@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DoceriaPedagógica — Materiais Prontos em 60 Segundos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0e0c;
+    --cream: #faf7f2;
+    --warm: #f5f0e8;
+    --gold: #c8963e;
+    --gold-light: #e8b86d;
+    --gold-pale: #fdf3e3;
+    --teal: #2d6e6e;
+    --teal-light: #4a9b9b;
+    --teal-pale: #e8f4f4;
+    --coral: #d95f3b;
+    --coral-pale: #fdeee9;
+    --text: #1a1917;
+    --text-mid: #4a4845;
+    --text-muted: #8a8785;
+    --border: rgba(15,14,12,0.1);
+    --border-mid: rgba(15,14,12,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 18px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(250,247,242,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    transition: box-shadow 0.3s;
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--ink);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .nav-logo-mark {
+    width: 32px; height: 32px;
+    background: var(--gold);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  .nav-links {
+    display: flex; align-items: center; gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 14px; font-weight: 500;
+    color: var(--text-mid);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--ink); }
+
+  .nav-cta {
+    background: var(--ink) !important;
+    color: var(--cream) !important;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    transition: opacity 0.2s !important;
+  }
+
+  .nav-cta:hover { opacity: 0.82 !important; }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 0;
+    padding-top: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(200,150,62,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(45,110,110,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-left {
+    padding: 80px 60px 80px 80px;
+    position: relative; z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--gold-pale);
+    border: 1px solid rgba(200,150,62,0.3);
+    color: var(--gold);
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 20px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.7)} }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 4.5vw, 58px);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--gold);
+    position: relative;
+  }
+
+  h1 em::after {
+    content: '';
+    position: absolute;
+    bottom: 2px; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold);
+    opacity: 0.3;
+    border-radius: 2px;
+  }
+
+  .hero-sub {
+    font-size: 17px; line-height: 1.7;
+    color: var(--text-mid);
+    margin-bottom: 40px;
+    max-width: 480px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; align-items: center; gap: 16px;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 16px 32px;
+    border-radius: 10px;
+    font-size: 15px; font-weight: 600;
+    text-decoration: none;
+    border: none; cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .btn-primary:hover { background: #2a2926; transform: translateY(-1px); }
+
+  .btn-secondary {
+    color: var(--text-mid);
+    font-size: 15px; font-weight: 500;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: color 0.2s;
+    cursor: pointer;
+    background: none; border: none;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .btn-secondary:hover { color: var(--ink); }
+
+  .btn-arrow {
+    width: 28px; height: 28px;
+    background: var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    transition: background 0.2s;
+  }
+
+  .btn-secondary:hover .btn-arrow { background: var(--border-mid); }
+
+  .hero-stats {
+    display: flex; gap: 40px;
+    margin-top: 52px; padding-top: 40px;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .hero-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 900;
+    color: var(--ink);
+  }
+
+  .hero-stat-lbl {
+    font-size: 12px; color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* Hero right — mockup */
+  .hero-right {
+    height: 100vh;
+    position: relative;
+    background: var(--warm);
+    border-left: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    animation: fadeIn 0.8s 0.3s ease both;
+  }
+
+  .hero-mockup {
+    width: 85%;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .mockup-topbar {
+    background: var(--ink);
+    padding: 12px 18px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .mockup-dots { display: flex; gap: 6px; }
+  .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .mockup-dot:nth-child(1) { background: #ff5f56; }
+  .mockup-dot:nth-child(2) { background: #ffbd2e; }
+  .mockup-dot:nth-child(3) { background: #27c93f; }
+
+  .mockup-title-bar {
+    flex: 1; text-align: center;
+    font-size: 12px; color: rgba(255,255,255,0.5);
+    font-family: 'Outfit', monospace;
+  }
+
+  .mockup-body { padding: 28px 24px; }
+
+  .mockup-label {
+    font-size: 10px; font-weight: 600;
+    color: var(--text-muted); letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+
+  .mockup-input {
+    background: var(--warm);
+    border: 1.5px solid var(--border-mid);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 14px; color: var(--ink);
+    margin-bottom: 16px;
+    font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .mockup-input-text { color: var(--text-muted); font-style: italic; }
+
+  .mockup-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+
+  .mockup-tag {
+    padding: 5px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 500;
+    border: 1.5px solid;
+  }
+
+  .mockup-tag.active {
+    background: var(--teal-pale);
+    border-color: var(--teal-light);
+    color: var(--teal);
+  }
+
+  .mockup-tag.inactive {
+    background: var(--warm);
+    border-color: var(--border-mid);
+    color: var(--text-muted);
+  }
+
+  .mockup-gen-btn {
+    width: 100%;
+    background: var(--gold);
+    color: white;
+    border: none; border-radius: 8px;
+    padding: 13px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+
+  .mockup-progress {
+    background: var(--warm);
+    border-radius: 4px;
+    height: 6px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .mockup-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+    border-radius: 4px;
+    width: 72%;
+    animation: loading 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes loading { from{width:30%} to{width:85%} }
+
+  .mockup-progress-label {
+    font-size: 11px; color: var(--text-muted);
+    display: flex; justify-content: space-between;
+  }
+
+  .mockup-preview-strip {
+    margin-top: 18px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  }
+
+  .mockup-mini-page {
+    background: var(--warm);
+    border-radius: 6px;
+    padding: 10px 8px;
+    aspect-ratio: 0.707;
+    display: flex; flex-direction: column; gap: 5px;
+  }
+
+  .mini-line { height: 5px; border-radius: 3px; background: var(--border-mid); }
+  .mini-line.title { height: 8px; background: rgba(200,150,62,0.3); width: 70%; }
+  .mini-line.short { width: 50%; }
+  .mini-line.med { width: 75%; }
+
+  .hero-floats {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+  }
+
+  .float-pill {
+    position: absolute;
+    background: white;
+    border: 1px solid var(--border-mid);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 12px;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    animation: floatY 4s ease-in-out infinite alternate;
+  }
+
+  .float-pill:nth-child(1) { top: 18%; right: 8%; animation-delay: 0s; }
+  .float-pill:nth-child(2) { bottom: 28%; right: 4%; animation-delay: 1s; }
+  .float-pill:nth-child(3) { top: 55%; left: 4%; animation-delay: 2s; }
+
+  @keyframes floatY { from{transform:translateY(0)} to{transform:translateY(-10px)} }
+
+  .float-icon { font-size: 16px; }
+  .float-text { font-weight: 500; color: var(--text); }
+  .float-sub { font-size: 10px; color: var(--text-muted); }
+
+  /* ─── SECTION BASE ─── */
+  section { padding: 100px 80px; }
+
+  .section-eyebrow {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .section-eyebrow::before {
+    content: '';
+    width: 30px; height: 2px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(30px, 3.5vw, 44px);
+    font-weight: 900;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+
+  h2 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .section-lead {
+    font-size: 17px; line-height: 1.7;
+    color: var(--text-mid);
+    max-width: 560px;
+    margin-bottom: 56px;
+  }
+
+  /* ─── PROBLEM STRIP ─── */
+  .problem-strip {
+    background: var(--ink);
+    padding: 28px 80px;
+    display: flex; align-items: center; gap: 60px;
+    overflow: hidden;
+  }
+
+  .problem-label {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .problem-items {
+    display: flex; gap: 0;
+    animation: scroll 20s linear infinite;
+    white-space: nowrap;
+  }
+
+  .problem-item {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 0 40px;
+    font-size: 14px; color: rgba(255,255,255,0.7);
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .problem-x { color: var(--coral); font-weight: 700; }
+
+  @keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ─── HOW IT WORKS ─── */
+  .how-section { background: var(--cream); }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .step-card {
+    background: var(--cream);
+    padding: 44px 36px;
+    position: relative;
+  }
+
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px; font-weight: 900;
+    color: rgba(200,150,62,0.12);
+    line-height: 1;
+    margin-bottom: 20px;
+    position: absolute;
+    top: 20px; right: 24px;
+  }
+
+  .step-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .step-desc {
+    font-size: 14px; line-height: 1.7;
+    color: var(--text-mid);
+  }
+
+  /* ─── FEATURES ─── */
+  .features-section { background: var(--warm); }
+
+  .features-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .features-list {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+
+  .feature-item {
+    padding: 20px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1.5px solid transparent;
+  }
+
+  .feature-item:hover, .feature-item.active {
+    background: white;
+    border-color: var(--border-mid);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+
+  .feature-item-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 8px;
+  }
+
+  .feature-icon-wrap {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .feature-name {
+    font-size: 15px; font-weight: 600;
+    color: var(--ink);
+  }
+
+  .feature-desc {
+    font-size: 13px; line-height: 1.6;
+    color: var(--text-muted);
+    padding-left: 50px;
+  }
+
+  .features-visual {
+    position: sticky; top: 100px;
+  }
+
+  .feature-preview-card {
+    background: white;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+  }
+
+  .fpreview-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .fpreview-icon { font-size: 20px; }
+
+  .fpreview-title {
+    font-size: 14px; font-weight: 600;
+  }
+
+  .fpreview-badge {
+    margin-left: auto;
+    background: var(--teal-pale);
+    color: var(--teal);
+    font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 20px;
+  }
+
+  .fpreview-body { padding: 24px; }
+
+  .doc-preview {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    font-size: 12px;
+  }
+
+  .doc-capa {
+    text-align: center;
+    padding: 16px 0 20px;
+    border-bottom: 2px solid var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .doc-capa-escola {
+    font-size: 10px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+
+  .doc-capa-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700;
+    color: var(--ink);
+    margin: 8px 0 4px;
+  }
+
+  .doc-capa-sub { font-size: 11px; color: var(--text-muted); }
+
+  .doc-section { margin-bottom: 14px; }
+
+  .doc-section-title {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .doc-section-title::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: var(--teal-pale);
+  }
+
+  .doc-text-line {
+    height: 6px; border-radius: 3px;
+    background: var(--warm);
+    margin-bottom: 5px;
+  }
+
+  .doc-answer-box {
+    border: 1px dashed var(--border-mid);
+    border-radius: 4px;
+    height: 40px;
+    margin-top: 8px;
+    display: flex; align-items: center;
+    padding: 0 10px;
+  }
+
+  .doc-answer-lines {
+    display: flex; flex-direction: column; gap: 4px; width: 100%;
+    padding-top: 8px;
+  }
+
+  .doc-answer-line {
+    border-bottom: 1px solid var(--border-mid);
+    height: 12px;
+  }
+
+  /* ─── MATERIALS GRID ─── */
+  .materials-section { background: var(--cream); }
+
+  .mat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .mat-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s;
+  }
+
+  .mat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    border-color: var(--border-mid);
+  }
+
+  .mat-card-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .mat-card-icon { font-size: 28px; margin-bottom: 14px; }
+
+  .mat-card-name {
+    font-size: 16px; font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .mat-card-desc {
+    font-size: 13px; line-height: 1.6;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .mat-card-tags {
+    display: flex; flex-wrap: wrap; gap: 5px;
+  }
+
+  .mat-tag {
+    font-size: 10px; font-weight: 600;
+    padding: 3px 9px; border-radius: 20px;
+    background: var(--warm);
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ─── LEVELS SECTION ─── */
+  .levels-section {
+    background: var(--ink);
+    padding: 100px 80px;
+  }
+
+  .levels-section .section-eyebrow { color: var(--gold-light); }
+  .levels-section .section-eyebrow::before { background: var(--gold-light); }
+  .levels-section h2 { color: var(--cream); }
+  .levels-section h2 em { color: var(--gold-light); }
+  .levels-section .section-lead { color: rgba(250,247,242,0.6); }
+
+  .levels-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+
+  .level-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 24px 18px;
+    text-align: center;
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .level-card:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(200,150,62,0.3);
+    transform: translateY(-3px);
+  }
+
+  .level-emoji { font-size: 28px; margin-bottom: 12px; }
+
+  .level-name {
+    font-size: 13px; font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 6px;
+  }
+
+  .level-desc {
+    font-size: 11px; line-height: 1.5;
+    color: rgba(250,247,242,0.45);
+  }
+
+  /* ─── DIFFERENTIALS ─── */
+  .diff-section { background: var(--cream); }
+
+  .diff-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .diff-card {
+    background: var(--cream);
+    padding: 44px 40px;
+    display: flex; gap: 24px;
+    align-items: flex-start;
+    transition: background 0.2s;
+  }
+
+  .diff-card:hover { background: white; }
+
+  .diff-icon-box {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .diff-content {}
+
+  .diff-title {
+    font-size: 16px; font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .diff-desc {
+    font-size: 13px; line-height: 1.7;
+    color: var(--text-muted);
+  }
+
+  /* ─── TESTIMONIALS ─── */
+  .testimonials-section { background: var(--warm); }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .testimonial-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+  }
+
+  .testimonial-stars {
+    display: flex; gap: 3px;
+    margin-bottom: 16px;
+    color: var(--gold);
+    font-size: 14px;
+  }
+
+  .testimonial-text {
+    font-size: 14px; line-height: 1.7;
+    color: var(--text-mid);
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .testimonial-author {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .testimonial-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .testimonial-name {
+    font-size: 14px; font-weight: 600;
+  }
+
+  .testimonial-role {
+    font-size: 12px; color: var(--text-muted);
+  }
+
+  /* ─── PRICING ─── */
+  .pricing-section { background: var(--cream); }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  .pricing-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 30px;
+    position: relative;
+    transition: all 0.2s;
+  }
+
+  .pricing-card:hover { box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+
+  .pricing-card.featured {
+    border-color: var(--gold);
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .pricing-popular {
+    position: absolute;
+    top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--gold);
+    color: white;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 6px 18px; border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .pricing-name {
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .pricing-card.featured .pricing-name { color: rgba(250,247,242,0.5); }
+
+  .pricing-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px; font-weight: 900;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .pricing-period {
+    font-size: 13px; color: var(--text-muted);
+    margin-bottom: 28px;
+  }
+
+  .pricing-card.featured .pricing-period { color: rgba(250,247,242,0.5); }
+
+  .pricing-features {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .pricing-feature {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: var(--text-mid);
+  }
+
+  .pricing-card.featured .pricing-feature { color: rgba(250,247,242,0.75); }
+
+  .pricing-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--teal-pale);
+    color: var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .pricing-card.featured .pricing-check {
+    background: rgba(74,155,155,0.2);
+    color: var(--teal-light);
+  }
+
+  .btn-plan {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; border: none;
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .btn-plan-light {
+    background: var(--warm);
+    color: var(--ink);
+  }
+
+  .btn-plan-light:hover { background: var(--border); }
+
+  .btn-plan-gold {
+    background: var(--gold);
+    color: white;
+  }
+
+  .btn-plan-gold:hover { background: #b5842e; }
+
+  /* ─── CTA FINAL ─── */
+  .cta-section {
+    background: var(--ink);
+    padding: 120px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: -300px; left: 50%; transform: translateX(-50%);
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(200,150,62,0.15) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .cta-section h2 {
+    color: var(--cream);
+    max-width: 600px; margin: 0 auto 20px;
+  }
+
+  .cta-section h2 em { color: var(--gold-light); }
+
+  .cta-sub {
+    font-size: 17px; color: rgba(250,247,242,0.6);
+    max-width: 480px; margin: 0 auto 44px;
+    line-height: 1.7;
+  }
+
+  .cta-actions {
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+  }
+
+  .btn-primary-gold {
+    background: var(--gold);
+    color: white;
+    padding: 18px 40px;
+    border-radius: 12px;
+    font-size: 16px; font-weight: 600;
+    text-decoration: none;
+    border: none; cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .btn-primary-gold:hover { background: #b5842e; transform: translateY(-2px); }
+
+  .btn-ghost {
+    color: rgba(250,247,242,0.6);
+    font-size: 15px; font-weight: 500;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: color 0.2s;
+    cursor: pointer;
+    background: none; border: none;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .btn-ghost:hover { color: var(--cream); }
+
+  .cta-note {
+    margin-top: 24px;
+    font-size: 12px; color: rgba(250,247,242,0.35);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: #090908;
+    padding: 60px 80px 40px;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 32px;
+  }
+
+  .footer-brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 900;
+    color: var(--cream);
+    margin-bottom: 12px;
+  }
+
+  .footer-brand-desc {
+    font-size: 13px; line-height: 1.7;
+    color: rgba(250,247,242,0.4);
+    max-width: 280px;
+  }
+
+  .footer-col-title {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(250,247,242,0.4);
+    margin-bottom: 20px;
+  }
+
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+
+  .footer-links a {
+    font-size: 13px; color: rgba(250,247,242,0.55);
+    text-decoration: none; transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--cream); }
+
+  .footer-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .footer-copy {
+    font-size: 12px; color: rgba(250,247,242,0.3);
+  }
+
+  .footer-legal {
+    display: flex; gap: 24px;
+  }
+
+  .footer-legal a {
+    font-size: 12px; color: rgba(250,247,242,0.3);
+    text-decoration: none; transition: color 0.2s;
+  }
+
+  .footer-legal a:hover { color: rgba(250,247,242,0.6); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1; transform: translateY(0);
+  }
+
+  /* ─── MOBILE RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 100px 24px 40px; }
+    .hero-right { height: 400px; border-left: none; border-top: 1px solid var(--border); }
+    section { padding: 60px 24px; }
+    .problem-strip { padding: 20px 24px; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .features-layout { grid-template-columns: 1fr; }
+    .features-visual { display: none; }
+    .mat-grid { grid-template-columns: 1fr 1fr; }
+    .levels-grid { grid-template-columns: repeat(2, 1fr); }
+    .diff-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .levels-section { padding: 60px 24px; }
+    .cta-section { padding: 80px 24px; }
+    footer { padding: 40px 24px 24px; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .hero-stats { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-mark">✦</div>
+    DoceriaPedagógica
+  </a>
+  <ul class="nav-links">
+    <li><a href="#como-funciona">Como funciona</a></li>
+    <li><a href="#materiais">Materiais</a></li>
+    <li><a href="#niveis">Níveis e Idiomas</a></li>
+    <li><a href="#planos">Planos</a></li>
+    <li><a href="#planos" class="nav-cta">Começar grátis</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-badge">Inteligência Artificial para Educadores</div>
+
+    <h1>Material pedagógico<br><em>pronto</em> em menos<br>de 60 segundos</h1>
+
+    <p class="hero-sub">
+      A IA que entende de educação de verdade. Você digita o tema, ela entrega apostila, atividades, plano de aula e jogos — diagramados, bonitos, prontos para imprimir. Em português, inglês ou qualquer idioma. Sem editar nada.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#planos" class="btn-primary">
+        Experimente grátis
+        <span>→</span>
+      </a>
+      <button class="btn-secondary" onclick="document.getElementById('como-funciona').scrollIntoView({behavior:'smooth'})">
+        Ver como funciona
+        <span class="btn-arrow">↓</span>
+      </button>
+    </div>
+
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">60s</div>
+        <div class="hero-stat-lbl">tempo de geração</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">0</div>
+        <div class="hero-stat-lbl">edições necessárias</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">6+</div>
+        <div class="hero-stat-lbl">tipos de material</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">9+</div>
+        <div class="hero-stat-lbl">níveis e idiomas</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-mockup">
+      <div class="mockup-topbar">
+        <div class="mockup-dots">
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+        </div>
+        <div class="mockup-title-bar">doceriapedagogica.com.br</div>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-label">Tema ou conteúdo</div>
+        <div class="mockup-input">
+          <span>📝</span>
+          <span class="mockup-input-text">Meio Ambiente e Sustentabilidade</span>
+        </div>
+        <div class="mockup-label">Tipo de material</div>
+        <div class="mockup-tags">
+          <div class="mockup-tag active">📚 Apostila</div>
+          <div class="mockup-tag active">✏️ Atividades</div>
+          <div class="mockup-tag inactive">🎲 Jogo</div>
+          <div class="mockup-tag inactive">📋 Plano de aula</div>
+          <div class="mockup-tag inactive">🔤 Cruzadinha</div>
+        </div>
+        <div class="mockup-gen-btn">✦ Gerar material agora</div>
+        <div class="mockup-progress">
+          <div class="mockup-progress-bar"></div>
+        </div>
+        <div class="mockup-progress-label">
+          <span>Montando layout profissional...</span>
+          <span style="color:var(--teal);">72%</span>
+        </div>
+        <div class="mockup-preview-strip">
+          <div class="mockup-mini-page">
+            <div class="mini-line title"></div>
+            <div class="mini-line"></div>
+            <div class="mini-line short"></div>
+            <div class="mini-line med"></div>
+          </div>
+          <div class="mockup-mini-page">
+            <div class="mini-line" style="height:8px;background:rgba(45,110,110,0.2);width:60%;margin-bottom:8px;"></div>
+            <div class="mini-line short"></div>
+            <div class="mini-line"></div>
+            <div class="mini-line med"></div>
+            <div class="mini-line short"></div>
+          </div>
+          <div class="mockup-mini-page">
+            <div class="mini-line" style="height:8px;background:rgba(200,150,62,0.2);width:55%;margin-bottom:8px;"></div>
+            <div class="mini-line med"></div>
+            <div class="mini-line short"></div>
+            <div class="mini-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-floats">
+      <div class="float-pill">
+        <span class="float-icon">📄</span>
+        <div>
+          <div class="float-text">PDF gerado!</div>
+          <div class="float-sub">8 páginas • pronto para imprimir</div>
+        </div>
+      </div>
+      <div class="float-pill">
+        <span class="float-icon">⚡</span>
+        <div>
+          <div class="float-text">38 segundos</div>
+          <div class="float-sub">apostila completa</div>
+        </div>
+      </div>
+      <div class="float-pill">
+        <span class="float-icon">🎯</span>
+        <div>
+          <div class="float-text">EJA • Adultos</div>
+          <div class="float-sub">linguagem adaptada</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM STRIP -->
+<div class="problem-strip">
+  <div class="problem-label">Problemas do passado</div>
+  <div style="overflow:hidden;flex:1;">
+    <div class="problem-items">
+      <div class="problem-item"><span class="problem-x">✕</span> Horas preparando material</div>
+      <div class="problem-item"><span class="problem-x">✕</span> Canva que trava e não salva</div>
+      <div class="problem-item"><span class="problem-x">✕</span> Atividade genérica demais</div>
+      <div class="problem-item"><span class="problem-x">✕</span> Material infantil para adulto</div>
+      <div class="problem-item"><span class="problem-x">✕</span> Sem espaço para resposta</div>
+      <div class="problem-item"><span class="problem-x">✕</span> Layout feio e confuso</div>
+      <div class="problem-item"><span class="problem-x">✕</span> Horas preparando material</div>
+      <div class="problem-item"><span class="problem-x">✕</span> Canva que trava e não salva</div>
+      <div class="problem-item"><span class="problem-x">✕</span> Atividade genérica demais</div>
+      <div class="problem-item"><span class="problem-x">✕</span> Material infantil para adulto</div>
+      <div class="problem-item"><span class="problem-x">✕</span> Sem espaço para resposta</div>
+      <div class="problem-item"><span class="problem-x">✕</span> Layout feio e confuso</div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="como-funciona">
+  <div class="reveal">
+    <div class="section-eyebrow">Como funciona</div>
+    <h2>Três passos.<br><em>Material na mão.</em></h2>
+    <p class="section-lead">Sem curva de aprendizado, sem tutorial, sem configuração. Você já sabe usar.</p>
+  </div>
+
+  <div class="steps-grid reveal">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <div class="step-icon" style="background:var(--gold-pale);">📝</div>
+      <div class="step-title">Descreva o que precisa</div>
+      <p class="step-desc">Digite o tema, escolha o nível (Infantil, Fundamental, EJA, Médio) ou o idioma (inglês, espanhol e outros) e selecione os tipos de material. Leva menos de 30 segundos.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <div class="step-icon" style="background:var(--teal-pale);">✦</div>
+      <div class="step-title">A IA gera tudo</div>
+      <p class="step-desc">Nossa IA especializada em educação cria o conteúdo pedagógico, monta o layout profissional, insere os espaços de resposta e diagramada tudo em tempo real.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <div class="step-icon" style="background:var(--coral-pale);">🖨️</div>
+      <div class="step-title">Baixe e imprima</div>
+      <p class="step-desc">O PDF chega perfeito, bonito e funcional — pronto para impressão. Sem abrir Canva, sem formatar no Word, sem editar nada. Vai direto para a mão do aluno.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="features-layout">
+    <div>
+      <div class="reveal">
+        <div class="section-eyebrow">O que ela faz</div>
+        <h2>Uma IA com<br><em>alma de professora</em></h2>
+        <p class="section-lead">Não é um gerador de texto. É uma especialista em educação que entende didática, faixa etária e realidade de sala de aula.</p>
+      </div>
+
+      <div class="features-list reveal">
+        <div class="feature-item active">
+          <div class="feature-item-header">
+            <div class="feature-icon-wrap" style="background:var(--gold-pale);">📚</div>
+            <div class="feature-name">Apostilas completas estruturadas</div>
+          </div>
+          <div class="feature-desc">Capa profissional, texto introdutório, 4 a 6 atividades variadas e fechamento — tudo em um único PDF diagramado.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-item-header">
+            <div class="feature-icon-wrap" style="background:var(--teal-pale);">✏️</div>
+            <div class="feature-name">Atividades variadas e completas</div>
+          </div>
+          <div class="feature-desc">Interpretação, produção escrita, completar, associação, questões abertas e fechadas — sempre com espaço de resposta adequado.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-item-header">
+            <div class="feature-icon-wrap" style="background:var(--coral-pale);">🎲</div>
+            <div class="feature-name">Jogos pedagógicos com instruções</div>
+          </div>
+          <div class="feature-desc">Quiz, trilha, jogo da memória, cruzadinha e caça-palavras temáticos — com instruções claras e objetivo de aprendizagem definido.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-item-header">
+            <div class="feature-icon-wrap" style="background:var(--gold-pale);">🧠</div>
+            <div class="feature-name">Mapa mental + Temas Geradores</div>
+          </div>
+          <div class="feature-desc">Mapas visuais do conteúdo e temas geradores no estilo Paulo Freire — conectados à realidade do aluno, especialmente para EJA.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-item-header">
+            <div class="feature-icon-wrap" style="background:var(--teal-pale);">📋</div>
+            <div class="feature-name">Plano de aula alinhado à BNCC</div>
+          </div>
+          <div class="feature-desc">Objetivo, desenvolvimento, recursos, avaliação e sugestão de aplicação — gerado junto com o material, sem trabalho extra.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-item-header">
+            <div class="feature-icon-wrap" style="background:var(--coral-pale);">🎵</div>
+            <div class="feature-name">Letra de música pedagógica</div>
+          </div>
+          <div class="feature-desc">Rap, cordel, paródia ou canção original com o conteúdo do tema — ideal para fixação e engajamento em qualquer nível.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="features-visual reveal">
+      <div class="feature-preview-card">
+        <div class="fpreview-header">
+          <span class="fpreview-icon">📄</span>
+          <span class="fpreview-title">Prévia do material gerado</span>
+          <span class="fpreview-badge">PDF pronto</span>
+        </div>
+        <div class="fpreview-body">
+          <div class="doc-preview">
+            <div class="doc-capa">
+              <div class="doc-capa-escola">EJA — Ensino Fundamental</div>
+              <div class="doc-capa-titulo">Meio Ambiente<br>e Sustentabilidade</div>
+              <div class="doc-capa-sub">Material gerado pela DoceriaPedagógica • 2025</div>
+            </div>
+            <div class="doc-section">
+              <div class="doc-section-title">Texto para leitura</div>
+              <div class="doc-text-line"></div>
+              <div class="doc-text-line" style="width:88%"></div>
+              <div class="doc-text-line" style="width:72%"></div>
+              <div class="doc-text-line"></div>
+              <div class="doc-text-line" style="width:65%"></div>
+            </div>
+            <div class="doc-section">
+              <div class="doc-section-title">Atividade 1 — Interpretação</div>
+              <div class="doc-text-line" style="width:90%"></div>
+              <div class="doc-text-line" style="width:75%"></div>
+              <div class="doc-answer-lines">
+                <div class="doc-answer-line"></div>
+                <div class="doc-answer-line"></div>
+                <div class="doc-answer-line"></div>
+              </div>
+            </div>
+            <div class="doc-section">
+              <div class="doc-section-title">Atividade 2 — Complete</div>
+              <div class="doc-text-line" style="width:85%"></div>
+              <div class="doc-answer-box">
+                <span style="font-size:10px;color:var(--text-muted);">_______________ reduz o lixo e protege o meio ambiente.</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:16px;">
+            <div style="flex:1;padding:10px;background:var(--warm);border-radius:8px;text-align:center;">
+              <div style="font-size:18px;margin-bottom:4px;">📄</div>
+              <div style="font-size:11px;font-weight:600;">PDF</div>
+              <div style="font-size:10px;color:var(--text-muted);">Imprimir</div>
+            </div>
+            <div style="flex:1;padding:10px;background:var(--warm);border-radius:8px;text-align:center;">
+              <div style="font-size:18px;margin-bottom:4px;">✏️</div>
+              <div style="font-size:11px;font-weight:600;">Editar</div>
+              <div style="font-size:10px;color:var(--text-muted);">Ajustar</div>
+            </div>
+            <div style="flex:1;padding:10px;background:var(--teal-pale);border-radius:8px;text-align:center;border:1px solid rgba(45,110,110,0.2);">
+              <div style="font-size:18px;margin-bottom:4px;">⬇️</div>
+              <div style="font-size:11px;font-weight:600;color:var(--teal);">Baixar</div>
+              <div style="font-size:10px;color:var(--teal);">Grátis</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MATERIALS -->
+<section class="materials-section" id="materiais">
+  <div class="reveal" style="max-width:700px;">
+    <div class="section-eyebrow">Tipos de material</div>
+    <h2>Tudo que você precisa,<br><em>em um só lugar</em></h2>
+    <p class="section-lead">Cada material gerado com intenção pedagógica real — não conteúdo genérico, mas algo que funciona na sua sala de aula.</p>
+  </div>
+
+  <div class="mat-grid reveal">
+    <div class="mat-card">
+      <div class="mat-card-accent" style="background:var(--gold);"></div>
+      <div class="mat-card-icon">📚</div>
+      <div class="mat-card-name">Apostila Completa</div>
+      <div class="mat-card-desc">Capa, texto, atividades variadas e fechamento em um único PDF de 6 a 10 páginas, diagramado profissionalmente.</div>
+      <div class="mat-card-tags">
+        <span class="mat-tag">Todos os níveis</span>
+        <span class="mat-tag">PDF</span>
+        <span class="mat-tag">Imprimível</span>
+      </div>
+    </div>
+    <div class="mat-card">
+      <div class="mat-card-accent" style="background:var(--teal);"></div>
+      <div class="mat-card-icon">✏️</div>
+      <div class="mat-card-name">Atividade Avulsa</div>
+      <div class="mat-card-desc">Interpretação de texto, produção escrita, completar, associar, questões abertas e fechadas — com espaços de resposta.</div>
+      <div class="mat-card-tags">
+        <span class="mat-tag">Focada</span>
+        <span class="mat-tag">Rápida</span>
+        <span class="mat-tag">PDF</span>
+      </div>
+    </div>
+    <div class="mat-card">
+      <div class="mat-card-accent" style="background:var(--coral);"></div>
+      <div class="mat-card-icon">🎲</div>
+      <div class="mat-card-name">Jogo Pedagógico</div>
+      <div class="mat-card-desc">Quiz interativo, trilha, jogo da memória e forca temáticos — com regras, objetivos e materiais para impressão.</div>
+      <div class="mat-card-tags">
+        <span class="mat-tag">Engajamento</span>
+        <span class="mat-tag">Digital</span>
+        <span class="mat-tag">Imprimível</span>
+      </div>
+    </div>
+    <div class="mat-card">
+      <div class="mat-card-accent" style="background:#7c6af5;"></div>
+      <div class="mat-card-icon">📋</div>
+      <div class="mat-card-name">Plano de Aula</div>
+      <div class="mat-card-desc">Objetivo, habilidades BNCC, desenvolvimento passo a passo, recursos necessários e avaliação — tudo estruturado.</div>
+      <div class="mat-card-tags">
+        <span class="mat-tag">BNCC</span>
+        <span class="mat-tag">Completo</span>
+        <span class="mat-tag">Word/PDF</span>
+      </div>
+    </div>
+    <div class="mat-card">
+      <div class="mat-card-accent" style="background:#3d9e6e;"></div>
+      <div class="mat-card-icon">🔤</div>
+      <div class="mat-card-name">Cruzadinha e Caça-palavras</div>
+      <div class="mat-card-desc">Gerados automaticamente com as palavras-chave do tema. Inclui gabarito e dicas pedagógicas.</div>
+      <div class="mat-card-tags">
+        <span class="mat-tag">Automático</span>
+        <span class="mat-tag">Com gabarito</span>
+        <span class="mat-tag">PDF</span>
+      </div>
+    </div>
+    <div class="mat-card">
+      <div class="mat-card-accent" style="background:#e06090;"></div>
+      <div class="mat-card-icon">🧠</div>
+      <div class="mat-card-name">Mapa Mental + Tema Gerador</div>
+      <div class="mat-card-desc">Mapa visual do conteúdo e temas geradores conectados à realidade do aluno — especialmente poderoso para EJA.</div>
+      <div class="mat-card-tags">
+        <span class="mat-tag">Visual</span>
+        <span class="mat-tag">Paulo Freire</span>
+        <span class="mat-tag">EJA/Todos</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEVELS -->
+<section class="levels-section" id="niveis">
+  <div class="reveal">
+    <div class="section-eyebrow">Níveis de ensino e idiomas</div>
+    <h2>Para <em>qualquer professor</em>,<br>em qualquer nível ou idioma</h2>
+    <p class="section-lead">Da Educação Infantil ao Ensino Médio, do EJA ao professor de inglês — a IA adapta linguagem, complexidade e formato automaticamente.</p>
+  </div>
+
+  <div style="margin-bottom:16px;" class="reveal">
+    <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:rgba(250,247,242,0.35);margin-bottom:12px;">Educação Básica</div>
+  </div>
+
+  <div class="levels-grid reveal" style="margin-bottom:20px;">
+    <div class="level-card">
+      <div class="level-emoji">🧒</div>
+      <div class="level-name">Educação Infantil</div>
+      <div class="level-desc">Linguagem lúdica, atividades visuais, letras grandes, espaço generoso</div>
+    </div>
+    <div class="level-card">
+      <div class="level-emoji">📖</div>
+      <div class="level-name">Fundamental I</div>
+      <div class="level-desc">1º ao 5º ano — alfabetização, numeração, introdução às disciplinas</div>
+    </div>
+    <div class="level-card">
+      <div class="level-emoji">🔬</div>
+      <div class="level-name">Fundamental II</div>
+      <div class="level-desc">6º ao 9º ano — aprofundamento, interdisciplinaridade, pensamento crítico</div>
+    </div>
+    <div class="level-card">
+      <div class="level-emoji">👩‍💼</div>
+      <div class="level-name">EJA</div>
+      <div class="level-desc">Linguagem adulta, contexto de vida real, sem infantilização, temas relevantes</div>
+    </div>
+    <div class="level-card">
+      <div class="level-emoji">🎓</div>
+      <div class="level-name">Ensino Médio</div>
+      <div class="level-desc">Densidade adequada, preparação para ENEM, conexão com o mundo do trabalho</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:16px;margin-top:40px;" class="reveal">
+    <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:rgba(250,247,242,0.35);margin-bottom:12px;">Idiomas e línguas estrangeiras</div>
+  </div>
+
+  <div class="levels-grid reveal" style="grid-template-columns:repeat(4,1fr);">
+    <div class="level-card" style="border-color:rgba(232,184,109,0.25);background:rgba(232,184,109,0.05);">
+      <div class="level-emoji">🇧🇷🇺🇸</div>
+      <div class="level-name">Inglês</div>
+      <div class="level-desc">Material em inglês, bilíngue ou com gabarito traduzido — para escolas, cursinhos e reforço</div>
+    </div>
+    <div class="level-card" style="border-color:rgba(232,184,109,0.25);background:rgba(232,184,109,0.05);">
+      <div class="level-emoji">🇪🇸</div>
+      <div class="level-name">Espanhol</div>
+      <div class="level-desc">Atividades, apostilas e jogos em espanhol — todos os níveis do básico ao avançado</div>
+    </div>
+    <div class="level-card" style="border-color:rgba(232,184,109,0.25);background:rgba(232,184,109,0.05);">
+      <div class="level-emoji">🌍</div>
+      <div class="level-name">Outros idiomas</div>
+      <div class="level-desc">Francês, italiano, alemão e outros — qualquer língua que a IA domine, a plataforma gera</div>
+    </div>
+    <div class="level-card" style="border-color:rgba(232,184,109,0.25);background:rgba(232,184,109,0.05);">
+      <div class="level-emoji">🤟</div>
+      <div class="level-name">Libras</div>
+      <div class="level-desc">Material de apoio ao ensino de Libras e educação inclusiva, com adaptações pedagógicas</div>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:40px;background:rgba(255,255,255,0.05);border:1px solid rgba(232,184,109,0.2);border-radius:14px;padding:24px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+    <span style="font-size:24px;">💡</span>
+    <div>
+      <div style="font-size:15px;font-weight:600;color:var(--cream);margin-bottom:4px;">Professor de inglês — exemplo prático</div>
+      <div style="font-size:13px;color:rgba(250,247,242,0.55);line-height:1.6;">Digite <em style="color:rgba(232,184,109,0.8);">"Professions vocabulary — A1/A2 level"</em> e receba: texto em inglês, atividades de match, fill in the blank, word search e produção escrita — tudo pronto para imprimir, em menos de 60 segundos.</div>
+    </div>
+  </div>
+</section>
+
+<!-- DIFFERENTIALS -->
+<section class="diff-section">
+  <div class="reveal" style="text-align:center;max-width:600px;margin:0 auto 56px;">
+    <div class="section-eyebrow" style="justify-content:center;">Por que é diferente</div>
+    <h2>O que você <em>não encontra</em><br>em nenhuma outra ferramenta</h2>
+  </div>
+
+  <div class="diff-grid reveal">
+    <div class="diff-card">
+      <div class="diff-icon-box" style="background:var(--gold-pale);">⏱️</div>
+      <div class="diff-content">
+        <div class="diff-title">Geração em menos de 60 segundos</div>
+        <div class="diff-desc">Nenhuma etapa de espera. Você configura, clica, e o material já está pronto. O professor não tem tempo a perder — a plataforma respeita isso.</div>
+      </div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-icon-box" style="background:var(--teal-pale);">📄</div>
+      <div class="diff-content">
+        <div class="diff-title">PDF diagramado, pronto para imprimir</div>
+        <div class="diff-desc">Não é texto para formatar. É um PDF completo, com layout profissional, fontes, margens e espaços de resposta — igual a um livro didático.</div>
+      </div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-icon-box" style="background:var(--coral-pale);">🚫</div>
+      <div class="diff-content">
+        <div class="diff-title">Zero infantilização para adultos</div>
+        <div class="diff-desc">Quando o público é adulto, a IA usa linguagem adequada, temas relevantes e abordagem respeitosa — nunca trata adulto como criança.</div>
+      </div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-icon-box" style="background:#f0ecff;">🎯</div>
+      <div class="diff-content">
+        <div class="diff-title">IA com perfil de professora</div>
+        <div class="diff-desc">Não é só gerar texto. A IA conhece progressão didática, diferenciação por nível, habilidades da BNCC e aplicabilidade real em sala de aula.</div>
+      </div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-icon-box" style="background:var(--gold-pale);">🧩</div>
+      <div class="diff-content">
+        <div class="diff-title">Sugestão de aplicação em aula</div>
+        <div class="diff-desc">Cada material vem acompanhado de como usá-lo — quando distribuir, como introduzir o tema, como aproveitar ao máximo cada atividade.</div>
+      </div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-icon-box" style="background:var(--teal-pale);">🔄</div>
+      <div class="diff-content">
+        <div class="diff-title">Adapta para qualquer nível</div>
+        <div class="diff-desc">O mesmo tema, gerado para EJA, Fundamental I, Ensino Médio ou em inglês — produz materiais completamente diferentes. Linguagem, complexidade e formato adaptados automaticamente.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="reveal" style="text-align:center;max-width:560px;margin:0 auto 56px;">
+    <div class="section-eyebrow" style="justify-content:center;">Professores que usam</div>
+    <h2>O que dizem quem<br>já <em>experimentou</em></h2>
+  </div>
+
+  <div class="testimonials-grid reveal">
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <div class="testimonial-text">"Sempre passei horas no Canva tentando deixar o material bonito. Agora em 40 segundos tenho uma apostila que parece livro didático. Não consigo mais imaginar sem."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:var(--teal);">M</div>
+        <div>
+          <div class="testimonial-name">Mariana Souza</div>
+          <div class="testimonial-role">Professora EJA — São Paulo</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <div class="testimonial-text">"A parte que mais me surpreendeu foi que ela entende que meus alunos são adultos. O material não tem nada infantil — tem dignidade e respeito pela experiência deles."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:var(--gold);">R</div>
+        <div>
+          <div class="testimonial-name">Roberto Alves</div>
+          <div class="testimonial-role">Professor Fundamental II — Recife</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <div class="testimonial-text">"Usava Wordwall para jogos mas era limitado demais. Aqui gero o jogo, a apostila e o plano de aula juntos, com o mesmo tema. Economizo meu domingo inteiro."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:var(--coral);">A</div>
+        <div>
+          <div class="testimonial-name">Ana Paula Lima</div>
+          <div class="testimonial-role">Professora Educação Infantil — Fortaleza</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="planos">
+  <div class="reveal" style="text-align:center;max-width:560px;margin:0 auto 56px;">
+    <div class="section-eyebrow" style="justify-content:center;">Planos e preços</div>
+    <h2>Comece grátis.<br><em>Escale quando quiser.</em></h2>
+    <p class="section-lead" style="margin:0 auto;">Sem cartão de crédito para começar. Cancele quando quiser. Sem surpresa.</p>
+  </div>
+
+  <div class="pricing-grid reveal">
+    <div class="pricing-card">
+      <div class="pricing-name">Gratuito</div>
+      <div class="pricing-price">R$0</div>
+      <div class="pricing-period">para sempre, sem cartão</div>
+      <ul class="pricing-features">
+        <li class="pricing-feature"><span class="pricing-check">✓</span>5 materiais por mês</li>
+        <li class="pricing-feature"><span class="pricing-check">✓</span>Apostila e atividades</li>
+        <li class="pricing-feature"><span class="pricing-check">✓</span>PDF para impressão</li>
+        <li class="pricing-feature"><span class="pricing-check">✓</span>Todos os níveis de ensino</li>
+        <li class="pricing-feature" style="opacity:0.4;"><span class="pricing-check" style="background:var(--border);">—</span>Jogos e cruzadinhas</li>
+        <li class="pricing-feature" style="opacity:0.4;"><span class="pricing-check" style="background:var(--border);">—</span>Plano de aula BNCC</li>
+      </ul>
+      <button class="btn-plan btn-plan-light">Começar grátis</button>
+    </div>
+
+    <div class="pricing-card featured">
+      <div class="pricing-popular">Mais popular</div>
+      <div class="pricing-name">Pro</div>
+      <div class="pricing-price" style="color:var(--gold-light);">R$39</div>
+      <div class="pricing-period">/mês — cancele quando quiser</div>
+      <ul class="pricing-features">
+        <li class="pricing-feature"><span class="pricing-check">✓</span>Materiais ilimitados</li>
+        <li class="pricing-feature"><span class="pricing-check">✓</span>Todos os tipos de material</li>
+        <li class="pricing-feature"><span class="pricing-check">✓</span>Jogos + Cruzadinha + Caça</li>
+        <li class="pricing-feature"><span class="pricing-check">✓</span>Plano de aula BNCC</li>
+        <li class="pricing-feature"><span class="pricing-check">✓</span>Mapa mental + Tema gerador</li>
+        <li class="pricing-feature"><span class="pricing-check">✓</span>Letra de música pedagógica</li>
+      </ul>
+      <button class="btn-plan btn-plan-gold">Assinar Pro</button>
+    </div>
+
+    <div class="pricing-card">
+      <div class="pricing-name">Escola</div>
+      <div class="pricing-price">R$199</div>
+      <div class="pricing-period">/mês — até 10 professores</div>
+      <ul class="pricing-features">
+        <li class="pricing-feature"><span class="pricing-check">✓</span>Tudo do plano Pro</li>
+        <li class="pricing-feature"><span class="pricing-check">✓</span>10 professores inclusos</li>
+        <li class="pricing-feature"><span class="pricing-check">✓</span>Painel administrativo</li>
+        <li class="pricing-feature"><span class="pricing-check">✓</span>Suporte prioritário</li>
+        <li class="pricing-feature"><span class="pricing-check">✓</span>Personalização com logo</li>
+        <li class="pricing-feature"><span class="pricing-check">✓</span>Relatório de uso da equipe</li>
+      </ul>
+      <button class="btn-plan btn-plan-light">Falar com a equipe</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section">
+  <div class="reveal">
+    <div class="section-eyebrow" style="justify-content:center;color:rgba(232,184,109,0.7);">Comece hoje</div>
+    <h2>Seu próximo material<br>está a <em>um clique</em></h2>
+    <p class="cta-sub">Junte-se a centenas de professores que já pararam de passar o fim de semana preparando material.</p>
+    <div class="cta-actions">
+      <button class="btn-primary-gold">Criar meu primeiro material grátis</button>
+      <button class="btn-ghost">Ver exemplos de material →</button>
+    </div>
+    <p class="cta-note">Sem cartão de crédito • Cancele quando quiser • PDF em menos de 60 segundos</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">DoceriaPedagógica</div>
+      <div class="footer-brand-desc">A plataforma de IA que entende de educação de verdade. Materiais pedagógicos prontos para qualquer nível, em menos de 60 segundos.</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Plataforma</div>
+      <ul class="footer-links">
+        <li><a href="#">Como funciona</a></li>
+        <li><a href="#">Materiais</a></li>
+        <li><a href="#">Níveis de ensino</a></li>
+        <li><a href="#">Inglês e idiomas</a></li>
+        <li><a href="#">Planos</a></li>
+        <li><a href="#">Exemplos</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Recursos</div>
+      <ul class="footer-links">
+        <li><a href="#">Blog pedagógico</a></li>
+        <li><a href="#">Guia de uso</a></li>
+        <li><a href="#">BNCC e IA</a></li>
+        <li><a href="#">EJA e educação</a></li>
+        <li><a href="#">Novidades</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Empresa</div>
+      <ul class="footer-links">
+        <li><a href="#">Sobre nós</a></li>
+        <li><a href="#">Contato</a></li>
+        <li><a href="#">Parceiros</a></li>
+        <li><a href="#">Imprensa</a></li>
+        <li><a href="#">Trabalhe conosco</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 DoceriaPedagógica. Feito com ❤️ para educadores brasileiros.</div>
+    <div class="footer-legal">
+      <a href="#">Privacidade</a>
+      <a href="#">Termos de uso</a>
+      <a href="#">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Feature items interactivity
+  document.querySelectorAll('.feature-item').forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      document.querySelectorAll('.feature-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  // Nav shadow on scroll
+  window.addEventListener('scroll', () => {
+    document.querySelector('nav').style.boxShadow =
+      window.scrollY > 20 ? '0 2px 20px rgba(0,0,0,0.08)' : 'none';
+  });
+</script>
+
+</body>
+</html>

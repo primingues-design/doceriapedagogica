@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Atividade — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root {
+    --ink: #0f0e0c;
+    --cream: #faf7f2;
+    --warm: #f5f0e8;
+    --gold: #c8963e;
+    --gold-light: #e8b86d;
+    --gold-pale: #fdf3e3;
+    --teal: #2d6e6e;
+    --teal-light: #4a9b9b;
+    --teal-pale: #e8f4f4;
+    --coral: #d95f3b;
+    --coral-pale: #fdeee9;
+    --text: #1a1917;
+    --text-mid: #4a4845;
+    --text-muted: #8a8785;
+    --border: rgba(15,14,12,0.1);
+    --border-mid: rgba(15,14,12,0.18);
+    --success: #2d6e6e;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--warm);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--ink);
+    padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .topbar-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 900;
+    color: var(--cream);
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+
+  .topbar-logo-mark {
+    width: 28px; height: 28px;
+    background: var(--gold);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+  }
+
+  .topbar-back {
+    font-size: 13px; color: rgba(250,247,242,0.5);
+    text-decoration: none; display: flex; align-items: center; gap: 6px;
+    transition: color 0.2s;
+  }
+
+  .topbar-back:hover { color: var(--cream); }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    min-height: calc(100vh - 56px);
+  }
+
+  /* ── FORM PANEL ── */
+  .form-panel {
+    background: var(--cream);
+    border-right: 1px solid var(--border);
+    padding: 32px 28px;
+    overflow-y: auto;
+    max-height: calc(100vh - 56px);
+    position: sticky; top: 56px;
+  }
+
+  .form-panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 900;
+    margin-bottom: 6px;
+  }
+
+  .form-panel-sub {
+    font-size: 13px; color: var(--text-muted);
+    margin-bottom: 28px; line-height: 1.5;
+  }
+
+  .field { margin-bottom: 20px; }
+
+  .field-label {
+    font-size: 11px; font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.07em; text-transform: uppercase;
+    display: block; margin-bottom: 7px;
+  }
+
+  .field-required { color: var(--coral); }
+
+  input[type="text"], select, textarea {
+    width: 100%;
+    background: white;
+    border: 1.5px solid var(--border-mid);
+    border-radius: 9px;
+    padding: 11px 14px;
+    font-size: 14px; color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  input[type="text"]:focus, select:focus, textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(200,150,62,0.12);
+  }
+
+  textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+  select option { background: white; }
+
+  .pill-group {
+    display: flex; flex-wrap: wrap; gap: 7px;
+  }
+
+  .pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border-mid);
+    background: white;
+    color: var(--text-muted);
+    font-size: 12px; font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Outfit', sans-serif;
+    user-select: none;
+  }
+
+  .pill.active {
+    border-color: var(--teal);
+    background: var(--teal-pale);
+    color: var(--teal);
+    font-weight: 600;
+  }
+
+  .pill:hover:not(.active) {
+    border-color: var(--border);
+    background: var(--warm);
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 24px 0;
+  }
+
+  .generate-btn {
+    width: 100%;
+    background: var(--gold);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: all 0.2s;
+    margin-top: 4px;
+  }
+
+  .generate-btn:hover:not(:disabled) {
+    background: #b5842e;
+    transform: translateY(-1px);
+  }
+
+  .generate-btn:disabled {
+    opacity: 0.55; cursor: not-allowed; transform: none;
+  }
+
+  .generate-btn .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  .generate-btn.loading .spinner { display: block; }
+  .generate-btn.loading .btn-icon { display: none; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .progress-area {
+    display: none;
+    margin-top: 16px;
+  }
+
+  .progress-area.show { display: block; }
+
+  .progress-steps {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+
+  .progress-step {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--text-muted);
+    transition: color 0.3s;
+  }
+
+  .progress-step.active { color: var(--teal); }
+  .progress-step.done { color: var(--success); }
+
+  .step-dot {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border-mid);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    transition: all 0.3s;
+  }
+
+  .progress-step.active .step-dot {
+    border-color: var(--teal);
+    background: var(--teal-pale);
+  }
+
+  .progress-step.done .step-dot {
+    border-color: var(--success);
+    background: var(--success);
+    color: white;
+  }
+
+  /* ── PREVIEW PANEL ── */
+  .preview-panel {
+    padding: 32px;
+    overflow-y: auto;
+  }
+
+  .preview-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 400px;
+    text-align: center;
+    color: var(--text-muted);
+  }
+
+  .preview-empty-icon {
+    font-size: 48px; margin-bottom: 16px; opacity: 0.4;
+  }
+
+  .preview-empty-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--text-mid);
+    margin-bottom: 8px;
+  }
+
+  .preview-empty-sub {
+    font-size: 14px; line-height: 1.6;
+    max-width: 320px;
+  }
+
+  /* ── PREVIEW HEADER BAR ── */
+  .preview-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .preview-header.show { display: flex; }
+
+  .preview-header-left {}
+
+  .preview-material-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700;
+  }
+
+  .preview-material-meta {
+    font-size: 12px; color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .preview-actions {
+    display: flex; gap: 10px;
+  }
+
+  .btn-download {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; gap: 8px;
+    transition: all 0.2s;
+  }
+
+  .btn-download:hover { background: #2a2926; }
+
+  .btn-regenerate {
+    background: white;
+    color: var(--text-mid);
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border-mid);
+    font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .btn-regenerate:hover { background: var(--warm); }
+
+  /* ── DOCUMENT PREVIEW ── */
+  .doc-wrapper {
+    display: none;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .doc-wrapper.show { display: block; }
+
+  #document-preview {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* ── DOCUMENT STYLES (also used for PDF) ── */
+  .doc-header {
+    background: var(--ink);
+    padding: 36px 48px 28px;
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .doc-header::after {
+    content: '✦';
+    position: absolute;
+    right: 36px; bottom: -10px;
+    font-size: 80px;
+    color: rgba(255,255,255,0.04);
+    font-family: 'Playfair Display', serif;
+  }
+
+  .doc-header-school {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(250,247,242,0.45);
+    margin-bottom: 12px;
+  }
+
+  .doc-header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .doc-header-title em {
+    color: var(--gold-light);
+    font-style: italic;
+  }
+
+  .doc-header-meta {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .doc-header-badge {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 11px; font-weight: 500;
+    color: rgba(250,247,242,0.7);
+  }
+
+  .doc-body {
+    padding: 40px 48px;
+  }
+
+  .doc-section {
+    margin-bottom: 36px;
+  }
+
+  .doc-section-label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .doc-section-label::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: var(--teal-pale);
+  }
+
+  .doc-text {
+    font-size: 14px; line-height: 1.85;
+    color: var(--text-mid);
+  }
+
+  .doc-activity {
+    margin-bottom: 28px;
+    padding: 20px 22px;
+    background: var(--warm);
+    border-radius: 10px;
+    border-left: 4px solid var(--gold);
+  }
+
+  .doc-activity-num {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .doc-activity-title {
+    font-size: 15px; font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .doc-activity-body {
+    font-size: 14px; line-height: 1.7;
+    color: var(--text-mid);
+  }
+
+  .doc-answer-lines {
+    margin-top: 14px;
+    display: flex; flex-direction: column; gap: 0;
+  }
+
+  .doc-answer-line {
+    border-bottom: 1.5px solid var(--border-mid);
+    min-height: 32px;
+    margin-bottom: 4px;
+  }
+
+  .doc-answer-box {
+    border: 1.5px dashed var(--border-mid);
+    border-radius: 6px;
+    min-height: 80px;
+    margin-top: 12px;
+    padding: 10px 14px;
+    font-size: 12px; color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .doc-footer {
+    background: var(--warm);
+    border-top: 1px solid var(--border);
+    padding: 20px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 11px; color: var(--text-muted);
+  }
+
+  .doc-footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  /* Error */
+  .error-box {
+    display: none;
+    background: var(--coral-pale);
+    border: 1px solid rgba(217,95,59,0.3);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--coral);
+    margin-top: 14px;
+    line-height: 1.5;
+  }
+
+  .error-box.show { display: block; }
+
+  /* Streaming cursor */
+  .streaming-cursor::after {
+    content: '|';
+    animation: blink 0.8s infinite;
+    color: var(--gold);
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* Responsive */
+  @media (max-width: 860px) {
+    .main { grid-template-columns: 1fr; }
+    .form-panel { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--border); }
+    .preview-panel { padding: 20px; }
+    .doc-body { padding: 24px 20px; }
+    .doc-header { padding: 24px 20px; }
+    .doc-footer { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="index.html">
+    <div class="topbar-logo-mark">✦</div>
+    DoceriaPedagógica
+  </a>
+  <a class="topbar-back" href="index.html">← Voltar ao site</a>
+</div>
+
+<div class="main">
+
+  <!-- FORM PANEL -->
+  <div class="form-panel">
+    <div class="form-panel-title">Gerar Atividade</div>
+    <div class="form-panel-sub">Preencha os campos abaixo. A IA cria o material completo em segundos.</div>
+
+    <div class="field">
+      <label class="field-label">Tema ou conteúdo <span class="field-required">*</span></label>
+      <input type="text" id="tema" placeholder="Ex: Meio Ambiente e Reciclagem" />
+    </div>
+
+    <div class="field">
+      <label class="field-label">Nível / público-alvo <span class="field-required">*</span></label>
+      <select id="nivel">
+        <option value="">Selecione o nível...</option>
+        <option value="Educação Infantil (4-5 anos)">Educação Infantil</option>
+        <option value="Fundamental I — Anos Iniciais (1º ao 5º ano)">Fundamental I (1º–5º ano)</option>
+        <option value="Fundamental II — Anos Finais (6º ao 9º ano)">Fundamental II (6º–9º ano)</option>
+        <option value="EJA — Alfabetização de Adultos">EJA — Alfabetização</option>
+        <option value="EJA — Ensino Fundamental para adultos">EJA — Fundamental</option>
+        <option value="EJA — Ensino Médio para adultos">EJA — Ensino Médio</option>
+        <option value="Ensino Médio Regular">Ensino Médio</option>
+        <option value="Inglês — Nível Básico A1/A2">Inglês — Básico (A1/A2)</option>
+        <option value="Inglês — Nível Intermediário B1/B2">Inglês — Intermediário (B1/B2)</option>
+        <option value="Espanhol — Nível Básico">Espanhol — Básico</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Tipos de atividade</label>
+      <div class="pill-group" id="tiposPills">
+        <div class="pill active" data-val="Interpretação de texto">📖 Interpretação</div>
+        <div class="pill active" data-val="Questões abertas">✍️ Questões abertas</div>
+        <div class="pill" data-val="Questões de múltipla escolha">☑️ Múltipla escolha</div>
+        <div class="pill" data-val="Complete as frases">✏️ Complete</div>
+        <div class="pill" data-val="Associação / relacione colunas">🔗 Associação</div>
+        <div class="pill" data-val="Produção escrita">📝 Produção escrita</div>
+        <div class="pill" data-val="Verdadeiro ou falso">✅ Verdadeiro/Falso</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Objetivo de aprendizagem</label>
+      <textarea id="objetivo" placeholder="Ex: Compreender a importância da reciclagem e identificar materiais recicláveis no cotidiano..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Observações adicionais</label>
+      <input type="text" id="obs" placeholder="Ex: Linguagem adulta, contexto urbano, sem imagens infantis..." />
+    </div>
+
+    <hr class="divider">
+
+    <button class="generate-btn" id="generateBtn" onclick="generateActivity()">
+      <span class="btn-icon">✦</span>
+      <div class="spinner"></div>
+      Gerar atividade agora
+    </button>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <div class="progress-area" id="progressArea">
+      <div class="progress-steps">
+        <div class="progress-step" id="step1">
+          <div class="step-dot">1</div>
+          <span>Analisando tema e nível...</span>
+        </div>
+        <div class="progress-step" id="step2">
+          <div class="step-dot">2</div>
+          <span>Criando conteúdo pedagógico...</span>
+        </div>
+        <div class="progress-step" id="step3">
+          <div class="step-dot">3</div>
+          <span>Montando atividades...</span>
+        </div>
+        <div class="progress-step" id="step4">
+          <div class="step-dot">4</div>
+          <span>Formatando para impressão...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div class="preview-panel">
+
+    <div class="preview-header" id="previewHeader">
+      <div class="preview-header-left">
+        <div class="preview-material-title" id="previewTitle">Atividade gerada</div>
+        <div class="preview-material-meta" id="previewMeta"></div>
+      </div>
+      <div class="preview-actions">
+        <button class="btn-regenerate" onclick="generateActivity()">↻ Gerar novamente</button>
+        <button class="btn-download" onclick="downloadPDF()">⬇ Baixar PDF</button>
+      </div>
+    </div>
+
+    <div class="preview-empty" id="previewEmpty">
+      <div class="preview-empty-icon">📄</div>
+      <div class="preview-empty-title">Sua atividade aparece aqui</div>
+      <div class="preview-empty-sub">Preencha o formulário ao lado e clique em <strong>Gerar atividade</strong> para ver o material completo, formatado e pronto para impressão.</div>
+    </div>
+
+    <div class="doc-wrapper" id="docWrapper">
+      <div id="document-preview">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Pill toggle
+  document.querySelectorAll('#tiposPills .pill').forEach(pill => {
+    pill.addEventListener('click', () => pill.classList.toggle('active'));
+  });
+
+  function getSelectedTypes() {
+    return [...document.querySelectorAll('#tiposPills .pill.active')]
+      .map(p => p.dataset.val).join(', ');
+  }
+
+  function setStep(n) {
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById('step' + i);
+      el.classList.remove('active', 'done');
+      if (i < n) el.classList.add('done'), el.querySelector('.step-dot').textContent = '✓';
+      else if (i === n) el.classList.add('active');
+      else el.querySelector('.step-dot').textContent = i;
+    }
+  }
+
+  async function generateActivity() {
+    const tema = document.getElementById('tema').value.trim();
+    const nivel = document.getElementById('nivel').value;
+    const objetivo = document.getElementById('objetivo').value.trim();
+    const obs = document.getElementById('obs').value.trim();
+    const tipos = getSelectedTypes();
+
+    const errorBox = document.getElementById('errorBox');
+    errorBox.classList.remove('show');
+
+    if (!tema) {
+      errorBox.textContent = 'Por favor, preencha o tema ou conteúdo da atividade.';
+      errorBox.classList.add('show');
+      document.getElementById('tema').focus();
+      return;
+    }
+    if (!nivel) {
+      errorBox.textContent = 'Por favor, selecione o nível ou público-alvo.';
+      errorBox.classList.add('show');
+      document.getElementById('nivel').focus();
+      return;
+    }
+
+    const btn = document.getElementById('generateBtn');
+    btn.disabled = true;
+    btn.classList.add('loading');
+    btn.querySelector('span:not(.spinner)') && (btn.childNodes[0].textContent = ' Gerando...');
+
+    document.getElementById('progressArea').classList.add('show');
+    document.getElementById('previewEmpty').style.display = 'none';
+    document.getElementById('previewHeader').classList.remove('show');
+    document.getElementById('docWrapper').classList.remove('show');
+
+    setStep(1);
+    await delay(600);
+    setStep(2);
+
+    const prompt = buildPrompt(tema, nivel, tipos, objetivo, obs);
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: `Você é uma especialista em educação brasileira com vasta experiência em sala de aula, didática e elaboração de materiais pedagógicos.
+Sua missão é gerar atividades pedagógicas de alta qualidade, prontas para uso imediato.
+REGRAS FUNDAMENTAIS:
+- Nunca infantilize conteúdo para adultos (EJA). Use linguagem respeitosa e contextualizada.
+- Adapte vocabulário, complexidade e exemplos ao nível informado.
+- Crie atividades com espaços de resposta adequados (linhas para escrever, caixas, etc).
+- Para inglês ou espanhol, gere o material no idioma solicitado.
+- Seja pedagógico(a), não genérico(a). Cada atividade deve ter propósito claro.
+- Retorne APENAS JSON válido, sem markdown, sem texto antes ou depois.`,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      setStep(3);
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err?.error?.message || `Erro ${response.status}`);
+      }
+
+      const data = await response.json();
+      const raw = data.content?.[0]?.text || '';
+
+      setStep(4);
+      await delay(400);
+
+      let parsed;
+      try {
+        const clean = raw.replace(/```json|```/g, '').trim();
+        parsed = JSON.parse(clean);
+      } catch(e) {
+        throw new Error('A IA retornou um formato inesperado. Tente gerar novamente.');
+      }
+
+      renderDocument(parsed, tema, nivel);
+
+    } catch (err) {
+      console.error(err);
+      errorBox.textContent = 'Erro ao gerar: ' + (err.message || 'Tente novamente.');
+      errorBox.classList.add('show');
+      document.getElementById('previewEmpty').style.display = 'flex';
+    } finally {
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      document.getElementById('progressArea').classList.remove('show');
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById('step' + i);
+        el.classList.remove('active', 'done');
+        el.querySelector('.step-dot').textContent = i;
+      }
+    }
+  }
+
+  function buildPrompt(tema, nivel, tipos, objetivo, obs) {
+    return `Crie uma atividade pedagógica completa com os seguintes dados:
+
+TEMA: ${tema}
+NÍVEL: ${nivel}
+TIPOS DE ATIVIDADE SOLICITADOS: ${tipos || 'Interpretação de texto, Questões abertas'}
+${objetivo ? 'OBJETIVO: ' + objetivo : ''}
+${obs ? 'OBSERVAÇÕES: ' + obs : ''}
+
+Retorne SOMENTE este JSON (sem markdown):
+{
+  "titulo": "título da atividade (criativo, não genérico)",
+  "subtitulo": "subtítulo descritivo opcional",
+  "nivel": "${nivel}",
+  "disciplina": "disciplina ou área",
+  "texto_base": "parágrafo introdutório ou texto para leitura (3-5 linhas, adequado ao nível, se pertinente ao tema)",
+  "atividades": [
+    {
+      "numero": 1,
+      "tipo": "nome do tipo de atividade",
+      "enunciado": "enunciado claro e completo da atividade",
+      "linhas_resposta": 3,
+      "tipo_resposta": "linhas" // "linhas", "caixa", "opcoes" ou "nenhum"
+    }
+  ],
+  "orientacao_professor": "dica rápida de como aplicar esta atividade em sala (2 linhas)"
+}
+
+Gere entre 3 e 5 atividades variadas. Para múltipla escolha, adicione campo "opcoes": ["a) ...", "b) ...", "c) ...", "d) ..."].`;
+  }
+
+  function renderDocument(data, tema, nivel) {
+    const date = new Date().toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
+
+    document.getElementById('previewTitle').textContent = data.titulo || 'Atividade gerada';
+    document.getElementById('previewMeta').textContent = `${data.nivel || nivel} • ${data.disciplina || tema} • ${date}`;
+
+    let atividadesHtml = '';
+    (data.atividades || []).forEach((at, i) => {
+      let respostaHtml = '';
+      if (at.tipo_resposta === 'linhas' || !at.tipo_resposta) {
+        const n = at.linhas_resposta || 3;
+        const lines = Array(n).fill('<div class="doc-answer-line"></div>').join('');
+        respostaHtml = `<div class="doc-answer-lines">${lines}</div>`;
+      } else if (at.tipo_resposta === 'caixa') {
+        respostaHtml = `<div class="doc-answer-box">Espaço para resposta</div>`;
+      } else if (at.tipo_resposta === 'opcoes' && at.opcoes) {
+        respostaHtml = `<div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+          ${at.opcoes.map(op => `<label style="display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text-mid);cursor:pointer;">
+            <input type="radio" name="q${i}" style="margin-top:3px;accent-color:var(--teal);"> ${op}
+          </label>`).join('')}
+        </div>`;
+      }
+
+      atividadesHtml += `
+        <div class="doc-activity">
+          <div class="doc-activity-num">Atividade ${at.numero || i+1} — ${at.tipo || ''}</div>
+          <div class="doc-activity-title">${at.enunciado || ''}</div>
+          ${respostaHtml}
+        </div>`;
+    });
+
+    const textoBaseHtml = data.texto_base ? `
+      <div class="doc-section">
+        <div class="doc-section-label">Leia com atenção</div>
+        <div class="doc-text">${data.texto_base}</div>
+      </div>` : '';
+
+    const orientacaoHtml = data.orientacao_professor ? `
+      <div style="margin-top:32px;padding:18px 20px;background:var(--teal-pale);border-radius:10px;border-left:4px solid var(--teal);">
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);margin-bottom:6px;">💡 Orientação ao professor</div>
+        <div style="font-size:13px;line-height:1.6;color:var(--teal);">${data.orientacao_professor}</div>
+      </div>` : '';
+
+    document.getElementById('document-preview').innerHTML = `
+      <div class="doc-header">
+        <div class="doc-header-school">DoceriaPedagógica — Material Pedagógico</div>
+        <div class="doc-header-title">${data.titulo || tema}</div>
+        ${data.subtitulo ? `<div style="font-size:14px;color:rgba(250,247,242,0.55);margin-top:4px;">${data.subtitulo}</div>` : ''}
+        <div class="doc-header-meta">
+          <span class="doc-header-badge">📚 ${data.nivel || nivel}</span>
+          <span class="doc-header-badge">📋 ${data.disciplina || tema}</span>
+          <span class="doc-header-badge">📅 ${date}</span>
+          <span class="doc-header-badge">Nome: _______________________________</span>
+        </div>
+      </div>
+      <div class="doc-body">
+        ${textoBaseHtml}
+        <div class="doc-section">
+          <div class="doc-section-label">Atividades</div>
+          ${atividadesHtml}
+        </div>
+        ${orientacaoHtml}
+      </div>
+      <div class="doc-footer">
+        <span class="doc-footer-logo">DoceriaPedagógica</span>
+        <span>Material gerado por IA com qualidade pedagógica • ${date}</span>
+        <span>Página 1</span>
+      </div>
+    `;
+
+    document.getElementById('docWrapper').classList.add('show');
+    document.getElementById('previewHeader').classList.add('show');
+    document.getElementById('previewEmpty').style.display = 'none';
+
+    document.getElementById('docWrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async function downloadPDF() {
+    const btn = document.querySelector('.btn-download');
+    btn.textContent = '⏳ Gerando PDF...';
+    btn.disabled = true;
+
+    const element = document.getElementById('document-preview');
+    const titulo = document.getElementById('previewTitle').textContent.replace(/[^a-zA-Z0-9\s]/g, '').trim().replace(/\s+/g, '_');
+
+    const opt = {
+      margin: [10, 10, 10, 10],
+      filename: `DoceriaPedagogica_${titulo}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, logging: false },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    try {
+      await html2pdf().set(opt).from(element).save();
+    } catch(e) {
+      console.error(e);
+    }
+
+    btn.textContent = '⬇ Baixar PDF';
+    btn.disabled = false;
+  }
+
+  function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+</script>
+</body>
+</html>

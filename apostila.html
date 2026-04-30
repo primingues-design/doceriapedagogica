@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Apostila — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root {
+    --ink: #0f0e0c;
+    --cream: #faf7f2;
+    --warm: #f5f0e8;
+    --gold: #c8963e;
+    --gold-light: #e8b86d;
+    --gold-pale: #fdf3e3;
+    --teal: #2d6e6e;
+    --teal-light: #4a9b9b;
+    --teal-pale: #e8f4f4;
+    --coral: #d95f3b;
+    --coral-pale: #fdeee9;
+    --lavender: #6c63d4;
+    --lavender-pale: #f0eeff;
+    --text: #1a1917;
+    --text-mid: #4a4845;
+    --text-muted: #8a8785;
+    --border: rgba(15,14,12,0.1);
+    --border-mid: rgba(15,14,12,0.18);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--warm);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--ink);
+    padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 900;
+    color: var(--cream);
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .topbar-logo-mark {
+    width: 28px; height: 28px; background: var(--gold);
+    border-radius: 7px; display: flex; align-items: center;
+    justify-content: center; font-size: 13px;
+  }
+  .topbar-nav { display: flex; align-items: center; gap: 16px; }
+  .topbar-link {
+    font-size: 13px; color: rgba(250,247,242,0.5);
+    text-decoration: none; display: flex; align-items: center; gap: 6px;
+    transition: color 0.2s; padding: 6px 12px; border-radius: 6px;
+  }
+  .topbar-link:hover { color: var(--cream); background: rgba(255,255,255,0.06); }
+  .topbar-link.active { color: var(--gold-light); background: rgba(200,150,62,0.1); }
+
+  /* ── LAYOUT ── */
+  .main { display: grid; grid-template-columns: 400px 1fr; min-height: calc(100vh - 56px); }
+
+  /* ── FORM ── */
+  .form-panel {
+    background: var(--cream);
+    border-right: 1px solid var(--border);
+    padding: 28px 24px;
+    overflow-y: auto;
+    max-height: calc(100vh - 56px);
+    position: sticky; top: 56px;
+  }
+
+  .form-section { margin-bottom: 24px; }
+
+  .form-section-title {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .form-section-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  .field { margin-bottom: 16px; }
+
+  .field-label {
+    font-size: 11px; font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.07em; text-transform: uppercase;
+    display: block; margin-bottom: 6px;
+  }
+
+  .req { color: var(--coral); }
+
+  input[type="text"], select, textarea {
+    width: 100%; background: white;
+    border: 1.5px solid var(--border-mid);
+    border-radius: 9px; padding: 10px 13px;
+    font-size: 13px; color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(200,150,62,0.1);
+  }
+  textarea { resize: vertical; min-height: 70px; line-height: 1.6; }
+
+  .pill-group { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill {
+    padding: 5px 12px; border-radius: 20px;
+    border: 1.5px solid var(--border-mid);
+    background: white; color: var(--text-muted);
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    transition: all 0.15s; font-family: 'Outfit', sans-serif;
+    user-select: none;
+  }
+  .pill.active { border-color: var(--teal); background: var(--teal-pale); color: var(--teal); font-weight: 600; }
+  .pill:hover:not(.active) { background: var(--warm); }
+
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .toggle-row:last-child { border-bottom: none; }
+
+  .toggle-label { font-size: 13px; color: var(--text-mid); }
+  .toggle-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  .toggle {
+    width: 36px; height: 20px;
+    background: var(--border-mid);
+    border-radius: 10px; cursor: pointer;
+    position: relative; transition: background 0.2s;
+    flex-shrink: 0; border: none;
+  }
+  .toggle.on { background: var(--teal); }
+  .toggle::after {
+    content: ''; position: absolute;
+    top: 3px; left: 3px;
+    width: 14px; height: 14px;
+    background: white; border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle.on::after { transform: translateX(16px); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  .generate-btn {
+    width: 100%; background: var(--gold); color: white;
+    border: none; padding: 14px; border-radius: 10px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: all 0.2s;
+  }
+  .generate-btn:hover:not(:disabled) { background: #b5842e; transform: translateY(-1px); }
+  .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .generate-btn .spin {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white; border-radius: 50%;
+    animation: rot 0.7s linear infinite; display: none;
+  }
+  .generate-btn.loading .spin { display: block; }
+  .generate-btn.loading .gicon { display: none; }
+  @keyframes rot { to { transform: rotate(360deg); } }
+
+  /* progress */
+  .progress-wrap { display: none; margin-top: 16px; }
+  .progress-wrap.show { display: block; }
+
+  .prog-bar-outer {
+    height: 4px; background: var(--border);
+    border-radius: 2px; overflow: hidden; margin-bottom: 12px;
+  }
+  .prog-bar-inner {
+    height: 100%; background: linear-gradient(90deg, var(--teal), var(--gold));
+    border-radius: 2px; width: 0%;
+    transition: width 0.5s ease;
+  }
+
+  .prog-steps { display: flex; flex-direction: column; gap: 7px; }
+  .prog-step {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 12px; color: var(--text-muted); transition: color 0.3s;
+  }
+  .prog-step.active { color: var(--teal); }
+  .prog-step.done { color: #2d6e6e; }
+  .prog-dot {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--border-mid);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; flex-shrink: 0; transition: all 0.3s;
+  }
+  .prog-step.active .prog-dot { border-color: var(--teal); background: var(--teal-pale); }
+  .prog-step.done .prog-dot { border-color: var(--teal); background: var(--teal); color: white; }
+
+  .error-box {
+    display: none; background: var(--coral-pale);
+    border: 1px solid rgba(217,95,59,0.3); border-radius: 8px;
+    padding: 12px 14px; font-size: 12px; color: var(--coral);
+    margin-top: 12px; line-height: 1.5;
+  }
+  .error-box.show { display: block; }
+
+  /* ── PREVIEW ── */
+  .preview-panel { padding: 28px; overflow-y: auto; }
+
+  .preview-empty {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 500px; text-align: center; color: var(--text-muted);
+  }
+  .preview-empty-icon { font-size: 52px; margin-bottom: 16px; opacity: 0.35; }
+  .preview-empty-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700; color: var(--text-mid); margin-bottom: 8px;
+  }
+  .preview-empty-sub { font-size: 14px; line-height: 1.6; max-width: 300px; }
+
+  .preview-header {
+    display: none; align-items: center;
+    justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+  }
+  .preview-header.show { display: flex; }
+
+  .ph-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; }
+  .ph-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+  .ph-actions { display: flex; gap: 10px; }
+
+  .btn-pdf {
+    background: var(--ink); color: var(--cream);
+    padding: 10px 22px; border-radius: 8px; border: none;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+  }
+  .btn-pdf:hover { background: #2a2926; }
+  .btn-pdf:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-regen {
+    background: white; color: var(--text-mid);
+    padding: 10px 16px; border-radius: 8px;
+    border: 1.5px solid var(--border-mid);
+    font-size: 13px; cursor: pointer;
+    font-family: 'Outfit', sans-serif; transition: all 0.2s;
+  }
+  .btn-regen:hover { background: var(--warm); }
+
+  /* page counter pill */
+  .pages-pill {
+    background: var(--teal-pale); color: var(--teal);
+    border: 1px solid rgba(45,110,110,0.2);
+    font-size: 11px; font-weight: 600;
+    padding: 4px 12px; border-radius: 20px;
+    display: none; align-items: center; gap: 5px;
+  }
+  .pages-pill.show { display: flex; }
+
+  /* ── APOSTILA DOC ── */
+  .doc-wrap { display: none; max-width: 800px; margin: 0 auto; }
+  .doc-wrap.show { display: block; }
+
+  #apostila-doc { background: white; font-family: 'Outfit', sans-serif; }
+
+  /* PAGE SIMULATIONS */
+  .ap-page {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  /* CAPA */
+  .ap-capa {
+    background: var(--ink);
+    min-height: 420px;
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    padding: 48px;
+    position: relative; overflow: hidden;
+  }
+  .ap-capa::before {
+    content: '';
+    position: absolute; top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(200,150,62,0.18) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .ap-capa::after {
+    content: '✦';
+    position: absolute; bottom: 24px; right: 40px;
+    font-size: 120px;
+    color: rgba(255,255,255,0.03);
+    font-family: 'Playfair Display', serif;
+  }
+  .ap-capa-top {}
+  .ap-capa-escola {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(250,247,242,0.35); margin-bottom: 32px;
+  }
+  .ap-capa-tag {
+    display: inline-block;
+    background: rgba(200,150,62,0.15);
+    border: 1px solid rgba(200,150,62,0.3);
+    color: var(--gold-light);
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .ap-capa-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 900; line-height: 1.15;
+    color: var(--cream); margin-bottom: 12px;
+  }
+  .ap-capa-title em { color: var(--gold-light); font-style: italic; }
+  .ap-capa-sub { font-size: 15px; color: rgba(250,247,242,0.5); line-height: 1.5; }
+  .ap-capa-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px;
+  }
+  .ap-capa-info { font-size: 12px; color: rgba(250,247,242,0.35); line-height: 1.8; }
+  .ap-capa-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; font-weight: 900; color: var(--gold-light);
+  }
+
+  /* BODY PAGES */
+  .ap-body { padding: 40px 48px; }
+  .ap-body-sm { padding: 28px 36px; }
+
+  .ap-section { margin-bottom: 32px; }
+
+  .ap-section-label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .ap-section-label::after { content: ''; flex: 1; height: 1px; background: var(--teal-pale); }
+
+  .ap-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--ink);
+  }
+
+  .ap-text { font-size: 14px; line-height: 1.9; color: var(--text-mid); margin-bottom: 12px; }
+
+  /* destaque box */
+  .ap-destaque {
+    background: var(--gold-pale);
+    border-left: 4px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px; margin: 16px 0;
+  }
+  .ap-destaque-label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 5px;
+  }
+  .ap-destaque-text { font-size: 13px; line-height: 1.6; color: var(--text-mid); }
+
+  /* activity card */
+  .ap-activity {
+    margin-bottom: 24px; padding: 20px 22px;
+    border-radius: 10px; border: 1.5px solid var(--border);
+    background: var(--warm);
+  }
+  .ap-activity-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+  }
+  .ap-activity-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--ink); color: var(--cream);
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .ap-activity-type {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .ap-activity-q { font-size: 14px; font-weight: 500; line-height: 1.6; color: var(--text); margin-bottom: 10px; }
+  .ap-answer-lines { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+  .ap-answer-line { border-bottom: 1.5px solid var(--border-mid); min-height: 30px; margin-bottom: 3px; }
+  .ap-answer-box {
+    border: 1.5px dashed var(--border-mid); border-radius: 6px;
+    min-height: 80px; margin-top: 10px; padding: 8px 12px;
+    font-size: 11px; color: var(--text-muted); font-style: italic;
+  }
+  .ap-opcoes { display: flex; flex-direction: column; gap: 7px; margin-top: 10px; }
+  .ap-opcao {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 13px; color: var(--text-mid);
+  }
+  .ap-opcao-bubble {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1.5px solid var(--border-mid);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: var(--text-muted);
+    flex-shrink: 0; margin-top: 1px;
+    background: white;
+  }
+
+  /* mapa mental placeholder */
+  .ap-mapa {
+    border: 1.5px solid var(--border);
+    border-radius: 12px; padding: 24px;
+    text-align: center; background: var(--warm);
+    margin-bottom: 20px;
+  }
+  .ap-mapa-center {
+    display: inline-block;
+    background: var(--ink); color: var(--cream);
+    font-size: 13px; font-weight: 600;
+    padding: 10px 20px; border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  .ap-mapa-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+  .ap-mapa-item {
+    background: var(--teal-pale); border: 1px solid rgba(45,110,110,0.2);
+    border-radius: 8px; padding: 8px 10px;
+    font-size: 12px; color: var(--teal); font-weight: 500;
+  }
+
+  /* fechamento */
+  .ap-fechamento {
+    background: var(--teal);
+    padding: 32px 40px; color: var(--cream);
+  }
+  .ap-fechamento-label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(250,247,242,0.5); margin-bottom: 10px;
+  }
+  .ap-fechamento-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; margin-bottom: 10px;
+  }
+  .ap-fechamento-text { font-size: 13px; line-height: 1.8; color: rgba(250,247,242,0.75); }
+
+  /* page footer */
+  .ap-page-footer {
+    background: var(--warm); border-top: 1px solid var(--border);
+    padding: 12px 36px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 10px; color: var(--text-muted);
+  }
+  .ap-footer-logo { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--gold); }
+
+  /* orientação prof */
+  .ap-orientacao {
+    background: var(--lavender-pale);
+    border-left: 4px solid var(--lavender);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px; margin-top: 20px;
+  }
+  .ap-orientacao-label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--lavender); margin-bottom: 6px;
+  }
+  .ap-orientacao-text { font-size: 12px; line-height: 1.6; color: #4a4880; }
+
+  @media (max-width: 860px) {
+    .main { grid-template-columns: 1fr; }
+    .form-panel { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--border); }
+    .preview-panel { padding: 16px; }
+    .ap-capa { padding: 28px; min-height: 300px; }
+    .ap-capa-title { font-size: 26px; }
+    .ap-body { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="index.html">
+    <div class="topbar-logo-mark">✦</div>
+    DoceriaPedagógica
+  </a>
+  <div class="topbar-nav">
+    <a class="topbar-link" href="gerador.html">✏️ Atividade</a>
+    <a class="topbar-link active" href="apostila.html">📚 Apostila</a>
+    <a class="topbar-link" href="index.html">← Site</a>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- FORM -->
+  <div class="form-panel">
+
+    <div class="form-section">
+      <div class="form-section-title">Conteúdo</div>
+
+      <div class="field">
+        <label class="field-label">Tema <span class="req">*</span></label>
+        <input type="text" id="tema" placeholder="Ex: Sistema Solar e Planetas" />
+      </div>
+
+      <div class="field">
+        <label class="field-label">Nível / público <span class="req">*</span></label>
+        <select id="nivel">
+          <option value="">Selecione...</option>
+          <option value="Educação Infantil (4-5 anos)">Educação Infantil</option>
+          <option value="Fundamental I — Anos Iniciais (1º ao 5º ano)">Fundamental I (1º–5º)</option>
+          <option value="Fundamental II — Anos Finais (6º ao 9º ano)">Fundamental II (6º–9º)</option>
+          <option value="EJA — Alfabetização de Adultos">EJA — Alfabetização</option>
+          <option value="EJA — Ensino Fundamental para adultos">EJA — Fundamental</option>
+          <option value="EJA — Ensino Médio para adultos">EJA — Médio</option>
+          <option value="Ensino Médio Regular">Ensino Médio</option>
+          <option value="Inglês — Nível Básico A1/A2">Inglês Básico A1/A2</option>
+          <option value="Inglês — Intermediário B1/B2">Inglês Interm. B1/B2</option>
+          <option value="Espanhol — Básico">Espanhol Básico</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Disciplina / área</label>
+        <input type="text" id="disciplina" placeholder="Ex: Ciências, Português, Matemática..." />
+      </div>
+
+      <div class="field">
+        <label class="field-label">Objetivo de aprendizagem</label>
+        <textarea id="objetivo" placeholder="Ex: Identificar os planetas do sistema solar, compreender suas características e refletir sobre a posição da Terra no universo..."></textarea>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">Atividades incluídas</div>
+      <div class="pill-group" id="tiposPills">
+        <div class="pill active" data-val="Interpretação de texto">📖 Interpretação</div>
+        <div class="pill active" data-val="Questões abertas">✍️ Abertas</div>
+        <div class="pill active" data-val="Múltipla escolha">☑️ Múltipla escolha</div>
+        <div class="pill active" data-val="Complete as frases">✏️ Complete</div>
+        <div class="pill" data-val="Associação de colunas">🔗 Associação</div>
+        <div class="pill active" data-val="Produção escrita">📝 Produção escrita</div>
+        <div class="pill" data-val="Verdadeiro ou Falso">✅ V ou F</div>
+        <div class="pill" data-val="Cruzadinha com palavras do tema">🔤 Cruzadinha</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">Seções extras</div>
+      <div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">🧠 Mapa mental</div>
+            <div class="toggle-sub">Organização visual do conteúdo</div>
+          </div>
+          <button class="toggle on" id="togMapa" onclick="toggleBtn(this)"></button>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">💡 Caixa de destaque</div>
+            <div class="toggle-sub">Conceito ou dado importante</div>
+          </div>
+          <button class="toggle on" id="togDestaque" onclick="toggleBtn(this)"></button>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">📋 Plano de aula junto</div>
+            <div class="toggle-sub">Orientações e BNCC</div>
+          </div>
+          <button class="toggle" id="togPlano" onclick="toggleBtn(this)"></button>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">🎵 Letra de música pedagógica</div>
+            <div class="toggle-sub">Rap, cordel ou paródia do tema</div>
+          </div>
+          <button class="toggle" id="togMusica" onclick="toggleBtn(this)"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Obs. adicionais</label>
+      <input type="text" id="obs" placeholder="Ex: Linguagem adulta, exemplos do cotidiano, sem infantilizar..." />
+    </div>
+
+    <hr class="divider">
+
+    <button class="generate-btn" id="genBtn" onclick="generate()">
+      <span class="gicon">✦</span>
+      <div class="spin"></div>
+      Gerar apostila completa
+    </button>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <div class="progress-wrap" id="progressWrap">
+      <div class="prog-bar-outer">
+        <div class="prog-bar-inner" id="progBar"></div>
+      </div>
+      <div class="prog-steps">
+        <div class="prog-step" id="ps1"><div class="prog-dot">1</div><span>Estruturando conteúdo pedagógico...</span></div>
+        <div class="prog-step" id="ps2"><div class="prog-dot">2</div><span>Criando texto introdutório...</span></div>
+        <div class="prog-step" id="ps3"><div class="prog-dot">3</div><span>Gerando atividades variadas...</span></div>
+        <div class="prog-step" id="ps4"><div class="prog-dot">4</div><span>Montando mapa mental...</span></div>
+        <div class="prog-step" id="ps5"><div class="prog-dot">5</div><span>Diagramando layout profissional...</span></div>
+        <div class="prog-step" id="ps6"><div class="prog-dot">6</div><span>Finalizando apostila...</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="preview-panel">
+
+    <div class="preview-header" id="prevHeader">
+      <div>
+        <div class="ph-title" id="phTitle">Apostila gerada</div>
+        <div class="ph-meta" id="phMeta"></div>
+      </div>
+      <div class="ph-actions">
+        <div class="pages-pill show" id="pagesPill">📄 <span id="pagesCount">0</span> páginas</div>
+        <button class="btn-regen" onclick="generate()">↻ Gerar novamente</button>
+        <button class="btn-pdf" id="pdfBtn" onclick="downloadPDF()">⬇ Baixar PDF</button>
+      </div>
+    </div>
+
+    <div class="preview-empty" id="prevEmpty">
+      <div class="preview-empty-icon">📚</div>
+      <div class="preview-empty-title">Sua apostila aparece aqui</div>
+      <div class="preview-empty-sub">Configure ao lado e clique em <strong>Gerar apostila completa</strong> — capa, texto, atividades e fechamento prontos em segundos.</div>
+    </div>
+
+    <div class="doc-wrap" id="docWrap">
+      <div id="apostila-doc"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function toggleBtn(el) { el.classList.toggle('on'); }
+
+  document.querySelectorAll('#tiposPills .pill').forEach(p => {
+    p.addEventListener('click', () => p.classList.toggle('active'));
+  });
+
+  function isOn(id) { return document.getElementById(id).classList.contains('on'); }
+
+  function getTypes() {
+    return [...document.querySelectorAll('#tiposPills .pill.active')].map(p => p.dataset.val).join(', ');
+  }
+
+  function setStep(n, total=6) {
+    for (let i = 1; i <= total; i++) {
+      const el = document.getElementById('ps'+i);
+      if (!el) continue;
+      el.classList.remove('active','done');
+      const dot = el.querySelector('.prog-dot');
+      if (i < n) { el.classList.add('done'); dot.textContent = '✓'; }
+      else if (i === n) { el.classList.add('active'); dot.textContent = i; }
+      else dot.textContent = i;
+    }
+    document.getElementById('progBar').style.width = Math.round((n/total)*90) + '%';
+  }
+
+  const STEPS_DELAY = [0, 700, 1200, 1800, 2400, 3000];
+
+  async function generate() {
+    const tema = document.getElementById('tema').value.trim();
+    const nivel = document.getElementById('nivel').value;
+    const disciplina = document.getElementById('disciplina').value.trim();
+    const objetivo = document.getElementById('objetivo').value.trim();
+    const obs = document.getElementById('obs').value.trim();
+    const tipos = getTypes();
+
+    const errBox = document.getElementById('errorBox');
+    errBox.classList.remove('show');
+
+    if (!tema) { errBox.textContent = 'Preencha o tema da apostila.'; errBox.classList.add('show'); document.getElementById('tema').focus(); return; }
+    if (!nivel) { errBox.textContent = 'Selecione o nível / público-alvo.'; errBox.classList.add('show'); document.getElementById('nivel').focus(); return; }
+
+    const btn = document.getElementById('genBtn');
+    btn.disabled = true; btn.classList.add('loading');
+
+    document.getElementById('progressWrap').classList.add('show');
+    document.getElementById('prevEmpty').style.display = 'none';
+    document.getElementById('prevHeader').classList.remove('show');
+    document.getElementById('docWrap').classList.remove('show');
+
+    STEPS_DELAY.forEach((d,i) => setTimeout(() => setStep(i+1), d));
+
+    const extras = [];
+    if (isOn('togMapa')) extras.push('mapa_mental');
+    if (isOn('togDestaque')) extras.push('destaque');
+    if (isOn('togPlano')) extras.push('plano_de_aula');
+    if (isOn('togMusica')) extras.push('musica_pedagogica');
+
+    const prompt = buildPrompt(tema, nivel, disciplina, objetivo, obs, tipos, extras);
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: `Você é uma especialista em educação brasileira, com experiência real em sala de aula, elaboração de materiais didáticos, EJA, educação infantil e ensino de idiomas.
+Gere apostilas pedagógicas completas, bem estruturadas e aplicáveis.
+REGRAS:
+- Nunca infantilize conteúdo para adultos (EJA). Linguagem adulta, respeitosa, contextualizada na vida real.
+- Para inglês/espanhol, gere o conteúdo no idioma solicitado.
+- Textos devem ter substância real — não frases genéricas.
+- Atividades com propósito claro, espaços de resposta adequados.
+- Retorne SOMENTE JSON válido. Sem markdown. Sem texto antes ou depois.`,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error?.message || `Erro ${res.status}`);
+      }
+
+      const data = await res.json();
+      const raw = data.content?.[0]?.text || '';
+
+      let parsed;
+      try {
+        parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+      } catch(e) {
+        throw new Error('Formato inesperado da IA. Tente novamente.');
+      }
+
+      document.getElementById('progBar').style.width = '100%';
+      await delay(300);
+
+      renderApostila(parsed, tema, nivel, disciplina);
+
+    } catch(err) {
+      errBox.textContent = 'Erro: ' + (err.message || 'Tente novamente.');
+      errBox.classList.add('show');
+      document.getElementById('prevEmpty').style.display = 'flex';
+    } finally {
+      btn.disabled = false; btn.classList.remove('loading');
+      document.getElementById('progressWrap').classList.remove('show');
+      document.getElementById('progBar').style.width = '0%';
+      for (let i=1;i<=6;i++) {
+        const el = document.getElementById('ps'+i);
+        if (el) { el.classList.remove('active','done'); el.querySelector('.prog-dot').textContent = i; }
+      }
+    }
+  }
+
+  function buildPrompt(tema, nivel, disciplina, objetivo, obs, tipos, extras) {
+    return `Crie uma apostila pedagógica completa:
+
+TEMA: ${tema}
+NÍVEL: ${nivel}
+${disciplina ? 'DISCIPLINA: ' + disciplina : ''}
+${objetivo ? 'OBJETIVO: ' + objetivo : ''}
+${obs ? 'OBSERVAÇÕES: ' + obs : ''}
+TIPOS DE ATIVIDADE: ${tipos || 'Interpretação de texto, Questões abertas, Produção escrita'}
+EXTRAS: ${extras.join(', ') || 'nenhum'}
+
+Retorne SOMENTE este JSON:
+{
+  "titulo": "título impactante e criativo da apostila",
+  "subtitulo": "subtítulo complementar",
+  "nivel": "${nivel}",
+  "disciplina": "${disciplina || 'tema livre'}",
+  "introducao_titulo": "título da seção introdutória",
+  "introducao_texto": "texto introdutório rico e adequado ao nível (4-6 parágrafos reais, não genéricos). Para EJA, conecte com a realidade adulta.",
+  "destaque": ${extras.includes('destaque') ? '{"titulo":"Sabia que...","texto":"fato ou conceito-chave marcante relacionado ao tema"}' : 'null'},
+  "mapa_mental": ${extras.includes('mapa_mental') ? '{"centro":"palavra-chave central","ramos":["conceito 1","conceito 2","conceito 3","conceito 4","conceito 5","conceito 6"]}' : 'null'},
+  "atividades": [
+    {
+      "numero": 1,
+      "tipo": "nome do tipo",
+      "enunciado": "enunciado completo e claro",
+      "linhas": 3,
+      "tipo_resposta": "linhas",
+      "opcoes": null
+    }
+  ],
+  "fechamento_titulo": "título da seção de fechamento/reflexão",
+  "fechamento_texto": "texto de fechamento reflexivo, que convide o aluno a continuar pensando sobre o tema (2-3 parágrafos)",
+  "musica": ${extras.includes('musica_pedagogica') ? '{"tipo":"rap/cordel/paródia","letra":"letra completa com tema pedagógico, 2 estrofes + refrão"}' : 'null'},
+  "orientacao_professor": ${extras.includes('plano_de_aula') ? '"orientações completas: objetivo, desenvolvimento (3 etapas), recursos, avaliação e habilidades BNCC relacionadas"' : '"dica rápida de como aplicar esta apostila em sala (2-3 linhas)"'},
+  "palavras_chave": ["palavra1","palavra2","palavra3","palavra4"]
+}
+
+Gere entre 4 e 6 atividades variadas. Para múltipla escolha use tipo_resposta:"opcoes" e preencha "opcoes":["A) ...","B) ...","C) ...","D) ..."]. Para produção escrita use tipo_resposta:"caixa". Para complete/V ou F use tipo_resposta:"linhas".`;
+  }
+
+  function renderApostila(d, tema, nivel, disciplina) {
+    const date = new Date().toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
+    const docEl = document.getElementById('apostila-doc');
+
+    let pages = [];
+
+    // ── CAPA ──
+    pages.push(`
+      <div class="ap-page">
+        <div class="ap-capa">
+          <div class="ap-capa-top">
+            <div class="ap-capa-escola">DoceriaPedagógica — Material Didático</div>
+            <div class="ap-capa-tag">${d.disciplina || disciplina || tema}</div>
+            <div class="ap-capa-title">${d.titulo || tema}</div>
+            <div class="ap-capa-sub">${d.subtitulo || ''}</div>
+          </div>
+          <div class="ap-capa-bottom">
+            <div class="ap-capa-info">
+              Nível: ${d.nivel || nivel}<br>
+              Data: ${date}<br>
+              Nome: ___________________________
+            </div>
+            <div class="ap-capa-logo">DoceriaPedagógica</div>
+          </div>
+        </div>
+      </div>`);
+
+    // ── INTRODUÇÃO ──
+    const paragsIntro = (d.introducao_texto || '').split('\n').filter(p => p.trim());
+    let introHtml = paragsIntro.map(p => `<p class="ap-text">${p.trim()}</p>`).join('');
+
+    let destaqueHtml = '';
+    if (d.destaque) {
+      destaqueHtml = `
+        <div class="ap-destaque">
+          <div class="ap-destaque-label">💡 ${d.destaque.titulo || 'Destaque'}</div>
+          <div class="ap-destaque-text">${d.destaque.texto || ''}</div>
+        </div>`;
+    }
+
+    let mapaHtml = '';
+    if (d.mapa_mental) {
+      const ramos = (d.mapa_mental.ramos || []).map(r =>
+        `<div class="ap-mapa-item">${r}</div>`).join('');
+      mapaHtml = `
+        <div class="ap-section">
+          <div class="ap-section-label">Mapa Mental</div>
+          <div class="ap-mapa">
+            <div class="ap-mapa-center">${d.mapa_mental.centro || d.titulo}</div>
+            <div class="ap-mapa-grid">${ramos}</div>
+          </div>
+        </div>`;
+    }
+
+    pages.push(`
+      <div class="ap-page">
+        <div class="ap-body">
+          <div class="ap-section">
+            <div class="ap-section-label">Introdução</div>
+            <div class="ap-section-title">${d.introducao_titulo || 'Vamos começar'}</div>
+            ${introHtml}
+            ${destaqueHtml}
+          </div>
+          ${mapaHtml}
+        </div>
+        <div class="ap-page-footer">
+          <span class="ap-footer-logo">DoceriaPedagógica</span>
+          <span>${d.titulo || tema} • ${d.nivel || nivel}</span>
+          <span>Pág. 2</span>
+        </div>
+      </div>`);
+
+    // ── ATIVIDADES (divididas em 2 páginas) ──
+    const ativs = d.atividades || [];
+    const half = Math.ceil(ativs.length / 2);
+    const groups = [ativs.slice(0, half), ativs.slice(half)];
+
+    groups.forEach((group, gi) => {
+      if (!group.length) return;
+      let ativsHtml = group.map((at, i) => {
+        let resHtml = '';
+        if (at.tipo_resposta === 'caixa') {
+          resHtml = `<div class="ap-answer-box">Espaço para resposta</div>`;
+        } else if (at.tipo_resposta === 'opcoes' && at.opcoes?.length) {
+          resHtml = `<div class="ap-opcoes">${at.opcoes.map((op,oi) => `
+            <div class="ap-opcao">
+              <div class="ap-opcao-bubble">${String.fromCharCode(65+oi)}</div>
+              <span>${op.replace(/^[A-D]\)\s*/,'')}</span>
+            </div>`).join('')}</div>`;
+        } else {
+          const n = at.linhas || 3;
+          resHtml = `<div class="ap-answer-lines">${Array(n).fill('<div class="ap-answer-line"></div>').join('')}</div>`;
+        }
+
+        return `
+          <div class="ap-activity">
+            <div class="ap-activity-header">
+              <div class="ap-activity-num">${at.numero || i+1}</div>
+              <div class="ap-activity-type">${at.tipo || 'Atividade'}</div>
+            </div>
+            <div class="ap-activity-q">${at.enunciado || ''}</div>
+            ${resHtml}
+          </div>`;
+      }).join('');
+
+      pages.push(`
+        <div class="ap-page">
+          <div class="ap-body">
+            <div class="ap-section">
+              <div class="ap-section-label">Atividades — Parte ${gi+1}</div>
+              ${ativsHtml}
+            </div>
+          </div>
+          <div class="ap-page-footer">
+            <span class="ap-footer-logo">DoceriaPedagógica</span>
+            <span>${d.titulo || tema} • ${d.nivel || nivel}</span>
+            <span>Pág. ${gi+3}</span>
+          </div>
+        </div>`);
+    });
+
+    // ── MÚSICA (se houver) ──
+    if (d.musica) {
+      const versos = (d.musica.letra || '').split('\n').filter(v => v.trim());
+      pages.push(`
+        <div class="ap-page">
+          <div class="ap-body">
+            <div class="ap-section">
+              <div class="ap-section-label">🎵 ${d.musica.tipo || 'Música pedagógica'}</div>
+              <div class="ap-section-title">Aprendendo com música</div>
+              <div style="background:var(--gold-pale);border-radius:10px;padding:24px 28px;border-left:4px solid var(--gold);">
+                ${versos.map(v => `<p style="font-size:14px;line-height:2;color:var(--text-mid);">${v}</p>`).join('')}
+              </div>
+            </div>
+          </div>
+          <div class="ap-page-footer">
+            <span class="ap-footer-logo">DoceriaPedagógica</span>
+            <span>${d.titulo || tema}</span>
+            <span>Pág. ${pages.length + 1}</span>
+          </div>
+        </div>`);
+    }
+
+    // ── FECHAMENTO ──
+    const paragsFech = (d.fechamento_texto || '').split('\n').filter(p => p.trim());
+    let orientHtml = '';
+    if (d.orientacao_professor) {
+      orientHtml = `
+        <div class="ap-orientacao">
+          <div class="ap-orientacao-label">💡 ${isOn('togPlano') ? 'Plano de aula & orientações' : 'Orientação ao professor'}</div>
+          <div class="ap-orientacao-text">${d.orientacao_professor}</div>
+        </div>`;
+    }
+
+    pages.push(`
+      <div class="ap-page">
+        <div class="ap-fechamento">
+          <div class="ap-fechamento-label">Fechamento</div>
+          <div class="ap-fechamento-title">${d.fechamento_titulo || 'Para refletir'}</div>
+          ${paragsFech.map(p => `<p class="ap-fechamento-text">${p.trim()}</p>`).join('')}
+        </div>
+        <div class="ap-body-sm">
+          ${orientHtml}
+          ${d.palavras_chave?.length ? `
+            <div style="margin-top:16px;">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Palavras-chave</div>
+              <div style="display:flex;flex-wrap:wrap;gap:7px;">
+                ${d.palavras_chave.map(p => `<span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text-muted);">${p}</span>`).join('')}
+              </div>
+            </div>` : ''}
+        </div>
+        <div class="ap-page-footer">
+          <span class="ap-footer-logo">DoceriaPedagógica</span>
+          <span>Material gerado por IA com qualidade pedagógica • ${date}</span>
+          <span>Pág. ${pages.length + 1}</span>
+        </div>
+      </div>`);
+
+    docEl.innerHTML = pages.join('');
+
+    const total = pages.length;
+    document.getElementById('pagesCount').textContent = total;
+    document.getElementById('phTitle').textContent = d.titulo || tema;
+    document.getElementById('phMeta').textContent = `${d.nivel || nivel} • ${d.disciplina || disciplina || tema} • ${date} • ${total} páginas`;
+
+    document.getElementById('docWrap').classList.add('show');
+    document.getElementById('prevHeader').classList.add('show');
+    document.getElementById('pagesPill').classList.add('show');
+    document.getElementById('prevEmpty').style.display = 'none';
+    document.getElementById('docWrap').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  async function downloadPDF() {
+    const pdfBtn = document.getElementById('pdfBtn');
+    pdfBtn.disabled = true;
+    pdfBtn.textContent = '⏳ Gerando PDF...';
+
+    const el = document.getElementById('apostila-doc');
+    const titulo = (document.getElementById('phTitle').textContent || 'apostila')
+      .replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_');
+
+    try {
+      await html2pdf().set({
+        margin: [8, 8, 8, 8],
+        filename: `DoceriaPedagogica_${titulo}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).from(el).save();
+    } catch(e) { console.error(e); }
+
+    pdfBtn.disabled = false;
+    pdfBtn.textContent = '⬇ Baixar PDF';
+  }
+
+  function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+</script>
+</body>
+</html>
