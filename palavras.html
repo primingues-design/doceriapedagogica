@@ -619,7 +619,7 @@ Regras: palavras em MAIÚSCULO sem acento, 4 a 12 letras, sem espaços, sem acen
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-5',
       max_tokens: 1000,
       system: 'Você é um especialista em educação. Retorne APENAS JSON válido, sem markdown, sem texto adicional.',
       messages: [{ role: 'user', content: prompt }]
@@ -643,7 +643,7 @@ Retorne SOMENTE JSON: {"PALAVRA1":"dica curta","PALAVRA2":"..."}`;
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-5',
       max_tokens: 1000,
       system: 'Retorne APENAS JSON válido, sem markdown.',
       messages: [{ role: 'user', content: prompt }]
