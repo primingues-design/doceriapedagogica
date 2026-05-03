@@ -288,7 +288,8 @@
 
   /* CAPA */
   .ap-capa {
-    background: var(--ink);
+    background: white;
+    border: 3px solid var(--gold);
     min-height: 420px;
     display: flex; flex-direction: column;
     justify-content: space-between;
@@ -313,7 +314,7 @@
   .ap-capa-escola {
     font-size: 10px; font-weight: 600;
     letter-spacing: 0.12em; text-transform: uppercase;
-    color: rgba(250,247,242,0.35); margin-bottom: 32px;
+    color: var(--text-muted); margin-bottom: 32px;
   }
   .ap-capa-tag {
     display: inline-block;
@@ -328,18 +329,18 @@
   .ap-capa-title {
     font-family: 'Playfair Display', serif;
     font-size: 36px; font-weight: 900; line-height: 1.15;
-    color: var(--cream); margin-bottom: 12px;
+    color: var(--ink); margin-bottom: 12px;
   }
   .ap-capa-title em { color: var(--gold-light); font-style: italic; }
-  .ap-capa-sub { font-size: 15px; color: rgba(250,247,242,0.5); line-height: 1.5; }
+  .ap-capa-sub { font-size: 15px; color: var(--text-muted); line-height: 1.5; }
   .ap-capa-bottom {
     display: flex; align-items: center; justify-content: space-between;
     border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px;
   }
-  .ap-capa-info { font-size: 12px; color: rgba(250,247,242,0.35); line-height: 1.8; }
+  .ap-capa-info { font-size: 12px; color: var(--text-muted); line-height: 1.8; }
   .ap-capa-logo {
     font-family: 'Playfair Display', serif;
-    font-size: 16px; font-weight: 900; color: var(--gold-light);
+    font-size: 16px; font-weight: 900; color: var(--gold);
   }
 
   /* BODY PAGES */
@@ -443,19 +444,21 @@
 
   /* fechamento */
   .ap-fechamento {
-    background: var(--teal);
-    padding: 32px 40px; color: var(--cream);
+    background: var(--teal-pale);
+    border: 2px solid var(--teal);
+    border-radius: 0 0 12px 12px;
+    padding: 32px 40px; color: var(--teal);
   }
   .ap-fechamento-label {
     font-size: 10px; font-weight: 700;
     letter-spacing: 0.1em; text-transform: uppercase;
-    color: rgba(250,247,242,0.5); margin-bottom: 10px;
+    color: var(--teal-light); margin-bottom: 10px;
   }
   .ap-fechamento-title {
     font-family: 'Playfair Display', serif;
-    font-size: 20px; font-weight: 700; margin-bottom: 10px;
+    font-size: 20px; font-weight: 700; margin-bottom: 10px; color: var(--teal);
   }
-  .ap-fechamento-text { font-size: 13px; line-height: 1.8; color: rgba(250,247,242,0.75); }
+  .ap-fechamento-text { font-size: 13px; line-height: 1.8; color: var(--teal); }
 
   /* page footer */
   .ap-page-footer {
@@ -717,8 +720,8 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-5',
-          max_tokens: 8000,
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
           system: `Você é uma especialista em educação brasileira, com experiência real em sala de aula, elaboração de materiais didáticos, EJA, educação infantil e ensino de idiomas.
 Gere apostilas pedagógicas completas, bem estruturadas e aplicáveis.
 REGRAS:
