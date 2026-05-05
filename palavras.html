@@ -202,34 +202,35 @@
   #puzzle-doc { background: white; font-family: 'Outfit', sans-serif; border-radius: 12px; box-shadow: 0 6px 32px rgba(0,0,0,0.08); overflow: hidden; }
 
   .doc-header {
-    background: var(--ink); padding: 28px 40px 22px;
+    background: white; padding: 28px 40px 22px;
+    border-bottom: 3px solid var(--gold);
     position: relative; overflow: hidden;
   }
   .doc-header::after {
     content: attr(data-type);
     position: absolute; right: 30px; bottom: -8px;
-    font-size: 80px; color: rgba(255,255,255,0.04);
+    font-size: 80px; color: rgba(200,150,62,0.06);
     font-family: 'Playfair Display', serif; line-height: 1;
   }
   .doc-header-tag {
     display: inline-block;
-    background: rgba(200,150,62,0.15); border: 1px solid rgba(200,150,62,0.3);
-    color: var(--gold-light); font-size: 10px; font-weight: 700;
+    background: var(--gold-pale); border: 1px solid rgba(200,150,62,0.4);
+    color: var(--gold); font-size: 10px; font-weight: 700;
     letter-spacing: 0.08em; text-transform: uppercase;
     padding: 4px 12px; border-radius: 20px; margin-bottom: 10px;
   }
   .doc-header-title {
     font-family: 'Playfair Display', serif;
-    font-size: 24px; font-weight: 900; color: var(--cream); margin-bottom: 6px;
+    font-size: 24px; font-weight: 900; color: var(--ink); margin-bottom: 6px;
   }
-  .doc-header-sub { font-size: 13px; color: rgba(250,247,242,0.45); }
+  .doc-header-sub { font-size: 13px; color: var(--text-muted); }
   .doc-header-meta {
     display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap;
   }
   .doc-header-badge {
-    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+    background: var(--warm); border: 1px solid var(--border-mid);
     border-radius: 6px; padding: 3px 10px;
-    font-size: 11px; color: rgba(250,247,242,0.6);
+    font-size: 11px; color: var(--text-muted);
   }
 
   .doc-body { padding: 32px 40px; }
@@ -619,8 +620,8 @@ Regras: palavras em MAIÚSCULO sem acento, 4 a 12 letras, sem espaços, sem acen
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-5',
-      max_tokens: 1000,
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 4000,
       system: 'Você é um especialista em educação. Retorne APENAS JSON válido, sem markdown, sem texto adicional.',
       messages: [{ role: 'user', content: prompt }]
     })
@@ -643,7 +644,7 @@ Retorne SOMENTE JSON: {"PALAVRA1":"dica curta","PALAVRA2":"..."}`;
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-5',
+      model: 'claude-sonnet-4-20250514',
       max_tokens: 1000,
       system: 'Retorne APENAS JSON válido, sem markdown.',
       messages: [{ role: 'user', content: prompt }]
@@ -911,28 +912,30 @@ function buildCrossword(words, clues, tema, nivel) {
 
 function renderCrossword(grid, placements, clues, tema, nivel, minR, maxR, minC, maxC) {
   const date = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-  const rows = maxR - minR + 1;
   const cols = maxC - minC + 1;
 
   // number cells
   const numMap = {};
   placements.forEach(p => { numMap[`${p.r},${p.c}`] = p.num; });
 
-  // Build grid HTML
-  let cellsHtml = '';
-  for (let r=minR; r<=maxR; r++) {
-    for (let c=minC; c<=maxC; c++) {
-      const val = grid[r][c];
-      const num = numMap[`${r},${c}`];
-      if (!val) {
-        cellsHtml += `<div class="cw-cell black"></div>`;
-      } else {
-        cellsHtml += `<div class="cw-cell white">
-          ${num ? `<div class="cw-cell-num">${num}</div>` : ''}
-          <div class="cw-cell-letter">${showingAnswers ? val : ''}</div>
-        </div>`;
+  // Build grid without answers (aluno)
+  function buildGrid(showLetters) {
+    let html = '';
+    for (let r=minR; r<=maxR; r++) {
+      for (let c=minC; c<=maxC; c++) {
+        const val = grid[r][c];
+        const num = numMap[`${r},${c}`];
+        if (!val) {
+          html += `<div class="cw-cell black"></div>`;
+        } else {
+          html += `<div class="cw-cell white">
+            ${num ? `<div class="cw-cell-num">${num}</div>` : ''}
+            <div class="cw-cell-letter" style="color:${showLetters?'var(--teal)':'transparent'}">${val}</div>
+          </div>`;
+        }
       }
     }
+    return html;
   }
 
   // clues
@@ -949,57 +952,88 @@ function renderCrossword(grid, placements, clues, tema, nivel, minR, maxR, minC,
     return `<div class="clue-item"><span class="clue-num">${p.num}↓</span><span>${clue}</span></div>`;
   }).join('');
 
-  // gabarito
-  const gabaritoHtml = placements.map(p =>
+  // gabarito lista
+  const gabaritoLista = placements.map(p =>
     `<div class="gabarito-item"><span>${p.num}${p.dir==='H'?'→':'↓'}</span> ${p.word}</div>`
   ).join('');
 
-  document.getElementById('puzzle-doc').innerHTML = `
-    <div class="doc-header" data-type="🔤">
-      <div class="doc-header-tag">Cruzadinha</div>
-      <div class="doc-header-title">${tema}</div>
-      <div class="doc-header-sub">Leia as dicas e complete a cruzadinha</div>
-      <div class="doc-header-meta">
-        <span class="doc-header-badge">📚 ${nivel}</span>
-        <span class="doc-header-badge">🔤 ${placements.length} palavras</span>
-        <span class="doc-header-badge">📅 ${date}</span>
-        <span class="doc-header-badge">Nome: ____________________</span>
-      </div>
-    </div>
-    <div class="doc-body">
-      <div class="cw-layout">
-        <div class="cw-grid-wrap">
-          <div class="cw-grid" style="grid-template-columns:repeat(${cols},34px);" id="cwGrid">
-            ${cellsHtml}
-          </div>
-        </div>
-        <div class="clues-wrap">
-          <div class="clues-section">
-            <div class="clues-label">Horizontais →</div>
-            ${hClues || '<div style="font-size:12px;color:var(--text-muted);">Nenhuma</div>'}
-          </div>
-          <div class="clues-section">
-            <div class="clues-label">Verticais ↓</div>
-            ${vClues || '<div style="font-size:12px;color:var(--text-muted);">Nenhuma</div>'}
-          </div>
+  // PAGE 1 — aluno (sem respostas)
+  const page1 = `
+    <div style="background:white;border-radius:12px;box-shadow:0 6px 32px rgba(0,0,0,0.08);overflow:hidden;margin-bottom:20px;">
+      <div class="doc-header" data-type="🔤">
+        <div class="doc-header-tag">Cruzadinha — Para o Aluno</div>
+        <div class="doc-header-title">${tema}</div>
+        <div class="doc-header-sub">Leia as dicas e complete a cruzadinha</div>
+        <div class="doc-header-meta">
+          <span class="doc-header-badge">📚 ${nivel}</span>
+          <span class="doc-header-badge">🔤 ${placements.length} palavras</span>
+          <span class="doc-header-badge">📅 ${date}</span>
+          <span class="doc-header-badge">Nome: ____________________</span>
         </div>
       </div>
-
-      <div class="gabarito-section" id="gabaritoSection" style="${showingAnswers?'':'display:none'}">
-        <div class="gabarito-title">🔑 Gabarito</div>
-        <div class="gabarito-grid">${gabaritoHtml}</div>
+      <div class="doc-body">
+        <div class="cw-layout">
+          <div class="cw-grid-wrap">
+            <div class="cw-grid" style="grid-template-columns:repeat(${cols},34px);">
+              ${buildGrid(false)}
+            </div>
+          </div>
+          <div class="clues-wrap">
+            <div class="clues-section">
+              <div class="clues-label">Horizontais →</div>
+              ${hClues || '<div style="font-size:12px;color:var(--text-muted);">Nenhuma</div>'}
+            </div>
+            <div class="clues-section">
+              <div class="clues-label">Verticais ↓</div>
+              ${vClues || '<div style="font-size:12px;color:var(--text-muted);">Nenhuma</div>'}
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="doc-footer">
-      <span class="doc-footer-logo">DoceriaPedagógica</span>
-      <span>Cruzadinha gerada com IA e algoritmo real • ${date}</span>
-      <span>1 crédito</span>
+      <div class="doc-footer">
+        <span class="doc-footer-logo">DoceriaPedagógica</span>
+        <span>Cruzadinha gerada com IA • ${date}</span>
+        <span>Página 1 de 2</span>
+      </div>
     </div>`;
 
+  // PAGE 2 — gabarito do professor (com respostas)
+  const page2 = `
+    <div style="background:white;border-radius:12px;box-shadow:0 6px 32px rgba(0,0,0,0.08);overflow:hidden;">
+      <div style="background:var(--teal-pale);border-bottom:3px solid var(--teal);padding:20px 40px;">
+        <div style="display:inline-block;background:var(--teal);color:white;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:8px;">🔑 Gabarito — Uso do Professor</div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--teal);">${tema}</div>
+        <div style="font-size:12px;color:var(--teal-light);margin-top:4px;">Este gabarito é de uso exclusivo do professor</div>
+      </div>
+      <div class="doc-body">
+        <div class="cw-layout">
+          <div class="cw-grid-wrap">
+            <div class="cw-grid" style="grid-template-columns:repeat(${cols},34px);">
+              ${buildGrid(true)}
+            </div>
+          </div>
+          <div class="clues-wrap">
+            <div class="clues-section">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;display:flex;align-items:center;gap:6px;">Respostas<span style="flex:1;height:1px;background:var(--teal-pale);display:block;"></span></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                ${gabaritoLista}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="doc-footer">
+        <span class="doc-footer-logo">DoceriaPedagógica</span>
+        <span>Gabarito do professor • ${date}</span>
+        <span>Página 2 de 2</span>
+      </div>
+    </div>`;
+
+  document.getElementById('puzzle-doc').innerHTML = page1 + page2;
   lastPlacements = placements;
 
   document.getElementById('phTitle').textContent = `Cruzadinha — ${tema}`;
-  document.getElementById('phMeta').textContent = `${nivel} • ${placements.length} palavras • ${date}`;
+  document.getElementById('phMeta').textContent = `${nivel} • ${placements.length} palavras • 2 páginas (aluno + gabarito) • ${date}`;
   document.getElementById('prevHeader').classList.add('show');
   document.getElementById('docWrap').classList.add('show');
   document.getElementById('docWrap').scrollIntoView({behavior:'smooth',block:'start'});
