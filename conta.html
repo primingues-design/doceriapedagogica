@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acesso — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0e0c;
+    --cream: #faf7f2;
+    --warm: #f5f0e8;
+    --gold: #c8963e;
+    --gold-light: #e8b86d;
+    --gold-pale: #fdf3e3;
+    --teal: #2d6e6e;
+    --teal-light: #4a9b9b;
+    --teal-pale: #e8f4f4;
+    --coral: #d95f3b;
+    --coral-pale: #fdeee9;
+    --green: #2e7d4f;
+    --green-pale: #e8f5ee;
+    --text: #1a1917;
+    --text-mid: #4a4845;
+    --text-muted: #8a8785;
+    --border: rgba(15,14,12,0.1);
+    --border-mid: rgba(15,14,12,0.18);
+    --mp-blue: #009ee3;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--warm);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── AUTH LAYOUT ── */
+  .auth-layout {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .auth-left {
+    background: var(--ink);
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .auth-left::before {
+    content: '';
+    position: absolute; top: -150px; right: -150px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(200,150,62,0.15) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .auth-left::after {
+    content: '✦';
+    position: absolute; bottom: 40px; left: 50px;
+    font-size: 160px;
+    color: rgba(255,255,255,0.03);
+    font-family: 'Playfair Display', serif;
+    line-height: 1;
+  }
+
+  .auth-logo {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none;
+  }
+
+  .auth-logo-mark {
+    width: 36px; height: 36px;
+    background: var(--gold); border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  .auth-logo-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 900;
+    color: var(--cream);
+  }
+
+  .auth-left-mid { position: relative; z-index: 1; }
+
+  .auth-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 900; line-height: 1.2;
+    color: var(--cream); margin-bottom: 16px;
+  }
+
+  .auth-headline em { color: var(--gold-light); font-style: italic; }
+
+  .auth-sub {
+    font-size: 15px; line-height: 1.7;
+    color: rgba(250,247,242,0.55);
+    max-width: 360px; margin-bottom: 32px;
+  }
+
+  .auth-features { display: flex; flex-direction: column; gap: 12px; }
+
+  .auth-feature {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 14px; color: rgba(250,247,242,0.7);
+  }
+
+  .auth-feature-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+
+  .auth-left-bottom {
+    font-size: 12px; color: rgba(250,247,242,0.25);
+    position: relative; z-index: 1;
+  }
+
+  /* ── AUTH FORM SIDE ── */
+  .auth-right {
+    background: var(--cream);
+    display: flex; align-items: center; justify-content: center;
+    padding: 40px;
+  }
+
+  .auth-box {
+    width: 100%; max-width: 400px;
+  }
+
+  .auth-box-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 900;
+    margin-bottom: 6px;
+  }
+
+  .auth-box-sub {
+    font-size: 14px; color: var(--text-muted);
+    margin-bottom: 32px; line-height: 1.5;
+  }
+
+  .form-field { margin-bottom: 16px; }
+
+  .form-label {
+    font-size: 11px; font-weight: 600;
+    color: var(--text-muted); letter-spacing: 0.07em;
+    text-transform: uppercase; display: block; margin-bottom: 6px;
+  }
+
+  .form-input {
+    width: 100%; background: white;
+    border: 1.5px solid var(--border-mid);
+    border-radius: 9px; padding: 12px 14px;
+    font-size: 14px; color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+  }
+
+  .form-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(200,150,62,0.1);
+  }
+
+  .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .btn-main {
+    width: 100%; background: var(--gold); color: white;
+    border: none; padding: 14px; border-radius: 10px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.2s; margin-top: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+
+  .btn-main:hover { background: #b5842e; transform: translateY(-1px); }
+  .btn-main:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .auth-divider {
+    text-align: center; margin: 20px 0;
+    font-size: 12px; color: var(--text-muted);
+    position: relative;
+  }
+
+  .auth-divider::before, .auth-divider::after {
+    content: ''; position: absolute; top: 50%;
+    width: 40%; height: 1px; background: var(--border);
+  }
+
+  .auth-divider::before { left: 0; }
+  .auth-divider::after { right: 0; }
+
+  .auth-switch {
+    text-align: center; font-size: 13px; color: var(--text-muted);
+    margin-top: 20px;
+  }
+
+  .auth-switch a {
+    color: var(--gold); font-weight: 600; cursor: pointer;
+    text-decoration: none;
+  }
+
+  .auth-switch a:hover { text-decoration: underline; }
+
+  .msg-error {
+    background: var(--coral-pale);
+    border: 1px solid rgba(217,95,59,0.3);
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 13px; color: var(--coral);
+    margin-bottom: 16px; display: none;
+  }
+  .msg-error.show { display: block; }
+
+  /* ── DASHBOARD LAYOUT ── */
+  .dash-layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .dash-sidebar {
+    background: var(--ink);
+    padding: 24px 16px;
+    display: flex; flex-direction: column;
+    position: sticky; top: 0; height: 100vh;
+  }
+
+  .dash-logo {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 8px; margin-bottom: 32px;
+    text-decoration: none;
+  }
+
+  .dash-logo-mark {
+    width: 30px; height: 30px;
+    background: var(--gold); border-radius: 7px;
+    display: flex; align-items: center; justify-content: center; font-size: 13px;
+  }
+
+  .dash-logo-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; font-weight: 900; color: var(--cream);
+  }
+
+  .dash-nav { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+
+  .dash-nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 8px; cursor: pointer;
+    font-size: 13px; color: rgba(250,247,242,0.55);
+    transition: all 0.15s; border: none; background: transparent;
+    font-family: 'Outfit', sans-serif; width: 100%; text-align: left;
+    text-decoration: none;
+  }
+
+  .dash-nav-item:hover { background: rgba(255,255,255,0.06); color: var(--cream); }
+  .dash-nav-item.active { background: rgba(200,150,62,0.12); color: var(--gold-light); }
+
+  .dash-nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+  .dash-nav-sep {
+    height: 1px; background: rgba(255,255,255,0.07);
+    margin: 12px 8px;
+  }
+
+  .dash-plan-badge {
+    margin: 16px 8px 8px;
+    background: rgba(200,150,62,0.1);
+    border: 1px solid rgba(200,150,62,0.2);
+    border-radius: 10px; padding: 14px;
+  }
+
+  .dash-plan-name {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--gold-light); margin-bottom: 4px;
+  }
+
+  .dash-plan-credits {
+    font-size: 22px; font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    color: var(--cream); margin-bottom: 2px;
+  }
+
+  .dash-plan-sub { font-size: 11px; color: rgba(250,247,242,0.4); }
+
+  .dash-plan-bar {
+    height: 4px; background: rgba(255,255,255,0.1);
+    border-radius: 2px; margin-top: 10px; overflow: hidden;
+  }
+
+  .dash-plan-bar-fill {
+    height: 100%; background: var(--gold);
+    border-radius: 2px; transition: width 0.5s;
+  }
+
+  .dash-user {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; margin-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    cursor: pointer;
+  }
+
+  .dash-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: white;
+    font-family: 'Playfair Display', serif;
+    flex-shrink: 0;
+  }
+
+  .dash-user-name { font-size: 12px; font-weight: 500; color: var(--cream); }
+  .dash-user-email { font-size: 11px; color: rgba(250,247,242,0.35); }
+
+  .btn-logout {
+    font-size: 11px; color: rgba(250,247,242,0.3);
+    background: none; border: none; cursor: pointer;
+    font-family: 'Outfit', sans-serif; text-align: left;
+    padding: 4px 12px; transition: color 0.2s;
+  }
+
+  .btn-logout:hover { color: var(--coral); }
+
+  /* MAIN CONTENT */
+  .dash-content { background: var(--warm); overflow-y: auto; }
+
+  .dash-topbar {
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .dash-page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 900;
+  }
+
+  .dash-page-sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+  .dash-topbar-right { display: flex; align-items: center; gap: 12px; }
+
+  .credits-chip {
+    display: flex; align-items: center; gap: 7px;
+    background: var(--gold-pale);
+    border: 1px solid rgba(200,150,62,0.25);
+    padding: 7px 14px; border-radius: 20px;
+    font-size: 13px; font-weight: 600; color: var(--gold);
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .credits-chip:hover { background: #fcebd0; }
+
+  .dash-body { padding: 28px 32px; }
+
+  /* TABS */
+  .dash-tabs {
+    display: flex; gap: 4px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px; margin-bottom: 28px;
+    width: fit-content;
+  }
+
+  .dash-tab {
+    padding: 8px 20px; border-radius: 7px;
+    font-size: 13px; font-weight: 500;
+    color: var(--text-muted); cursor: pointer;
+    transition: all 0.15s; border: none; background: transparent;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .dash-tab.active { background: var(--ink); color: var(--cream); }
+
+  /* CARDS */
+  .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
+
+  .stat-card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px;
+  }
+
+  .stat-label { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+
+  .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 900; color: var(--ink);
+  }
+
+  .stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  /* QUICK ACTIONS */
+  .quick-title {
+    font-size: 12px; font-weight: 600;
+    color: var(--text-muted); letter-spacing: 0.07em;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+
+  .quick-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 28px; }
+
+  .quick-card {
+    background: var(--cream); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px; cursor: pointer;
+    transition: all 0.2s; text-decoration: none; display: block;
+    position: relative; overflow: hidden;
+  }
+
+  .quick-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.09); border-color: var(--border-mid); }
+
+  .quick-card-accent { position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 12px 12px 0 0; }
+
+  .quick-card-icon { font-size: 24px; margin-bottom: 10px; }
+  .quick-card-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .quick-card-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+  .quick-card-cost {
+    position: absolute; top: 14px; right: 14px;
+    background: var(--warm); border: 1px solid var(--border);
+    border-radius: 10px; padding: 3px 8px;
+    font-size: 10px; font-weight: 700; color: var(--text-muted);
+  }
+
+  /* HISTORY */
+  .history-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .history-item {
+    background: var(--cream); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 18px;
+    display: flex; align-items: center; gap: 14px;
+    transition: border-color 0.15s;
+  }
+
+  .history-item:hover { border-color: var(--border-mid); }
+
+  .history-icon {
+    width: 36px; height: 36px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+
+  .history-meta { flex: 1; }
+  .history-name { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+  .history-info { font-size: 11px; color: var(--text-muted); }
+
+  .history-tag {
+    font-size: 11px; padding: 4px 10px;
+    border-radius: 20px; border: 1px solid;
+    white-space: nowrap; font-weight: 600;
+  }
+
+  .history-dl {
+    font-size: 12px; color: var(--text-muted);
+    background: none; border: none; cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    padding: 6px 10px; border-radius: 6px;
+    transition: background 0.15s;
+  }
+
+  .history-dl:hover { background: var(--warm); }
+
+  /* ── PLANS SCREEN ── */
+  .plans-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 32px; }
+
+  .plan-card {
+    background: var(--cream); border: 1.5px solid var(--border);
+    border-radius: 16px; padding: 28px 24px;
+    position: relative; transition: all 0.2s;
+  }
+
+  .plan-card:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.08); }
+
+  .plan-card.current { border-color: var(--teal); }
+  .plan-card.featured { border-color: var(--gold); background: var(--ink); color: var(--cream); }
+
+  .plan-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 4px 14px; border-radius: 20px; white-space: nowrap;
+  }
+
+  .plan-badge.popular { background: var(--gold); color: white; }
+  .plan-badge.current-badge { background: var(--teal); color: white; }
+
+  .plan-name {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;
+  }
+
+  .plan-card.featured .plan-name { color: rgba(250,247,242,0.5); }
+
+  .plan-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px; font-weight: 900; line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .plan-card.featured .plan-price { color: var(--gold-light); }
+
+  .plan-period { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+  .plan-card.featured .plan-period { color: rgba(250,247,242,0.4); }
+
+  .plan-credits-box {
+    background: var(--warm); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .plan-card.featured .plan-credits-box {
+    background: rgba(255,255,255,0.07);
+  }
+
+  .plan-credits-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 900; color: var(--teal);
+  }
+
+  .plan-card.featured .plan-credits-num { color: var(--teal-light); }
+
+  .plan-credits-label { font-size: 12px; color: var(--text-muted); line-height: 1.3; }
+  .plan-card.featured .plan-credits-label { color: rgba(250,247,242,0.5); }
+
+  .plan-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+
+  .plan-feature {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 13px; color: var(--text-mid);
+  }
+
+  .plan-card.featured .plan-feature { color: rgba(250,247,242,0.7); }
+
+  .plan-check {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--teal-pale); color: var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; flex-shrink: 0;
+  }
+
+  .plan-card.featured .plan-check { background: rgba(74,155,155,0.2); color: var(--teal-light); }
+
+  .btn-plan {
+    width: 100%; padding: 12px; border-radius: 9px;
+    font-size: 13px; font-weight: 600; cursor: pointer; border: none;
+    font-family: 'Outfit', sans-serif; transition: all 0.2s;
+  }
+
+  .btn-plan-outline { background: var(--warm); color: var(--ink); border: 1.5px solid var(--border-mid); }
+  .btn-plan-outline:hover { background: var(--border); }
+  .btn-plan-gold { background: var(--gold); color: white; }
+  .btn-plan-gold:hover { background: #b5842e; }
+  .btn-plan-current { background: var(--teal-pale); color: var(--teal); border: 1.5px solid var(--teal); cursor: default; }
+
+  /* CREDITS PACKS */
+  .credits-section { margin-top: 32px; }
+
+  .credits-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; margin-bottom: 6px;
+  }
+
+  .credits-section-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+
+  .packs-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+
+  .pack-card {
+    background: var(--cream); border: 1.5px solid var(--border);
+    border-radius: 12px; padding: 20px 16px; text-align: center;
+    cursor: pointer; transition: all 0.2s; position: relative;
+  }
+
+  .pack-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .pack-card.best { border-color: var(--gold); }
+
+  .pack-best {
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    background: var(--gold); color: white;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 10px; white-space: nowrap;
+  }
+
+  .pack-credits {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px; font-weight: 900; color: var(--ink); margin-bottom: 4px;
+  }
+
+  .pack-label { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; }
+
+  .pack-price {
+    font-size: 18px; font-weight: 700; color: var(--teal); margin-bottom: 4px;
+  }
+
+  .pack-per { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; }
+
+  .btn-pack {
+    width: 100%; padding: 9px; border-radius: 7px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1.5px solid var(--border-mid);
+    background: var(--warm); color: var(--ink);
+    font-family: 'Outfit', sans-serif; transition: all 0.2s;
+  }
+
+  .btn-pack:hover, .pack-card.best .btn-pack { background: var(--gold); color: white; border-color: var(--gold); }
+
+  /* PAYMENT MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(15,14,12,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center; justify-content: center;
+  }
+
+  .modal-overlay.show { display: flex; }
+
+  .modal {
+    background: var(--cream); border-radius: 20px;
+    padding: 36px; width: 100%; max-width: 460px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.2);
+    position: relative;
+  }
+
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: var(--warm); border: none;
+    width: 32px; height: 32px; border-radius: 50%;
+    cursor: pointer; font-size: 14px; color: var(--text-muted);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+
+  .modal-close:hover { background: var(--border); }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 900; margin-bottom: 6px;
+  }
+
+  .modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+
+  .order-box {
+    background: var(--warm); border-radius: 12px;
+    padding: 16px 18px; margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .order-name { font-size: 14px; font-weight: 600; }
+  .order-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .order-price { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; color: var(--teal); }
+
+  .payment-methods { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+  .pay-method {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px; border-radius: 10px;
+    border: 1.5px solid var(--border-mid);
+    cursor: pointer; transition: all 0.15s; background: white;
+  }
+
+  .pay-method:hover { border-color: var(--mp-blue); background: #f0faff; }
+  .pay-method.selected { border-color: var(--mp-blue); background: #e8f6fd; }
+
+  .pay-method-icon { font-size: 22px; }
+  .pay-method-name { font-size: 13px; font-weight: 600; }
+  .pay-method-sub { font-size: 11px; color: var(--text-muted); }
+
+  .pay-radio {
+    margin-left: auto; width: 18px; height: 18px;
+    border-radius: 50%; border: 2px solid var(--border-mid);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .pay-method.selected .pay-radio {
+    border-color: var(--mp-blue); background: var(--mp-blue);
+  }
+
+  .pay-method.selected .pay-radio::after {
+    content: ''; width: 7px; height: 7px;
+    background: white; border-radius: 50%;
+  }
+
+  .mp-badge {
+    display: flex; align-items: center; gap: 8px;
+    background: #e8f6fd; border: 1px solid rgba(0,158,227,0.2);
+    border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;
+    font-size: 12px; color: #0077b6;
+  }
+
+  .btn-pay {
+    width: 100%; background: var(--mp-blue); color: white;
+    border: none; padding: 15px; border-radius: 10px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: opacity 0.2s;
+  }
+
+  .btn-pay:hover { opacity: 0.88; }
+
+  .modal-note { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 12px; line-height: 1.5; }
+
+  /* PIX SCREEN */
+  .pix-box { text-align: center; }
+
+  .pix-qr {
+    width: 160px; height: 160px;
+    background: white; border: 2px solid var(--border-mid);
+    border-radius: 12px; margin: 16px auto;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: var(--text-muted);
+    position: relative; overflow: hidden;
+  }
+
+  .pix-qr-grid {
+    display: grid; grid-template-columns: repeat(8,1fr);
+    gap: 1px; width: 120px; height: 120px;
+  }
+
+  .pix-cell {
+    border-radius: 1px;
+    background: var(--ink);
+  }
+
+  .pix-key {
+    background: var(--warm); border: 1px solid var(--border-mid);
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 12px; font-family: monospace;
+    color: var(--text-mid); word-break: break-all;
+    margin-bottom: 12px;
+  }
+
+  .btn-copy {
+    background: var(--ink); color: var(--cream);
+    border: none; padding: 11px 24px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    font-family: 'Outfit', sans-serif; transition: opacity 0.2s;
+  }
+
+  .btn-copy:hover { opacity: 0.85; }
+
+  .pix-timer {
+    font-size: 12px; color: var(--coral);
+    margin-top: 12px; font-weight: 600;
+  }
+
+  .pix-waiting {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 13px; color: var(--text-muted); margin-top: 14px;
+  }
+
+  .pulse-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--teal); animation: pdot 1.2s ease-in-out infinite;
+  }
+
+  @keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+  /* SUCCESS */
+  .success-screen { text-align: center; padding: 20px 0; }
+  .success-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--green-pale); border: 2px solid var(--green);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin: 0 auto 16px;
+  }
+
+  .success-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+  .success-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .auth-layout { grid-template-columns: 1fr; }
+    .auth-left { display: none; }
+    .dash-layout { grid-template-columns: 1fr; }
+    .dash-sidebar { display: none; }
+    .stats-row { grid-template-columns: repeat(2,1fr); }
+    .quick-grid { grid-template-columns: 1fr 1fr; }
+    .plans-grid { grid-template-columns: 1fr; }
+    .packs-grid { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     SCREEN: LOGIN
+══════════════════════════════════ -->
+<div class="screen active" id="screen-login">
+  <div class="auth-layout">
+    <div class="auth-left">
+      <a class="auth-logo" href="index.html">
+        <div class="auth-logo-mark">✦</div>
+        <span class="auth-logo-name">DoceriaPedagógica</span>
+      </a>
+
+      <div class="auth-left-mid">
+        <div class="auth-headline">Material pedagógico<br><em>pronto</em> em<br>60 segundos.</div>
+        <div class="auth-sub">A plataforma de IA para professores que respeita seu tempo, sua turma e sua profissão.</div>
+        <div class="auth-features">
+          <div class="auth-feature"><div class="auth-feature-icon">📚</div>Apostilas completas diagramadas</div>
+          <div class="auth-feature"><div class="auth-feature-icon">✏️</div>Atividades para todos os níveis</div>
+          <div class="auth-feature"><div class="auth-feature-icon">🎲</div>Jogos, cruzadinhas e caça-palavras</div>
+          <div class="auth-feature"><div class="auth-feature-icon">📄</div>PDF pronto para impressão</div>
+          <div class="auth-feature"><div class="auth-feature-icon">🇧🇷🇺🇸</div>Português, inglês, espanhol e mais</div>
+        </div>
+      </div>
+
+      <div class="auth-left-bottom">© 2025 DoceriaPedagógica • Feito para educadores brasileiros</div>
+    </div>
+
+    <div class="auth-right">
+      <div class="auth-box">
+        <div class="auth-box-title">Bem-vinda de volta 👋</div>
+        <div class="auth-box-sub">Entre na sua conta para acessar seus materiais</div>
+
+        <div class="msg-error" id="login-error"></div>
+
+        <div class="form-field">
+          <label class="form-label">E-mail</label>
+          <input type="email" class="form-input" id="login-email" placeholder="seuemail@escola.com" />
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Senha</label>
+          <input type="password" class="form-input" id="login-pass" placeholder="••••••••" />
+        </div>
+
+        <div style="text-align:right;margin-bottom:8px;">
+          <a style="font-size:12px;color:var(--gold);cursor:pointer;text-decoration:none;">Esqueci minha senha</a>
+        </div>
+
+        <button class="btn-main" onclick="doLogin()">Entrar na plataforma →</button>
+
+        <div class="auth-divider">ou</div>
+
+        <div class="auth-switch">
+          Não tem conta? <a onclick="showScreen('screen-register')">Cadastre-se grátis</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SCREEN: REGISTER
+══════════════════════════════════ -->
+<div class="screen" id="screen-register">
+  <div class="auth-layout">
+    <div class="auth-left">
+      <a class="auth-logo" href="index.html">
+        <div class="auth-logo-mark">✦</div>
+        <span class="auth-logo-name">DoceriaPedagógica</span>
+      </a>
+      <div class="auth-left-mid">
+        <div class="auth-headline">Comece <em>grátis</em><br>hoje mesmo.</div>
+        <div class="auth-sub">5 materiais gratuitos por mês. Sem cartão de crédito. Cancele quando quiser.</div>
+        <div class="auth-features">
+          <div class="auth-feature"><div class="auth-feature-icon">🎁</div>5 materiais grátis/mês no plano Free</div>
+          <div class="auth-feature"><div class="auth-feature-icon">⚡</div>Geração em menos de 60 segundos</div>
+          <div class="auth-feature"><div class="auth-feature-icon">🔒</div>Seus materiais sempre salvos</div>
+          <div class="auth-feature"><div class="auth-feature-icon">📱</div>Acesse em qualquer dispositivo</div>
+        </div>
+      </div>
+      <div class="auth-left-bottom">© 2025 DoceriaPedagógica</div>
+    </div>
+
+    <div class="auth-right">
+      <div class="auth-box">
+        <div class="auth-box-title">Criar conta gratuita</div>
+        <div class="auth-box-sub">Leva menos de 1 minuto. Sem cartão de crédito.</div>
+
+        <div class="msg-error" id="register-error"></div>
+
+        <div class="input-row">
+          <div class="form-field">
+            <label class="form-label">Nome</label>
+            <input type="text" class="form-input" id="reg-nome" placeholder="Maria" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Sobrenome</label>
+            <input type="text" class="form-input" id="reg-sobrenome" placeholder="Silva" />
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">E-mail</label>
+          <input type="email" class="form-input" id="reg-email" placeholder="seuemail@escola.com" />
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Você é professora/professor de...</label>
+          <select class="form-input" id="reg-nivel">
+            <option value="">Selecione seu nível principal</option>
+            <option>Educação Infantil</option>
+            <option>Fundamental I</option>
+            <option>Fundamental II</option>
+            <option>EJA</option>
+            <option>Ensino Médio</option>
+            <option>Inglês / Idiomas</option>
+            <option>Mais de um nível</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">Senha</label>
+          <input type="password" class="form-input" id="reg-pass" placeholder="Mínimo 6 caracteres" />
+        </div>
+
+        <button class="btn-main" onclick="doRegister()">Criar minha conta grátis →</button>
+
+        <div style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:12px;line-height:1.5;">
+          Ao criar sua conta, você concorda com os <a style="color:var(--gold);">Termos de Uso</a> e <a style="color:var(--gold);">Política de Privacidade</a>.
+        </div>
+
+        <div class="auth-divider">ou</div>
+
+        <div class="auth-switch">
+          Já tem conta? <a onclick="showScreen('screen-login')">Entrar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SCREEN: DASHBOARD
+══════════════════════════════════ -->
+<div class="screen" id="screen-dashboard">
+  <div class="dash-layout">
+
+    <!-- SIDEBAR -->
+    <div class="dash-sidebar">
+      <a class="dash-logo" href="index.html">
+        <div class="dash-logo-mark">✦</div>
+        <span class="dash-logo-name">Doceria</span>
+      </a>
+
+      <nav class="dash-nav">
+        <button class="dash-nav-item active" onclick="switchTab('home')">
+          <span class="dash-nav-icon">🏠</span> Início
+        </button>
+        <button class="dash-nav-item" onclick="window.open('apostila.html')">
+          <span class="dash-nav-icon">📚</span> Gerar Apostila
+        </button>
+        <button class="dash-nav-item" onclick="window.open('gerador.html')">
+          <span class="dash-nav-icon">✏️</span> Gerar Atividade
+        </button>
+        <button class="dash-nav-item">
+          <span class="dash-nav-icon">🎲</span> Jogos
+          <span style="margin-left:auto;font-size:9px;background:var(--gold);color:white;padding:2px 6px;border-radius:8px;font-weight:700;">Em breve</span>
+        </button>
+        <button class="dash-nav-item">
+          <span class="dash-nav-icon">📄</span> Meus materiais
+        </button>
+        <div class="dash-nav-sep"></div>
+        <button class="dash-nav-item" onclick="showScreen('screen-plans')">
+          <span class="dash-nav-icon">⭐</span> Planos e créditos
+        </button>
+        <button class="dash-nav-item">
+          <span class="dash-nav-icon">⚙️</span> Configurações
+        </button>
+      </nav>
+
+      <div class="dash-plan-badge">
+        <div class="dash-plan-name" id="sb-plan-name">Plano Free</div>
+        <div class="dash-plan-credits" id="sb-credits">5</div>
+        <div class="dash-plan-sub">créditos disponíveis</div>
+        <div class="dash-plan-bar">
+          <div class="dash-plan-bar-fill" id="sb-bar" style="width:100%"></div>
+        </div>
+      </div>
+
+      <div class="dash-user">
+        <div class="dash-avatar" id="dash-avatar">M</div>
+        <div>
+          <div class="dash-user-name" id="dash-user-name">Professora</div>
+          <div class="dash-user-email" id="dash-user-email">email@escola.com</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Sair da conta</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="dash-content">
+      <div class="dash-topbar">
+        <div>
+          <div class="dash-page-title" id="dash-greeting">Bom dia, Professora! ☀️</div>
+          <div class="dash-page-sub">Pronta para criar seu próximo material?</div>
+        </div>
+        <div class="dash-topbar-right">
+          <div class="credits-chip" onclick="showScreen('screen-plans')">
+            ✦ <span id="top-credits">5</span> créditos
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-body">
+        <!-- STATS -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-label">Materiais gerados</div>
+            <div class="stat-value" id="stat-total">0</div>
+            <div class="stat-sub">desde o início</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Créditos disponíveis</div>
+            <div class="stat-value" id="stat-credits">5</div>
+            <div class="stat-sub"><a style="color:var(--gold);cursor:pointer;font-size:12px;" onclick="showScreen('screen-plans')">+ Comprar créditos</a></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">PDFs baixados</div>
+            <div class="stat-value" id="stat-pdfs">0</div>
+            <div class="stat-sub">prontos para impressão</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Seu plano</div>
+            <div class="stat-value" style="font-size:20px;" id="stat-plan">Free</div>
+            <div class="stat-sub"><a style="color:var(--gold);cursor:pointer;font-size:12px;" onclick="showScreen('screen-plans')">Ver planos</a></div>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="quick-title">Criar novo material</div>
+        <div class="quick-grid">
+          <a class="quick-card" href="apostila.html">
+            <div class="quick-card-accent" style="background:var(--gold);"></div>
+            <div class="quick-card-cost">2 créditos</div>
+            <div class="quick-card-icon">📚</div>
+            <div class="quick-card-name">Apostila Completa</div>
+            <div class="quick-card-desc">Capa + texto + atividades + fechamento em PDF</div>
+          </a>
+          <a class="quick-card" href="gerador.html">
+            <div class="quick-card-accent" style="background:var(--teal);"></div>
+            <div class="quick-card-cost">1 crédito</div>
+            <div class="quick-card-icon">✏️</div>
+            <div class="quick-card-name">Atividade Avulsa</div>
+            <div class="quick-card-desc">Interpretação, complete, múltipla escolha e mais</div>
+          </a>
+          <a class="quick-card" href="#">
+            <div class="quick-card-accent" style="background:var(--coral);"></div>
+            <div class="quick-card-cost">1 crédito</div>
+            <div class="quick-card-icon">📋</div>
+            <div class="quick-card-name">Plano de Aula</div>
+            <div class="quick-card-desc">BNCC, objetivo, desenvolvimento e avaliação</div>
+          </a>
+          <a class="quick-card" href="#">
+            <div class="quick-card-accent" style="background:#7c6af5;"></div>
+            <div class="quick-card-cost">1 crédito</div>
+            <div class="quick-card-icon">🎲</div>
+            <div class="quick-card-name">Jogo Pedagógico</div>
+            <div class="quick-card-desc">Quiz, trilha, memória e mais</div>
+          </a>
+          <a class="quick-card" href="#">
+            <div class="quick-card-accent" style="background:#3d9e6e;"></div>
+            <div class="quick-card-cost">1 crédito</div>
+            <div class="quick-card-icon">🔤</div>
+            <div class="quick-card-name">Cruzadinha</div>
+            <div class="quick-card-desc">Gerada com as palavras do seu tema</div>
+          </a>
+          <a class="quick-card" href="#">
+            <div class="quick-card-accent" style="background:#e06090;"></div>
+            <div class="quick-card-cost">1 crédito</div>
+            <div class="quick-card-icon">🧠</div>
+            <div class="quick-card-name">Mapa Mental</div>
+            <div class="quick-card-desc">Organização visual do conteúdo</div>
+          </a>
+        </div>
+
+        <!-- HISTORY -->
+        <div class="quick-title">Últimos materiais</div>
+        <div class="history-list" id="history-list">
+          <div style="padding:28px;text-align:center;color:var(--text-muted);background:var(--cream);border-radius:12px;border:1px solid var(--border);">
+            <div style="font-size:32px;margin-bottom:10px;opacity:0.3;">📄</div>
+            <div style="font-size:14px;">Nenhum material gerado ainda.</div>
+            <div style="font-size:12px;margin-top:4px;">Clique em um dos cards acima para começar!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SCREEN: PLANS
+══════════════════════════════════ -->
+<div class="screen" id="screen-plans">
+  <div class="dash-layout">
+    <div class="dash-sidebar">
+      <a class="dash-logo" href="index.html">
+        <div class="dash-logo-mark">✦</div>
+        <span class="dash-logo-name">Doceria</span>
+      </a>
+      <nav class="dash-nav">
+        <button class="dash-nav-item" onclick="showScreen('screen-dashboard')">
+          <span class="dash-nav-icon">🏠</span> Início
+        </button>
+        <button class="dash-nav-item" onclick="window.open('apostila.html')">
+          <span class="dash-nav-icon">📚</span> Gerar Apostila
+        </button>
+        <button class="dash-nav-item" onclick="window.open('gerador.html')">
+          <span class="dash-nav-icon">✏️</span> Gerar Atividade
+        </button>
+        <div class="dash-nav-sep"></div>
+        <button class="dash-nav-item active">
+          <span class="dash-nav-icon">⭐</span> Planos e créditos
+        </button>
+      </nav>
+      <div class="dash-plan-badge">
+        <div class="dash-plan-name" id="sb-plan-name2">Plano Free</div>
+        <div class="dash-plan-credits" id="sb-credits2">5</div>
+        <div class="dash-plan-sub">créditos disponíveis</div>
+      </div>
+      <div class="dash-user">
+        <div class="dash-avatar" id="dash-avatar2">M</div>
+        <div>
+          <div class="dash-user-name" id="dash-user-name2">Professora</div>
+          <div class="dash-user-email" id="dash-user-email2">email@escola.com</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Sair</button>
+    </div>
+
+    <div class="dash-content">
+      <div class="dash-topbar">
+        <div>
+          <div class="dash-page-title">Planos e Créditos</div>
+          <div class="dash-page-sub">Escolha o melhor plano para você ou compre créditos extras</div>
+        </div>
+      </div>
+
+      <div class="dash-body">
+
+        <!-- PLANS -->
+        <div class="plans-grid">
+          <div class="plan-card current">
+            <div class="plan-badge current-badge">Seu plano atual</div>
+            <div class="plan-name">Gratuito</div>
+            <div class="plan-price">R$0</div>
+            <div class="plan-period">para sempre</div>
+            <div class="plan-credits-box">
+              <div class="plan-credits-num">5</div>
+              <div class="plan-credits-label">créditos por mês<br>renovam todo mês</div>
+            </div>
+            <ul class="plan-features">
+              <li class="plan-feature"><span class="plan-check">✓</span>Atividades e apostilas</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>PDF para impressão</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Todos os níveis</li>
+            </ul>
+            <button class="btn-plan btn-plan-current">Plano atual</button>
+          </div>
+
+          <div class="plan-card featured">
+            <div class="plan-badge popular">Mais popular</div>
+            <div class="plan-name">Pro</div>
+            <div class="plan-price">R$39</div>
+            <div class="plan-period">/mês • cancele quando quiser</div>
+            <div class="plan-credits-box">
+              <div class="plan-credits-num">60</div>
+              <div class="plan-credits-label">créditos por mês<br>+ 10 bônus no 1º mês</div>
+            </div>
+            <ul class="plan-features">
+              <li class="plan-feature"><span class="plan-check">✓</span>Tudo do plano gratuito</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Jogos + Cruzadinha</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Mapa mental + Tema gerador</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Música pedagógica</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Plano de aula BNCC</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Créditos não expiram</li>
+            </ul>
+            <button class="btn-plan btn-plan-gold" onclick="openPayment('Pro Mensal','R$ 39,00','plan_pro_mensal')">Assinar Pro com PIX</button>
+          </div>
+
+          <div class="plan-card">
+            <div class="plan-name">Escola</div>
+            <div class="plan-price">R$199</div>
+            <div class="plan-period">/mês • até 10 professores</div>
+            <div class="plan-credits-box">
+              <div class="plan-credits-num">400</div>
+              <div class="plan-credits-label">créditos por mês<br>compartilhados na equipe</div>
+            </div>
+            <ul class="plan-features">
+              <li class="plan-feature"><span class="plan-check">✓</span>Tudo do Pro</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>10 professores inclusos</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Painel administrativo</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Logo da escola</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Suporte prioritário</li>
+            </ul>
+            <button class="btn-plan btn-plan-outline" onclick="openPayment('Plano Escola','R$ 199,00','plan_escola')">Contratar para escola</button>
+          </div>
+        </div>
+
+        <!-- CREDIT PACKS -->
+        <div class="credits-section">
+          <div class="credits-section-title">Comprar créditos extras</div>
+          <div class="credits-section-sub">Sem assinatura. Créditos não expiram. Use quando precisar.</div>
+
+          <div class="packs-grid">
+            <div class="pack-card" onclick="openPayment('10 Créditos','R$ 9,90','pack_10')">
+              <div class="pack-credits">10</div>
+              <div class="pack-label">créditos</div>
+              <div class="pack-price">R$ 9,90</div>
+              <div class="pack-per">R$ 0,99 por crédito</div>
+              <button class="btn-pack">Comprar</button>
+            </div>
+            <div class="pack-card best" onclick="openPayment('30 Créditos','R$ 24,90','pack_30')">
+              <div class="pack-best">Melhor valor</div>
+              <div class="pack-credits">30</div>
+              <div class="pack-label">créditos</div>
+              <div class="pack-price">R$ 24,90</div>
+              <div class="pack-per">R$ 0,83 por crédito</div>
+              <button class="btn-pack">Comprar</button>
+            </div>
+            <div class="pack-card" onclick="openPayment('60 Créditos','R$ 44,90','pack_60')">
+              <div class="pack-credits">60</div>
+              <div class="pack-label">créditos</div>
+              <div class="pack-price">R$ 44,90</div>
+              <div class="pack-per">R$ 0,75 por crédito</div>
+              <button class="btn-pack">Comprar</button>
+            </div>
+            <div class="pack-card" onclick="openPayment('120 Créditos','R$ 79,90','pack_120')">
+              <div class="pack-credits">120</div>
+              <div class="pack-label">créditos</div>
+              <div class="pack-price">R$ 79,90</div>
+              <div class="pack-per">R$ 0,67 por crédito</div>
+              <button class="btn-pack">Comprar</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;background:var(--teal-pale);border:1px solid rgba(45,110,110,0.2);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px;">
+          <span style="font-size:20px;">🔒</span>
+          <div style="font-size:13px;color:var(--teal);line-height:1.6;">
+            <strong>Pagamento 100% seguro via Mercado Pago.</strong> PIX com confirmação instantânea, cartão de crédito e boleto. Seus dados são criptografados e protegidos.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     MODAL: PAYMENT
+══════════════════════════════════ -->
+<div class="modal-overlay" id="modal-payment">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <!-- STEP 1: METHOD SELECTION -->
+    <div id="pay-step-1">
+      <div class="modal-title">Finalizar compra</div>
+      <div class="modal-sub">Escolha como quer pagar</div>
+
+      <div class="order-box">
+        <div>
+          <div class="order-name" id="order-name">Pro Mensal</div>
+          <div class="order-sub" id="order-sub">Assinatura recorrente • cancele quando quiser</div>
+        </div>
+        <div class="order-price" id="order-price">R$ 39,00</div>
+      </div>
+
+      <div class="payment-methods">
+        <div class="pay-method selected" onclick="selectMethod(this)">
+          <div class="pay-method-icon">⚡</div>
+          <div>
+            <div class="pay-method-name">PIX</div>
+            <div class="pay-method-sub">Aprovação instantânea • disponível 24h</div>
+          </div>
+          <div class="pay-radio"></div>
+        </div>
+        <div class="pay-method" onclick="selectMethod(this)">
+          <div class="pay-method-icon">💳</div>
+          <div>
+            <div class="pay-method-name">Cartão de crédito</div>
+            <div class="pay-method-sub">Visa, Mastercard, Elo • parcelamento disponível</div>
+          </div>
+          <div class="pay-radio"></div>
+        </div>
+        <div class="pay-method" onclick="selectMethod(this)">
+          <div class="pay-method-icon">📄</div>
+          <div>
+            <div class="pay-method-name">Boleto bancário</div>
+            <div class="pay-method-sub">Compensação em até 3 dias úteis</div>
+          </div>
+          <div class="pay-radio"></div>
+        </div>
+      </div>
+
+      <div class="mp-badge">
+        <span style="font-size:18px;">🛡️</span>
+        Pagamento processado com segurança pelo <strong>Mercado Pago</strong>
+      </div>
+
+      <button class="btn-pay" onclick="goToPixScreen()">
+        Continuar para pagamento →
+      </button>
+      <div class="modal-note">Ao pagar, você concorda com os Termos de Uso. Compra protegida pelo Mercado Pago.</div>
+    </div>
+
+    <!-- STEP 2: PIX -->
+    <div id="pay-step-2" style="display:none;">
+      <div class="modal-title">Pagar com PIX</div>
+      <div class="modal-sub">Escaneie o QR Code ou copie a chave PIX</div>
+
+      <div class="pix-box">
+        <div class="pix-qr" id="pix-qr-box">
+          <!-- QR simulado -->
+          <div class="pix-qr-grid" id="qrGrid"></div>
+        </div>
+
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">ou use a chave PIX abaixo:</div>
+
+        <div class="pix-key" id="pix-key-text">
+          00020126580014BR.GOV.BCB.PIX0136doceriapedagogica@pix.com.br5204000053039865802BR5925DoceriaPedagogica LTDA6009SAO PAULO62070503***63041D3E
+        </div>
+
+        <button class="btn-copy" onclick="copyPix()">📋 Copiar chave PIX</button>
+
+        <div class="pix-timer" id="pix-timer">⏱ Código válido por <span id="timer-count">14:59</span></div>
+
+        <div class="pix-waiting">
+          <div class="pulse-dot"></div>
+          Aguardando confirmação do pagamento...
+        </div>
+      </div>
+
+      <div class="modal-note" style="margin-top:16px;">
+        Após o pagamento, os créditos serão adicionados automaticamente à sua conta em instantes.
+      </div>
+
+      <button style="width:100%;margin-top:12px;padding:10px;background:none;border:1px solid var(--border-mid);border-radius:8px;font-size:13px;cursor:pointer;color:var(--text-muted);font-family:'Outfit',sans-serif;" onclick="simulateSuccess()">
+        ✅ Simular pagamento confirmado (demo)
+      </button>
+    </div>
+
+    <!-- STEP 3: SUCCESS -->
+    <div id="pay-step-3" style="display:none;">
+      <div class="success-screen">
+        <div class="success-icon">✅</div>
+        <div class="success-title">Pagamento confirmado!</div>
+        <div class="success-sub" id="success-msg">Seus créditos foram adicionados à sua conta. Pode começar a criar seus materiais agora!</div>
+        <button class="btn-main" style="max-width:280px;margin:0 auto;" onclick="closeModal();showScreen('screen-dashboard')">
+          Ir para o painel →
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── STATE ──
+  let currentUser = JSON.parse(localStorage.getItem('dp_user') || 'null');
+  let users = JSON.parse(localStorage.getItem('dp_users') || '[]');
+  let currentOrder = {};
+  let timerInterval = null;
+
+  // ── INIT ──
+  if (currentUser) {
+    showDashboard();
+  }
+
+  // ── SCREEN NAVIGATION ──
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (id === 'screen-dashboard' || id === 'screen-plans') updateDashUI();
+  }
+
+  function showDashboard() {
+    showScreen('screen-dashboard');
+    updateDashUI();
+  }
+
+  // ── AUTH ──
+  function doLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const pass  = document.getElementById('login-pass').value;
+    const err   = document.getElementById('login-error');
+
+    if (!email || !pass) { showErr(err, 'Preencha e-mail e senha.'); return; }
+
+    // demo: accept any valid email + any pass, OR find in users
+    const found = users.find(u => u.email === email && u.pass === pass);
+
+    if (!found && !(email.includes('@') && pass.length >= 3)) {
+      showErr(err, 'E-mail ou senha incorretos. Use qualquer e-mail válido para este demo.');
+      return;
+    }
+
+    currentUser = found || {
+      nome: email.split('@')[0],
+      sobrenome: '',
+      email,
+      nivel: 'EJA',
+      credits: 5,
+      plan: 'Free',
+      totalMaterials: 0,
+      totalPdfs: 0
+    };
+
+    localStorage.setItem('dp_user', JSON.stringify(currentUser));
+    err.classList.remove('show');
+    showDashboard();
+  }
+
+  function doRegister() {
+    const nome  = document.getElementById('reg-nome').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const pass  = document.getElementById('reg-pass').value;
+    const nivel = document.getElementById('reg-nivel').value;
+    const err   = document.getElementById('register-error');
+
+    if (!nome) { showErr(err, 'Digite seu nome.'); return; }
+    if (!email || !email.includes('@')) { showErr(err, 'Digite um e-mail válido.'); return; }
+    if (!pass || pass.length < 6) { showErr(err, 'Senha deve ter ao menos 6 caracteres.'); return; }
+    if (users.find(u => u.email === email)) { showErr(err, 'Este e-mail já está cadastrado.'); return; }
+
+    const newUser = {
+      nome, sobrenome: document.getElementById('reg-sobrenome').value.trim(),
+      email, pass, nivel: nivel || 'EJA',
+      credits: 5, plan: 'Free',
+      totalMaterials: 0, totalPdfs: 0
+    };
+
+    users.push(newUser);
+    localStorage.setItem('dp_users', JSON.stringify(users));
+    currentUser = newUser;
+    localStorage.setItem('dp_user', JSON.stringify(currentUser));
+    err.classList.remove('show');
+    showDashboard();
+  }
+
+  function doLogout() {
+    currentUser = null;
+    localStorage.removeItem('dp_user');
+    showScreen('screen-login');
+  }
+
+  function showErr(el, msg) {
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+
+  // ── DASHBOARD UI ──
+  function updateDashUI() {
+    if (!currentUser) return;
+    const name = currentUser.nome || 'Professora';
+    const initials = name.charAt(0).toUpperCase();
+    const credits = currentUser.credits ?? 5;
+    const plan = currentUser.plan || 'Free';
+    const maxCredits = plan === 'Pro' ? 60 : plan === 'Escola' ? 400 : 5;
+    const barPct = Math.min(100, Math.round((credits / maxCredits) * 100));
+
+    // greeting
+    const hr = new Date().getHours();
+    const greet = hr < 12 ? 'Bom dia' : hr < 18 ? 'Boa tarde' : 'Boa noite';
+    const el = document.getElementById('dash-greeting');
+    if (el) el.textContent = `${greet}, ${name}! ${hr < 12 ? '☀️' : hr < 18 ? '👋' : '🌙'}`;
+
+    ['dash-avatar','dash-avatar2'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=initials; });
+    ['dash-user-name','dash-user-name2'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=name; });
+    ['dash-user-email','dash-user-email2'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=currentUser.email; });
+    ['sb-plan-name','sb-plan-name2'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent='Plano ' + plan; });
+    ['sb-credits','sb-credits2'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=credits; });
+    ['top-credits'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=credits; });
+    ['stat-credits'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=credits; });
+    ['stat-plan'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=plan; });
+    ['stat-total'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=currentUser.totalMaterials||0; });
+    ['stat-pdfs'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=currentUser.totalPdfs||0; });
+
+    const bar = document.getElementById('sb-bar');
+    if (bar) bar.style.width = barPct + '%';
+  }
+
+  // ── PAYMENT ──
+  function openPayment(name, price, productId) {
+    currentOrder = { name, price, productId };
+    document.getElementById('order-name').textContent = name;
+    document.getElementById('order-price').textContent = price;
+    document.getElementById('order-sub').textContent =
+      productId.startsWith('plan') ? 'Assinatura recorrente • cancele quando quiser' : 'Créditos avulsos • não expiram';
+
+    document.getElementById('pay-step-1').style.display = 'block';
+    document.getElementById('pay-step-2').style.display = 'none';
+    document.getElementById('pay-step-3').style.display = 'none';
+    document.getElementById('modal-payment').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-payment').classList.remove('show');
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  }
+
+  function selectMethod(el) {
+    document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function goToPixScreen() {
+    document.getElementById('pay-step-1').style.display = 'none';
+    document.getElementById('pay-step-2').style.display = 'block';
+    buildQR();
+    startTimer();
+  }
+
+  function buildQR() {
+    const grid = document.getElementById('qrGrid');
+    grid.innerHTML = '';
+    for (let i = 0; i < 64; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'pix-cell';
+      // corner markers
+      const r = Math.floor(i/8), c = i%8;
+      const corner = (r<3&&c<3)||(r<3&&c>4)||(r>4&&c<3);
+      cell.style.opacity = corner ? '1' : (Math.random() > 0.45 ? '1' : '0.1');
+      grid.appendChild(cell);
+    }
+  }
+
+  function startTimer() {
+    let seconds = 899;
+    const el = document.getElementById('timer-count');
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      seconds--;
+      if (seconds <= 0) { clearInterval(timerInterval); el.textContent = '00:00'; return; }
+      const m = Math.floor(seconds/60).toString().padStart(2,'0');
+      const s = (seconds%60).toString().padStart(2,'0');
+      el.textContent = `${m}:${s}`;
+    }, 1000);
+  }
+
+  function copyPix() {
+    const key = document.getElementById('pix-key-text').textContent.trim();
+    navigator.clipboard?.writeText(key).catch(()=>{});
+    const btn = document.querySelector('.btn-copy');
+    btn.textContent = '✅ Copiado!';
+    setTimeout(() => btn.textContent = '📋 Copiar chave PIX', 2000);
+  }
+
+  function simulateSuccess() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+    document.getElementById('pay-step-2').style.display = 'none';
+    document.getElementById('pay-step-3').style.display = 'block';
+
+    // Add credits / update plan
+    const pid = currentOrder.productId;
+    const creditsMap = {
+      plan_pro_mensal: 70, plan_escola: 400,
+      pack_10: 10, pack_30: 30, pack_60: 60, pack_120: 120
+    };
+    const added = creditsMap[pid] || 10;
+
+    if (currentUser) {
+      currentUser.credits = (currentUser.credits || 0) + added;
+      if (pid.startsWith('plan_pro')) currentUser.plan = 'Pro';
+      if (pid.startsWith('plan_escola')) currentUser.plan = 'Escola';
+      localStorage.setItem('dp_user', JSON.stringify(currentUser));
+      updateDashUI();
+    }
+
+    document.getElementById('success-msg').textContent =
+      `${added} créditos foram adicionados à sua conta. Pode começar a criar seus materiais agora!`;
+  }
+</script>
+</body>
+</html>
