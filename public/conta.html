@@ -1406,41 +1406,40 @@
   let currentOrder = {};
   let timerInterval = null;
 
-  // ── INIT — verifica sessão existente ou callback de confirmação de e-mail ──
-  let authReady = false;
-
-  sb.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_IN' && session) {
-      authReady = true;
-      await loadProfile(session.user);
-      showDashboard();
-    } else if (event === 'SIGNED_OUT') {
-      authReady = true;
-      currentUser = null;
-      showScreen('screen-login');
-    } else if (event === 'INITIAL_SESSION') {
-      authReady = true;
+  // ── INIT — verifica sessão existente ──
+  (async () => {
+    try {
+      const { data: { session } } = await sb.auth.getSession();
       if (session) {
         await loadProfile(session.user);
         showDashboard();
       } else {
         showScreen('screen-login');
       }
-    }
-  });
-
-  // Fallback: se onAuthStateChange demorar, getSession resolve logo
-  setTimeout(async () => {
-    if (authReady) return;
-    const { data: { session } } = await sb.auth.getSession();
-    authReady = true;
-    if (session) {
-      await loadProfile(session.user);
-      showDashboard();
-    } else {
+    } catch (e) {
       showScreen('screen-login');
     }
-  }, 800);
+  })();
+
+  // Escuta novos logins, logouts e refresh de token
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session && !currentUser) {
+      try {
+        await loadProfile(session.user);
+        showDashboard();
+      } catch (e) {
+        showScreen('screen-login');
+      }
+    } else if (event === 'TOKEN_REFRESHED' && session && !currentUser) {
+      try {
+        await loadProfile(session.user);
+        showDashboard();
+      } catch (e) { /* sessão já ativa, ignora */ }
+    } else if (event === 'SIGNED_OUT') {
+      currentUser = null;
+      showScreen('screen-login');
+    }
+  });
 
   // ── SCREEN NAVIGATION ──
   function showScreen(id) {
