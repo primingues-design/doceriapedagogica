@@ -1399,10 +1399,18 @@
   let currentOrder = {};
   let timerInterval = null;
 
-  // ── INIT ──
-  if (currentUser) {
-    showDashboard();
+  // ── INIT — acesso direto sem login ──
+  if (!currentUser) {
+    currentUser = {
+      nome: 'Professora',
+      email: '',
+      credits: 999,
+      plan: 'Pro',
+      totalMaterials: 0,
+      totalPdfs: 0
+    };
   }
+  showDashboard();
 
   // ── SCREEN NAVIGATION ──
   function showScreen(id) {
