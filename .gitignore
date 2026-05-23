@@ -39,6 +39,11 @@ yarn-error.log*
 # claude code memory
 .claude/
 
+# setup scripts com dados sensíveis
+supabase-setup.sql
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel

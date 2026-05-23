@@ -792,6 +792,7 @@
     .packs-grid { grid-template-columns: repeat(2,1fr); }
   }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -1393,24 +1394,39 @@
 </div>
 
 <script>
+  // ── SUPABASE ──
+  const { createClient } = supabase;
+  const sb = createClient(
+    'https://atkwvwhwbkerezdmipxw.supabase.co',
+    'sb_publishable_zWPrTWOrbMSCnD1uwOWulg_borGCRbZ'
+  );
+
   // ── STATE ──
-  let currentUser = JSON.parse(localStorage.getItem('dp_user') || 'null');
-  let users = JSON.parse(localStorage.getItem('dp_users') || '[]');
+  let currentUser = null;
   let currentOrder = {};
   let timerInterval = null;
 
-  // ── INIT — acesso direto sem login ──
-  if (!currentUser) {
-    currentUser = {
-      nome: 'Professora',
-      email: '',
-      credits: 999,
-      plan: 'Pro',
-      totalMaterials: 0,
-      totalPdfs: 0
-    };
-  }
-  showDashboard();
+  // ── INIT — verifica sessão existente ──
+  (async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      await loadProfile(session.user);
+      showDashboard();
+    } else {
+      showScreen('screen-login');
+    }
+  })();
+
+  // Escuta mudanças de sessão (login/logout em outras abas)
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      await loadProfile(session.user);
+      showDashboard();
+    } else if (event === 'SIGNED_OUT') {
+      currentUser = null;
+      showScreen('screen-login');
+    }
+  });
 
   // ── SCREEN NAVIGATION ──
   function showScreen(id) {
@@ -1424,68 +1440,87 @@
     updateDashUI();
   }
 
+  // ── CARREGAR PERFIL DO BANCO ──
+  async function loadProfile(user) {
+    const { data } = await sb.from('profiles').select('*').eq('id', user.id).single();
+    if (data) {
+      currentUser = {
+        id: user.id,
+        nome: data.nome || user.email.split('@')[0],
+        email: user.email,
+        nivel: data.nivel || 'EJA',
+        credits: data.credits ?? 5,
+        plan: data.plan || 'Free',
+        totalMaterials: data.total_materials || 0,
+        totalPdfs: data.total_pdfs || 0
+      };
+    } else {
+      // Perfil ainda não existe — cria agora
+      const nome = user.user_metadata?.nome || user.email.split('@')[0];
+      await sb.from('profiles').insert({ id: user.id, nome, email: user.email });
+      currentUser = { id: user.id, nome, email: user.email, credits: 5, plan: 'Free', totalMaterials: 0, totalPdfs: 0 };
+    }
+  }
+
   // ── AUTH ──
-  function doLogin() {
+  async function doLogin() {
     const email = document.getElementById('login-email').value.trim();
     const pass  = document.getElementById('login-pass').value;
     const err   = document.getElementById('login-error');
+    const btn   = document.querySelector('#screen-login .btn-main');
 
     if (!email || !pass) { showErr(err, 'Preencha e-mail e senha.'); return; }
 
-    // demo: accept any valid email + any pass, OR find in users
-    const found = users.find(u => u.email === email && u.pass === pass);
+    btn.textContent = 'Entrando...'; btn.disabled = true;
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+    btn.textContent = 'Entrar na plataforma →'; btn.disabled = false;
 
-    if (!found && !(email.includes('@') && pass.length >= 3)) {
-      showErr(err, 'E-mail ou senha incorretos. Use qualquer e-mail válido para este demo.');
-      return;
+    if (error) {
+      const msg = error.message.includes('Invalid') ? 'E-mail ou senha incorretos.' : error.message;
+      showErr(err, msg); return;
     }
 
-    currentUser = found || {
-      nome: email.split('@')[0],
-      sobrenome: '',
-      email,
-      nivel: 'EJA',
-      credits: 5,
-      plan: 'Free',
-      totalMaterials: 0,
-      totalPdfs: 0
-    };
-
-    localStorage.setItem('dp_user', JSON.stringify(currentUser));
     err.classList.remove('show');
+    await loadProfile(data.user);
     showDashboard();
   }
 
-  function doRegister() {
+  async function doRegister() {
     const nome  = document.getElementById('reg-nome').value.trim();
     const email = document.getElementById('reg-email').value.trim();
     const pass  = document.getElementById('reg-pass').value;
     const nivel = document.getElementById('reg-nivel').value;
     const err   = document.getElementById('register-error');
+    const btn   = document.querySelector('#screen-register .btn-main');
 
     if (!nome) { showErr(err, 'Digite seu nome.'); return; }
     if (!email || !email.includes('@')) { showErr(err, 'Digite um e-mail válido.'); return; }
     if (!pass || pass.length < 6) { showErr(err, 'Senha deve ter ao menos 6 caracteres.'); return; }
-    if (users.find(u => u.email === email)) { showErr(err, 'Este e-mail já está cadastrado.'); return; }
 
-    const newUser = {
-      nome, sobrenome: document.getElementById('reg-sobrenome').value.trim(),
-      email, pass, nivel: nivel || 'EJA',
-      credits: 5, plan: 'Free',
-      totalMaterials: 0, totalPdfs: 0
-    };
+    btn.textContent = 'Criando conta...'; btn.disabled = true;
+    const { data, error } = await sb.auth.signUp({
+      email, password: pass,
+      options: { data: { nome, nivel } }
+    });
+    btn.textContent = 'Criar conta grátis →'; btn.disabled = false;
 
-    users.push(newUser);
-    localStorage.setItem('dp_users', JSON.stringify(users));
-    currentUser = newUser;
-    localStorage.setItem('dp_user', JSON.stringify(currentUser));
+    if (error) { showErr(err, error.message); return; }
+
+    if (data.user && !data.session) {
+      // Supabase enviou e-mail de confirmação
+      err.style.color = 'var(--teal)';
+      showErr(err, '✅ Verifique seu e-mail para confirmar o cadastro!');
+      return;
+    }
+
     err.classList.remove('show');
+    await loadProfile(data.user);
     showDashboard();
   }
 
-  function doLogout() {
+  async function doLogout() {
+    await sb.auth.signOut();
     currentUser = null;
-    localStorage.removeItem('dp_user');
     showScreen('screen-login');
   }
 
