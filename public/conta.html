@@ -1457,7 +1457,7 @@
     } else {
       // Perfil ainda não existe — cria agora
       const nome = user.user_metadata?.nome || user.email.split('@')[0];
-      await sb.from('profiles').insert({ id: user.id, nome, email: user.email });
+      await sb.from('profiles').insert({ id: user.id, nome, nivel: user.user_metadata?.nivel || 'EJA' });
       currentUser = { id: user.id, nome, email: user.email, credits: 5, plan: 'Free', totalMaterials: 0, totalPdfs: 0 };
     }
   }
