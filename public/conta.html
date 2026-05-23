@@ -1455,7 +1455,8 @@
 
   // ── CARREGAR PERFIL DO BANCO ──
   async function loadProfile(user) {
-    const { data } = await sb.from('profiles').select('*').eq('id', user.id).single();
+    // maybeSingle() retorna null (sem erro) quando não encontra registro
+    const { data, error } = await sb.from('profiles').select('*').eq('id', user.id).maybeSingle();
     if (data) {
       currentUser = {
         id: user.id,
@@ -1468,10 +1469,11 @@
         totalPdfs: data.total_pdfs || 0
       };
     } else {
-      // Perfil ainda não existe — cria agora
+      // Perfil ainda não existe — cria agora (trigger pode ter falhado)
       const nome = user.user_metadata?.nome || user.email.split('@')[0];
-      await sb.from('profiles').insert({ id: user.id, nome, nivel: user.user_metadata?.nivel || 'EJA' });
-      currentUser = { id: user.id, nome, email: user.email, credits: 5, plan: 'Free', totalMaterials: 0, totalPdfs: 0 };
+      const nivel = user.user_metadata?.nivel || 'EJA';
+      await sb.from('profiles').insert({ id: user.id, nome, nivel }).catch(() => {});
+      currentUser = { id: user.id, nome, email: user.email, nivel, credits: 5, plan: 'Free', totalMaterials: 0, totalPdfs: 0 };
     }
   }
 
