@@ -1406,27 +1406,41 @@
   let currentOrder = {};
   let timerInterval = null;
 
-  // ── INIT — verifica sessão existente ──
-  (async () => {
+  // ── INIT — verifica sessão existente ou callback de confirmação de e-mail ──
+  let authReady = false;
+
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      authReady = true;
+      await loadProfile(session.user);
+      showDashboard();
+    } else if (event === 'SIGNED_OUT') {
+      authReady = true;
+      currentUser = null;
+      showScreen('screen-login');
+    } else if (event === 'INITIAL_SESSION') {
+      authReady = true;
+      if (session) {
+        await loadProfile(session.user);
+        showDashboard();
+      } else {
+        showScreen('screen-login');
+      }
+    }
+  });
+
+  // Fallback: se onAuthStateChange demorar, getSession resolve logo
+  setTimeout(async () => {
+    if (authReady) return;
     const { data: { session } } = await sb.auth.getSession();
+    authReady = true;
     if (session) {
       await loadProfile(session.user);
       showDashboard();
     } else {
       showScreen('screen-login');
     }
-  })();
-
-  // Escuta mudanças de sessão (login/logout em outras abas)
-  sb.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_IN' && session) {
-      await loadProfile(session.user);
-      showDashboard();
-    } else if (event === 'SIGNED_OUT') {
-      currentUser = null;
-      showScreen('screen-login');
-    }
-  });
+  }, 800);
 
   // ── SCREEN NAVIGATION ──
   function showScreen(id) {
