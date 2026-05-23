@@ -1487,17 +1487,41 @@
     if (!email || !pass) { showErr(err, 'Preencha e-mail e senha.'); return; }
 
     btn.textContent = 'Entrando...'; btn.disabled = true;
-    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
-    btn.textContent = 'Entrar na plataforma →'; btn.disabled = false;
+    try {
+      const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
 
-    if (error) {
-      const msg = error.message.includes('Invalid') ? 'E-mail ou senha incorretos.' : error.message;
-      showErr(err, msg); return;
+      if (error) {
+        const m = error.message || '';
+        let msg = 'E-mail ou senha incorretos.';
+        if (m.toLowerCase().includes('confirm') || m.toLowerCase().includes('verif')) {
+          msg = 'Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada.';
+        } else if (!m.toLowerCase().includes('invalid') && !m.toLowerCase().includes('credentials')) {
+          msg = m;
+        }
+        showErr(err, msg); return;
+      }
+
+      err.classList.remove('show');
+
+      // Carrega perfil — se falhar, usa dados básicos e entra mesmo assim
+      try {
+        await loadProfile(data.user);
+      } catch (profileErr) {
+        currentUser = {
+          id: data.user.id,
+          nome: data.user.user_metadata?.nome || data.user.email.split('@')[0],
+          email: data.user.email,
+          nivel: data.user.user_metadata?.nivel || 'EJA',
+          credits: 5, plan: 'Free', totalMaterials: 0, totalPdfs: 0
+        };
+      }
+      showDashboard();
+
+    } catch (e) {
+      showErr(err, 'Erro de conexão. Verifique sua internet e tente novamente.');
+    } finally {
+      btn.textContent = 'Entrar na plataforma →'; btn.disabled = false;
     }
-
-    err.classList.remove('show');
-    await loadProfile(data.user);
-    showDashboard();
   }
 
   async function doRegister() {
@@ -1513,24 +1537,35 @@
     if (!pass || pass.length < 6) { showErr(err, 'Senha deve ter ao menos 6 caracteres.'); return; }
 
     btn.textContent = 'Criando conta...'; btn.disabled = true;
-    const { data, error } = await sb.auth.signUp({
-      email, password: pass,
-      options: { data: { nome, nivel } }
-    });
-    btn.textContent = 'Criar conta grátis →'; btn.disabled = false;
+    try {
+      const { data, error } = await sb.auth.signUp({
+        email, password: pass,
+        options: { data: { nome, nivel } }
+      });
 
-    if (error) { showErr(err, error.message); return; }
+      if (error) { showErr(err, error.message); return; }
 
-    if (data.user && !data.session) {
-      // Supabase enviou e-mail de confirmação
-      err.style.color = 'var(--teal)';
-      showErr(err, '✅ Verifique seu e-mail para confirmar o cadastro!');
-      return;
+      if (data.user && !data.session) {
+        err.style.color = 'var(--teal)';
+        showErr(err, '✅ Verifique seu e-mail para confirmar o cadastro!');
+        return;
+      }
+
+      err.classList.remove('show');
+      try { await loadProfile(data.user); } catch (_) {
+        currentUser = {
+          id: data.user.id, nome,
+          email: data.user.email, nivel,
+          credits: 5, plan: 'Free', totalMaterials: 0, totalPdfs: 0
+        };
+      }
+      showDashboard();
+
+    } catch (e) {
+      showErr(err, 'Erro ao criar conta. Tente novamente.');
+    } finally {
+      btn.textContent = 'Criar conta grátis →'; btn.disabled = false;
     }
-
-    err.classList.remove('show');
-    await loadProfile(data.user);
-    showDashboard();
   }
 
   async function doLogout() {
