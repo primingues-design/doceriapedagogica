@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trilha do Conhecimento — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root {
+    --ink: #0f0e0c;
+    --cream: #faf7f2;
+    --warm: #f5f0e8;
+    --gold: #c8963e;
+    --gold-light: #e8b86d;
+    --gold-pale: #fdf3e3;
+    --teal: #2d6e6e;
+    --teal-light: #4a9b9b;
+    --teal-pale: #e8f4f4;
+    --coral: #d95f3b;
+    --coral-pale: #fdeee9;
+    --green: #2d7d4e;
+    --green-pale: #e8f5ee;
+    --purple: #6b5aed;
+    --purple-pale: #f0eeff;
+    --text: #1a1917;
+    --text-mid: #4a4845;
+    --text-muted: #8a8785;
+    --border: rgba(15,14,12,0.1);
+    --border-mid: rgba(15,14,12,0.18);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--warm); color: var(--text);
+    min-height: 100vh; -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--ink); padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 900; color: var(--cream);
+    display: flex; align-items: center; gap: 10px; text-decoration: none;
+  }
+  .topbar-logo-mark {
+    width: 28px; height: 28px; background: var(--gold);
+    border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px;
+  }
+  .topbar-nav { display: flex; gap: 4px; }
+  .topbar-link {
+    font-size: 12px; color: rgba(250,247,242,0.5);
+    text-decoration: none; padding: 6px 12px; border-radius: 6px; transition: all 0.15s;
+  }
+  .topbar-link:hover { color: var(--cream); background: rgba(255,255,255,0.06); }
+  .topbar-link.active { color: var(--gold-light); background: rgba(200,150,62,0.1); }
+
+  /* ── LAYOUT ── */
+  .main { display: grid; grid-template-columns: 360px 1fr; min-height: calc(100vh - 56px); }
+
+  /* ── FORM PANEL ── */
+  .form-panel {
+    background: var(--cream); border-right: 1px solid var(--border);
+    padding: 28px 24px; overflow-y: auto;
+    max-height: calc(100vh - 56px); position: sticky; top: 56px;
+  }
+  .form-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; margin-bottom: 5px; }
+  .form-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
+
+  .field { margin-bottom: 18px; }
+  .field-label {
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
+    letter-spacing: 0.07em; text-transform: uppercase; display: block; margin-bottom: 7px;
+  }
+  .field-required { color: var(--coral); }
+
+  input[type="text"], select, textarea {
+    width: 100%; background: white; border: 1.5px solid var(--border-mid); border-radius: 9px;
+    padding: 11px 14px; font-size: 14px; color: var(--text); font-family: 'Outfit', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+  }
+  input[type="text"]:focus, select:focus, textarea:focus {
+    border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,150,62,0.12);
+  }
+  textarea { resize: vertical; min-height: 72px; line-height: 1.6; }
+
+  .pill-group { display: flex; flex-wrap: wrap; gap: 7px; }
+  .pill {
+    padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border-mid);
+    background: white; color: var(--text-muted); font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s; font-family: 'Outfit', sans-serif; user-select: none;
+  }
+  .pill.active { border-color: var(--gold); background: var(--gold-pale); color: var(--gold); font-weight: 600; }
+  .pill:hover:not(.active) { background: var(--warm); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 22px 0; }
+
+  .generate-btn {
+    width: 100%; background: var(--gold); color: white; border: none;
+    padding: 15px; border-radius: 10px; font-size: 15px; font-weight: 600;
+    cursor: pointer; font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s;
+  }
+  .generate-btn:hover:not(:disabled) { background: #b5842e; transform: translateY(-1px); }
+  .generate-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+  .generate-btn .spinner {
+    width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white;
+    border-radius: 50%; animation: spin 0.7s linear infinite; display: none;
+  }
+  .generate-btn.loading .spinner { display: block; }
+  .generate-btn.loading .btn-text { display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .progress-area { display: none; margin-top: 16px; }
+  .progress-area.show { display: block; }
+  .progress-steps { display: flex; flex-direction: column; gap: 8px; }
+  .progress-step { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted); transition: color 0.3s; }
+  .progress-step.active { color: var(--teal); }
+  .progress-step.done { color: var(--teal); }
+  .step-dot {
+    width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border-mid);
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: all 0.3s;
+  }
+  .progress-step.active .step-dot { border-color: var(--teal); background: var(--teal-pale); }
+  .progress-step.done .step-dot { border-color: var(--teal); background: var(--teal); color: white; }
+
+  .error-box {
+    display: none; background: var(--coral-pale); border: 1px solid rgba(217,95,59,0.3);
+    border-radius: 10px; padding: 14px 16px; font-size: 13px; color: var(--coral); margin-top: 14px; line-height: 1.5;
+  }
+  .error-box.show { display: block; }
+
+  /* ── PREVIEW PANEL ── */
+  .preview-panel { padding: 28px; overflow-y: auto; }
+
+  /* ── EMPTY ── */
+  .game-empty {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 420px; text-align: center; color: var(--text-muted);
+  }
+  .game-empty-icon { font-size: 52px; margin-bottom: 16px; opacity: 0.4; }
+  .game-empty-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--text-mid); margin-bottom: 8px; }
+  .game-empty-sub { font-size: 14px; line-height: 1.6; max-width: 320px; }
+
+  /* ── GAME CONTAINER ── */
+  .game-container { display: none; max-width: 860px; margin: 0 auto; }
+  .game-container.show { display: block; }
+
+  /* ── SETUP SCREEN ── */
+  .setup-card {
+    background: white; border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.1); overflow: hidden;
+  }
+  .setup-hero {
+    background: var(--ink); padding: 32px 40px; color: var(--cream); position: relative; overflow: hidden;
+  }
+  .setup-hero::after { content: '🎯'; position: absolute; right: 28px; top: 16px; font-size: 72px; opacity: 0.1; }
+  .setup-badge {
+    display: inline-flex; gap: 6px; align-items: center;
+    background: rgba(200,150,62,0.15); border: 1px solid rgba(200,150,62,0.3);
+    color: var(--gold-light); border-radius: 20px; padding: 4px 14px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .setup-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; margin-bottom: 6px; }
+  .setup-sub { font-size: 13px; color: rgba(250,247,242,0.5); }
+  .setup-body { padding: 32px 40px; }
+  .setup-num-label { font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+  .player-rows { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .player-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; border-radius: 10px; background: var(--warm);
+    border: 1.5px solid var(--border);
+  }
+  .player-token {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0; font-weight: 700; color: white;
+  }
+  .player-name-input {
+    flex: 1; background: white; border: 1.5px solid var(--border-mid);
+    border-radius: 8px; padding: 8px 12px; font-size: 14px;
+    font-family: 'Outfit', sans-serif; color: var(--text); outline: none; transition: border-color 0.2s;
+  }
+  .player-name-input:focus { border-color: var(--gold); }
+  .btn-start-game {
+    width: 100%; background: var(--gold); color: white; border: none;
+    padding: 15px; border-radius: 10px; font-size: 15px; font-weight: 600;
+    cursor: pointer; font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s;
+  }
+  .btn-start-game:hover { background: #b5842e; transform: translateY(-1px); }
+
+  /* ── PLAYING SCREEN ── */
+  .playing-screen { display: none; }
+  .playing-screen.show { display: block; }
+
+  /* ── BOARD ── */
+  .board-card {
+    background: white; border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 20px 20px 16px; margin-bottom: 16px;
+  }
+  .board-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .board-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; }
+  .board-meta { font-size: 12px; color: var(--text-muted); }
+
+  /* Legend */
+  .board-legend {
+    display: flex; gap: 14px; margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+  /* Trail rows */
+  .trail { display: flex; flex-direction: column; gap: 6px; }
+  .trail-row { display: flex; align-items: center; gap: 6px; }
+  .trail-row.reverse { flex-direction: row-reverse; }
+
+  .trail-space {
+    width: 52px; height: 52px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; position: relative;
+    border: 2px solid transparent; transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .trail-space.normal   { background: var(--cream); border-color: var(--border-mid); }
+  .trail-space.bonus    { background: var(--gold-pale); border-color: rgba(200,150,62,0.4); }
+  .trail-space.desafio  { background: var(--coral-pale); border-color: rgba(217,95,59,0.35); }
+  .trail-space.start    { background: var(--teal-pale); border-color: rgba(45,110,110,0.4); }
+  .trail-space.finish   { background: var(--green-pale); border-color: rgba(45,125,78,0.4); }
+  .trail-space.active   { transform: scale(1.05); box-shadow: 0 0 0 3px rgba(200,150,62,0.35); }
+
+  .space-num { font-size: 11px; font-weight: 700; color: var(--text-muted); line-height: 1; }
+  .space-icon { font-size: 13px; line-height: 1; }
+
+  /* Tokens on spaces */
+  .space-tokens {
+    position: absolute; top: -6px; right: -6px;
+    display: flex; gap: 2px; flex-wrap: wrap; max-width: 36px;
+  }
+  .space-token {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid white; font-size: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 800;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Arrow connectors */
+  .trail-arrow {
+    font-size: 18px; color: var(--text-muted); opacity: 0.5;
+    display: flex; align-items: center; flex-shrink: 0;
+    padding: 0 2px;
+  }
+  .row-connector {
+    display: flex; justify-content: flex-end; padding-right: 6px; margin: -2px 0;
+    font-size: 18px; color: var(--text-muted); opacity: 0.5;
+  }
+  .row-connector.left { justify-content: flex-start; padding-left: 6px; padding-right: 0; }
+
+  /* Player status bar */
+  .players-bar {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;
+  }
+  .player-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: white; border: 1.5px solid var(--border-mid);
+    border-radius: 10px; padding: 8px 14px;
+    transition: all 0.2s; font-size: 13px;
+  }
+  .player-chip.current {
+    border-width: 2px;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+  }
+  .player-chip-token {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800; color: white; flex-shrink: 0;
+  }
+  .player-chip-info {}
+  .player-chip-name { font-weight: 600; color: var(--text); line-height: 1.2; }
+  .player-chip-pos { font-size: 11px; color: var(--text-muted); }
+  .player-chip-crown { font-size: 14px; margin-left: 2px; }
+
+  /* ── QUESTION CARD ── */
+  .question-area { margin-bottom: 16px; }
+
+  /* Turn banner */
+  .turn-banner {
+    display: flex; align-items: center; gap: 10px;
+    background: white; border-radius: 10px; border: 1.5px solid var(--border-mid);
+    padding: 10px 16px; margin-bottom: 12px;
+    font-size: 13px; font-weight: 500; color: var(--text-mid);
+  }
+  .turn-banner-token {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; color: white; flex-shrink: 0;
+  }
+  .turn-badge {
+    margin-left: auto; font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 3px 10px; border-radius: 20px;
+  }
+  .turn-badge.desafio { background: var(--coral-pale); color: var(--coral); }
+  .turn-badge.bonus   { background: var(--gold-pale);  color: var(--gold); }
+  .turn-badge.normal  { background: var(--teal-pale);  color: var(--teal); }
+
+  .question-card {
+    background: white; border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden;
+  }
+  .question-card-top {
+    background: var(--ink); padding: 20px 28px; color: var(--cream);
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .q-num-badge {
+    background: var(--gold); color: white;
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+  }
+  .q-text { font-size: 16px; font-weight: 500; line-height: 1.5; }
+  .question-card-body { padding: 20px 28px; }
+
+  .options-list { display: flex; flex-direction: column; gap: 9px; }
+  .opt-btn {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 16px; border-radius: 10px;
+    border: 1.5px solid var(--border-mid); background: white;
+    cursor: pointer; text-align: left; font-family: 'Outfit', sans-serif;
+    font-size: 14px; color: var(--text-mid); transition: all 0.15s; width: 100%;
+  }
+  .opt-btn:hover:not(:disabled) { border-color: var(--gold); background: var(--gold-pale); color: var(--text); }
+  .opt-btn:disabled { cursor: default; }
+  .opt-btn.correct { border-color: var(--green); background: var(--green-pale); color: var(--green); font-weight: 600; }
+  .opt-btn.wrong   { border-color: var(--coral); background: var(--coral-pale); color: var(--coral); }
+  .opt-btn.dimmed  { opacity: 0.4; }
+  .opt-letter {
+    width: 26px; height: 26px; border-radius: 7px;
+    background: var(--warm); border: 1.5px solid var(--border-mid);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; color: var(--text-muted); transition: all 0.15s;
+  }
+  .opt-btn.correct .opt-letter { background: var(--green); border-color: var(--green); color: white; }
+  .opt-btn.wrong   .opt-letter { background: var(--coral); border-color: var(--coral); color: white; }
+
+  .feedback-strip {
+    display: none; margin-top: 14px; padding: 12px 16px; border-radius: 10px;
+    font-size: 13px; line-height: 1.6; border-left: 4px solid;
+  }
+  .feedback-strip.show { display: block; }
+  .feedback-strip.correct { background: var(--green-pale); border-color: var(--green); color: var(--green); }
+  .feedback-strip.wrong   { background: var(--coral-pale); border-color: var(--coral); color: var(--coral); }
+  .feedback-strip strong  { display: block; margin-bottom: 3px; font-size: 14px; }
+
+  .question-foot { padding: 0 28px 20px; display: flex; justify-content: flex-end; }
+  .btn-next-turn {
+    background: var(--teal); color: white; border: none;
+    padding: 12px 26px; border-radius: 10px; font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: 'Outfit', sans-serif;
+    display: none; align-items: center; gap: 8px; transition: all 0.2s;
+  }
+  .btn-next-turn.show { display: flex; }
+  .btn-next-turn:hover { background: #245858; }
+
+  /* ── WIN SCREEN ── */
+  .win-screen { display: none; }
+  .win-screen.show { display: block; }
+  .win-card {
+    background: white; border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,0.1); overflow: hidden;
+  }
+  .win-hero {
+    padding: 40px; text-align: center;
+    background: linear-gradient(135deg, #1a3d2e 0%, #2d6e4e 100%);
+    color: var(--cream); position: relative; overflow: hidden;
+  }
+  .win-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(200,150,62,0.2) 0%, transparent 60%);
+  }
+  .win-trophy { font-size: 56px; margin-bottom: 10px; position: relative; }
+  .win-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; position: relative; }
+  .win-sub { font-size: 14px; color: rgba(250,247,242,0.6); margin-top: 6px; position: relative; }
+  .win-body { padding: 32px 40px; }
+  .win-ranking-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .win-ranking-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .win-ranking { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+  .win-rank-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; border-radius: 10px; background: var(--warm);
+  }
+  .win-rank-pos {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .win-rank-pos.first  { background: var(--gold);  color: white; }
+  .win-rank-pos.second { background: #b0b0b0; color: white; }
+  .win-rank-pos.third  { background: #c87941; color: white; }
+  .win-rank-pos.other  { background: var(--warm); color: var(--text-muted); border: 1.5px solid var(--border-mid); }
+  .win-rank-token {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: white; flex-shrink: 0;
+  }
+  .win-rank-name { font-weight: 600; font-size: 15px; flex: 1; }
+  .win-rank-score { font-size: 13px; color: var(--text-muted); }
+  .win-rank-trophy { font-size: 18px; }
+
+  .win-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-replay {
+    flex: 1; background: var(--gold); color: white; border: none;
+    padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;
+  }
+  .btn-replay:hover { background: #b5842e; }
+  .btn-new {
+    flex: 1; background: white; color: var(--text-mid); border: 1.5px solid var(--border-mid);
+    padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 500;
+    cursor: pointer; font-family: 'Outfit', sans-serif; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-new:hover { background: var(--warm); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 960px) {
+    .main { grid-template-columns: 1fr; }
+    .form-panel { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--border); }
+    .preview-panel { padding: 16px; }
+    .setup-body, .win-body { padding: 24px 20px; }
+    .setup-hero { padding: 28px 24px; }
+    .trail-space { width: 44px; height: 44px; border-radius: 10px; }
+    .space-num { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="index.html">
+    <div class="topbar-logo-mark">✦</div>
+    DoceriaPedagógica
+  </a>
+  <nav class="topbar-nav">
+    <a class="topbar-link" href="gerador.html">Atividades</a>
+    <a class="topbar-link" href="apostila.html">Apostila</a>
+    <a class="topbar-link" href="jogos.html">Quiz</a>
+    <a class="topbar-link" href="memoria.html">Memória</a>
+    <a class="topbar-link active" href="trilha.html">Trilha</a>
+    <a class="topbar-link" href="interativo.html">Palavras</a>
+    <a class="topbar-link" href="jogos-area.html" style="color:#7fdc9e;border:1px solid rgba(127,220,158,0.3);border-radius:6px;">Área do Aluno</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <!-- ── FORM ── -->
+  <div class="form-panel">
+    <div class="form-title">Trilha do Conhecimento</div>
+    <div class="form-sub">A IA cria as perguntas — os alunos avançam na trilha respondendo corretamente.</div>
+
+    <div class="field">
+      <label class="field-label">Tema ou conteúdo <span class="field-required">*</span></label>
+      <input type="text" id="tema" placeholder="Ex: Independência do Brasil, Química, Gramática..." />
+    </div>
+
+    <div class="field">
+      <label class="field-label">Nível / público-alvo <span class="field-required">*</span></label>
+      <select id="nivel">
+        <option value="">Selecione o nível...</option>
+        <option value="Educação Infantil (4-5 anos)">Educação Infantil</option>
+        <option value="Fundamental I — Anos Iniciais (1º ao 5º ano)">Fundamental I (1º–5º ano)</option>
+        <option value="Fundamental II — Anos Finais (6º ao 9º ano)">Fundamental II (6º–9º ano)</option>
+        <option value="EJA — Alfabetização de Adultos">EJA — Alfabetização</option>
+        <option value="EJA — Ensino Fundamental para adultos">EJA — Fundamental</option>
+        <option value="EJA — Ensino Médio para adultos">EJA — Ensino Médio</option>
+        <option value="Ensino Médio Regular">Ensino Médio</option>
+        <option value="Inglês — Nível Básico A1/A2">Inglês — Básico (A1/A2)</option>
+        <option value="Inglês — Nível Intermediário B1/B2">Inglês — Intermediário (B1/B2)</option>
+        <option value="Espanhol — Nível Básico">Espanhol — Básico</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Número de jogadores</label>
+      <div class="pill-group" id="jogadoresPills">
+        <div class="pill" data-val="1">1 jogador</div>
+        <div class="pill active" data-val="2">2 jogadores</div>
+        <div class="pill" data-val="3">3 jogadores</div>
+        <div class="pill" data-val="4">4 jogadores</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Número de perguntas</label>
+      <div class="pill-group" id="perguntasPills">
+        <div class="pill" data-val="10">10 perguntas</div>
+        <div class="pill active" data-val="15">15 perguntas</div>
+        <div class="pill" data-val="20">20 perguntas</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Disciplina (opcional)</label>
+      <input type="text" id="disciplina" placeholder="Ex: História, Ciências, Inglês..." />
+    </div>
+
+    <div class="field">
+      <label class="field-label">Observações adicionais</label>
+      <textarea id="obs" placeholder="Ex: Foco em datas importantes, use linguagem simples..."></textarea>
+    </div>
+
+    <hr class="divider">
+
+    <button class="generate-btn" id="generateBtn" onclick="generateTrail()">
+      <div class="spinner"></div>
+      <span class="btn-text">✦ Criar Trilha</span>
+    </button>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <div class="progress-area" id="progressArea">
+      <div class="progress-steps">
+        <div class="progress-step" id="step1"><div class="step-dot">1</div><span>Analisando tema e nível...</span></div>
+        <div class="progress-step" id="step2"><div class="step-dot">2</div><span>Criando perguntas variadas...</span></div>
+        <div class="progress-step" id="step3"><div class="step-dot">3</div><span>Definindo desafios especiais...</span></div>
+        <div class="progress-step" id="step4"><div class="step-dot">4</div><span>Montando a trilha...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PREVIEW PANEL ── -->
+  <div class="preview-panel">
+
+    <div class="game-empty" id="gameEmpty">
+      <div class="game-empty-icon">🎯</div>
+      <div class="game-empty-title">Sua trilha aparece aqui</div>
+      <div class="game-empty-sub">Preencha o formulário ao lado e clique em <strong>Criar Trilha</strong> para gerar um jogo de tabuleiro pedagógico pronto para a sala de aula.</div>
+    </div>
+
+    <div class="game-container" id="gameContainer">
+
+      <!-- SETUP SCREEN -->
+      <div id="setupScreen">
+        <div class="setup-card">
+          <div class="setup-hero">
+            <div class="setup-badge">🎯 Trilha do Conhecimento</div>
+            <div class="setup-title" id="setupTitle">Trilha</div>
+            <div class="setup-sub" id="setupSub">Configure os jogadores e comece!</div>
+          </div>
+          <div class="setup-body">
+            <div class="setup-num-label" id="setupNumLabel">Nomes dos jogadores</div>
+            <div class="player-rows" id="playerRows"></div>
+            <button class="btn-start-game" onclick="startGame()">▶ Começar a Trilha</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLAYING SCREEN -->
+      <div class="playing-screen" id="playingScreen">
+
+        <!-- Board -->
+        <div class="board-card">
+          <div class="board-header">
+            <div class="board-title" id="boardTitle">Trilha</div>
+            <div class="board-meta" id="boardMeta"></div>
+          </div>
+          <div class="board-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--teal-pale);border:1px solid rgba(45,110,110,0.3)"></div>Início</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--cream);border:1px solid var(--border-mid)"></div>Normal</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--gold-pale);border:1px solid rgba(200,150,62,0.4)"></div>Bônus ⭐ (+3 se acertar)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--coral-pale);border:1px solid rgba(217,95,59,0.35)"></div>Desafio 🔥 (−1 se errar)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--green-pale);border:1px solid rgba(45,125,78,0.4)"></div>Chegada 🏁</div>
+          </div>
+          <div class="trail" id="trail"></div>
+        </div>
+
+        <!-- Players bar -->
+        <div class="players-bar" id="playersBar"></div>
+
+        <!-- Question area -->
+        <div class="question-area" id="questionArea">
+          <div class="turn-banner" id="turnBanner">
+            <div class="turn-banner-token" id="turnToken"></div>
+            <span id="turnName">Vez do jogador</span>
+            <span class="turn-badge normal" id="turnBadge">Normal</span>
+          </div>
+          <div class="question-card">
+            <div class="question-card-top">
+              <div class="q-num-badge" id="qNumBadge">1</div>
+              <div class="q-text" id="qText">Carregando pergunta...</div>
+            </div>
+            <div class="question-card-body">
+              <div class="options-list" id="optionsList"></div>
+              <div class="feedback-strip" id="feedbackStrip"></div>
+            </div>
+            <div class="question-foot">
+              <button class="btn-next-turn" id="btnNextTurn" onclick="nextTurn()">
+                <span id="btnNextLabel">Próximo jogador</span> →
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- WIN SCREEN -->
+      <div class="win-screen" id="winScreen">
+        <div class="win-card">
+          <div class="win-hero">
+            <div class="win-trophy">🏆</div>
+            <div class="win-title" id="winTitle">Chegou primeiro!</div>
+            <div class="win-sub" id="winSub">Parabéns pelo desempenho!</div>
+          </div>
+          <div class="win-body">
+            <div class="win-ranking-title">Classificação final</div>
+            <div class="win-ranking" id="winRanking"></div>
+            <div class="win-actions">
+              <button class="btn-replay" onclick="replayGame()">↺ Jogar novamente</button>
+              <button class="btn-new" onclick="showSetup()">✦ Nova trilha</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── CONSTANTS ──
+  const TOTAL_SPACES = 20;
+  const PLAYER_COLORS = ['#d95f3b','#2d6e6e','#c8963e','#6b5aed'];
+  const PLAYER_INITIALS = ['A','B','C','D'];
+
+  // Space types by number
+  const SPACE_TYPE = {
+    1: 'start',
+    5: 'bonus', 10: 'bonus', 15: 'bonus',
+    7: 'desafio', 13: 'desafio',
+    20: 'finish'
+  };
+  const SPACE_ICONS = { start:'🚀', bonus:'⭐', desafio:'🔥', finish:'🏁', normal:'' };
+
+  // ── STATE ──
+  let trailData = null;
+  let players = [];
+  let numPlayers = 2;
+  let currentPlayerIdx = 0;
+  let questionQueue = [];
+  let currentQIdx = 0;
+  let gameOver = false;
+
+  // ── PILLS ──
+  ['jogadoresPills','perguntasPills'].forEach(id => {
+    document.querySelectorAll(`#${id} .pill`).forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll(`#${id} .pill`).forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+      });
+    });
+  });
+
+  function getPill(id) {
+    const a = document.querySelector(`#${id} .pill.active`);
+    return a ? a.dataset.val : null;
+  }
+
+  function setStep(n) {
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById('step' + i);
+      el.classList.remove('active','done');
+      if (i < n) { el.classList.add('done'); el.querySelector('.step-dot').textContent = '✓'; }
+      else if (i === n) el.classList.add('active');
+      else el.querySelector('.step-dot').textContent = i;
+    }
+  }
+
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+
+  // ── GENERATE ──
+  async function generateTrail() {
+    const tema = document.getElementById('tema').value.trim();
+    const nivel = document.getElementById('nivel').value;
+    const numPerguntas = parseInt(getPill('perguntasPills') || '15');
+    const disciplina = document.getElementById('disciplina').value.trim();
+    const obs = document.getElementById('obs').value.trim();
+    numPlayers = parseInt(getPill('jogadoresPills') || '2');
+
+    const err = document.getElementById('errorBox');
+    err.classList.remove('show');
+
+    if (!tema) { err.textContent = 'Por favor, preencha o tema.'; err.classList.add('show'); document.getElementById('tema').focus(); return; }
+    if (!nivel) { err.textContent = 'Por favor, selecione o nível.'; err.classList.add('show'); document.getElementById('nivel').focus(); return; }
+
+    const btn = document.getElementById('generateBtn');
+    btn.disabled = true; btn.classList.add('loading');
+    document.getElementById('progressArea').classList.add('show');
+    document.getElementById('gameEmpty').style.display = 'none';
+    document.getElementById('gameContainer').classList.remove('show');
+
+    setStep(1); await delay(500); setStep(2);
+
+    const prompt = `Crie ${numPerguntas} perguntas de múltipla escolha para o Jogo da Trilha do Conhecimento:
+
+TEMA: ${tema}
+NÍVEL: ${nivel}
+${disciplina ? 'DISCIPLINA: ' + disciplina : ''}
+${obs ? 'OBSERVAÇÕES: ' + obs : ''}
+
+REGRAS:
+- Cada pergunta tem exatamente 3 alternativas (a, b, c) — simples e diretas.
+- Alterne perguntas do tipo "normal" e "desafio" (desafio = mais difícil, posições 5, 7, 10, 13, 15, 18).
+- A explicação deve ser breve (1 linha).
+- Adapte vocabulário e dificuldade ao nível informado.
+- Para EJA: linguagem adulta e contextualizada.
+- Para Inglês/Espanhol: perguntas e alternativas no idioma solicitado.
+
+Retorne SOMENTE este JSON (sem markdown):
+{
+  "titulo": "Trilha: ${tema}",
+  "nivel": "${nivel}",
+  "disciplina": "${disciplina || tema}",
+  "perguntas": [
+    {
+      "numero": 1,
+      "enunciado": "Pergunta clara e objetiva?",
+      "opcoes": { "a": "alternativa A", "b": "alternativa B", "c": "alternativa C" },
+      "resposta_correta": "a",
+      "explicacao": "Breve explicação da resposta correta.",
+      "tipo": "normal"
+    }
+  ]
+}
+
+Gere exatamente ${numPerguntas} perguntas. Inclua pelo menos 4 perguntas do tipo "desafio" distribuídas entre as demais.`;
+
+    try {
+      const response = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-5',
+          max_tokens: 4000,
+          system: `Você é uma especialista em educação brasileira com experiência em jogos pedagógicos e gamificação.
+Sua missão é criar perguntas que incentivem o aprendizado ativo e a competição saudável em sala de aula.
+Retorne APENAS JSON válido, sem markdown, sem texto antes ou depois.`,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      setStep(3);
+      if (!response.ok) { const e = await response.json().catch(()=>({})); throw new Error(e?.error?.message || `Erro ${response.status}`); }
+
+      const data = await response.json();
+      const raw = data.content?.[0]?.text || '';
+      setStep(4); await delay(400);
+
+      let parsed;
+      try { parsed = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+      catch(e) { throw new Error('Formato inesperado. Tente novamente.'); }
+
+      trailData = parsed;
+      showSetup();
+
+    } catch(e) {
+      console.error(e);
+      err.textContent = 'Erro ao gerar: ' + (e.message || 'Tente novamente.');
+      err.classList.add('show');
+      document.getElementById('gameEmpty').style.display = 'flex';
+    } finally {
+      btn.disabled = false; btn.classList.remove('loading');
+      document.getElementById('progressArea').classList.remove('show');
+      for (let i = 1; i <= 4; i++) { const el = document.getElementById('step'+i); el.classList.remove('active','done'); el.querySelector('.step-dot').textContent = i; }
+    }
+  }
+
+  // ── SETUP SCREEN ──
+  function showSetup() {
+    document.getElementById('setupTitle').textContent = trailData.titulo || 'Trilha do Conhecimento';
+    document.getElementById('setupSub').textContent = `${trailData.disciplina || ''} • ${trailData.nivel || ''} • ${(trailData.perguntas||[]).length} perguntas`;
+    document.getElementById('setupNumLabel').textContent = `Nomes dos ${numPlayers} jogador${numPlayers>1?'es':''}`;
+
+    const rows = document.getElementById('playerRows');
+    rows.innerHTML = '';
+    for (let i = 0; i < numPlayers; i++) {
+      rows.innerHTML += `
+        <div class="player-row">
+          <div class="player-token" style="background:${PLAYER_COLORS[i]}">${PLAYER_INITIALS[i]}</div>
+          <input class="player-name-input" id="pname${i}" type="text"
+            placeholder="Nome do Jogador ${i+1}" value="Jogador ${i+1}" />
+        </div>`;
+    }
+
+    showScreen('setup');
+    document.getElementById('gameContainer').classList.add('show');
+    document.getElementById('gameContainer').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  function showScreen(name) {
+    document.getElementById('setupScreen').style.display   = name === 'setup'   ? 'block' : 'none';
+    document.getElementById('playingScreen').classList.toggle('show', name === 'playing');
+    document.getElementById('winScreen').classList.toggle('show', name === 'win');
+  }
+
+  // ── START GAME ──
+  function startGame() {
+    players = [];
+    for (let i = 0; i < numPlayers; i++) {
+      const nameEl = document.getElementById('pname' + i);
+      players.push({
+        name: nameEl ? nameEl.value.trim() || `Jogador ${i+1}` : `Jogador ${i+1}`,
+        color: PLAYER_COLORS[i],
+        initial: PLAYER_INITIALS[i],
+        position: 0,
+        score: 0
+      });
+    }
+
+    currentPlayerIdx = 0;
+    questionQueue = shuffleArr([...(trailData.perguntas || [])]);
+    currentQIdx = 0;
+    gameOver = false;
+
+    document.getElementById('boardTitle').textContent = trailData.titulo || 'Trilha';
+    document.getElementById('boardMeta').textContent = `${(trailData.perguntas||[]).length} perguntas • ${TOTAL_SPACES} casas`;
+
+    showScreen('playing');
+    renderBoard();
+    renderPlayersBar();
+    renderQuestion();
+  }
+
+  // ── BOARD ──
+  function renderBoard() {
+    const trail = document.getElementById('trail');
+    trail.innerHTML = '';
+
+    // Build rows: 1-5, 6-10 (reversed), 11-15, 16-20 (reversed)
+    const rows = [
+      { spaces: [1,2,3,4,5],     reverse: false },
+      { spaces: [6,7,8,9,10],    reverse: true  },
+      { spaces: [11,12,13,14,15],reverse: false },
+      { spaces: [16,17,18,19,20],reverse: true  }
+    ];
+
+    rows.forEach((row, rowIdx) => {
+      // Connector arrow between rows (not before first)
+      if (rowIdx > 0) {
+        const prevReverse = rows[rowIdx-1].reverse;
+        const connector = document.createElement('div');
+        connector.className = 'row-connector' + (prevReverse ? ' left' : '');
+        connector.textContent = '↓';
+        trail.appendChild(connector);
+      }
+
+      const rowEl = document.createElement('div');
+      rowEl.className = 'trail-row' + (row.reverse ? ' reverse' : '');
+
+      const spacesToRender = row.reverse ? [...row.spaces].reverse() : row.spaces;
+
+      spacesToRender.forEach((num, spaceIdx) => {
+        // Arrow between spaces (skip first)
+        if (spaceIdx > 0) {
+          const arrow = document.createElement('div');
+          arrow.className = 'trail-arrow';
+          arrow.textContent = '→';
+          rowEl.appendChild(arrow);
+        }
+
+        const type = SPACE_TYPE[num] || 'normal';
+        const icon = SPACE_ICONS[type] || '';
+
+        const sp = document.createElement('div');
+        sp.className = `trail-space ${type}`;
+        sp.id = `space-${num}`;
+        sp.innerHTML = `
+          <div class="space-num">${num === 1 ? '🚀' : num === 20 ? '🏁' : num}</div>
+          ${icon && num !== 1 && num !== 20 ? `<div class="space-icon">${icon}</div>` : ''}
+          <div class="space-tokens" id="tokens-${num}"></div>`;
+        rowEl.appendChild(sp);
+      });
+
+      trail.appendChild(rowEl);
+    });
+
+    // Place all tokens at position 0 (start)
+    updateTokensOnBoard();
+  }
+
+  function updateTokensOnBoard() {
+    // Clear all token containers
+    document.querySelectorAll('.space-tokens').forEach(el => el.innerHTML = '');
+
+    // "Position 0" tokens go on a special start indicator — show on space 1 with opacity
+    players.forEach(p => {
+      const spaceNum = p.position === 0 ? 1 : p.position;
+      const container = document.getElementById(`tokens-${spaceNum}`);
+      if (container) {
+        const token = document.createElement('div');
+        token.className = 'space-token';
+        token.style.background = p.color;
+        token.textContent = p.initial;
+        if (p.position === 0) token.style.opacity = '0.45';
+        container.appendChild(token);
+      }
+    });
+
+    // Highlight current player's space
+    document.querySelectorAll('.trail-space.active').forEach(el => el.classList.remove('active'));
+    const cp = players[currentPlayerIdx];
+    if (cp && cp.position > 0 && cp.position <= TOTAL_SPACES) {
+      const spEl = document.getElementById(`space-${cp.position}`);
+      if (spEl) spEl.classList.add('active');
+    }
+  }
+
+  // ── PLAYERS BAR ──
+  function renderPlayersBar() {
+    const bar = document.getElementById('playersBar');
+    bar.innerHTML = '';
+    players.forEach((p, i) => {
+      bar.innerHTML += `
+        <div class="player-chip${i === currentPlayerIdx ? ' current' : ''}" id="chip-${i}" style="${i === currentPlayerIdx ? `border-color:${p.color}` : ''}">
+          <div class="player-chip-token" style="background:${p.color}">${p.initial}</div>
+          <div class="player-chip-info">
+            <div class="player-chip-name">${escHtml(p.name)}</div>
+            <div class="player-chip-pos">Casa ${p.position} / ${TOTAL_SPACES}</div>
+          </div>
+          ${i === currentPlayerIdx ? '<div class="player-chip-crown">👑</div>' : ''}
+        </div>`;
+    });
+  }
+
+  // ── QUESTION ──
+  function renderQuestion() {
+    if (!trailData || !questionQueue.length) return;
+
+    // Cycle through questions
+    if (currentQIdx >= questionQueue.length) {
+      questionQueue = shuffleArr([...(trailData.perguntas || [])]);
+      currentQIdx = 0;
+    }
+
+    const q = questionQueue[currentQIdx];
+    const cp = players[currentPlayerIdx];
+    const spaceNum = cp.position + 1 <= TOTAL_SPACES ? cp.position + 1 : TOTAL_SPACES;
+    const spaceType = SPACE_TYPE[spaceNum] || 'normal';
+    const isDesafio = q.tipo === 'desafio' || spaceType === 'desafio';
+    const isBonus   = spaceType === 'bonus';
+
+    // Turn banner
+    document.getElementById('turnToken').style.background = cp.color;
+    document.getElementById('turnToken').textContent = cp.initial;
+    document.getElementById('turnName').textContent = `Vez de ${cp.name}`;
+    const badge = document.getElementById('turnBadge');
+    if (isDesafio) { badge.textContent = '🔥 Desafio'; badge.className = 'turn-badge desafio'; }
+    else if (isBonus) { badge.textContent = '⭐ Bônus'; badge.className = 'turn-badge bonus'; }
+    else { badge.textContent = '▶ Normal'; badge.className = 'turn-badge normal'; }
+
+    // Question
+    document.getElementById('qNumBadge').textContent = q.numero || (currentQIdx + 1);
+    document.getElementById('qText').textContent = q.enunciado;
+
+    // Options
+    const list = document.getElementById('optionsList');
+    list.innerHTML = '';
+    ['a','b','c'].forEach(letter => {
+      if (!q.opcoes[letter]) return;
+      const btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.innerHTML = `<span class="opt-letter">${letter.toUpperCase()}</span><span>${escHtml(q.opcoes[letter])}</span>`;
+      btn.onclick = () => selectAnswer(letter, q, isDesafio, isBonus);
+      list.appendChild(btn);
+    });
+
+    // Reset feedback
+    const fb = document.getElementById('feedbackStrip');
+    fb.classList.remove('show','correct','wrong');
+    document.getElementById('btnNextTurn').classList.remove('show');
+
+    // Button label
+    const isLast = currentPlayerIdx === players.length - 1;
+    document.getElementById('btnNextLabel').textContent = isLast ? 'Primeira jogada' : 'Próximo jogador';
+  }
+
+  // ── SELECT ANSWER ──
+  function selectAnswer(chosen, q, isDesafio, isBonus) {
+    const isCorrect = chosen === q.resposta_correta;
+    const cp = players[currentPlayerIdx];
+
+    // Disable all options
+    document.querySelectorAll('#optionsList .opt-btn').forEach((btn, i) => {
+      btn.disabled = true;
+      const letters = ['a','b','c'];
+      const l = letters[i];
+      if (!l) return;
+      if (l === q.resposta_correta) btn.classList.add('correct');
+      else if (l === chosen && !isCorrect) btn.classList.add('wrong');
+      else btn.classList.add('dimmed');
+    });
+
+    // Calculate advance
+    let advance = 0;
+    if (isCorrect) {
+      advance = isDesafio ? 3 : isBonus ? 3 : 2;
+      cp.score += isDesafio ? 3 : isBonus ? 3 : 2;
+    } else {
+      advance = isDesafio ? -1 : 0;
+      if (isDesafio) cp.score = Math.max(0, cp.score - 1);
+    }
+
+    // Move player
+    const newPos = Math.min(TOTAL_SPACES, Math.max(0, cp.position + advance));
+    cp.position = newPos;
+
+    // Feedback
+    const fb = document.getElementById('feedbackStrip');
+    let fbText = '';
+    if (isCorrect) {
+      fbText = `<strong>✅ Correto! Avança ${advance} casa${advance !== 1 ? 's' : ''}.</strong>${q.explicacao ? q.explicacao : ''}`;
+      fb.className = 'feedback-strip show correct';
+    } else {
+      const penaltyMsg = advance < 0 ? ` Recua ${Math.abs(advance)} casa.` : ' Fica na mesma casa.';
+      fbText = `<strong>❌ Incorreto.${penaltyMsg}</strong>${q.explicacao ? q.explicacao : ''}`;
+      fb.className = 'feedback-strip show wrong';
+    }
+    fb.innerHTML = fbText;
+
+    currentQIdx++;
+
+    // Animate token move then check win
+    setTimeout(() => {
+      updateTokensOnBoard();
+      renderPlayersBar();
+
+      if (cp.position >= TOTAL_SPACES) {
+        setTimeout(() => showWin(cp), 600);
+      } else {
+        document.getElementById('btnNextTurn').classList.add('show');
+      }
+    }, 400);
+  }
+
+  // ── NEXT TURN ──
+  function nextTurn() {
+    currentPlayerIdx = (currentPlayerIdx + 1) % players.length;
+    renderPlayersBar();
+    updateTokensOnBoard();
+    renderQuestion();
+    document.getElementById('gameContainer').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  // ── WIN ──
+  function showWin(winner) {
+    gameOver = true;
+    document.getElementById('winTitle').textContent = `${winner.name} chegou primeiro! 🎉`;
+    document.getElementById('winSub').textContent = trailData.titulo || 'Trilha do Conhecimento';
+
+    // Sort by position desc, then score desc
+    const sorted = [...players].sort((a,b) => b.position - a.position || b.score - a.score);
+    const posLabels = ['first','second','third','other'];
+    const medals = ['🥇','🥈','🥉',''];
+
+    const ranking = document.getElementById('winRanking');
+    ranking.innerHTML = '';
+    sorted.forEach((p, i) => {
+      ranking.innerHTML += `
+        <div class="win-rank-row">
+          <div class="win-rank-pos ${posLabels[i] || 'other'}">${i+1}º</div>
+          <div class="win-rank-token" style="background:${p.color}">${p.initial}</div>
+          <div class="win-rank-name">${escHtml(p.name)}</div>
+          <div class="win-rank-score">Casa ${p.position} • ${p.score} pts</div>
+          <div class="win-rank-trophy">${medals[i] || ''}</div>
+        </div>`;
+    });
+
+    showScreen('win');
+    document.getElementById('gameContainer').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  function replayGame() { startGame(); }
+  function showSetupFromWin() { showSetup(); }
+  // attach to btn-new in win screen
+  document.addEventListener('DOMContentLoaded', () => {
+    const btnNew = document.querySelector('.btn-new');
+    if (btnNew) btnNew.onclick = () => showSetup();
+  });
+
+  // ── HELPERS ──
+  function shuffleArr(arr) {
+    for (let i = arr.length-1; i > 0; i--) {
+      const j = Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]] = [arr[j],arr[i]];
+    }
+    return arr;
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+</script>
+
+</body>
+</html>

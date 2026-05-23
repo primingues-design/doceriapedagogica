@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caça-Palavras & Cruzadinha — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+:root {
+  --ink:#0f0e0c; --cream:#faf7f2; --warm:#f5f0e8;
+  --gold:#c8963e; --gold-light:#e8b86d; --gold-pale:#fdf3e3;
+  --teal:#2d6e6e; --teal-light:#4a9b9b; --teal-pale:#e8f4f4;
+  --coral:#d95f3b; --coral-pale:#fdeee9;
+  --green:#2d7d4e; --green-pale:#e8f5ee;
+  --purple:#6b5aed; --purple-pale:#f0eeff;
+  --text:#1a1917; --text-mid:#4a4845; --text-muted:#8a8785;
+  --border:rgba(15,14,12,0.1); --border-mid:rgba(15,14,12,0.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* TOPBAR */
+.topbar{background:var(--ink);padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+.topbar-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--cream);display:flex;align-items:center;gap:10px;text-decoration:none}
+.topbar-logo-mark{width:28px;height:28px;background:var(--gold);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.topbar-nav{display:flex;gap:4px}
+.topbar-link{font-size:12px;color:rgba(250,247,242,0.5);text-decoration:none;padding:6px 12px;border-radius:6px;transition:all 0.15s}
+.topbar-link:hover{color:var(--cream);background:rgba(255,255,255,0.06)}
+.topbar-link.active{color:var(--gold-light);background:rgba(200,150,62,0.1)}
+
+/* LAYOUT */
+.main{display:grid;grid-template-columns:380px 1fr;min-height:calc(100vh - 56px)}
+
+/* FORM PANEL */
+.form-panel{background:var(--cream);border-right:1px solid var(--border);padding:24px 20px;overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px}
+
+/* MODE TABS */
+.mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:22px}
+.mode-tab{padding:10px;border-radius:9px;border:2px solid var(--border-mid);background:white;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:7px;color:var(--text-muted)}
+.mode-tab.active{border-color:var(--gold);background:var(--gold-pale);color:var(--gold)}
+
+.form-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;margin-bottom:4px}
+.form-sub{font-size:12px;color:var(--text-muted);margin-bottom:20px;line-height:1.5}
+.field{margin-bottom:16px}
+.field-label{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.07em;text-transform:uppercase;display:block;margin-bottom:6px}
+.field-required{color:var(--coral)}
+input[type="text"],select,textarea{width:100%;background:white;border:1.5px solid var(--border-mid);border-radius:9px;padding:10px 13px;font-size:14px;color:var(--text);font-family:'Outfit',sans-serif;transition:border-color 0.2s,box-shadow 0.2s;outline:none}
+input[type="text"]:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,150,62,0.12)}
+textarea{resize:vertical;min-height:68px;line-height:1.6;font-size:13px}
+
+.pill-group{display:flex;flex-wrap:wrap;gap:6px}
+.pill{padding:5px 13px;border-radius:20px;border:1.5px solid var(--border-mid);background:white;color:var(--text-muted);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s;font-family:'Outfit',sans-serif;user-select:none}
+.pill.active{border-color:var(--gold);background:var(--gold-pale);color:var(--gold);font-weight:600}
+.pill:hover:not(.active){background:var(--warm)}
+
+/* toggle switch */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:white;border-radius:9px;border:1.5px solid var(--border-mid);margin-bottom:8px}
+.toggle-label{font-size:13px;font-weight:500;color:var(--text-mid);display:flex;align-items:center;gap:8px}
+.toggle-switch{position:relative;width:40px;height:22px;flex-shrink:0}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border-mid);border-radius:22px;cursor:pointer;transition:0.2s}
+.toggle-slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:white;border-radius:50%;transition:0.2s}
+input:checked + .toggle-slider{background:var(--teal)}
+input:checked + .toggle-slider::before{transform:translateX(18px)}
+
+/* section only shown in certain modes */
+.cruz-only{display:none}
+.caca-only{display:block}
+
+.divider{border:none;border-top:1px solid var(--border);margin:18px 0}
+.generate-btn{width:100%;background:var(--gold);color:white;border:none;padding:14px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s}
+.generate-btn:hover:not(:disabled){background:#b5842e;transform:translateY(-1px)}
+.generate-btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.generate-btn .spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,0.4);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.generate-btn.loading .spinner{display:block}
+.generate-btn.loading .btn-text{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.progress-area{display:none;margin-top:14px}
+.progress-area.show{display:block}
+.progress-steps{display:flex;flex-direction:column;gap:8px}
+.progress-step{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-muted);transition:color .3s}
+.progress-step.active{color:var(--teal)}
+.progress-step.done{color:var(--teal)}
+.step-dot{width:17px;height:17px;border-radius:50%;border:2px solid var(--border-mid);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .3s}
+.progress-step.active .step-dot{border-color:var(--teal);background:var(--teal-pale)}
+.progress-step.done .step-dot{border-color:var(--teal);background:var(--teal);color:white}
+.error-box{display:none;background:var(--coral-pale);border:1px solid rgba(217,95,59,0.3);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--coral);margin-top:12px;line-height:1.5}
+.error-box.show{display:block}
+
+/* PREVIEW PANEL */
+.preview-panel{padding:28px;overflow-y:auto}
+
+/* EMPTY STATE */
+.game-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;text-align:center;color:var(--text-muted)}
+.game-empty-icon{font-size:52px;margin-bottom:16px;opacity:.4}
+.game-empty-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-mid);margin-bottom:8px}
+.game-empty-sub{font-size:14px;line-height:1.6;max-width:300px}
+
+/* GAME CONTAINER */
+.game-container{display:none;max-width:900px;margin:0 auto}
+.game-container.show{display:block}
+
+/* HUD */
+.game-hud{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.hud-chip{display:flex;align-items:center;gap:6px;background:white;border:1.5px solid var(--border-mid);border-radius:9px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--text)}
+.hud-chip.green{background:var(--green-pale);border-color:rgba(45,125,78,.2);color:var(--green)}
+.hud-chip.gold{background:var(--gold-pale);border-color:rgba(200,150,62,.3);color:var(--gold)}
+.hud-chip.teal{background:var(--teal-pale);border-color:rgba(45,110,110,.3);color:var(--teal)}
+.hud-actions{margin-left:auto;display:flex;gap:8px}
+.btn-hud{background:white;border:1.5px solid var(--border-mid);padding:7px 14px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s;color:var(--text-mid)}
+.btn-hud:hover{background:var(--warm)}
+.btn-hud.primary{background:var(--teal);color:white;border-color:var(--teal)}
+.btn-hud.primary:hover{background:#245858}
+.btn-hud.danger{background:var(--coral-pale);color:var(--coral);border-color:rgba(217,95,59,.3)}
+.btn-hud.danger:hover{background:var(--coral);color:white}
+.btn-hud:disabled{opacity:.4;cursor:not-allowed}
+
+/* ═══════════════════════════════
+   CAÇA-PALAVRAS
+═══════════════════════════════ */
+.ws-container{display:flex;gap:20px;align-items:flex-start}
+.ws-grid-wrap{flex:1;min-width:0}
+.ws-grid{display:grid;gap:3px;user-select:none;touch-action:none;cursor:crosshair}
+.ws-cell{display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:15px;font-weight:700;text-transform:uppercase;background:white;border:1px solid var(--border);color:var(--text);transition:background .08s,color .08s;font-family:'Outfit',sans-serif}
+.ws-cell.selecting{background:var(--gold-pale);border-color:var(--gold);color:var(--gold)}
+.ws-cell.found-0{background:#d1fae5;border-color:#34d399;color:#065f46}
+.ws-cell.found-1{background:#dbeafe;border-color:#60a5fa;color:#1e40af}
+.ws-cell.found-2{background:#ede9fe;border-color:#a78bfa;color:#5b21b6}
+.ws-cell.found-3{background:#fef3c7;border-color:#fbbf24;color:#92400e}
+.ws-cell.found-4{background:#fee2e2;border-color:#f87171;color:#991b1b}
+.ws-cell.found-5{background:#ccfbf1;border-color:#2dd4bf;color:#115e59}
+.ws-cell.found-6{background:#fce7f3;border-color:#f472b6;color:#831843}
+.ws-cell.found-7{background:#ecfccb;border-color:#86efac;color:#166534}
+.ws-cell.found-8{background:#fef9c3;border-color:#fde047;color:#713f12}
+.ws-cell.found-9{background:#e0e7ff;border-color:#818cf8;color:#3730a3}
+.ws-cell.hint-reveal{background:var(--teal-pale) !important;border-color:var(--teal) !important;color:var(--teal) !important}
+
+/* Word list */
+.ws-sidebar{width:200px;flex-shrink:0}
+.ws-words-title{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.ws-words-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.ws-word-item{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:7px;font-size:13px;font-weight:500;color:var(--text-mid);margin-bottom:4px;background:white;border:1px solid var(--border);transition:all .2s}
+.ws-word-item.found{text-decoration:line-through;color:var(--text-muted);background:var(--warm)}
+.ws-word-item .check{font-size:14px;opacity:0}
+.ws-word-item.found .check{opacity:1}
+.ws-word-item .clue-tip{font-size:11px;color:var(--text-muted);margin-top:1px;display:block}
+
+/* Win overlay (word search) */
+.ws-win{display:none;background:white;border-radius:14px;box-shadow:0 8px 40px rgba(0,0,0,.1);overflow:hidden}
+.ws-win.show{display:block}
+.ws-win-hero{background:linear-gradient(135deg,#1a3d2e 0%,#2d6e4e 100%);padding:32px;text-align:center;color:var(--cream);position:relative;overflow:hidden}
+.ws-win-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(200,150,62,.2) 0%,transparent 60%)}
+.ws-win-trophy{font-size:48px;margin-bottom:8px;position:relative}
+.ws-win-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;position:relative}
+.ws-win-sub{font-size:13px;color:rgba(250,247,242,.6);margin-top:4px;position:relative}
+.ws-win-body{padding:28px 32px}
+.ws-win-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.ws-win-stat{background:var(--warm);border-radius:10px;padding:14px;text-align:center}
+.ws-win-stat-val{font-size:22px;font-weight:700;color:var(--teal)}
+.ws-win-stat-lbl{font-size:11px;color:var(--text-muted);margin-top:2px}
+.ws-win-actions{display:flex;gap:10px}
+.btn-win{flex:1;background:var(--gold);color:white;border:none;padding:13px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-win:hover{background:#b5842e}
+.btn-win.secondary{background:white;color:var(--text-mid);border:1.5px solid var(--border-mid)}
+.btn-win.secondary:hover{background:var(--warm)}
+
+/* ═══════════════════════════════
+   CRUZADINHA
+═══════════════════════════════ */
+.cw-container{display:flex;gap:20px;align-items:flex-start}
+.cw-grid-area{flex:0 0 auto}
+.cw-grid{display:grid;gap:0;border:2px solid var(--ink);border-radius:2px;width:fit-content}
+.cw-cell{width:36px;height:36px;position:relative;border:1px solid rgba(15,14,12,.2)}
+.cw-cell.black{background:var(--ink)}
+.cw-cell.white{background:white;cursor:pointer}
+.cw-cell.white:hover{background:var(--gold-pale)}
+.cw-cell.active-word{background:var(--teal-pale)}
+.cw-cell.active-cell{background:var(--gold-pale);border-color:var(--gold)}
+.cw-cell.correct{background:#d1fae5 !important}
+.cw-cell.wrong{background:#fee2e2 !important}
+.cw-cell.revealed{background:#dbeafe !important}
+.cw-num{position:absolute;top:2px;left:3px;font-size:8px;font-weight:700;color:var(--text-muted);line-height:1;pointer-events:none;z-index:2}
+.cw-input{position:absolute;inset:0;width:100%;height:100%;border:none;background:transparent;text-align:center;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:var(--text);text-transform:uppercase;outline:none;cursor:pointer;padding:0;caret-color:transparent}
+
+/* Clues panel */
+.cw-clues-panel{flex:1;min-width:0;max-height:520px;overflow-y:auto}
+.clues-section{margin-bottom:16px}
+.clues-section-title{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;display:flex;align-items:center;gap:8px;position:sticky;top:0;background:var(--warm);padding:4px 0;z-index:1}
+.clues-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.clue-item{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;border-radius:8px;margin-bottom:5px;cursor:pointer;background:white;border:1.5px solid var(--border);transition:all .15s;font-size:13px}
+.clue-item:hover{border-color:var(--gold);background:var(--gold-pale)}
+.clue-item.active{border-color:var(--teal);background:var(--teal-pale)}
+.clue-item.solved{opacity:.5;text-decoration:line-through;cursor:default}
+.clue-num{font-weight:700;color:var(--gold);flex-shrink:0;min-width:28px;font-size:12px}
+.clue-emoji{font-size:20px;flex-shrink:0;line-height:1.2}
+.clue-text{color:var(--text-mid);line-height:1.4;flex:1}
+
+/* ═══════════════════════════════
+   PDF PRINT AREA
+═══════════════════════════════ */
+#pdf-print{display:none}
+.pdf-page{font-family:'Outfit',sans-serif;background:white;padding:32px 36px}
+.pdf-header{border-top:5px solid var(--gold);border-bottom:1px solid var(--border);padding:18px 0 14px;margin-bottom:24px}
+.pdf-header-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+.pdf-header-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--text);margin-bottom:3px}
+.pdf-header-meta{font-size:11px;color:var(--text-muted)}
+.pdf-body{display:flex;gap:24px;align-items:flex-start}
+.pdf-grid-wrap{flex-shrink:0}
+.pdf-ws-grid{display:inline-grid;gap:2px;margin-bottom:16px}
+.pdf-ws-cell{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;text-transform:uppercase;background:white;border:1px solid rgba(15,14,12,.15);border-radius:4px;font-family:'Outfit',sans-serif}
+.pdf-cw-grid{display:inline-grid;gap:0;border:2px solid var(--ink)}
+.pdf-cw-cell-b{width:28px;height:28px;background:var(--ink)}
+.pdf-cw-cell-w{width:28px;height:28px;background:white;border:1px solid rgba(15,14,12,.2);position:relative;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:'Outfit',sans-serif;color:var(--text)}
+.pdf-cw-cell-num{position:absolute;top:1px;left:2px;font-size:7px;font-weight:700;color:var(--text-muted)}
+.pdf-words{flex:1}
+.pdf-words-title{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
+.pdf-word-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.pdf-word-item{font-size:12px;color:var(--text);padding:4px 0;border-bottom:1px solid var(--border);display:flex;gap:8px}
+.pdf-clues-wrap{flex:1}
+.pdf-clue-section{margin-bottom:14px}
+.pdf-clue-title{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.pdf-clue-item{display:flex;align-items:flex-start;gap:8px;padding:3px 0;font-size:11px;color:var(--text-mid);border-bottom:1px solid var(--border);line-height:1.4}
+.pdf-clue-num{font-weight:700;color:var(--gold);min-width:26px;flex-shrink:0}
+.pdf-clue-emoji{font-size:14px;flex-shrink:0}
+.pdf-footer{margin-top:20px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted)}
+.pdf-footer-logo{font-family:'Playfair Display',serif;color:var(--gold);font-weight:700}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  .main{grid-template-columns:1fr}
+  .form-panel{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--border)}
+  .preview-panel{padding:16px}
+  .ws-container,.cw-container{flex-direction:column}
+  .ws-sidebar{width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="index.html">
+    <div class="topbar-logo-mark">✦</div>
+    DoceriaPedagógica
+  </a>
+  <nav class="topbar-nav">
+    <a class="topbar-link" href="gerador.html">Atividades</a>
+    <a class="topbar-link" href="apostila.html">Apostila</a>
+    <a class="topbar-link" href="jogos.html">Quiz</a>
+    <a class="topbar-link" href="memoria.html">Memória</a>
+    <a class="topbar-link" href="trilha.html">Trilha</a>
+    <a class="topbar-link active" href="interativo.html">Palavras</a>
+    <a class="topbar-link" href="jogos-area.html" style="color:#7fdc9e;border:1px solid rgba(127,220,158,0.3);border-radius:6px;">Área do Aluno</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <!-- FORM PANEL -->
+  <div class="form-panel">
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tabCaca" onclick="setMode('caca')">🔍 Caça-palavras</button>
+      <button class="mode-tab" id="tabCruz" onclick="setMode('cruz')">✏️ Cruzadinha</button>
+    </div>
+
+    <div class="form-title" id="formTitle">Caça-Palavras</div>
+    <div class="form-sub" id="formSub">A IA gera as palavras — os alunos encontram na grade.</div>
+
+    <div class="field">
+      <label class="field-label">Tema ou conteúdo <span class="field-required">*</span></label>
+      <input type="text" id="tema" placeholder="Ex: Animais, Planetas, Verbos irregulares..." />
+    </div>
+    <div class="field">
+      <label class="field-label">Nível / público-alvo <span class="field-required">*</span></label>
+      <select id="nivel">
+        <option value="">Selecione...</option>
+        <option value="Educação Infantil (4-5 anos)">Educação Infantil</option>
+        <option value="Fundamental I (1º ao 5º ano)">Fundamental I (1º–5º)</option>
+        <option value="Fundamental II (6º ao 9º ano)">Fundamental II (6º–9º)</option>
+        <option value="EJA — Alfabetização">EJA — Alfabetização</option>
+        <option value="EJA — Ensino Fundamental">EJA — Fundamental</option>
+        <option value="EJA — Ensino Médio">EJA — Ensino Médio</option>
+        <option value="Ensino Médio">Ensino Médio</option>
+        <option value="Inglês — Básico (A1/A2)">Inglês — Básico</option>
+        <option value="Inglês — Intermediário (B1/B2)">Inglês — Intermediário</option>
+        <option value="Espanhol — Básico">Espanhol — Básico</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Número de palavras</label>
+      <div class="pill-group" id="numPills">
+        <div class="pill" data-val="8">8</div>
+        <div class="pill active" data-val="10">10</div>
+        <div class="pill" data-val="12">12</div>
+        <div class="pill" data-val="15">15</div>
+      </div>
+    </div>
+
+    <!-- CAÇA-PALAVRAS options -->
+    <div class="caca-only">
+      <div class="field">
+        <label class="field-label">Tamanho da grade</label>
+        <div class="pill-group" id="sizePills">
+          <div class="pill" data-val="12">12×12</div>
+          <div class="pill active" data-val="15">15×15</div>
+          <div class="pill" data-val="18">18×18</div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Direções</label>
+        <div class="pill-group" id="dirPills">
+          <div class="pill" data-val="easy">↔ ↕ Fácil</div>
+          <div class="pill active" data-val="medium">↔ ↕ ↗ Médio</div>
+          <div class="pill" data-val="hard">Todas Difícil</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CRUZADINHA options -->
+    <div class="cruz-only" id="cruzOptions">
+      <div class="field">
+        <label class="field-label">Opções de dica</label>
+        <div class="toggle-row">
+          <span class="toggle-label">🖼️ Imagens (emoji) nas dicas</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleEmoji" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">💡 Dicas de texto</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleDicas" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Banco de palavras (opcional)</label>
+      <textarea id="banco" placeholder="Cole suas palavras separadas por vírgula ou enter. Deixe vazio para a IA gerar.&#10;Ex: GATO, CACHORRO, PEIXE, COELHO"></textarea>
+    </div>
+
+    <hr class="divider">
+
+    <button class="generate-btn" id="generateBtn" onclick="generateGame()">
+      <div class="spinner"></div>
+      <span class="btn-text">✦ Gerar Jogo</span>
+    </button>
+    <div class="error-box" id="errorBox"></div>
+    <div class="progress-area" id="progressArea">
+      <div class="progress-steps">
+        <div class="progress-step" id="step1"><div class="step-dot">1</div><span>Analisando tema e nível...</span></div>
+        <div class="progress-step" id="step2"><div class="step-dot">2</div><span>Gerando palavras pedagógicas...</span></div>
+        <div class="progress-step" id="step3"><div class="step-dot">3</div><span>Montando o tabuleiro...</span></div>
+        <div class="progress-step" id="step4"><div class="step-dot">4</div><span>Finalizando jogo...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div class="preview-panel">
+
+    <div class="game-empty" id="gameEmpty">
+      <div class="game-empty-icon">🔍</div>
+      <div class="game-empty-title">Seu jogo aparece aqui</div>
+      <div class="game-empty-sub">Preencha o formulário e clique em <strong>Gerar Jogo</strong> para criar o caça-palavras ou cruzadinha interativo.</div>
+    </div>
+
+    <div class="game-container" id="gameContainer">
+
+      <!-- ── CAÇA-PALAVRAS ── -->
+      <div id="wsGame" style="display:none">
+        <div class="game-hud" id="wsHud">
+          <div class="hud-chip green" id="wsFound">✅ 0 / 0</div>
+          <div class="hud-chip" id="wsTimer">⏱ 0:00</div>
+          <div class="hud-chip gold" id="wsHints">💡 3 dicas</div>
+          <div class="hud-actions">
+            <button class="btn-hud" onclick="wsUseHint()">💡 Dica</button>
+            <button class="btn-hud" onclick="wsRevealAll()">👁 Revelar</button>
+            <button class="btn-hud primary" onclick="downloadPDF()">⬇ PDF</button>
+          </div>
+        </div>
+        <div class="ws-container">
+          <div class="ws-grid-wrap">
+            <div class="ws-grid" id="wsGrid"></div>
+          </div>
+          <div class="ws-sidebar">
+            <div class="ws-words-title">Encontre as palavras</div>
+            <div id="wsWordList"></div>
+          </div>
+        </div>
+        <div class="ws-win" id="wsWin">
+          <div class="ws-win-hero">
+            <div class="ws-win-trophy">🏆</div>
+            <div class="ws-win-title">Todas as palavras encontradas!</div>
+            <div class="ws-win-sub" id="wsWinSub">Excelente trabalho!</div>
+          </div>
+          <div class="ws-win-body">
+            <div class="ws-win-stats">
+              <div class="ws-win-stat"><div class="ws-win-stat-val" id="wsWinTime">—</div><div class="ws-win-stat-lbl">Tempo</div></div>
+              <div class="ws-win-stat"><div class="ws-win-stat-val" id="wsWinHints">—</div><div class="ws-win-stat-lbl">Dicas usadas</div></div>
+              <div class="ws-win-stat"><div class="ws-win-stat-val" id="wsWinWords">—</div><div class="ws-win-stat-lbl">Palavras</div></div>
+            </div>
+            <div class="ws-win-actions">
+              <button class="btn-win" onclick="wsRestart()">↺ Jogar novamente</button>
+              <button class="btn-win secondary" onclick="downloadPDF()">⬇ Imprimir PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CRUZADINHA ── -->
+      <div id="cwGame" style="display:none">
+        <div class="game-hud" id="cwHud">
+          <div class="hud-chip teal" id="cwProgress">✏️ 0 / 0 palavras</div>
+          <div class="hud-chip gold" id="cwHintsChip">💡 3 dicas</div>
+          <div class="hud-actions">
+            <button class="btn-hud primary" onclick="cwCheck()">✓ Verificar</button>
+            <button class="btn-hud" onclick="cwHint()">💡 Revelar letra</button>
+            <button class="btn-hud danger" onclick="cwRevealAll()">👁 Revelar tudo</button>
+            <button class="btn-hud" onclick="downloadPDF()">⬇ PDF</button>
+          </div>
+        </div>
+        <div class="cw-container">
+          <div class="cw-grid-area">
+            <div class="cw-grid" id="cwGrid"></div>
+          </div>
+          <div class="cw-clues-panel" id="cwCluesPanel"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="pdf-print"></div>
+
+<script>
+// ═══════════════════════════════
+//  STATE
+// ═══════════════════════════════
+let currentMode = 'caca';
+let gameData = null;
+
+// Word search
+let wsGridData = [], wsPlacements = [], wsFoundWords = new Set();
+let wsIsSelecting = false, wsStartCell = null, wsCurrentEnd = null;
+let wsTimer = null, wsSeconds = 0, wsHintsLeft = 3, wsHintsUsed = 0;
+let wsColorIdx = 0, wsCellColors = {}; // map "r,c" -> color class index
+
+// Crossword
+let cwGridData = [], cwPlacements = [], cwUserData = [];
+let cwMinR = 0, cwMaxR = 0, cwMinC = 0, cwMaxC = 0;
+let cwCols = 0;
+let cwActiveCell = null, cwActiveWordIdx = -1, cwActiveDir = 'H';
+let cwHintsLeft = 3;
+
+const DIR_VECS = {
+  h:[0,1], hr:[0,-1], v:[1,0], vr:[-1,0],
+  dr:[1,1], dl:[1,-1], ur:[-1,1], ul:[-1,-1]
+};
+
+// ═══════════════════════════════
+//  MODE & PILLS
+// ═══════════════════════════════
+function setMode(m) {
+  currentMode = m;
+  document.getElementById('tabCaca').classList.toggle('active', m === 'caca');
+  document.getElementById('tabCruz').classList.toggle('active', m === 'cruz');
+  document.querySelectorAll('.caca-only').forEach(el => el.style.display = m==='caca'?'block':'none');
+  document.querySelectorAll('.cruz-only').forEach(el => el.style.display = m==='cruz'?'block':'none');
+  document.getElementById('formTitle').textContent = m==='caca' ? 'Caça-Palavras' : 'Cruzadinha';
+  document.getElementById('formSub').textContent = m==='caca'
+    ? 'A IA gera as palavras — os alunos encontram na grade.'
+    : 'A IA cria as pistas — os alunos preenchem as letras.';
+  document.querySelector('.game-empty-icon').textContent = m==='caca' ? '🔍' : '✏️';
+}
+
+['numPills','sizePills','dirPills'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.querySelectorAll('.pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      el.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+    });
+  });
+});
+
+function getPill(id) {
+  const a = document.querySelector(`#${id} .pill.active`);
+  return a ? a.dataset.val : null;
+}
+
+function setStep(n) {
+  for (let i=1;i<=4;i++) {
+    const el = document.getElementById('step'+i);
+    el.classList.remove('active','done');
+    if (i<n){el.classList.add('done');el.querySelector('.step-dot').textContent='✓';}
+    else if(i===n) el.classList.add('active');
+    else el.querySelector('.step-dot').textContent=i;
+  }
+}
+const delay = ms => new Promise(r => setTimeout(r,ms));
+
+// ═══════════════════════════════
+//  GENERATE
+// ═══════════════════════════════
+async function generateGame() {
+  const tema = document.getElementById('tema').value.trim();
+  const nivel = document.getElementById('nivel').value;
+  const numPalavras = parseInt(getPill('numPills')||'10');
+  const banco = document.getElementById('banco').value.trim();
+
+  const err = document.getElementById('errorBox');
+  err.classList.remove('show');
+  if (!tema){err.textContent='Preencha o tema.';err.classList.add('show');document.getElementById('tema').focus();return;}
+  if (!nivel){err.textContent='Selecione o nível.';err.classList.add('show');document.getElementById('nivel').focus();return;}
+
+  const btn = document.getElementById('generateBtn');
+  btn.disabled=true; btn.classList.add('loading');
+  document.getElementById('progressArea').classList.add('show');
+  document.getElementById('gameEmpty').style.display='none';
+  document.getElementById('gameContainer').classList.remove('show');
+  document.getElementById('wsGame').style.display='none';
+  document.getElementById('cwGame').style.display='none';
+  stopWSTimer();
+
+  setStep(1); await delay(500); setStep(2);
+
+  const wantEmoji = document.getElementById('toggleEmoji')?.checked ?? true;
+  const wantDicas = document.getElementById('toggleDicas')?.checked ?? true;
+  const hasBanco = banco.length > 0;
+
+  let prompt = '';
+  if (currentMode === 'caca') {
+    if (hasBanco) {
+      const wordList = banco.split(/[,\n]+/).map(w=>w.trim().toUpperCase()).filter(Boolean).slice(0,numPalavras);
+      prompt = `Crie um caça-palavras pedagógico usando EXATAMENTE estas palavras: ${wordList.join(', ')}
+TEMA: ${tema} | NÍVEL: ${nivel}
+Retorne SOMENTE este JSON:
+{"titulo":"Caça-palavras: ${tema}","nivel":"${nivel}","disciplina":"${tema}",
+"palavras":[{"texto":"PALAVRA","dica":"definição ou pista pedagógica curta"}]}`;
+    } else {
+      prompt = `Gere ${numPalavras} palavras para um caça-palavras pedagógico.
+TEMA: ${tema} | NÍVEL: ${nivel}
+Regras: palavras relacionadas ao tema, adequadas ao nível, sem acento, mínimo 4 letras, máximo 12 letras.
+Retorne SOMENTE este JSON:
+{"titulo":"Caça-palavras: ${tema}","nivel":"${nivel}","disciplina":"${tema}",
+"palavras":[{"texto":"PALAVRA","dica":"definição ou pista pedagógica curta"}]}
+Gere exatamente ${numPalavras} objetos no array.`;
+    }
+  } else {
+    const emojiInstr = wantEmoji ? 'Para cada palavra, forneça um emoji que a represente visualmente (campo "emoji").' : '';
+    const dicaInstr = wantDicas ? 'Para cada palavra, forneça uma dica textual pedagógica (campo "dica").' : 'Campo "dica" pode ser vazio.';
+    if (hasBanco) {
+      const wordList = banco.split(/[,\n]+/).map(w=>w.trim().toUpperCase()).filter(Boolean).slice(0,numPalavras);
+      prompt = `Crie uma cruzadinha usando EXATAMENTE estas palavras: ${wordList.join(', ')}
+TEMA: ${tema} | NÍVEL: ${nivel}
+${emojiInstr} ${dicaInstr}
+Retorne SOMENTE este JSON:
+{"titulo":"Cruzadinha: ${tema}","nivel":"${nivel}","disciplina":"${tema}",
+"palavras":[{"texto":"PALAVRA","dica":"pista pedagógica","emoji":"🔤"}]}`;
+    } else {
+      prompt = `Gere ${numPalavras} palavras para uma cruzadinha pedagógica.
+TEMA: ${tema} | NÍVEL: ${nivel}
+${emojiInstr} ${dicaInstr}
+Regras: palavras relacionadas ao tema, sem acento, mínimo 3 letras, máximo 12 letras.
+Retorne SOMENTE este JSON:
+{"titulo":"Cruzadinha: ${tema}","nivel":"${nivel}","disciplina":"${tema}",
+"palavras":[{"texto":"PALAVRA","dica":"pista pedagógica","emoji":"🔤"}]}
+Gere exatamente ${numPalavras} objetos.`;
+    }
+  }
+
+  try {
+    const response = await fetch('/api/claude', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-5', max_tokens:2500,
+        system:'Você é especialista em educação brasileira e jogos pedagógicos. Retorne APENAS JSON válido, sem markdown.',
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+
+    setStep(3);
+    if (!response.ok){const e=await response.json().catch(()=>({}));throw new Error(e?.error?.message||`Erro ${response.status}`);}
+
+    const data = await response.json();
+    const raw = data.content?.[0]?.text||'';
+    setStep(4); await delay(300);
+
+    let parsed;
+    try{ parsed=JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+    catch(e){ throw new Error('Formato inesperado. Tente novamente.'); }
+
+    gameData = parsed;
+
+    if (currentMode==='caca') buildAndShowWordSearch(parsed);
+    else buildAndShowCrossword(parsed);
+
+  } catch(e) {
+    console.error(e);
+    err.textContent='Erro ao gerar: '+(e.message||'Tente novamente.');
+    err.classList.add('show');
+    document.getElementById('gameEmpty').style.display='flex';
+  } finally {
+    btn.disabled=false; btn.classList.remove('loading');
+    document.getElementById('progressArea').classList.remove('show');
+    for(let i=1;i<=4;i++){const el=document.getElementById('step'+i);el.classList.remove('active','done');el.querySelector('.step-dot').textContent=i;}
+  }
+}
+
+// ═══════════════════════════════
+//  WORD SEARCH — BUILD
+// ═══════════════════════════════
+function buildAndShowWordSearch(data) {
+  const gridSize = parseInt(getPill('sizePills')||'15');
+  const difficulty = getPill('dirPills')||'medium';
+  const words = (data.palavras||[]).map(p=>p.texto.toUpperCase().replace(/[^A-Z]/g,''));
+
+  const dirs = {
+    easy:  [[0,1],[1,0]],
+    medium:[[0,1],[1,0],[1,1],[1,-1]],
+    hard:  [[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]]
+  }[difficulty];
+
+  const grid = Array.from({length:gridSize},()=>Array(gridSize).fill(null));
+  wsPlacements = [];
+  const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  for (const word of words) {
+    let placed = false;
+    for (let attempt=0; attempt<200 && !placed; attempt++) {
+      const [dr,dc] = dirs[Math.floor(Math.random()*dirs.length)];
+      const maxR = dr>0 ? gridSize-word.length : dr<0 ? word.length-1 : gridSize-1;
+      const maxC = dc>0 ? gridSize-word.length : dc<0 ? word.length-1 : gridSize-1;
+      const minR = dr<0 ? word.length-1 : 0;
+      const minC = dc<0 ? word.length-1 : 0;
+      if (maxR<minR||maxC<minC) continue;
+      const r = minR + Math.floor(Math.random()*(maxR-minR+1));
+      const c = minC + Math.floor(Math.random()*(maxC-minC+1));
+      let ok = true;
+      for (let i=0;i<word.length;i++) {
+        const nr=r+dr*i, nc=c+dc*i;
+        if (nr<0||nr>=gridSize||nc<0||nc>=gridSize){ok=false;break;}
+        if (grid[nr][nc]!==null&&grid[nr][nc]!==word[i]){ok=false;break;}
+      }
+      if (ok) {
+        for (let i=0;i<word.length;i++) grid[r+dr*i][c+dc*i] = word[i];
+        wsPlacements.push({word,r,c,dr,dc});
+        placed=true;
+      }
+    }
+  }
+
+  for (let r=0;r<gridSize;r++) for(let c=0;c<gridSize;c++) {
+    if (grid[r][c]===null) grid[r][c]=ALPHABET[Math.floor(Math.random()*26)];
+  }
+
+  wsGridData = grid;
+  wsFoundWords = new Set();
+  wsHintsLeft = 3; wsHintsUsed = 0; wsColorIdx = 0; wsCellColors = {};
+  wsSeconds = 0;
+
+  renderWSGrid(gridSize);
+  renderWSWordList(data.palavras||[]);
+
+  document.getElementById('wsFound').textContent = `✅ 0 / ${wsPlacements.length}`;
+  document.getElementById('wsTimer').textContent = '⏱ 0:00';
+  document.getElementById('wsHints').textContent = `💡 ${wsHintsLeft} dicas`;
+  document.getElementById('wsWin').classList.remove('show');
+  document.getElementById('wsGame').style.display='block';
+  document.getElementById('gameContainer').classList.add('show');
+  document.getElementById('gameContainer').scrollIntoView({behavior:'smooth',block:'start'});
+  startWSTimer();
+}
+
+// ═══════════════════════════════
+//  WORD SEARCH — RENDER
+// ═══════════════════════════════
+function renderWSGrid(size) {
+  const grid = document.getElementById('wsGrid');
+  grid.style.gridTemplateColumns = `repeat(${size},1fr)`;
+  grid.style.maxWidth = size<=12 ? '400px' : size<=15 ? '480px' : '560px';
+  grid.innerHTML = '';
+
+  for (let r=0;r<wsGridData.length;r++) {
+    for (let c=0;c<wsGridData[r].length;c++) {
+      const cell = document.createElement('div');
+      cell.className = 'ws-cell';
+      cell.dataset.r = r; cell.dataset.c = c;
+      cell.textContent = wsGridData[r][c];
+      cell.style.aspectRatio = '1';
+      cell.style.fontSize = size<=12 ? '16px' : size<=15 ? '14px' : '12px';
+      grid.appendChild(cell);
+    }
+  }
+
+  grid.addEventListener('pointerdown', onWSDown, {passive:false});
+  grid.addEventListener('pointermove', onWSMove, {passive:false});
+  grid.addEventListener('pointerup', onWSUp);
+  grid.addEventListener('pointercancel', ()=>{ wsIsSelecting=false; clearWSSelecting(); });
+}
+
+function renderWSWordList(palavras) {
+  const list = document.getElementById('wsWordList');
+  list.innerHTML = '';
+  palavras.forEach(p => {
+    const word = p.texto.toUpperCase().replace(/[^A-Z]/g,'');
+    const div = document.createElement('div');
+    div.className = 'ws-word-item';
+    div.id = `ws-word-${word}`;
+    div.innerHTML = `<span class="check">✓</span><div><strong>${word}</strong>${p.dica ? `<span class="clue-tip">${escHtml(p.dica)}</span>` : ''}</div>`;
+    list.appendChild(div);
+  });
+}
+
+// ═══════════════════════════════
+//  WORD SEARCH — INTERACTION
+// ═══════════════════════════════
+function getCellAt(x, y) {
+  const el = document.elementFromPoint(x, y);
+  return el?.closest('.ws-cell') || null;
+}
+
+function onWSDown(e) {
+  e.preventDefault();
+  const cell = getCellAt(e.clientX, e.clientY);
+  if (!cell) return;
+  wsIsSelecting = true;
+  wsStartCell = {r:+cell.dataset.r, c:+cell.dataset.c};
+  wsCurrentEnd = wsStartCell;
+  document.getElementById('wsGrid').setPointerCapture(e.pointerId);
+  renderWSSelecting();
+}
+
+function onWSMove(e) {
+  if (!wsIsSelecting) return;
+  e.preventDefault();
+  const cell = getCellAt(e.clientX, e.clientY);
+  if (!cell) return;
+  wsCurrentEnd = {r:+cell.dataset.r, c:+cell.dataset.c};
+  renderWSSelecting();
+}
+
+function onWSUp(e) {
+  if (!wsIsSelecting) return;
+  wsIsSelecting = false;
+  validateWSSelection();
+}
+
+function getWSPath(r1,c1,r2,c2) {
+  const dr=r2-r1, dc=c2-c1;
+  const dist=Math.max(Math.abs(dr),Math.abs(dc));
+  if (dist===0) return [{r:r1,c:c1}];
+  const isH=dr===0, isV=dc===0, isD=Math.abs(dr)===Math.abs(dc);
+  if (!isH&&!isV&&!isD) {
+    // snap to nearest valid axis
+    if (Math.abs(dr)>Math.abs(dc)) return getWSPath(r1,c1,r2,c1);
+    return getWSPath(r1,c1,r1,c2);
+  }
+  const sr=dr===0?0:dr/Math.abs(dr), sc=dc===0?0:dc/Math.abs(dc);
+  const path=[];
+  for(let i=0;i<=dist;i++) path.push({r:r1+sr*i,c:c1+sc*i});
+  return path;
+}
+
+function renderWSSelecting() {
+  clearWSSelecting();
+  if (!wsStartCell||!wsCurrentEnd) return;
+  const path=getWSPath(wsStartCell.r,wsStartCell.c,wsCurrentEnd.r,wsCurrentEnd.c);
+  path.forEach(({r,c})=>{
+    const cell=document.querySelector(`.ws-cell[data-r="${r}"][data-c="${c}"]`);
+    if (cell&&!cell.className.includes('found-')) cell.classList.add('selecting');
+  });
+}
+
+function clearWSSelecting() {
+  document.querySelectorAll('.ws-cell.selecting').forEach(c=>c.classList.remove('selecting'));
+}
+
+function validateWSSelection() {
+  clearWSSelecting();
+  if (!wsStartCell||!wsCurrentEnd) return;
+  const path=getWSPath(wsStartCell.r,wsStartCell.c,wsCurrentEnd.r,wsCurrentEnd.c);
+  if (path.length<2) return;
+
+  for (const pl of wsPlacements) {
+    if (wsFoundWords.has(pl.word)) continue;
+    const plCells=[];
+    for(let i=0;i<pl.word.length;i++) plCells.push({r:pl.r+pl.dr*i,c:pl.c+pl.dc*i});
+    const fwd=path.length===plCells.length&&path.every((cell,i)=>cell.r===plCells[i].r&&cell.c===plCells[i].c);
+    const bwd=path.length===plCells.length&&path.every((cell,i)=>cell.r===plCells[plCells.length-1-i].r&&cell.c===plCells[plCells.length-1-i].c);
+    if (fwd||bwd) {
+      markWordFound(pl);
+      return;
+    }
+  }
+}
+
+function markWordFound(pl) {
+  wsFoundWords.add(pl.word);
+  const colorClass = 'found-'+(wsColorIdx%10);
+  wsColorIdx++;
+  for(let i=0;i<pl.word.length;i++) {
+    const r=pl.r+pl.dr*i, c=pl.c+pl.dc*i;
+    const cell=document.querySelector(`.ws-cell[data-r="${r}"][data-c="${c}"]`);
+    if (cell) { cell.className='ws-cell '+colorClass; }
+  }
+  const wordEl=document.getElementById(`ws-word-${pl.word}`);
+  if (wordEl) wordEl.classList.add('found');
+  document.getElementById('wsFound').textContent=`✅ ${wsFoundWords.size} / ${wsPlacements.length}`;
+
+  if (wsFoundWords.size===wsPlacements.length) {
+    setTimeout(showWSWin, 600);
+  }
+}
+
+// Timer
+function startWSTimer() {
+  stopWSTimer();
+  wsTimer=setInterval(()=>{
+    wsSeconds++;
+    document.getElementById('wsTimer').textContent='⏱ '+formatTime(wsSeconds);
+  },1000);
+}
+function stopWSTimer(){if(wsTimer){clearInterval(wsTimer);wsTimer=null;}}
+function formatTime(s){return Math.floor(s/60)+':'+(s%60).toString().padStart(2,'0');}
+
+// Hint
+function wsUseHint() {
+  if (wsHintsLeft<=0) return;
+  const remaining = wsPlacements.filter(pl=>!wsFoundWords.has(pl.word));
+  if (!remaining.length) return;
+  const pl = remaining[Math.floor(Math.random()*remaining.length)];
+  wsHintsLeft--;
+  wsHintsUsed++;
+  document.getElementById('wsHints').textContent=`💡 ${wsHintsLeft} dicas`;
+
+  // Flash cells then mark found
+  const cells=[];
+  for(let i=0;i<pl.word.length;i++){
+    const cell=document.querySelector(`.ws-cell[data-r="${pl.r+pl.dr*i}"][data-c="${pl.c+pl.dc*i}"]`);
+    if(cell){cell.classList.add('hint-reveal');cells.push(cell);}
+  }
+  setTimeout(()=>{
+    cells.forEach(c=>c.classList.remove('hint-reveal'));
+    markWordFound(pl);
+  },1500);
+}
+
+function wsRevealAll() {
+  wsPlacements.forEach(pl=>{ if(!wsFoundWords.has(pl.word)) { wsHintsUsed++; markWordFound(pl); } });
+  stopWSTimer();
+}
+
+function wsRestart() {
+  buildAndShowWordSearch(gameData);
+}
+
+function showWSWin() {
+  stopWSTimer();
+  document.getElementById('wsWinTime').textContent=formatTime(wsSeconds);
+  document.getElementById('wsWinHints').textContent=wsHintsUsed+' usadas';
+  document.getElementById('wsWinWords').textContent=wsFoundWords.size+' palavras';
+  document.getElementById('wsWin').classList.add('show');
+  document.getElementById('wsWin').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ═══════════════════════════════
+//  CROSSWORD — BUILD
+// ═══════════════════════════════
+function buildAndShowCrossword(data) {
+  const words = (data.palavras||[]).map(p=>({
+    texto: p.texto.toUpperCase().replace(/[^A-Z]/g,''),
+    dica: p.dica||'',
+    emoji: p.emoji||''
+  })).filter(p=>p.texto.length>=3);
+
+  const sorted = [...words].sort((a,b)=>b.texto.length-a.texto.length).slice(0,15);
+  const SIZE = 21;
+  const grid = Array.from({length:SIZE},()=>Array(SIZE).fill(null));
+  cwPlacements = [];
+  let wordNum = 1;
+
+  // Place first word horizontally in center
+  const first = sorted[0];
+  const sc = Math.floor((SIZE-first.texto.length)/2);
+  const sr = Math.floor(SIZE/2);
+  for(let i=0;i<first.texto.length;i++) grid[sr][sc+i]=first.texto[i];
+  cwPlacements.push({word:first.texto,dica:first.dica,emoji:first.emoji,r:sr,c:sc,dir:'H',num:wordNum++});
+
+  for(let wi=1;wi<sorted.length;wi++) {
+    const word=sorted[wi].texto, dica=sorted[wi].dica, emoji=sorted[wi].emoji;
+    let best=null, bestScore=-1;
+    for(const placed of cwPlacements) {
+      for(let pi=0;pi<placed.word.length;pi++) {
+        for(let wii=0;wii<word.length;wii++) {
+          if(placed.word[pi]!==word[wii]) continue;
+          const newDir=placed.dir==='H'?'V':'H';
+          let r,c;
+          if(newDir==='V'){r=placed.r-wii;c=placed.c+pi;}
+          else{r=placed.r+pi;c=placed.c-wii;}
+          if(r<1||c<1||r+(newDir==='V'?word.length:1)>=SIZE-1||c+(newDir==='H'?word.length:1)>=SIZE-1) continue;
+          let fits=true, intersections=0;
+          for(let li=0;li<word.length;li++){
+            const lr=newDir==='V'?r+li:r, lc=newDir==='H'?c+li:c;
+            const ex=grid[lr][lc];
+            if(ex!==null&&ex!==word[li]){fits=false;break;}
+            if(ex===word[li]) intersections++;
+            if(ex===null){
+              if(newDir==='H'){
+                if(li>0&&grid[lr-1]?.[lc]!==null) {fits=false;break;}
+                if(li>0&&grid[lr+1]?.[lc]!==null) {fits=false;break;}
+              } else {
+                if(li>0&&grid[lr]?.[lc-1]!==null) {fits=false;break;}
+                if(li>0&&grid[lr]?.[lc+1]!==null) {fits=false;break;}
+              }
+            }
+          }
+          if(fits){
+            if(newDir==='H'){if(grid[r][c-1]!==null||grid[r][c+word.length]!==null) fits=false;}
+            else{if(grid[r-1]?.[c]!=null||grid[r+word.length]?.[c]!=null) fits=false;}
+          }
+          if(fits&&intersections>bestScore){bestScore=intersections;best={word,dica,emoji,r,c,dir:newDir,num:wordNum};}
+        }
+      }
+    }
+    if(best){
+      const {word:w,r,c,dir}=best;
+      for(let li=0;li<w.length;li++) grid[dir==='V'?r+li:r][dir==='H'?c+li:c]=w[li];
+      cwPlacements.push(best);
+      wordNum++;
+    }
+  }
+
+  // Bounding box
+  cwMinR=SIZE;cwMaxR=0;cwMinC=SIZE;cwMaxC=0;
+  for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++){
+    if(grid[r][c]){cwMinR=Math.min(cwMinR,r);cwMaxR=Math.max(cwMaxR,r);cwMinC=Math.min(cwMinC,c);cwMaxC=Math.max(cwMaxC,c);}
+  }
+  cwMinR=Math.max(0,cwMinR-1);cwMaxR=Math.min(SIZE-1,cwMaxR+1);
+  cwMinC=Math.max(0,cwMinC-1);cwMaxC=Math.min(SIZE-1,cwMaxC+1);
+  cwCols=cwMaxC-cwMinC+1;
+
+  // Build trimmed grid
+  cwGridData=[];
+  for(let r=cwMinR;r<=cwMaxR;r++){
+    const row=[];
+    for(let c=cwMinC;c<=cwMaxC;c++) row.push(grid[r][c]);
+    cwGridData.push(row);
+  }
+  cwUserData=cwGridData.map(row=>row.map(()=>''));
+  cwHintsLeft=3;
+  cwActiveCell=null; cwActiveWordIdx=-1;
+
+  renderCWGrid();
+  renderCWClues();
+
+  document.getElementById('cwHintsChip').textContent=`💡 ${cwHintsLeft} dicas`;
+  updateCWProgress();
+  document.getElementById('cwGame').style.display='block';
+  document.getElementById('gameContainer').classList.add('show');
+  document.getElementById('gameContainer').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ═══════════════════════════════
+//  CROSSWORD — RENDER GRID
+// ═══════════════════════════════
+function renderCWGrid() {
+  const grid = document.getElementById('cwGrid');
+  grid.style.gridTemplateColumns=`repeat(${cwCols},36px)`;
+  grid.style.gridTemplateRows=`repeat(${cwGridData.length},36px)`;
+  grid.innerHTML='';
+
+  const numMap={};
+  cwPlacements.forEach(pl=>{ numMap[`${pl.r-cwMinR},${pl.c-cwMinC}`]=pl.num; });
+
+  for(let r=0;r<cwGridData.length;r++){
+    for(let c=0;c<cwGridData[r].length;c++){
+      const val=cwGridData[r][c];
+      const cell=document.createElement('div');
+      if(val===null){
+        cell.className='cw-cell black';
+      } else {
+        cell.className='cw-cell white';
+        cell.dataset.r=r; cell.dataset.c=c;
+        const num=numMap[`${r},${c}`];
+        if(num) cell.innerHTML=`<span class="cw-num">${num}</span>`;
+        const inp=document.createElement('input');
+        inp.className='cw-input';
+        inp.maxLength=1;
+        inp.autocomplete='off';
+        inp.autocorrect='off';
+        inp.autocapitalize='characters';
+        inp.spellcheck=false;
+        inp.addEventListener('focus',()=>cwOnFocus(r,c));
+        inp.addEventListener('input',e=>cwOnInput(e,r,c));
+        inp.addEventListener('keydown',e=>cwOnKeydown(e,r,c));
+        cell.appendChild(inp);
+        cell.addEventListener('click',()=>cwOnCellClick(r,c));
+      }
+      grid.appendChild(cell);
+    }
+  }
+}
+
+// ═══════════════════════════════
+//  CROSSWORD — RENDER CLUES
+// ═══════════════════════════════
+function renderCWClues() {
+  const panel=document.getElementById('cwCluesPanel');
+  const showEmoji=document.getElementById('toggleEmoji')?.checked??true;
+  const hClues=cwPlacements.filter(p=>p.dir==='H').sort((a,b)=>a.num-b.num);
+  const vClues=cwPlacements.filter(p=>p.dir==='V').sort((a,b)=>a.num-b.num);
+
+  function buildClueHTML(list, dir) {
+    return list.map(pl => {
+      const idx=cwPlacements.indexOf(pl);
+      const emoji=showEmoji&&pl.emoji?`<span class="clue-emoji">${pl.emoji}</span>`:'';
+      const dica=pl.dica||`Palavra com ${pl.word.length} letras`;
+      return `<div class="clue-item" id="clue-${idx}" onclick="cwSelectWordByIdx(${idx})">
+        <span class="clue-num">${pl.num}${dir==='H'?'→':'↓'}</span>
+        ${emoji}
+        <span class="clue-text">${escHtml(dica)}</span>
+      </div>`;
+    }).join('');
+  }
+
+  panel.innerHTML=`
+    <div class="clues-section">
+      <div class="clues-section-title">Horizontais →</div>
+      ${buildClueHTML(hClues,'H')||'<div style="font-size:12px;color:var(--text-muted)">Nenhuma</div>'}
+    </div>
+    <div class="clues-section">
+      <div class="clues-section-title">Verticais ↓</div>
+      ${buildClueHTML(vClues,'V')||'<div style="font-size:12px;color:var(--text-muted)">Nenhuma</div>'}
+    </div>`;
+}
+
+// ═══════════════════════════════
+//  CROSSWORD — INTERACTION
+// ═══════════════════════════════
+function cwGetCell(r,c){return document.querySelector(`.cw-cell[data-r="${r}"][data-c="${c}"]`);}
+function cwGetInput(r,c){return cwGetCell(r,c)?.querySelector('.cw-input');}
+
+function cwOnCellClick(r,c) {
+  const words=cwPlacements.filter(pl=>{
+    for(let i=0;i<pl.word.length;i++){
+      const pr=pl.r-cwMinR+(pl.dir==='V'?i:0);
+      const pc=pl.c-cwMinC+(pl.dir==='H'?i:0);
+      if(pr===r&&pc===c) return true;
+    }
+    return false;
+  });
+  if(!words.length) return;
+
+  // Toggle direction if clicking same cell
+  let chosenWord=words[0];
+  if(cwActiveCell&&cwActiveCell.r===r&&cwActiveCell.c===c&&words.length>1){
+    const curIdx=words.findIndex(w=>w===cwPlacements[cwActiveWordIdx]);
+    chosenWord=words[(curIdx+1)%words.length];
+  }
+  cwSelectWord(chosenWord,r,c);
+}
+
+function cwOnFocus(r,c){ cwOnCellClick(r,c); }
+
+function cwSelectWordByIdx(idx){
+  const pl=cwPlacements[idx];
+  if(!pl) return;
+  const r=pl.r-cwMinR, c=pl.c-cwMinC;
+  cwSelectWord(pl,r,c);
+  cwGetInput(r,c)?.focus();
+}
+
+function cwSelectWord(pl,r,c){
+  // Clear highlight
+  document.querySelectorAll('.cw-cell.active-word,.cw-cell.active-cell').forEach(el=>{
+    el.classList.remove('active-word','active-cell');
+  });
+  document.querySelectorAll('.clue-item.active').forEach(el=>el.classList.remove('active'));
+
+  cwActiveCell={r,c};
+  cwActiveWordIdx=cwPlacements.indexOf(pl);
+  cwActiveDir=pl.dir;
+
+  // Highlight word cells
+  for(let i=0;i<pl.word.length;i++){
+    const pr=pl.r-cwMinR+(pl.dir==='V'?i:0);
+    const pc=pl.c-cwMinC+(pl.dir==='H'?i:0);
+    const cell=cwGetCell(pr,pc);
+    if(cell){
+      cell.classList.add(pr===r&&pc===c?'active-cell':'active-word');
+    }
+  }
+
+  const clueEl=document.getElementById(`clue-${cwActiveWordIdx}`);
+  if(clueEl){clueEl.classList.add('active');clueEl.scrollIntoView({block:'nearest'});}
+}
+
+function cwOnInput(e,r,c){
+  const inp=e.target;
+  const val=inp.value.replace(/[^A-Za-z]/g,'').toUpperCase().slice(-1);
+  inp.value=val;
+  cwUserData[r][c]=val;
+
+  // clear check styling
+  const cell=cwGetCell(r,c);
+  if(cell) cell.classList.remove('correct','wrong','revealed');
+
+  if(val) cwMoveNext(r,c);
+  updateCWProgress();
+}
+
+function cwOnKeydown(e,r,c){
+  if(e.key==='Backspace'){
+    if(cwUserData[r][c]) { cwUserData[r][c]=''; cwGetInput(r,c).value=''; updateCWProgress(); }
+    else cwMovePrev(r,c);
+    e.preventDefault();
+  } else if(e.key==='Enter'||e.key==='Tab'){
+    e.preventDefault();
+    const next=cwPlacements[(cwActiveWordIdx+1)%cwPlacements.length];
+    if(next){ const r2=next.r-cwMinR,c2=next.c-cwMinC; cwSelectWord(next,r2,c2); cwGetInput(r2,c2)?.focus(); }
+  } else if(e.key==='ArrowRight'){e.preventDefault();cwGetInput(r,c+1)?.focus();}
+  else if(e.key==='ArrowLeft'){e.preventDefault();cwGetInput(r,c-1)?.focus();}
+  else if(e.key==='ArrowDown'){e.preventDefault();cwGetInput(r+1,c)?.focus();}
+  else if(e.key==='ArrowUp'){e.preventDefault();cwGetInput(r-1,c)?.focus();}
+}
+
+function cwMoveNext(r,c){
+  if(cwActiveWordIdx<0) return;
+  const pl=cwPlacements[cwActiveWordIdx];
+  const cells=[];
+  for(let i=0;i<pl.word.length;i++) cells.push({r:pl.r-cwMinR+(pl.dir==='V'?i:0),c:pl.c-cwMinC+(pl.dir==='H'?i:0)});
+  const idx=cells.findIndex(cl=>cl.r===r&&cl.c===c);
+  if(idx<cells.length-1) {
+    const next=cells[idx+1];
+    cwGetCell(next.r,next.c)?.classList.replace('active-word','active-cell');
+    cwGetCell(r,c)?.classList.replace('active-cell','active-word');
+    cwActiveCell=next;
+    cwGetInput(next.r,next.c)?.focus();
+  }
+}
+
+function cwMovePrev(r,c){
+  if(cwActiveWordIdx<0) return;
+  const pl=cwPlacements[cwActiveWordIdx];
+  const cells=[];
+  for(let i=0;i<pl.word.length;i++) cells.push({r:pl.r-cwMinR+(pl.dir==='V'?i:0),c:pl.c-cwMinC+(pl.dir==='H'?i:0)});
+  const idx=cells.findIndex(cl=>cl.r===r&&cl.c===c);
+  if(idx>0){
+    const prev=cells[idx-1];
+    cwGetCell(prev.r,prev.c)?.classList.replace('active-word','active-cell');
+    cwGetCell(r,c)?.classList.replace('active-cell','active-word');
+    cwActiveCell=prev;
+    cwGetInput(prev.r,prev.c)?.focus();
+  }
+}
+
+function updateCWProgress(){
+  let filled=0, total=0;
+  cwPlacements.forEach(pl=>{
+    for(let i=0;i<pl.word.length;i++){
+      const r=pl.r-cwMinR+(pl.dir==='V'?i:0), c=pl.c-cwMinC+(pl.dir==='H'?i:0);
+      total++;
+      if(cwUserData[r]?.[c]) filled++;
+    }
+  });
+  // count complete words
+  const completeWords=cwPlacements.filter(pl=>{
+    for(let i=0;i<pl.word.length;i++){
+      const r=pl.r-cwMinR+(pl.dir==='V'?i:0),c=pl.c-cwMinC+(pl.dir==='H'?i:0);
+      if(cwUserData[r]?.[c]!==pl.word[i]) return false;
+    }
+    return true;
+  }).length;
+  document.getElementById('cwProgress').textContent=`✏️ ${completeWords} / ${cwPlacements.length} palavras`;
+}
+
+function cwCheck(){
+  cwPlacements.forEach(pl=>{
+    for(let i=0;i<pl.word.length;i++){
+      const r=pl.r-cwMinR+(pl.dir==='V'?i:0),c=pl.c-cwMinC+(pl.dir==='H'?i:0);
+      const cell=cwGetCell(r,c);
+      if(!cell) continue;
+      const val=cwUserData[r]?.[c]||'';
+      cell.classList.remove('correct','wrong','revealed');
+      if(val) cell.classList.add(val===pl.word[i]?'correct':'wrong');
+    }
+  });
+}
+
+function cwHint(){
+  if(cwHintsLeft<=0) return;
+  if(cwActiveCell===null) return;
+  const {r,c}=cwActiveCell;
+  const val=cwGridData[r][c];
+  if(!val) return;
+  cwUserData[r][c]=val;
+  const inp=cwGetInput(r,c);
+  if(inp) inp.value=val;
+  const cell=cwGetCell(r,c);
+  if(cell){cell.classList.remove('correct','wrong');cell.classList.add('revealed');}
+  cwHintsLeft--;
+  document.getElementById('cwHintsChip').textContent=`💡 ${cwHintsLeft} dicas`;
+  updateCWProgress();
+  if(cwActiveWordIdx>=0) cwMoveNext(r,c);
+}
+
+function cwRevealAll(){
+  for(let r=0;r<cwGridData.length;r++) for(let c=0;c<cwGridData[r].length;c++){
+    if(cwGridData[r][c]===null) continue;
+    cwUserData[r][c]=cwGridData[r][c];
+    const inp=cwGetInput(r,c); if(inp) inp.value=cwGridData[r][c];
+    const cell=cwGetCell(r,c);
+    if(cell){cell.classList.remove('correct','wrong');cell.classList.add('revealed');}
+  }
+  updateCWProgress();
+}
+
+// ═══════════════════════════════
+//  PDF DOWNLOAD
+// ═══════════════════════════════
+async function downloadPDF() {
+  const btn = event.currentTarget;
+  const orig=btn.textContent; btn.textContent='⏳...'; btn.disabled=true;
+  const date=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  const showEmoji=document.getElementById('toggleEmoji')?.checked??true;
+  const titulo=gameData?.titulo||'Jogo';
+
+  let page1='', page2='';
+
+  if(currentMode==='caca') {
+    const size=wsGridData.length;
+    let gridHtml='';
+    wsGridData.forEach(row=>{
+      row.forEach(letter=>{gridHtml+=`<div class="pdf-ws-cell">${letter}</div>`;});
+    });
+    const wordsHtml=(gameData.palavras||[]).map(p=>`<div class="pdf-word-item"><strong>${escHtml(p.texto.toUpperCase())}</strong>${p.dica?`<span style="color:var(--text-muted);font-size:10px;margin-left:4px;">${escHtml(p.dica)}</span>`:''}</div>`).join('');
+
+    page1=`<div class="pdf-page">
+      <div class="pdf-header">
+        <div class="pdf-header-label">DoceriaPedagógica — Caça-Palavras Interativo</div>
+        <div class="pdf-header-title">${escHtml(titulo)}</div>
+        <div class="pdf-header-meta">${escHtml(gameData.nivel||'')} • ${wsGridData.length}×${wsGridData.length} • ${(gameData.palavras||[]).length} palavras • ${date}</div>
+      </div>
+      <div class="pdf-body">
+        <div class="pdf-grid-wrap">
+          <div class="pdf-ws-grid" style="grid-template-columns:repeat(${size},28px)">${gridHtml}</div>
+        </div>
+        <div class="pdf-words">
+          <div class="pdf-words-title">Encontre as palavras</div>
+          <div class="pdf-word-grid">${wordsHtml}</div>
+        </div>
+      </div>
+      <div class="pdf-footer"><span class="pdf-footer-logo">DoceriaPedagógica</span><span>Caça-palavras gerado por IA</span><span>${date}</span></div>
+    </div>`;
+
+    // Gabarito
+    let gridHtml2='';
+    wsGridData.forEach((row,r)=>{
+      row.forEach((letter,c)=>{
+        const color=wsCellColors[`${r},${c}`]||'';
+        const found=[...wsFoundWords].some(w=>wsPlacements.find(pl=>pl.word===w&&Array.from({length:pl.word.length},(_,i)=>({r:pl.r+pl.dr*i,c:pl.c+pl.dc*i})).some(cl=>cl.r===r&&cl.c===c)));
+        gridHtml2+=`<div class="pdf-ws-cell" style="${found?'background:#d1fae5;border-color:#34d399;':''}font-weight:700">${letter}</div>`;
+      });
+    });
+
+    // rebuild with all words highlighted
+    const allFoundCells=new Set();
+    wsPlacements.forEach(pl=>{for(let i=0;i<pl.word.length;i++) allFoundCells.add(`${pl.r+pl.dr*i},${pl.c+pl.dc*i}`);});
+    let gridHtmlKey='';
+    wsGridData.forEach((row,r)=>{row.forEach((letter,c)=>{
+      const hi=allFoundCells.has(`${r},${c}`);
+      gridHtmlKey+=`<div class="pdf-ws-cell" style="${hi?'background:#d1fae5;border-color:#34d399;font-weight:800;color:#065f46;':''}">${letter}</div>`;
+    });});
+
+    page2=`<div class="pdf-page" style="margin-top:8px">
+      <div class="pdf-header" style="border-top-color:var(--teal)">
+        <div class="pdf-header-label">Gabarito — Uso do Professor</div>
+        <div class="pdf-header-title" style="color:var(--teal)">${escHtml(titulo)}</div>
+        <div class="pdf-header-meta">${date}</div>
+      </div>
+      <div><div class="pdf-ws-grid" style="display:inline-grid;grid-template-columns:repeat(${size},28px);gap:2px">${gridHtmlKey}</div></div>
+      <div class="pdf-footer"><span class="pdf-footer-logo">DoceriaPedagógica</span><span>Gabarito do professor</span><span>${date}</span></div>
+    </div>`;
+
+  } else {
+    // CRUZADINHA PDF
+    const numMap={};
+    cwPlacements.forEach(pl=>{ numMap[`${pl.r-cwMinR},${pl.c-cwMinC}`]=pl.num; });
+    const rows=cwGridData.length;
+
+    let gridHtml='';
+    for(let r=0;r<rows;r++) for(let c=0;c<cwGridData[r].length;c++){
+      const val=cwGridData[r][c];
+      const num=numMap[`${r},${c}`];
+      if(!val) gridHtml+=`<div class="pdf-cw-cell-b"></div>`;
+      else gridHtml+=`<div class="pdf-cw-cell-w">${num?`<span class="pdf-cw-cell-num">${num}</span>`:''}</div>`;
+    }
+
+    const hPl=cwPlacements.filter(p=>p.dir==='H').sort((a,b)=>a.num-b.num);
+    const vPl=cwPlacements.filter(p=>p.dir==='V').sort((a,b)=>a.num-b.num);
+    const hCluesHtml=hPl.map(pl=>`<div class="pdf-clue-item"><span class="pdf-clue-num">${pl.num}→</span>${showEmoji&&pl.emoji?`<span class="pdf-clue-emoji">${pl.emoji}</span>`:''}<span>${escHtml(pl.dica||`${pl.word.length} letras`)}</span></div>`).join('');
+    const vCluesHtml=vPl.map(pl=>`<div class="pdf-clue-item"><span class="pdf-clue-num">${pl.num}↓</span>${showEmoji&&pl.emoji?`<span class="pdf-clue-emoji">${pl.emoji}</span>`:''}<span>${escHtml(pl.dica||`${pl.word.length} letras`)}</span></div>`).join('');
+
+    const cellSize=Math.min(28, Math.floor(220/cwCols));
+    page1=`<div class="pdf-page">
+      <div class="pdf-header">
+        <div class="pdf-header-label">DoceriaPedagógica — Cruzadinha Interativa</div>
+        <div class="pdf-header-title">${escHtml(titulo)}</div>
+        <div class="pdf-header-meta">${escHtml(gameData.nivel||'')} • ${cwPlacements.length} palavras • Nome: ________________ • ${date}</div>
+      </div>
+      <div class="pdf-body">
+        <div class="pdf-grid-wrap">
+          <div class="pdf-cw-grid" style="grid-template-columns:repeat(${cwCols},${cellSize}px);grid-template-rows:repeat(${rows},${cellSize}px)">${gridHtml}</div>
+        </div>
+        <div class="pdf-clues-wrap">
+          <div class="pdf-clue-section">
+            <div class="pdf-clue-title">Horizontais →</div>${hCluesHtml}
+          </div>
+          <div class="pdf-clue-section">
+            <div class="pdf-clue-title">Verticais ↓</div>${vCluesHtml}
+          </div>
+        </div>
+      </div>
+      <div class="pdf-footer"><span class="pdf-footer-logo">DoceriaPedagógica</span><span>Cruzadinha gerada por IA</span><span>${date}</span></div>
+    </div>`;
+
+    let gridHtmlKey='';
+    for(let r=0;r<rows;r++) for(let c=0;c<cwGridData[r].length;c++){
+      const val=cwGridData[r][c];
+      const num=numMap[`${r},${c}`];
+      if(!val) gridHtmlKey+=`<div class="pdf-cw-cell-b"></div>`;
+      else gridHtmlKey+=`<div class="pdf-cw-cell-w" style="font-size:${cellSize>22?12:10}px;color:var(--teal)">${num?`<span class="pdf-cw-cell-num">${num}</span>`:''}${val}</div>`;
+    }
+
+    page2=`<div class="pdf-page" style="margin-top:8px">
+      <div class="pdf-header" style="border-top-color:var(--teal)">
+        <div class="pdf-header-label">Gabarito — Uso do Professor</div>
+        <div class="pdf-header-title" style="color:var(--teal)">${escHtml(titulo)}</div>
+        <div class="pdf-header-meta">${date}</div>
+      </div>
+      <div class="pdf-cw-grid" style="display:inline-grid;grid-template-columns:repeat(${cwCols},${cellSize}px);grid-template-rows:repeat(${rows},${cellSize}px)">${gridHtmlKey}</div>
+      <div class="pdf-footer"><span class="pdf-footer-logo">DoceriaPedagógica</span><span>Gabarito do professor</span><span>${date}</span></div>
+    </div>`;
+  }
+
+  const el=document.getElementById('pdf-print');
+  el.innerHTML=page1+page2;
+  el.style.display='block';
+  const filenameBase=(titulo).replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_');
+
+  try {
+    await html2pdf().set({
+      margin:[15,15,15,15],
+      filename:`DoceriaPedagogica_${currentMode==='caca'?'CacaPalavras':'Cruzadinha'}_${filenameBase}.pdf`,
+      image:{type:'jpeg',quality:0.97},
+      html2canvas:{scale:2,useCORS:true,logging:false,backgroundColor:'#ffffff'},
+      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+      pagebreak:{mode:['avoid-all','css','legacy']}
+    }).from(el).save();
+  } catch(e){console.error(e);}
+
+  el.style.display='none';
+  btn.textContent=orig; btn.disabled=false;
+}
+
+function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+</script>
+</body>
+</html>

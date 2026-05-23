@@ -389,7 +389,7 @@
   }
   .ap-activity-num {
     width: 26px; height: 26px; border-radius: 50%;
-    background: var(--ink); color: var(--cream);
+    background: var(--gold); color: white;
     font-size: 11px; font-weight: 700;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
@@ -430,7 +430,7 @@
   }
   .ap-mapa-center {
     display: inline-block;
-    background: var(--ink); color: var(--cream);
+    background: var(--teal); color: white;
     font-size: 13px; font-weight: 600;
     padding: 10px 20px; border-radius: 8px;
     margin-bottom: 16px;
@@ -1013,11 +1013,12 @@ Gere entre 4 e 6 atividades variadas. Para múltipla escolha use tipo_resposta:"
 
     try {
       await html2pdf().set({
-        margin: [8, 8, 8, 8],
+        margin: [15, 15, 15, 15],
         filename: `DoceriaPedagogica_${titulo}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
       }).from(el).save();
     } catch(e) { console.error(e); }
 

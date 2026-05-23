@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo da Memória — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root {
+    --ink: #0f0e0c;
+    --cream: #faf7f2;
+    --warm: #f5f0e8;
+    --gold: #c8963e;
+    --gold-light: #e8b86d;
+    --gold-pale: #fdf3e3;
+    --teal: #2d6e6e;
+    --teal-light: #4a9b9b;
+    --teal-pale: #e8f4f4;
+    --coral: #d95f3b;
+    --coral-pale: #fdeee9;
+    --green: #2d7d4e;
+    --green-pale: #e8f5ee;
+    --text: #1a1917;
+    --text-mid: #4a4845;
+    --text-muted: #8a8785;
+    --border: rgba(15,14,12,0.1);
+    --border-mid: rgba(15,14,12,0.18);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--warm);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--ink); padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 900; color: var(--cream);
+    display: flex; align-items: center; gap: 10px; text-decoration: none;
+  }
+  .topbar-logo-mark {
+    width: 28px; height: 28px; background: var(--gold);
+    border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px;
+  }
+  .topbar-nav { display: flex; gap: 4px; }
+  .topbar-link {
+    font-size: 12px; color: rgba(250,247,242,0.5);
+    text-decoration: none; padding: 6px 12px; border-radius: 6px; transition: all 0.15s;
+  }
+  .topbar-link:hover { color: var(--cream); background: rgba(255,255,255,0.06); }
+  .topbar-link.active { color: var(--gold-light); background: rgba(200,150,62,0.1); }
+
+  /* ── LAYOUT ── */
+  .main {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    min-height: calc(100vh - 56px);
+  }
+
+  /* ── FORM PANEL ── */
+  .form-panel {
+    background: var(--cream); border-right: 1px solid var(--border);
+    padding: 28px 24px; overflow-y: auto;
+    max-height: calc(100vh - 56px); position: sticky; top: 56px;
+  }
+  .form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 900; margin-bottom: 5px;
+  }
+  .form-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
+
+  .field { margin-bottom: 18px; }
+  .field-label {
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
+    letter-spacing: 0.07em; text-transform: uppercase;
+    display: block; margin-bottom: 7px;
+  }
+  .field-required { color: var(--coral); }
+
+  input[type="text"], select, textarea {
+    width: 100%; background: white;
+    border: 1.5px solid var(--border-mid); border-radius: 9px;
+    padding: 11px 14px; font-size: 14px; color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+  }
+  input[type="text"]:focus, select:focus, textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(200,150,62,0.12);
+  }
+  textarea { resize: vertical; min-height: 72px; line-height: 1.6; }
+
+  .pill-group { display: flex; flex-wrap: wrap; gap: 7px; }
+  .pill {
+    padding: 6px 14px; border-radius: 20px;
+    border: 1.5px solid var(--border-mid); background: white;
+    color: var(--text-muted); font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s;
+    font-family: 'Outfit', sans-serif; user-select: none;
+  }
+  .pill.active {
+    border-color: var(--gold); background: var(--gold-pale);
+    color: var(--gold); font-weight: 600;
+  }
+  .pill:hover:not(.active) { background: var(--warm); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 22px 0; }
+
+  .generate-btn {
+    width: 100%; background: var(--gold); color: white; border: none;
+    padding: 15px; border-radius: 10px; font-size: 15px; font-weight: 600;
+    cursor: pointer; font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: all 0.2s;
+  }
+  .generate-btn:hover:not(:disabled) { background: #b5842e; transform: translateY(-1px); }
+  .generate-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+  .generate-btn .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4); border-top-color: white;
+    border-radius: 50%; animation: spin 0.7s linear infinite; display: none;
+  }
+  .generate-btn.loading .spinner { display: block; }
+  .generate-btn.loading .btn-text { display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .progress-area { display: none; margin-top: 16px; }
+  .progress-area.show { display: block; }
+  .progress-steps { display: flex; flex-direction: column; gap: 8px; }
+  .progress-step {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--text-muted); transition: color 0.3s;
+  }
+  .progress-step.active { color: var(--teal); }
+  .progress-step.done { color: var(--teal); }
+  .step-dot {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid var(--border-mid); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; transition: all 0.3s;
+  }
+  .progress-step.active .step-dot { border-color: var(--teal); background: var(--teal-pale); }
+  .progress-step.done .step-dot { border-color: var(--teal); background: var(--teal); color: white; }
+
+  .error-box {
+    display: none; background: var(--coral-pale);
+    border: 1px solid rgba(217,95,59,0.3); border-radius: 10px;
+    padding: 14px 16px; font-size: 13px; color: var(--coral);
+    margin-top: 14px; line-height: 1.5;
+  }
+  .error-box.show { display: block; }
+
+  /* ── PREVIEW PANEL ── */
+  .preview-panel { padding: 32px; overflow-y: auto; }
+
+  /* ── EMPTY STATE ── */
+  .game-empty {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 420px; text-align: center; color: var(--text-muted);
+  }
+  .game-empty-icon { font-size: 52px; margin-bottom: 16px; opacity: 0.4; }
+  .game-empty-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; color: var(--text-mid); margin-bottom: 8px;
+  }
+  .game-empty-sub { font-size: 14px; line-height: 1.6; max-width: 320px; }
+
+  /* ── GAME CONTAINER ── */
+  .game-container { display: none; max-width: 900px; margin: 0 auto; }
+  .game-container.show { display: block; }
+
+  /* ── START SCREEN ── */
+  .start-card {
+    background: white; border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 20px;
+  }
+  .start-hero {
+    background: var(--ink); padding: 36px 44px; color: var(--cream);
+    position: relative; overflow: hidden;
+  }
+  .start-hero::after {
+    content: '🃏'; position: absolute; right: 32px; top: 16px;
+    font-size: 72px; opacity: 0.1;
+  }
+  .start-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(200,150,62,0.15); border: 1px solid rgba(200,150,62,0.3);
+    color: var(--gold-light); border-radius: 20px;
+    padding: 4px 14px; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .start-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 900; line-height: 1.2; margin-bottom: 6px;
+  }
+  .start-sub { font-size: 13px; color: rgba(250,247,242,0.5); }
+  .start-body { padding: 32px 44px; }
+  .start-meta {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 28px;
+  }
+  .start-meta-card {
+    background: var(--warm); border-radius: 10px; padding: 14px; text-align: center;
+  }
+  .start-meta-icon { font-size: 22px; margin-bottom: 5px; }
+  .start-meta-val { font-size: 20px; font-weight: 700; color: var(--text); }
+  .start-meta-lbl { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .start-actions { display: flex; gap: 12px; }
+  .btn-start {
+    flex: 1; background: var(--gold); color: white; border: none;
+    padding: 15px; border-radius: 10px; font-size: 15px; font-weight: 600;
+    cursor: pointer; font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s;
+  }
+  .btn-start:hover { background: #b5842e; transform: translateY(-1px); }
+  .btn-gabarito {
+    background: white; color: var(--text-mid);
+    border: 1.5px solid var(--border-mid); padding: 15px 20px;
+    border-radius: 10px; font-size: 13px; font-weight: 500;
+    cursor: pointer; font-family: 'Outfit', sans-serif; transition: all 0.2s;
+  }
+  .btn-gabarito:hover { background: var(--warm); }
+
+  /* ── PLAYING SCREEN ── */
+  .playing-screen { display: none; }
+  .playing-screen.show { display: block; }
+
+  .game-hud {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+  }
+  .hud-chip {
+    display: flex; align-items: center; gap: 7px;
+    background: white; border: 1.5px solid var(--border-mid);
+    border-radius: 10px; padding: 8px 16px;
+    font-size: 14px; font-weight: 600; color: var(--text);
+  }
+  .hud-chip.green { background: var(--green-pale); border-color: rgba(45,125,78,0.25); color: var(--green); }
+  .hud-chip.gold  { background: var(--gold-pale);  border-color: rgba(200,150,62,0.3); color: var(--gold); }
+
+  .progress-bar-wrap { flex: 1; min-width: 160px; }
+  .progress-bar-label { font-size: 11px; color: var(--text-muted); margin-bottom: 5px; text-align: center; }
+  .progress-bar { height: 7px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--green); border-radius: 99px; transition: width 0.5s ease; }
+
+  /* ── CARD GRID ── */
+  .card-grid {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  /* ── MEMORY CARD (flip animation) ── */
+  .mem-card {
+    perspective: 1000px;
+    cursor: pointer;
+    height: 110px;
+  }
+  .mem-card.no-click { pointer-events: none; }
+
+  .card-inner {
+    width: 100%; height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .mem-card.flipped .card-inner,
+  .mem-card.matched .card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .card-face {
+    position: absolute; inset: 0;
+    border-radius: 12px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex; align-items: center; justify-content: center;
+    padding: 12px;
+  }
+
+  /* FRENTE (dorso) */
+  .card-front {
+    background: var(--ink);
+    border: 2px solid rgba(200,150,62,0.3);
+    flex-direction: column; gap: 6px;
+  }
+  .card-front-mark {
+    font-size: 22px; color: var(--gold); opacity: 0.7;
+    font-family: 'Playfair Display', serif;
+  }
+  .card-front-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: rgba(250,247,242,0.3);
+  }
+
+  /* VERSO (conteúdo) */
+  .card-back {
+    transform: rotateY(180deg);
+    text-align: center;
+    font-size: 13px; font-weight: 500; line-height: 1.4;
+    border: 2px solid var(--border-mid);
+    background: white; color: var(--text);
+  }
+  .card-back.side-a {
+    background: var(--gold-pale);
+    border-color: rgba(200,150,62,0.35);
+    color: var(--text);
+  }
+  .card-back.side-b {
+    background: var(--teal-pale);
+    border-color: rgba(45,110,110,0.3);
+    color: var(--text);
+  }
+  .mem-card.matched .card-back {
+    background: var(--green-pale) !important;
+    border-color: rgba(45,125,78,0.4) !important;
+  }
+  .mem-card.matched .card-front {
+    background: var(--green-pale);
+  }
+
+  /* wrong shake */
+  @keyframes shake {
+    0%,100% { transform: rotateY(180deg) translateX(0); }
+    25% { transform: rotateY(180deg) translateX(-6px); }
+    75% { transform: rotateY(180deg) translateX(6px); }
+  }
+  .mem-card.wrong .card-inner { animation: shake 0.35s ease; }
+  .mem-card.wrong .card-back {
+    background: var(--coral-pale) !important;
+    border-color: rgba(217,95,59,0.4) !important;
+  }
+
+  /* match pop */
+  @keyframes pop {
+    0% { transform: rotateY(180deg) scale(1); }
+    50% { transform: rotateY(180deg) scale(1.06); }
+    100% { transform: rotateY(180deg) scale(1); }
+  }
+  .mem-card.matched .card-inner { animation: pop 0.35s ease 0.45s; }
+
+  .card-type-badge {
+    position: absolute; top: 7px; right: 8px;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--text-muted); opacity: 0.7;
+  }
+
+  /* ── WIN SCREEN ── */
+  .win-screen { display: none; }
+  .win-screen.show { display: block; }
+
+  .win-card {
+    background: white; border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.1); overflow: hidden;
+  }
+  .win-hero {
+    padding: 40px; text-align: center;
+    background: linear-gradient(135deg, #1a3d2e 0%, #2d6e4e 100%);
+    color: var(--cream); position: relative; overflow: hidden;
+  }
+  .win-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(200,150,62,0.2) 0%, transparent 60%);
+  }
+  .win-trophy { font-size: 56px; margin-bottom: 10px; position: relative; }
+  .win-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 900; position: relative;
+  }
+  .win-sub { font-size: 14px; color: rgba(250,247,242,0.6); margin-top: 6px; position: relative; }
+  .win-body { padding: 32px 40px; }
+  .win-stats {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 28px;
+  }
+  .win-stat {
+    background: var(--warm); border-radius: 10px; padding: 16px; text-align: center;
+  }
+  .win-stat-val { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .win-stat-val.green { color: var(--green); }
+  .win-stat-val.gold  { color: var(--gold); }
+  .win-stat-val.teal  { color: var(--teal); }
+  .win-stat-lbl { font-size: 11px; color: var(--text-muted); }
+  .win-pairs-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
+  }
+  .win-pairs-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .win-pairs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 28px; }
+  .win-pair-row {
+    display: flex; gap: 0; border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--border-mid); font-size: 12px;
+  }
+  .win-pair-a {
+    flex: 1; background: var(--gold-pale); color: var(--text);
+    padding: 8px 10px; font-weight: 500; line-height: 1.35;
+  }
+  .win-pair-b {
+    flex: 1; background: var(--teal-pale); color: var(--text);
+    padding: 8px 10px; line-height: 1.35;
+    border-left: 1px solid var(--border-mid);
+  }
+  .win-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-play-again {
+    flex: 1; background: var(--gold); color: white; border: none;
+    padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s;
+  }
+  .btn-play-again:hover { background: #b5842e; }
+  .btn-new-game {
+    flex: 1; background: white; color: var(--text-mid);
+    border: 1.5px solid var(--border-mid); padding: 14px;
+    border-radius: 10px; font-size: 14px; font-weight: 500;
+    cursor: pointer; font-family: 'Outfit', sans-serif; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-new-game:hover { background: var(--warm); }
+  .btn-pdf-win {
+    background: var(--ink); color: var(--cream); border: none;
+    padding: 14px 20px; border-radius: 10px; font-size: 13px; font-weight: 600;
+    cursor: pointer; font-family: 'Outfit', sans-serif; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-pdf-win:hover { background: #2a2926; }
+
+  /* ── PDF HIDDEN AREA ── */
+  #pdf-print { display: none; }
+  .pdf-wrap { font-family: 'Outfit', sans-serif; background: white; padding: 40px 44px; }
+  .pdf-top {
+    border-top: 5px solid var(--gold);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0 16px; margin-bottom: 28px;
+  }
+  .pdf-lbl {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;
+  }
+  .pdf-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 900; color: var(--text); margin-bottom: 4px;
+  }
+  .pdf-meta { font-size: 12px; color: var(--text-muted); }
+  .pdf-pairs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .pdf-pair {
+    display: flex; border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--border-mid); page-break-inside: avoid;
+  }
+  .pdf-side-a {
+    flex: 1; background: #fdf3e3; padding: 10px 12px;
+    font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.4;
+  }
+  .pdf-side-b {
+    flex: 1; background: #e8f4f4; padding: 10px 12px;
+    font-size: 12px; color: var(--text-mid); line-height: 1.4;
+    border-left: 1px solid var(--border-mid);
+  }
+  .pdf-legend {
+    display: flex; gap: 16px; margin-bottom: 14px; font-size: 11px; color: var(--text-muted);
+  }
+  .pdf-legend span { display: flex; align-items: center; gap: 5px; }
+  .pdf-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .pdf-footer {
+    margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);
+  }
+  .pdf-footer-logo { font-family: 'Playfair Display', serif; color: var(--gold); font-weight: 700; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; }
+    .form-panel { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--border); }
+    .preview-panel { padding: 16px; }
+    .start-body, .win-body { padding: 24px 20px; }
+    .start-hero { padding: 28px 24px; }
+    .win-stats { grid-template-columns: 1fr 1fr; }
+    .win-pairs-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="index.html">
+    <div class="topbar-logo-mark">✦</div>
+    DoceriaPedagógica
+  </a>
+  <nav class="topbar-nav">
+    <a class="topbar-link" href="gerador.html">Atividades</a>
+    <a class="topbar-link" href="apostila.html">Apostila</a>
+    <a class="topbar-link" href="jogos.html">Quiz</a>
+    <a class="topbar-link active" href="memoria.html">Memória</a>
+    <a class="topbar-link" href="trilha.html">Trilha</a>
+    <a class="topbar-link" href="interativo.html">Palavras</a>
+    <a class="topbar-link" href="jogos-area.html" style="color:#7fdc9e;border:1px solid rgba(127,220,158,0.3);border-radius:6px;">Área do Aluno</a>
+  </nav>
+</div>
+
+<div class="main">
+
+  <!-- ── FORM PANEL ── -->
+  <div class="form-panel">
+    <div class="form-title">Jogo da Memória</div>
+    <div class="form-sub">A IA cria os pares de cartas — seus alunos viram e combinam.</div>
+
+    <div class="field">
+      <label class="field-label">Tema ou conteúdo <span class="field-required">*</span></label>
+      <input type="text" id="tema" placeholder="Ex: Sistema Solar, Verbos, Frações..." />
+    </div>
+
+    <div class="field">
+      <label class="field-label">Nível / público-alvo <span class="field-required">*</span></label>
+      <select id="nivel">
+        <option value="">Selecione o nível...</option>
+        <option value="Educação Infantil (4-5 anos)">Educação Infantil</option>
+        <option value="Fundamental I — Anos Iniciais (1º ao 5º ano)">Fundamental I (1º–5º ano)</option>
+        <option value="Fundamental II — Anos Finais (6º ao 9º ano)">Fundamental II (6º–9º ano)</option>
+        <option value="EJA — Alfabetização de Adultos">EJA — Alfabetização</option>
+        <option value="EJA — Ensino Fundamental para adultos">EJA — Fundamental</option>
+        <option value="EJA — Ensino Médio para adultos">EJA — Ensino Médio</option>
+        <option value="Ensino Médio Regular">Ensino Médio</option>
+        <option value="Inglês — Nível Básico A1/A2">Inglês — Básico (A1/A2)</option>
+        <option value="Inglês — Nível Intermediário B1/B2">Inglês — Intermediário (B1/B2)</option>
+        <option value="Espanhol — Nível Básico">Espanhol — Básico</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Tipo de par</label>
+      <div class="pill-group" id="tipoPills">
+        <div class="pill active" data-val="conceito-definição">💡 Conceito + Definição</div>
+        <div class="pill" data-val="pergunta-resposta">❓ Pergunta + Resposta</div>
+        <div class="pill" data-val="palavra-exemplo">📝 Palavra + Exemplo</div>
+        <div class="pill" data-val="termo-tradução">🌐 Termo + Tradução</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Número de pares</label>
+      <div class="pill-group" id="paresPills">
+        <div class="pill" data-val="6">6 pares</div>
+        <div class="pill active" data-val="8">8 pares</div>
+        <div class="pill" data-val="10">10 pares</div>
+        <div class="pill" data-val="12">12 pares</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Disciplina (opcional)</label>
+      <input type="text" id="disciplina" placeholder="Ex: Ciências, Português, Inglês..." />
+    </div>
+
+    <div class="field">
+      <label class="field-label">Observações adicionais</label>
+      <textarea id="obs" placeholder="Ex: Use vocabulário simples, foco em exemplos do cotidiano..."></textarea>
+    </div>
+
+    <hr class="divider">
+
+    <button class="generate-btn" id="generateBtn" onclick="generateGame()">
+      <div class="spinner"></div>
+      <span class="btn-text">✦ Criar Jogo da Memória</span>
+    </button>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <div class="progress-area" id="progressArea">
+      <div class="progress-steps">
+        <div class="progress-step" id="step1"><div class="step-dot">1</div><span>Analisando tema e nível...</span></div>
+        <div class="progress-step" id="step2"><div class="step-dot">2</div><span>Criando pares pedagógicos...</span></div>
+        <div class="progress-step" id="step3"><div class="step-dot">3</div><span>Verificando qualidade dos pares...</span></div>
+        <div class="progress-step" id="step4"><div class="step-dot">4</div><span>Montando o jogo...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PREVIEW PANEL ── -->
+  <div class="preview-panel">
+
+    <div class="game-empty" id="gameEmpty">
+      <div class="game-empty-icon">🃏</div>
+      <div class="game-empty-title">Seu jogo aparece aqui</div>
+      <div class="game-empty-sub">Preencha o formulário ao lado e clique em <strong>Criar Jogo</strong> para gerar cartas pedagógicas prontas para usar em sala.</div>
+    </div>
+
+    <div class="game-container" id="gameContainer">
+
+      <!-- START SCREEN -->
+      <div id="startScreen">
+        <div class="start-card">
+          <div class="start-hero">
+            <div class="start-badge">🃏 Jogo da Memória</div>
+            <div class="start-title" id="startTitle">Jogo da Memória</div>
+            <div class="start-sub" id="startSub">Encontre todos os pares!</div>
+          </div>
+          <div class="start-body">
+            <div class="start-meta">
+              <div class="start-meta-card">
+                <div class="start-meta-icon">🃏</div>
+                <div class="start-meta-val" id="metaCartas">—</div>
+                <div class="start-meta-lbl">cartas</div>
+              </div>
+              <div class="start-meta-card">
+                <div class="start-meta-icon">🎯</div>
+                <div class="start-meta-val" id="metaPares">—</div>
+                <div class="start-meta-lbl">pares</div>
+              </div>
+              <div class="start-meta-card">
+                <div class="start-meta-icon">📚</div>
+                <div class="start-meta-val" id="metaTipo">—</div>
+                <div class="start-meta-lbl">tipo</div>
+              </div>
+            </div>
+            <div class="start-actions">
+              <button class="btn-start" onclick="startGame()">▶ Começar o Jogo</button>
+              <button class="btn-gabarito" onclick="downloadPDF()">⬇ Gabarito PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLAYING SCREEN -->
+      <div class="playing-screen" id="playingScreen">
+        <div class="game-hud">
+          <div class="hud-chip green" id="hudMatches">✅ 0 pares</div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-label" id="hudProgress">0 de 0 pares encontrados</div>
+            <div class="progress-bar"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+          </div>
+          <div class="hud-chip gold" id="hudMoves">🎴 0 jogadas</div>
+          <div class="hud-chip" id="hudTimer">⏱ 0:00</div>
+        </div>
+        <div class="card-grid" id="cardGrid"></div>
+      </div>
+
+      <!-- WIN SCREEN -->
+      <div class="win-screen" id="winScreen">
+        <div class="win-card">
+          <div class="win-hero">
+            <div class="win-trophy">🏆</div>
+            <div class="win-title">Parabéns! Todos os pares encontrados!</div>
+            <div class="win-sub" id="winSub">Excelente memória!</div>
+          </div>
+          <div class="win-body">
+            <div class="win-stats">
+              <div class="win-stat">
+                <div class="win-stat-val teal" id="winTime">—</div>
+                <div class="win-stat-lbl">Tempo</div>
+              </div>
+              <div class="win-stat">
+                <div class="win-stat-val gold" id="winMoves">—</div>
+                <div class="win-stat-lbl">Jogadas</div>
+              </div>
+              <div class="win-stat">
+                <div class="win-stat-val green" id="winScore">—</div>
+                <div class="win-stat-lbl">Pontuação</div>
+              </div>
+            </div>
+            <div class="win-pairs-title">Todos os pares</div>
+            <div class="win-pairs-grid" id="winPairsGrid"></div>
+            <div class="win-actions">
+              <button class="btn-play-again" onclick="startGame()">↺ Jogar novamente</button>
+              <button class="btn-new-game" onclick="showStart()">✦ Novo jogo</button>
+              <button class="btn-pdf-win" onclick="downloadPDF()">⬇ PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PDF HIDDEN -->
+<div id="pdf-print"></div>
+
+<script>
+  // ── STATE ──
+  let gameData = null;
+  let cards = [];
+  let flippedCards = [];
+  let matchedPairs = 0;
+  let totalPairs = 0;
+  let moves = 0;
+  let timerInterval = null;
+  let secondsElapsed = 0;
+  let canFlip = true;
+
+  // ── PILL (single select) ──
+  ['tipoPills','paresPills'].forEach(id => {
+    document.querySelectorAll(`#${id} .pill`).forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll(`#${id} .pill`).forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+      });
+    });
+  });
+
+  function getPill(id) {
+    const a = document.querySelector(`#${id} .pill.active`);
+    return a ? a.dataset.val : null;
+  }
+
+  // ── STEPS ──
+  function setStep(n) {
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById('step' + i);
+      el.classList.remove('active','done');
+      if (i < n) { el.classList.add('done'); el.querySelector('.step-dot').textContent = '✓'; }
+      else if (i === n) el.classList.add('active');
+      else el.querySelector('.step-dot').textContent = i;
+    }
+  }
+
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+
+  // ── GENERATE ──
+  async function generateGame() {
+    const tema = document.getElementById('tema').value.trim();
+    const nivel = document.getElementById('nivel').value;
+    const tipo = getPill('tipoPills') || 'conceito-definição';
+    const numPares = parseInt(getPill('paresPills') || '8');
+    const disciplina = document.getElementById('disciplina').value.trim();
+    const obs = document.getElementById('obs').value.trim();
+
+    const err = document.getElementById('errorBox');
+    err.classList.remove('show');
+
+    if (!tema) {
+      err.textContent = 'Por favor, preencha o tema ou conteúdo.';
+      err.classList.add('show');
+      document.getElementById('tema').focus();
+      return;
+    }
+    if (!nivel) {
+      err.textContent = 'Por favor, selecione o nível ou público-alvo.';
+      err.classList.add('show');
+      document.getElementById('nivel').focus();
+      return;
+    }
+
+    const btn = document.getElementById('generateBtn');
+    btn.disabled = true;
+    btn.classList.add('loading');
+    document.getElementById('progressArea').classList.add('show');
+    document.getElementById('gameEmpty').style.display = 'none';
+    document.getElementById('gameContainer').classList.remove('show');
+    stopTimer();
+
+    setStep(1); await delay(500);
+    setStep(2);
+
+    const tipoDesc = {
+      'conceito-definição': 'Carta A = conceito/termo técnico curto (1-4 palavras). Carta B = definição clara e didática (1-2 linhas).',
+      'pergunta-resposta': 'Carta A = pergunta direta e objetiva. Carta B = resposta correta e completa (1-2 linhas).',
+      'palavra-exemplo': 'Carta A = palavra ou expressão. Carta B = exemplo prático de uso em frase ou contexto real.',
+      'termo-tradução': 'Carta A = palavra ou expressão no idioma original. Carta B = tradução + breve contexto ou exemplo de uso.'
+    };
+
+    const prompt = `Crie ${numPares} pares de cartas para o Jogo da Memória pedagógico com estes dados:
+
+TEMA: ${tema}
+NÍVEL: ${nivel}
+${disciplina ? 'DISCIPLINA: ' + disciplina : ''}
+TIPO DE PAR: ${tipo}
+DESCRIÇÃO DO PAR: ${tipoDesc[tipo] || ''}
+${obs ? 'OBSERVAÇÕES: ' + obs : ''}
+
+REGRAS IMPORTANTES:
+- Carta A deve ser curta (máximo 5 palavras para conceitos/termos).
+- Carta B deve ser clara, direta e adequada ao nível informado.
+- Os pares devem ser pedagogicamente corretos e variados.
+- Nunca repita conteúdo entre pares diferentes.
+- Para EJA: use linguagem adulta e contextualizada.
+- Para Inglês/Espanhol: carta A no idioma estrangeiro, carta B em português.
+
+Retorne SOMENTE este JSON (sem markdown):
+{
+  "titulo": "Jogo da Memória: ${tema}",
+  "nivel": "${nivel}",
+  "disciplina": "${disciplina || tema}",
+  "tipo": "${tipo}",
+  "pares": [
+    {
+      "id": 1,
+      "carta_a": "texto curto do lado A",
+      "carta_b": "texto do lado B (explicação, definição ou resposta)"
+    }
+  ]
+}
+
+Gere exatamente ${numPares} pares. Certifique-se que cada par forma uma correspondência clara e inequívoca.`;
+
+    try {
+      const response = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-5',
+          max_tokens: 3000,
+          system: `Você é uma especialista em educação brasileira com vasta experiência em jogos pedagógicos e material didático.
+Sua missão é criar pares de cartas que promovam aprendizagem ativa e associação de conceitos.
+Retorne APENAS JSON válido, sem markdown, sem texto antes ou depois.`,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      setStep(3);
+      if (!response.ok) {
+        const e = await response.json().catch(() => ({}));
+        throw new Error(e?.error?.message || `Erro ${response.status}`);
+      }
+
+      const data = await response.json();
+      const raw = data.content?.[0]?.text || '';
+      setStep(4); await delay(400);
+
+      let parsed;
+      try {
+        parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+      } catch(e) {
+        throw new Error('A IA retornou um formato inesperado. Tente novamente.');
+      }
+
+      gameData = parsed;
+      showStartScreen();
+
+    } catch(e) {
+      console.error(e);
+      document.getElementById('errorBox').textContent = 'Erro ao gerar: ' + (e.message || 'Tente novamente.');
+      document.getElementById('errorBox').classList.add('show');
+      document.getElementById('gameEmpty').style.display = 'flex';
+    } finally {
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      document.getElementById('progressArea').classList.remove('show');
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById('step' + i);
+        el.classList.remove('active','done');
+        el.querySelector('.step-dot').textContent = i;
+      }
+    }
+  }
+
+  // ── SHOW START ──
+  function showStartScreen() {
+    const pares = gameData.pares || [];
+    document.getElementById('startTitle').textContent = gameData.titulo || `Jogo da Memória`;
+    document.getElementById('startSub').textContent = `${gameData.disciplina || ''} • ${gameData.nivel || ''}`;
+    document.getElementById('metaCartas').textContent = pares.length * 2;
+    document.getElementById('metaPares').textContent = pares.length;
+    const tipoLabel = { 'conceito-definição':'C+D', 'pergunta-resposta':'P+R', 'palavra-exemplo':'P+E', 'termo-tradução':'T+T' };
+    document.getElementById('metaTipo').textContent = tipoLabel[gameData.tipo] || gameData.tipo || '—';
+
+    showScreen('start');
+    document.getElementById('gameContainer').classList.add('show');
+    document.getElementById('gameContainer').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  function showStart() { showStartScreen(); }
+
+  // ── SCREENS ──
+  function showScreen(name) {
+    document.getElementById('startScreen').style.display   = name === 'start'   ? 'block' : 'none';
+    document.getElementById('playingScreen').classList.toggle('show', name === 'playing');
+    document.getElementById('winScreen').classList.toggle('show', name === 'win');
+  }
+
+  // ── START GAME ──
+  function startGame() {
+    matchedPairs = 0;
+    moves = 0;
+    flippedCards = [];
+    canFlip = true;
+    stopTimer();
+    secondsElapsed = 0;
+    totalPairs = gameData.pares.length;
+
+    // Build + shuffle cards
+    cards = [];
+    gameData.pares.forEach(par => {
+      cards.push({ uid: par.id + '-a', pairId: par.id, side: 'a', text: par.carta_a });
+      cards.push({ uid: par.id + '-b', pairId: par.id, side: 'b', text: par.carta_b });
+    });
+    shuffle(cards);
+
+    showScreen('playing');
+    renderGrid();
+    updateHUD();
+    startTimer();
+  }
+
+  // ── SHUFFLE ──
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
+
+  // ── RENDER GRID ──
+  function renderGrid() {
+    const grid = document.getElementById('cardGrid');
+    const n = cards.length; // 12, 16, 20, or 24
+    // cols: 4 for ≤16, 5 for 20, 6 for 24
+    const cols = n <= 12 ? 4 : n <= 16 ? 4 : n <= 20 ? 5 : 6;
+    grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    grid.innerHTML = '';
+
+    cards.forEach((card, idx) => {
+      const el = document.createElement('div');
+      el.className = 'mem-card';
+      el.dataset.idx = idx;
+      el.innerHTML = `
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <div class="card-front-mark">✦</div>
+            <div class="card-front-label">Memória</div>
+          </div>
+          <div class="card-face card-back side-${card.side}">
+            <span class="card-type-badge">${card.side === 'a' ? 'A' : 'B'}</span>
+            ${escHtml(card.text)}
+          </div>
+        </div>`;
+      el.addEventListener('click', () => onCardClick(idx));
+      grid.appendChild(el);
+    });
+  }
+
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // ── CARD CLICK ──
+  function onCardClick(idx) {
+    if (!canFlip) return;
+    const card = cards[idx];
+    const el = document.querySelectorAll('.mem-card')[idx];
+    if (el.classList.contains('flipped') || el.classList.contains('matched')) return;
+
+    el.classList.add('flipped');
+    flippedCards.push({ idx, pairId: card.pairId, el });
+
+    if (flippedCards.length === 2) {
+      moves++;
+      updateHUD();
+      canFlip = false;
+      checkMatch();
+    }
+  }
+
+  // ── CHECK MATCH ──
+  function checkMatch() {
+    const [a, b] = flippedCards;
+    if (a.pairId === b.pairId) {
+      // Match!
+      setTimeout(() => {
+        a.el.classList.remove('flipped');
+        b.el.classList.remove('flipped');
+        a.el.classList.add('matched');
+        b.el.classList.add('matched');
+        matchedPairs++;
+        flippedCards = [];
+        canFlip = true;
+        updateHUD();
+        if (matchedPairs === totalPairs) setTimeout(showWin, 500);
+      }, 500);
+    } else {
+      // No match
+      a.el.classList.add('wrong');
+      b.el.classList.add('wrong');
+      setTimeout(() => {
+        a.el.classList.remove('flipped','wrong');
+        b.el.classList.remove('flipped','wrong');
+        flippedCards = [];
+        canFlip = true;
+        updateHUD();
+      }, 900);
+    }
+  }
+
+  // ── HUD ──
+  function updateHUD() {
+    document.getElementById('hudMatches').textContent = `✅ ${matchedPairs} par${matchedPairs !== 1 ? 'es' : ''}`;
+    document.getElementById('hudMoves').textContent   = `🎴 ${moves} jogada${moves !== 1 ? 's' : ''}`;
+    const pct = totalPairs > 0 ? (matchedPairs / totalPairs) * 100 : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('hudProgress').textContent = `${matchedPairs} de ${totalPairs} pares encontrados`;
+  }
+
+  // ── TIMER ──
+  function startTimer() {
+    timerInterval = setInterval(() => {
+      secondsElapsed++;
+      document.getElementById('hudTimer').textContent = '⏱ ' + formatTime(secondsElapsed);
+    }, 1000);
+  }
+  function stopTimer() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  }
+  function formatTime(s) {
+    const m = Math.floor(s / 60);
+    const ss = s % 60;
+    return `${m}:${ss.toString().padStart(2,'0')}`;
+  }
+
+  // ── WIN SCREEN ──
+  function showWin() {
+    stopTimer();
+    const time = formatTime(secondsElapsed);
+    const score = calcScore();
+
+    document.getElementById('winTime').textContent  = time;
+    document.getElementById('winMoves').textContent = moves + ' jogadas';
+    document.getElementById('winScore').textContent = score + ' pts';
+    document.getElementById('winSub').textContent   = scoreMessage(score);
+
+    // Pairs review
+    const grid = document.getElementById('winPairsGrid');
+    grid.innerHTML = '';
+    (gameData.pares || []).forEach(par => {
+      grid.innerHTML += `
+        <div class="win-pair-row">
+          <div class="win-pair-a">${escHtml(par.carta_a)}</div>
+          <div class="win-pair-b">${escHtml(par.carta_b)}</div>
+        </div>`;
+    });
+
+    showScreen('win');
+    document.getElementById('gameContainer').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  function calcScore() {
+    const base = totalPairs * 100;
+    const movePenalty = Math.max(0, (moves - totalPairs) * 5);
+    const timePenalty = Math.max(0, Math.floor(secondsElapsed / 10) * 2);
+    return Math.max(0, base - movePenalty - timePenalty);
+  }
+
+  function scoreMessage(score) {
+    const max = totalPairs * 100;
+    const pct = (score / max) * 100;
+    if (pct >= 85) return 'Memória incrível! Desempenho excepcional!';
+    if (pct >= 60) return 'Muito bem! Ótimo raciocínio!';
+    return 'Bom trabalho! Continue praticando!';
+  }
+
+  // ── DOWNLOAD PDF (gabarito) ──
+  async function downloadPDF() {
+    if (!gameData) return;
+    const btn = event.currentTarget;
+    const orig = btn.textContent;
+    btn.textContent = '⏳ Gerando...';
+    btn.disabled = true;
+
+    const date = new Date().toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
+    const pares = gameData.pares || [];
+
+    const paresHtml = pares.map((par, i) => `
+      <div class="pdf-pair">
+        <div class="pdf-side-a">${escHtml(par.carta_a)}</div>
+        <div class="pdf-side-b">${escHtml(par.carta_b)}</div>
+      </div>`).join('');
+
+    document.getElementById('pdf-print').innerHTML = `
+      <div class="pdf-wrap">
+        <div class="pdf-top">
+          <div class="pdf-lbl">DoceriaPedagógica — Jogo da Memória — Gabarito</div>
+          <div class="pdf-titulo">${escHtml(gameData.titulo || 'Jogo da Memória')}</div>
+          <div class="pdf-meta">${escHtml(gameData.nivel || '')} • ${escHtml(gameData.disciplina || '')} • ${pares.length} pares • ${date}</div>
+        </div>
+        <div class="pdf-legend">
+          <span><span class="pdf-dot" style="background:#fdf3e3;border:1px solid #c8963e44;"></span>Carta A</span>
+          <span><span class="pdf-dot" style="background:#e8f4f4;border:1px solid #2d6e6e44;"></span>Carta B</span>
+        </div>
+        <div class="pdf-pairs-grid">${paresHtml}</div>
+        <div class="pdf-footer">
+          <span class="pdf-footer-logo">DoceriaPedagógica</span>
+          <span>Gabarito gerado por IA com qualidade pedagógica</span>
+          <span>${date}</span>
+        </div>
+      </div>`;
+
+    const el = document.getElementById('pdf-print');
+    el.style.display = 'block';
+    const titulo = (gameData.titulo || 'Memoria').replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_');
+
+    try {
+      await html2pdf().set({
+        margin: [15,15,15,15],
+        filename: `DoceriaPedagogica_Memoria_${titulo}.pdf`,
+        image: { type:'jpeg', quality:0.97 },
+        html2canvas: { scale:2, useCORS:true, logging:false, backgroundColor:'#ffffff' },
+        jsPDF: { unit:'mm', format:'a4', orientation:'portrait' },
+        pagebreak: { mode:['avoid-all','css','legacy'] }
+      }).from(el).save();
+    } catch(e) { console.error(e); }
+
+    el.style.display = 'none';
+    btn.textContent = orig;
+    btn.disabled = false;
+  }
+</script>
+
+</body>
+</html>

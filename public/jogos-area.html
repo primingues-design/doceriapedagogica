@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Área de Jogos — Doceria Pedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1410;
+    --cream: #faf7f2;
+    --warm: #f5f0e8;
+    --gold: #c8963e;
+    --gold-light: #e8b85a;
+    --teal: #2d6e6e;
+    --coral: #d95f3b;
+    --green: #3d9e6e;
+    --purple: #7c6af5;
+    --orange: #e8963e;
+    --border: rgba(26,20,16,0.1);
+    --border-mid: rgba(26,20,16,0.18);
+    --text: #1a1410;
+    --text-muted: #7a6a5a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--ink);
+    padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 900; color: var(--cream);
+    display: flex; align-items: center; gap: 10px; text-decoration: none;
+  }
+  .topbar-logo-mark {
+    width: 28px; height: 28px; background: var(--gold);
+    border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px;
+  }
+  .topbar-badge {
+    font-size: 11px; background: #e8f7ee; color: #2d7a4a;
+    border: 1px solid #a8d8b8; border-radius: 20px;
+    padding: 4px 12px; font-weight: 700; letter-spacing: 0.3px;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--ink) 0%, #2a1f14 60%, #1a3030 100%);
+    padding: 72px 32px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 120%, rgba(200,150,62,0.15), transparent 60%);
+  }
+  .hero-eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gold-light); margin-bottom: 16px; position: relative;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 52px); font-weight: 900;
+    color: var(--cream); line-height: 1.1; margin-bottom: 16px;
+    position: relative;
+  }
+  .hero-title span { color: var(--gold-light); }
+  .hero-sub {
+    font-size: 16px; color: rgba(250,247,242,0.65); max-width: 520px; margin: 0 auto 32px;
+    line-height: 1.6; position: relative;
+  }
+  .hero-free-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 30px; padding: 8px 20px;
+    font-size: 13px; color: rgba(250,247,242,0.8); position: relative;
+  }
+  .hero-free-badge strong { color: #7fdc9e; }
+
+  /* GRID DE JOGOS */
+  .games-section {
+    max-width: 1080px; margin: 0 auto; padding: 64px 32px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 900; margin-bottom: 8px;
+  }
+  .section-sub {
+    font-size: 14px; color: var(--text-muted); margin-bottom: 40px;
+  }
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .game-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px 24px;
+    text-decoration: none;
+    color: var(--text);
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  }
+  .game-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+    border-color: var(--border-mid);
+  }
+  .game-card-bar {
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    border-radius: 16px 16px 0 0;
+  }
+  .game-card-icon {
+    font-size: 36px; margin-bottom: 16px;
+  }
+  .game-card-name {
+    font-size: 18px; font-weight: 700; margin-bottom: 8px;
+    font-family: 'Playfair Display', serif;
+  }
+  .game-card-desc {
+    font-size: 13px; color: var(--text-muted); line-height: 1.5; flex: 1;
+    margin-bottom: 20px;
+  }
+  .game-card-tags {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px;
+  }
+  .tag {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 3px 8px; border-radius: 8px;
+    background: var(--warm); color: var(--text-muted); border: 1px solid var(--border);
+  }
+  .game-card-btn {
+    display: block; text-align: center;
+    padding: 10px 0; border-radius: 10px;
+    font-size: 14px; font-weight: 700;
+    background: var(--ink); color: var(--cream);
+    transition: opacity 0.15s;
+  }
+  .game-card:hover .game-card-btn { opacity: 0.85; }
+
+  /* SOON CARD */
+  .game-card.soon {
+    opacity: 0.55; pointer-events: none;
+    background: var(--warm);
+  }
+  .soon-badge {
+    position: absolute; top: 18px; right: 18px;
+    font-size: 10px; font-weight: 700; background: var(--warm);
+    border: 1px solid var(--border-mid); border-radius: 10px;
+    padding: 3px 8px; color: var(--text-muted);
+  }
+
+  /* FOOTER */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 32px;
+    text-align: center;
+  }
+  .footer-text {
+    font-size: 13px; color: var(--text-muted); margin-bottom: 8px;
+  }
+  .footer-link {
+    font-size: 13px; color: var(--teal); text-decoration: none; font-weight: 600;
+  }
+  .footer-link:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    .topbar { padding: 12px 16px; }
+    .hero { padding: 48px 16px 56px; }
+    .games-section { padding: 40px 16px; }
+    .games-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="index.html">
+    <div class="topbar-logo-mark">✦</div>
+    DoceriaPedagógica
+  </a>
+  <span class="topbar-badge">Acesso gratuito</span>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Área do Aluno</div>
+  <h1 class="hero-title">Jogos <span>Pedagógicos</span></h1>
+  <p class="hero-sub">Escolha um jogo, aprenda brincando e mostre o quanto você sabe!</p>
+  <div class="hero-free-badge">
+    <strong>100% gratuito</strong> — sem cadastro, sem senha, só jogar
+  </div>
+</div>
+
+<div class="games-section">
+  <div class="section-title">Escolha seu jogo</div>
+  <p class="section-sub">Todos os jogos foram preparados especialmente pela sua professora.</p>
+
+  <div class="games-grid">
+
+    <a class="game-card" href="jogos.html">
+      <div class="game-card-bar" style="background:#7c6af5;"></div>
+      <div class="game-card-icon">🎲</div>
+      <div class="game-card-name">Quiz Interativo</div>
+      <div class="game-card-desc">Responda perguntas com tempo cronometrado. Escolha o nível de dificuldade e veja quantos pontos você consegue!</div>
+      <div class="game-card-tags">
+        <span class="tag">Individual</span>
+        <span class="tag">Timer</span>
+        <span class="tag">Pontuação</span>
+      </div>
+      <div class="game-card-btn" style="background:#7c6af5;">Jogar Quiz</div>
+    </a>
+
+    <a class="game-card" href="memoria.html">
+      <div class="game-card-bar" style="background:#e8963e;"></div>
+      <div class="game-card-icon">🃏</div>
+      <div class="game-card-name">Jogo da Memória</div>
+      <div class="game-card-desc">Encontre os pares de cartas viradas. Treine sua memória e atenção com as palavras do tema estudado!</div>
+      <div class="game-card-tags">
+        <span class="tag">Individual</span>
+        <span class="tag">Memória</span>
+        <span class="tag">Pares</span>
+      </div>
+      <div class="game-card-btn" style="background:#e8963e;">Jogar Memória</div>
+    </a>
+
+    <a class="game-card" href="trilha.html">
+      <div class="game-card-bar" style="background:#2d6e6e;"></div>
+      <div class="game-card-icon">🎯</div>
+      <div class="game-card-name">Trilha do Conhecimento</div>
+      <div class="game-card-desc">Um tabuleiro para até 4 jogadores! Responda perguntas para avançar na trilha e seja o primeiro a chegar ao fim.</div>
+      <div class="game-card-tags">
+        <span class="tag">Até 4 jogadores</span>
+        <span class="tag">Tabuleiro</span>
+        <span class="tag">Turno a turno</span>
+      </div>
+      <div class="game-card-btn" style="background:#2d6e6e;">Jogar Trilha</div>
+    </a>
+
+    <a class="game-card" href="interativo.html">
+      <div class="game-card-bar" style="background:#3d9e6e;"></div>
+      <div class="game-card-icon">🔤</div>
+      <div class="game-card-name">Caça-palavras & Cruzadinha</div>
+      <div class="game-card-desc">Encontre palavras escondidas no grid ou complete a cruzadinha com dicas e imagens. Dois jogos em um!</div>
+      <div class="game-card-tags">
+        <span class="tag">Individual</span>
+        <span class="tag">Palavras</span>
+        <span class="tag">2 modos</span>
+      </div>
+      <div class="game-card-btn" style="background:#3d9e6e;">Jogar Palavras</div>
+    </a>
+
+  </div>
+</div>
+
+<div class="footer">
+  <p class="footer-text">Material preparado com carinho pela sua professora usando</p>
+  <a class="footer-link" href="index.html">Doceria Pedagógica ✦</a>
+</div>
+
+</body>
+</html>

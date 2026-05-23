@@ -351,9 +351,11 @@
 
   /* ── DOCUMENT STYLES (also used for PDF) ── */
   .doc-header {
-    background: var(--ink);
-    padding: 36px 48px 28px;
-    color: var(--cream);
+    background: white;
+    border-top: 5px solid var(--gold);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 48px 24px;
+    color: var(--text);
     position: relative;
     overflow: hidden;
   }
@@ -363,14 +365,14 @@
     position: absolute;
     right: 36px; bottom: -10px;
     font-size: 80px;
-    color: rgba(255,255,255,0.04);
+    color: rgba(15,14,12,0.04);
     font-family: 'Playfair Display', serif;
   }
 
   .doc-header-school {
     font-size: 10px; font-weight: 600;
     letter-spacing: 0.1em; text-transform: uppercase;
-    color: rgba(250,247,242,0.45);
+    color: var(--text-muted);
     margin-bottom: 12px;
   }
 
@@ -379,10 +381,11 @@
     font-size: 26px; font-weight: 900;
     line-height: 1.2;
     margin-bottom: 8px;
+    color: var(--text);
   }
 
   .doc-header-title em {
-    color: var(--gold-light);
+    color: var(--gold);
     font-style: italic;
   }
 
@@ -392,12 +395,12 @@
   }
 
   .doc-header-badge {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.12);
+    background: var(--warm);
+    border: 1px solid var(--border-mid);
     border-radius: 6px;
     padding: 4px 12px;
     font-size: 11px; font-weight: 500;
-    color: rgba(250,247,242,0.7);
+    color: var(--text-mid);
   }
 
   .doc-body {
@@ -843,7 +846,7 @@ Gere entre 3 e 5 atividades variadas. Para múltipla escolha, adicione campo "op
       <div class="doc-header">
         <div class="doc-header-school">DoceriaPedagógica — Material Pedagógico</div>
         <div class="doc-header-title">${data.titulo || tema}</div>
-        ${data.subtitulo ? `<div style="font-size:14px;color:rgba(250,247,242,0.55);margin-top:4px;">${data.subtitulo}</div>` : ''}
+        ${data.subtitulo ? `<div style="font-size:14px;color:var(--text-muted);margin-top:4px;">${data.subtitulo}</div>` : ''}
         <div class="doc-header-meta">
           <span class="doc-header-badge">📚 ${data.nivel || nivel}</span>
           <span class="doc-header-badge">📋 ${data.disciplina || tema}</span>
@@ -882,11 +885,12 @@ Gere entre 3 e 5 atividades variadas. Para múltipla escolha, adicione campo "op
     const titulo = document.getElementById('previewTitle').textContent.replace(/[^a-zA-Z0-9\s]/g, '').trim().replace(/\s+/g, '_');
 
     const opt = {
-      margin: [10, 10, 10, 10],
+      margin: [15, 15, 15, 15],
       filename: `DoceriaPedagogica_${titulo}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     try {

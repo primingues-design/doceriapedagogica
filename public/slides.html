@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apresentação de Slides — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root {
+    --ink: #0f0e0c; --cream: #faf7f2; --warm: #f5f0e8;
+    --gold: #c8963e; --gold-pale: #fdf3e3;
+    --teal: #2d6e6e; --teal-pale: #e8f4f4;
+    --coral: #d95f3b; --coral-pale: #fdeee9;
+    --text: #1a1917; --text-mid: #4a4845; --text-muted: #8a8785;
+    --border: rgba(15,14,12,0.1); --border-mid: rgba(15,14,12,0.18);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Outfit', sans-serif; background: var(--warm); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+  /* TOPBAR */
+  .topbar { background: var(--ink); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .topbar-logo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 900; color: var(--cream); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .topbar-logo-mark { width: 28px; height: 28px; background: var(--gold); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+  .topbar-back { font-size: 13px; color: rgba(250,247,242,0.5); text-decoration: none; transition: color 0.2s; }
+  .topbar-back:hover { color: var(--cream); }
+
+  /* LAYOUT */
+  .main { display: grid; grid-template-columns: 380px 1fr; min-height: calc(100vh - 56px); }
+
+  /* FORM PANEL */
+  .form-panel { background: var(--cream); border-right: 1px solid var(--border); padding: 28px 24px; overflow-y: auto; max-height: calc(100vh - 56px); position: sticky; top: 56px; }
+  .form-panel-title { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 900; margin-bottom: 5px; }
+  .form-panel-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
+  .field { margin-bottom: 18px; }
+  .field-label { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+  .field-required { color: var(--coral); }
+  input[type="text"], select, textarea { width: 100%; background: white; border: 1.5px solid var(--border-mid); border-radius: 9px; padding: 10px 13px; font-size: 14px; color: var(--text); font-family: 'Outfit', sans-serif; transition: border-color 0.2s; outline: none; }
+  input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,150,62,0.12); }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .pill-group { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { padding: 5px 12px; border-radius: 20px; border: 1.5px solid var(--border-mid); background: white; color: var(--text-muted); font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: 'Outfit', sans-serif; user-select: none; }
+  .pill.active { border-color: var(--gold); background: var(--gold-pale); color: var(--gold); font-weight: 600; }
+  .pill:hover:not(.active) { background: var(--warm); }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* THEME SELECTOR */
+  .theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .theme-swatch { border: 2.5px solid var(--border-mid); border-radius: 10px; padding: 10px 8px; cursor: pointer; text-align: center; transition: all 0.15s; background: white; }
+  .theme-swatch:hover { border-color: var(--border); transform: translateY(-1px); }
+  .theme-swatch.selected { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(200,150,62,0.25); }
+  .theme-swatch-preview { height: 40px; border-radius: 6px; margin-bottom: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .theme-swatch-name { font-size: 11px; font-weight: 600; color: var(--text-mid); }
+
+  /* GENERATE BTN */
+  .generate-btn { width: 100%; background: var(--gold); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Outfit', sans-serif; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; }
+  .generate-btn:hover:not(:disabled) { background: #b5842e; transform: translateY(-1px); }
+  .generate-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+  .generate-btn .spinner { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+  .generate-btn.loading .spinner { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .progress-area { display: none; margin-top: 14px; }
+  .progress-area.show { display: block; }
+  .progress-steps { display: flex; flex-direction: column; gap: 7px; }
+  .progress-step { display: flex; align-items: center; gap: 9px; font-size: 12px; color: var(--text-muted); }
+  .progress-step.active { color: var(--gold); }
+  .progress-step.done { color: var(--teal); }
+  .step-dot { width: 17px; height: 17px; border-radius: 50%; border: 2px solid var(--border-mid); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; }
+  .progress-step.active .step-dot { border-color: var(--gold); background: var(--gold-pale); }
+  .progress-step.done .step-dot { border-color: var(--teal); background: var(--teal); color: white; }
+  .error-box { display: none; background: var(--coral-pale); border: 1px solid rgba(217,95,59,0.3); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: var(--coral); margin-top: 12px; }
+  .error-box.show { display: block; }
+
+  /* PREVIEW PANEL */
+  .preview-panel { padding: 28px; overflow-y: auto; display: flex; flex-direction: column; }
+  .preview-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; min-height: 400px; text-align: center; color: var(--text-muted); }
+  .preview-empty-icon { font-size: 52px; margin-bottom: 16px; opacity: 0.35; }
+  .preview-empty-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--text-mid); margin-bottom: 8px; }
+  .preview-empty-sub { font-size: 14px; line-height: 1.6; max-width: 320px; }
+
+  /* SLIDE PLAYER WRAPPER */
+  .player-wrap { display: none; flex-direction: column; gap: 16px; }
+  .player-wrap.show { display: flex; }
+
+  /* PLAYER CONTROLS BAR */
+  .player-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .player-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; }
+  .player-meta { font-size: 12px; color: var(--text-muted); }
+  .player-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn-action { padding: 8px 16px; border-radius: 8px; border: 1.5px solid var(--border-mid); background: white; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Outfit', sans-serif; color: var(--text-mid); transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+  .btn-action:hover { background: var(--warm); border-color: var(--border); }
+  .btn-action.primary { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+  .btn-action.primary:hover { background: #2a2926; }
+
+  /* THEME SWITCHER (inline) */
+  .theme-switch-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .theme-switch-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); }
+  .theme-btn { width: 24px; height: 24px; border-radius: 50%; border: 2.5px solid white; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.18); transition: transform 0.15s; }
+  .theme-btn:hover { transform: scale(1.2); }
+  .theme-btn.active { box-shadow: 0 0 0 2px var(--gold), 0 1px 4px rgba(0,0,0,0.2); }
+
+  /* SLIDE CONTAINER */
+  .slide-container { position: relative; width: 100%; background: #1a1410; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 48px rgba(0,0,0,0.22); aspect-ratio: 16/9; cursor: pointer; }
+  .slide-stage { position: absolute; inset: 0; transition: opacity 0.25s; }
+
+  /* SLIDE NAVIGATION OVERLAY */
+  .slide-nav-left, .slide-nav-right { position: absolute; top: 0; bottom: 0; width: 20%; display: flex; align-items: center; cursor: pointer; z-index: 10; opacity: 0; transition: opacity 0.2s; }
+  .slide-container:hover .slide-nav-left,
+  .slide-container:hover .slide-nav-right { opacity: 1; }
+  .slide-nav-left { left: 0; justify-content: flex-start; padding-left: 16px; }
+  .slide-nav-right { right: 0; justify-content: flex-end; padding-right: 16px; }
+  .nav-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 18px; color: white; transition: background 0.15s; border: 1px solid rgba(255,255,255,0.2); }
+  .nav-btn:hover { background: rgba(255,255,255,0.28); }
+
+  /* PROGRESS BAR */
+  .slide-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.15); z-index: 10; }
+  .slide-progress-fill { height: 100%; background: rgba(255,255,255,0.7); transition: width 0.25s; }
+
+  /* SLIDE COUNTER */
+  .slide-counter-badge { position: absolute; bottom: 12px; right: 16px; background: rgba(0,0,0,0.35); color: rgba(255,255,255,0.8); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 10px; z-index: 10; backdrop-filter: blur(4px); }
+
+  /* SLIDE THUMBS */
+  .slide-thumbs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+  .slide-thumb { flex-shrink: 0; width: 96px; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; opacity: 0.65; }
+  .slide-thumb:hover { opacity: 1; }
+  .slide-thumb.active { border-color: var(--gold); opacity: 1; box-shadow: 0 2px 10px rgba(200,150,62,0.3); }
+
+  /* ══════════════════════════════════════
+     SLIDE THEMES
+  ══════════════════════════════════════ */
+
+  /* --- DOURADO --- */
+  .theme-dourado .slide-capa { background: linear-gradient(135deg, #1a1410 0%, #2a1f10 60%, #1a2a20 100%); }
+  .theme-dourado .slide-body { background: #faf7f2; }
+  .theme-dourado .capa-emoji { font-size: clamp(48px,8%,80px); margin-bottom: 2%; }
+  .theme-dourado .capa-titulo { font-family:'Playfair Display',serif; font-weight:900; color:#faf7f2; line-height:1.1; margin-bottom:2%; }
+  .theme-dourado .capa-sub { color:rgba(250,247,242,0.65); }
+  .theme-dourado .capa-meta { color:#c8963e; border-top:1px solid rgba(200,150,62,0.3); }
+  .theme-dourado .slide-titulo { font-family:'Playfair Display',serif; font-weight:900; color:#1a1917; }
+  .theme-dourado .slide-acento { background:#c8963e; }
+  .theme-dourado .topico-dot { color:#c8963e; }
+  .theme-dourado .slide-destaque { background:linear-gradient(135deg,#1a1410,#2a1f10); }
+  .theme-dourado .destaque-texto { color:#faf7f2; }
+  .theme-dourado .destaque-acento { color:#c8963e; }
+  .theme-dourado .pergunta-bg { background:linear-gradient(135deg,#c8963e,#e8b86d); }
+  .theme-dourado .slide-fechamento { background:linear-gradient(135deg,#1a1410,#2a1f10); }
+
+  /* --- OCEANO --- */
+  .theme-oceano .slide-capa { background:linear-gradient(135deg,#0d1f33 0%,#0d3355 60%,#0a2a40 100%); }
+  .theme-oceano .slide-body { background:#f0f7ff; }
+  .theme-oceano .capa-titulo { font-family:'Playfair Display',serif; font-weight:900; color:#e8f4f4; line-height:1.1; margin-bottom:2%; }
+  .theme-oceano .capa-sub { color:rgba(232,244,244,0.65); }
+  .theme-oceano .capa-meta { color:#4a9b9b; border-top:1px solid rgba(74,155,155,0.3); }
+  .theme-oceano .capa-emoji { font-size:clamp(48px,8%,80px); margin-bottom:2%; }
+  .theme-oceano .slide-titulo { font-family:'Playfair Display',serif; font-weight:900; color:#0d2137; }
+  .theme-oceano .slide-acento { background:#2d6e6e; }
+  .theme-oceano .topico-dot { color:#2d6e6e; }
+  .theme-oceano .slide-destaque { background:linear-gradient(135deg,#0d1f33,#0d3355); }
+  .theme-oceano .destaque-texto { color:#e8f4f4; }
+  .theme-oceano .destaque-acento { color:#4a9b9b; }
+  .theme-oceano .pergunta-bg { background:linear-gradient(135deg,#2d6e6e,#4a9b9b); }
+  .theme-oceano .slide-fechamento { background:linear-gradient(135deg,#0d1f33,#0d3355); }
+
+  /* --- FLORESTA --- */
+  .theme-floresta .slide-capa { background:linear-gradient(135deg,#0f1e10 0%,#1a3320 60%,#0f2515 100%); }
+  .theme-floresta .slide-body { background:#f2f7f2; }
+  .theme-floresta .capa-titulo { font-family:'Playfair Display',serif; font-weight:900; color:#e8f5e8; line-height:1.1; margin-bottom:2%; }
+  .theme-floresta .capa-sub { color:rgba(232,245,232,0.65); }
+  .theme-floresta .capa-meta { color:#5cb87a; border-top:1px solid rgba(92,184,122,0.3); }
+  .theme-floresta .capa-emoji { font-size:clamp(48px,8%,80px); margin-bottom:2%; }
+  .theme-floresta .slide-titulo { font-family:'Playfair Display',serif; font-weight:900; color:#0f1e10; }
+  .theme-floresta .slide-acento { background:#3d9e6e; }
+  .theme-floresta .topico-dot { color:#3d9e6e; }
+  .theme-floresta .slide-destaque { background:linear-gradient(135deg,#0f1e10,#1a3320); }
+  .theme-floresta .destaque-texto { color:#e8f5e8; }
+  .theme-floresta .destaque-acento { color:#5cb87a; }
+  .theme-floresta .pergunta-bg { background:linear-gradient(135deg,#3d9e6e,#5cb87a); }
+  .theme-floresta .slide-fechamento { background:linear-gradient(135deg,#0f1e10,#1a3320); }
+
+  /* --- NOTURNO --- */
+  .theme-noturno .slide-capa { background:linear-gradient(135deg,#0a0814 0%,#140a28 60%,#0a1028 100%); }
+  .theme-noturno .slide-body { background:#f5f4ff; }
+  .theme-noturno .capa-titulo { font-family:'Playfair Display',serif; font-weight:900; color:#e8e4ff; line-height:1.1; margin-bottom:2%; }
+  .theme-noturno .capa-sub { color:rgba(232,228,255,0.65); }
+  .theme-noturno .capa-meta { color:#9d8ef5; border-top:1px solid rgba(124,106,245,0.3); }
+  .theme-noturno .capa-emoji { font-size:clamp(48px,8%,80px); margin-bottom:2%; }
+  .theme-noturno .slide-titulo { font-family:'Playfair Display',serif; font-weight:900; color:#140a28; }
+  .theme-noturno .slide-acento { background:#7c6af5; }
+  .theme-noturno .topico-dot { color:#7c6af5; }
+  .theme-noturno .slide-destaque { background:linear-gradient(135deg,#0a0814,#140a28); }
+  .theme-noturno .destaque-texto { color:#e8e4ff; }
+  .theme-noturno .destaque-acento { color:#9d8ef5; }
+  .theme-noturno .pergunta-bg { background:linear-gradient(135deg,#7c6af5,#9d8ef5); }
+  .theme-noturno .slide-fechamento { background:linear-gradient(135deg,#0a0814,#140a28); }
+
+  /* --- CORAL --- */
+  .theme-coral .slide-capa { background:linear-gradient(135deg,#2a1008 0%,#3d1810 60%,#2a0f18 100%); }
+  .theme-coral .slide-body { background:#fff8f6; }
+  .theme-coral .capa-titulo { font-family:'Playfair Display',serif; font-weight:900; color:#fdeee9; line-height:1.1; margin-bottom:2%; }
+  .theme-coral .capa-sub { color:rgba(253,238,233,0.65); }
+  .theme-coral .capa-meta { color:#e8803e; border-top:1px solid rgba(217,95,59,0.3); }
+  .theme-coral .capa-emoji { font-size:clamp(48px,8%,80px); margin-bottom:2%; }
+  .theme-coral .slide-titulo { font-family:'Playfair Display',serif; font-weight:900; color:#2a1008; }
+  .theme-coral .slide-acento { background:#d95f3b; }
+  .theme-coral .topico-dot { color:#d95f3b; }
+  .theme-coral .slide-destaque { background:linear-gradient(135deg,#2a1008,#3d1810); }
+  .theme-coral .destaque-texto { color:#fdeee9; }
+  .theme-coral .destaque-acento { color:#e8803e; }
+  .theme-coral .pergunta-bg { background:linear-gradient(135deg,#d95f3b,#e8803e); }
+  .theme-coral .slide-fechamento { background:linear-gradient(135deg,#2a1008,#3d1810); }
+
+  /* --- GELO (light/minimal) --- */
+  .theme-gelo .slide-capa { background:linear-gradient(135deg,#1a3a5c 0%,#2a5080 60%,#1a3050 100%); }
+  .theme-gelo .slide-body { background:#ffffff; }
+  .theme-gelo .capa-titulo { font-family:'Outfit',sans-serif; font-weight:800; color:#ffffff; line-height:1.1; margin-bottom:2%; }
+  .theme-gelo .capa-sub { color:rgba(255,255,255,0.7); }
+  .theme-gelo .capa-meta { color:#7dd3fc; border-top:1px solid rgba(125,211,252,0.3); }
+  .theme-gelo .capa-emoji { font-size:clamp(48px,8%,80px); margin-bottom:2%; }
+  .theme-gelo .slide-titulo { font-family:'Outfit',sans-serif; font-weight:800; color:#1a3a5c; }
+  .theme-gelo .slide-acento { background:#1a3a5c; }
+  .theme-gelo .topico-dot { color:#1a3a5c; }
+  .theme-gelo .slide-destaque { background:linear-gradient(135deg,#1a3a5c,#2a5080); }
+  .theme-gelo .destaque-texto { color:#ffffff; }
+  .theme-gelo .destaque-acento { color:#7dd3fc; }
+  .theme-gelo .pergunta-bg { background:linear-gradient(135deg,#1a3a5c,#2a5080); }
+  .theme-gelo .slide-fechamento { background:linear-gradient(135deg,#1a3a5c,#2a5080); }
+
+  /* ══════════════════════════════════════
+     SLIDE INNER LAYOUTS (all themes share structure)
+  ══════════════════════════════════════ */
+  .slide { width:100%; height:100%; display:flex; flex-direction:column; padding:5% 6%; position:relative; overflow:hidden; }
+
+  /* CAPA */
+  .slide-capa { align-items:center; justify-content:center; text-align:center; }
+  .capa-emoji { line-height:1; }
+  .capa-titulo { font-size:clamp(22px,4.5%,48px); }
+  .capa-sub { font-size:clamp(12px,2%,20px); margin-bottom:5%; }
+  .capa-meta { display:flex; align-items:center; justify-content:center; gap:4%; padding-top:3%; margin-top:3%; font-size:clamp(10px,1.5%,14px); font-weight:600; letter-spacing:0.05em; text-transform:uppercase; flex-wrap:wrap; }
+
+  /* TÓPICOS */
+  .slide-body { }
+  .slide-header { display:flex; align-items:flex-start; gap:3%; margin-bottom:4%; }
+  .slide-header-emoji { font-size:clamp(28px,5%,52px); flex-shrink:0; line-height:1; }
+  .slide-header-text { flex:1; }
+  .slide-titulo { font-size:clamp(18px,3.2%,32px); line-height:1.15; }
+  .slide-acento { height:3px; width:48px; border-radius:2px; margin-top:8px; }
+  .topicos-list { display:flex; flex-direction:column; gap:2.5%; flex:1; }
+  .topico-item { display:flex; align-items:flex-start; gap:2.5%; font-size:clamp(12px,2%,18px); line-height:1.45; color:var(--text-mid); }
+  .topico-dot { font-size:clamp(14px,2%,18px); flex-shrink:0; margin-top:1px; }
+  .topico-text { flex:1; }
+
+  /* DESTAQUE */
+  .slide-destaque { align-items:center; justify-content:center; text-align:center; }
+  .destaque-inner { max-width:84%; }
+  .destaque-acento { font-size:clamp(28px,5%,52px); margin-bottom:4%; line-height:1; }
+  .destaque-texto { font-size:clamp(16px,2.8%,28px); line-height:1.4; font-weight:700; }
+  .destaque-sub { font-size:clamp(11px,1.6%,16px); margin-top:3%; opacity:0.65; }
+
+  /* DOIS LADOS */
+  .slide-dois { }
+  .dois-grid { display:grid; grid-template-columns:1fr 1fr; gap:4%; flex:1; margin-top:2%; }
+  .dois-lado { background:rgba(0,0,0,0.04); border-radius:8px; padding:4% 5%; }
+  .dois-lado-titulo { font-size:clamp(12px,1.8%,16px); font-weight:800; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3%; }
+  .dois-item { font-size:clamp(11px,1.7%,15px); color:var(--text-mid); padding:2% 0; border-bottom:1px solid var(--border); line-height:1.4; }
+  .dois-item:last-child { border-bottom:none; }
+
+  /* PERGUNTA */
+  .slide-pergunta { align-items:center; justify-content:center; text-align:center; }
+  .pergunta-bg { border-radius:16px; padding:6% 8%; max-width:88%; }
+  .pergunta-emoji { font-size:clamp(28px,5%,52px); margin-bottom:3%; }
+  .pergunta-texto { font-size:clamp(16px,2.8%,28px); font-weight:800; color:white; line-height:1.35; margin-bottom:3%; }
+  .pergunta-dica { font-size:clamp(11px,1.6%,15px); color:rgba(255,255,255,0.7); }
+
+  /* FECHAMENTO */
+  .slide-fechamento { align-items:center; justify-content:center; text-align:center; }
+  .fechamento-emoji { font-size:clamp(32px,5%,52px); margin-bottom:3%; }
+  .fechamento-titulo { font-family:'Playfair Display',serif; font-size:clamp(20px,3.5%,36px); font-weight:900; color:white; margin-bottom:4%; }
+  .fechamento-pontos { text-align:left; max-width:80%; width:100%; display:flex; flex-direction:column; gap:2%; margin-bottom:4%; }
+  .fechamento-ponto { display:flex; align-items:flex-start; gap:2%; font-size:clamp(12px,1.8%,16px); color:rgba(255,255,255,0.85); }
+  .fechamento-ponto::before { content:'✦'; color:rgba(255,255,255,0.5); flex-shrink:0; }
+  .fechamento-chamada { font-size:clamp(11px,1.6%,15px); color:rgba(255,255,255,0.55); border-top:1px solid rgba(255,255,255,0.15); padding-top:3%; margin-top:1%; }
+
+  /* PDF hidden container */
+  #pdf-container { display:none; }
+  .pdf-slide { width:297mm; height:167mm; overflow:hidden; page-break-after:always; }
+
+  @media (max-width:860px) {
+    .main { grid-template-columns:1fr; }
+    .form-panel { position:static; max-height:none; border-right:none; border-bottom:1px solid var(--border); }
+    .preview-panel { padding:16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="index.html">
+    <div class="topbar-logo-mark">✦</div>
+    DoceriaPedagógica
+  </a>
+  <a class="topbar-back" href="conta.html">← Voltar ao painel</a>
+</div>
+
+<div class="main">
+
+  <!-- FORM PANEL -->
+  <div class="form-panel">
+    <div class="form-panel-title">Apresentação de Slides</div>
+    <div class="form-panel-sub">Gere slides prontos para projetar em sala de aula. Escolha o design e o conteúdo é criado pela IA.</div>
+
+    <div class="field">
+      <label class="field-label">Tema da aula <span class="field-required">*</span></label>
+      <input type="text" id="tema" placeholder="Ex: Revolução Industrial, Fotossíntese, Frações..." />
+    </div>
+
+    <div class="field">
+      <label class="field-label">Disciplina</label>
+      <input type="text" id="disciplina" placeholder="Ex: História, Ciências, Matemática..." />
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label">Nível <span class="field-required">*</span></label>
+        <select id="nivel">
+          <option value="">Selecione...</option>
+          <option>Educação Infantil</option>
+          <option>Fundamental I (1º–5º)</option>
+          <option>Fundamental II (6º–9º)</option>
+          <option>Ensino Médio</option>
+          <option>EJA</option>
+          <option>Ensino Superior</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Nº de slides</label>
+        <select id="qtd">
+          <option value="6">6 slides</option>
+          <option value="8" selected>8 slides</option>
+          <option value="10">10 slides</option>
+          <option value="12">12 slides</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Estilo da apresentação</label>
+      <div class="pill-group" id="estiloPills">
+        <div class="pill active" data-val="expositivo">📖 Expositivo</div>
+        <div class="pill" data-val="dialogado">💬 Dialogado</div>
+        <div class="pill" data-val="introdutorio">🌱 Introdução ao tema</div>
+        <div class="pill" data-val="revisao">🔄 Revisão/Fechamento</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Nome da professora (para a capa)</label>
+      <input type="text" id="professor" placeholder="Ex: Profª Maria Silva" />
+    </div>
+
+    <div class="field">
+      <label class="field-label">Design do tema <span class="field-required">*</span></label>
+      <div class="theme-grid" id="themeGrid">
+        <div class="theme-swatch selected" data-theme="dourado" onclick="selectTheme('dourado', this)">
+          <div class="theme-swatch-preview" style="background:linear-gradient(135deg,#1a1410,#c8963e)">🌟</div>
+          <div class="theme-swatch-name">Dourado</div>
+        </div>
+        <div class="theme-swatch" data-theme="oceano" onclick="selectTheme('oceano', this)">
+          <div class="theme-swatch-preview" style="background:linear-gradient(135deg,#0d1f33,#2d6e6e)">🌊</div>
+          <div class="theme-swatch-name">Oceano</div>
+        </div>
+        <div class="theme-swatch" data-theme="floresta" onclick="selectTheme('floresta', this)">
+          <div class="theme-swatch-preview" style="background:linear-gradient(135deg,#0f1e10,#3d9e6e)">🌿</div>
+          <div class="theme-swatch-name">Floresta</div>
+        </div>
+        <div class="theme-swatch" data-theme="noturno" onclick="selectTheme('noturno', this)">
+          <div class="theme-swatch-preview" style="background:linear-gradient(135deg,#0a0814,#7c6af5)">✨</div>
+          <div class="theme-swatch-name">Noturno</div>
+        </div>
+        <div class="theme-swatch" data-theme="coral" onclick="selectTheme('coral', this)">
+          <div class="theme-swatch-preview" style="background:linear-gradient(135deg,#2a1008,#d95f3b)">🔥</div>
+          <div class="theme-swatch-name">Coral</div>
+        </div>
+        <div class="theme-swatch" data-theme="gelo" onclick="selectTheme('gelo', this)">
+          <div class="theme-swatch-preview" style="background:linear-gradient(135deg,#1a3a5c,#7dd3fc)">❄️</div>
+          <div class="theme-swatch-name">Gelo</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Observações</label>
+      <input type="text" id="obs" placeholder="Ex: incluir perguntas para a turma, foco em imagens, linguagem simples..." />
+    </div>
+
+    <hr class="divider">
+
+    <button class="generate-btn" id="generateBtn" onclick="generateSlides()">
+      <span class="btn-icon">🎞️</span>
+      <div class="spinner"></div>
+      Gerar Apresentação
+    </button>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <div class="progress-area" id="progressArea">
+      <div class="progress-steps">
+        <div class="progress-step" id="step1"><div class="step-dot">1</div><span>Estruturando a apresentação...</span></div>
+        <div class="progress-step" id="step2"><div class="step-dot">2</div><span>Criando conteúdo dos slides...</span></div>
+        <div class="progress-step" id="step3"><div class="step-dot">3</div><span>Definindo perguntas e destaques...</span></div>
+        <div class="progress-step" id="step4"><div class="step-dot">4</div><span>Aplicando o tema visual...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div class="preview-panel">
+
+    <div class="preview-empty" id="previewEmpty">
+      <div class="preview-empty-icon">🎞️</div>
+      <div class="preview-empty-title">Sua apresentação aparece aqui</div>
+      <div class="preview-empty-sub">Preencha o formulário, escolha o design e clique em <strong>Gerar Apresentação</strong> para criar slides prontos para projetar.</div>
+    </div>
+
+    <div class="player-wrap" id="playerWrap">
+
+      <div class="player-bar">
+        <div>
+          <div class="player-title" id="playerTitle">Apresentação</div>
+          <div class="player-meta" id="playerMeta"></div>
+        </div>
+        <div class="player-actions">
+          <div class="theme-switch-row">
+            <span class="theme-switch-label">Tema:</span>
+            <div class="theme-btn" style="background:linear-gradient(135deg,#1a1410,#c8963e)" title="Dourado" onclick="applyTheme('dourado')"></div>
+            <div class="theme-btn" style="background:linear-gradient(135deg,#0d1f33,#2d6e6e)" title="Oceano" onclick="applyTheme('oceano')"></div>
+            <div class="theme-btn" style="background:linear-gradient(135deg,#0f1e10,#3d9e6e)" title="Floresta" onclick="applyTheme('floresta')"></div>
+            <div class="theme-btn" style="background:linear-gradient(135deg,#0a0814,#7c6af5)" title="Noturno" onclick="applyTheme('noturno')"></div>
+            <div class="theme-btn" style="background:linear-gradient(135deg,#2a1008,#d95f3b)" title="Coral" onclick="applyTheme('coral')"></div>
+            <div class="theme-btn" style="background:linear-gradient(135deg,#1a3a5c,#7dd3fc)" title="Gelo" onclick="applyTheme('gelo')"></div>
+          </div>
+          <button class="btn-action" onclick="toggleFullscreen()" title="Tela cheia (F)">⛶ Tela cheia</button>
+          <button class="btn-action primary" onclick="generateBtn_regen()">↻ Regerar</button>
+          <button class="btn-action primary" onclick="downloadPDF()">⬇ PDF</button>
+        </div>
+      </div>
+
+      <!-- SLIDE VIEWER -->
+      <div class="slide-container" id="slideContainer">
+        <div class="slide-stage" id="slideStage"></div>
+        <div class="slide-nav-left" onclick="prevSlide()"><div class="nav-btn">‹</div></div>
+        <div class="slide-nav-right" onclick="nextSlide()"><div class="nav-btn">›</div></div>
+        <div class="slide-counter-badge" id="slideCounter">1 / 1</div>
+        <div class="slide-progress"><div class="slide-progress-fill" id="progressFill"></div></div>
+      </div>
+
+      <!-- THUMBNAILS -->
+      <div class="slide-thumbs" id="slideThumbs"></div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PDF CONTAINER (hidden) -->
+<div id="pdf-container"></div>
+
+<script>
+  let slidesData = [];
+  let currentIndex = 0;
+  let currentTheme = 'dourado';
+
+  // ── THEME SELECTION ──
+  function selectTheme(theme, el) {
+    document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('selected'));
+    el.classList.add('selected');
+    currentTheme = theme;
+    if (slidesData.length) { applyTheme(theme); }
+  }
+
+  function applyTheme(theme) {
+    currentTheme = theme;
+    // update theme button active state
+    document.querySelectorAll('.theme-btn').forEach((btn, i) => {
+      btn.classList.remove('active');
+      const themes = ['dourado','oceano','floresta','noturno','coral','gelo'];
+      if (themes[i] === theme) btn.classList.add('active');
+    });
+    renderSlide(currentIndex);
+    renderThumbs();
+  }
+
+  // ── FORM PILLS ──
+  document.querySelectorAll('#estiloPills .pill').forEach(p => {
+    p.addEventListener('click', () => {
+      document.querySelectorAll('#estiloPills .pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+    });
+  });
+  function getEstilo() {
+    const active = document.querySelector('#estiloPills .pill.active');
+    return active ? active.dataset.val : 'expositivo';
+  }
+
+  function setStep(n) {
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById('step' + i);
+      el.classList.remove('active','done');
+      if (i < n) { el.classList.add('done'); el.querySelector('.step-dot').textContent = '✓'; }
+      else if (i === n) el.classList.add('active');
+      else el.querySelector('.step-dot').textContent = i;
+    }
+  }
+
+  function generateBtn_regen() { generateSlides(); }
+
+  async function generateSlides() {
+    const tema = document.getElementById('tema').value.trim();
+    const disciplina = document.getElementById('disciplina').value.trim();
+    const nivel = document.getElementById('nivel').value;
+    const qtd = parseInt(document.getElementById('qtd').value);
+    const professor = document.getElementById('professor').value.trim();
+    const obs = document.getElementById('obs').value.trim();
+    const estilo = getEstilo();
+
+    const errorBox = document.getElementById('errorBox');
+    errorBox.classList.remove('show');
+    if (!tema) { errorBox.textContent = 'Preencha o tema da aula.'; errorBox.classList.add('show'); document.getElementById('tema').focus(); return; }
+    if (!nivel) { errorBox.textContent = 'Selecione o nível.'; errorBox.classList.add('show'); document.getElementById('nivel').focus(); return; }
+
+    const btn = document.getElementById('generateBtn');
+    btn.disabled = true; btn.classList.add('loading');
+    document.getElementById('progressArea').classList.add('show');
+    document.getElementById('previewEmpty').style.display = 'none';
+    document.getElementById('playerWrap').classList.remove('show');
+
+    setStep(1); await delay(600); setStep(2);
+
+    const tiposSlides = {
+      expositivo: 'capa, topicos, topicos, destaque, topicos, topicos, pergunta, fechamento',
+      dialogado: 'capa, pergunta, topicos, destaque, topicos, pergunta, topicos, fechamento',
+      introdutorio: 'capa, destaque, topicos, topicos, dois_lados, pergunta, fechamento',
+      revisao: 'capa, destaque, topicos, dois_lados, topicos, pergunta, pergunta, fechamento'
+    };
+
+    const sequencia = tiposSlides[estilo] || tiposSlides.expositivo;
+
+    const prompt = `Crie uma apresentação pedagógica de slides com os dados abaixo:
+
+TEMA: ${tema}
+${disciplina ? 'DISCIPLINA: ' + disciplina : ''}
+NÍVEL: ${nivel}
+NÚMERO DE SLIDES: ${qtd}
+ESTILO: ${estilo}
+${professor ? 'PROFESSORA: ' + professor : ''}
+${obs ? 'OBSERVAÇÕES: ' + obs : ''}
+
+Gere exatamente ${qtd} slides. Sugira uma sequência lógica como: ${sequencia} (adapte conforme necessário para ${qtd} slides).
+
+Retorne SOMENTE este JSON válido (sem markdown):
+{
+  "titulo": "título da apresentação",
+  "disciplina": "${disciplina || tema}",
+  "nivel": "${nivel}",
+  "professor": "${professor || 'Doceria Pedagógica'}",
+  "slides": [
+    // SLIDE TIPO "capa":
+    { "tipo": "capa", "emoji": "emoji relevante ao tema", "titulo": "título impactante", "subtitulo": "subtítulo descritivo (1 linha)" },
+
+    // SLIDE TIPO "topicos":
+    { "tipo": "topicos", "emoji": "emoji do subtema", "titulo": "título do slide", "topicos": ["tópico 1 conciso", "tópico 2", "tópico 3", "tópico 4"] },
+
+    // SLIDE TIPO "destaque":
+    { "tipo": "destaque", "emoji": "emoji", "texto": "frase ou conceito-chave impactante (máx. 2 linhas)", "sub": "explicação curta opcional" },
+
+    // SLIDE TIPO "dois_lados":
+    { "tipo": "dois_lados", "emoji": "emoji", "titulo": "título do slide", "lado_a": { "titulo": "Título Lado A", "itens": ["item 1", "item 2", "item 3"] }, "lado_b": { "titulo": "Título Lado B", "itens": ["item 1", "item 2", "item 3"] } },
+
+    // SLIDE TIPO "pergunta":
+    { "tipo": "pergunta", "emoji": "🤔", "pergunta": "pergunta reflexiva para a turma?", "dica": "dica ou contexto para o professor" },
+
+    // SLIDE TIPO "fechamento":
+    { "tipo": "fechamento", "emoji": "⭐", "titulo": "O que aprendemos hoje", "pontos": ["ponto 1", "ponto 2", "ponto 3"], "chamada": "chamada para ação ou tarefa opcional" }
+  ]
+}
+
+REGRAS:
+- Linguagem adaptada ao nível: ${nivel}
+- Cada tópico deve ter no máximo 10 palavras
+- Destaque e pergunta devem ser marcantes e memoráveis
+- O slide de fechamento sempre resume os pontos principais`;
+
+    try {
+      const response = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-5',
+          max_tokens: 4000,
+          system: `Você é uma especialista em comunicação pedagógica e design instrucional.
+Crie apresentações de slides claras, envolventes e didaticamente eficazes.
+Adapte sempre o vocabulário e a complexidade ao nível informado.
+Use linguagem ativa e exemplos concretos.
+Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou depois.`,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      setStep(3);
+      if (!response.ok) { const err = await response.json().catch(() => ({})); throw new Error(err?.error?.message || `Erro ${response.status}`); }
+      const data = await response.json();
+      const raw = data.content?.[0]?.text || '';
+      setStep(4); await delay(400);
+
+      let parsed;
+      try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
+      catch(e) { throw new Error('Formato inesperado. Tente novamente.'); }
+
+      slidesData = parsed.slides || [];
+      currentIndex = 0;
+
+      document.getElementById('playerTitle').textContent = parsed.titulo || tema;
+      document.getElementById('playerMeta').textContent = `${parsed.nivel || nivel} • ${parsed.disciplina || ''} • ${slidesData.length} slides`;
+
+      document.getElementById('playerWrap').classList.add('show');
+      document.getElementById('previewEmpty').style.display = 'none';
+
+      applyTheme(currentTheme);
+      renderThumbs();
+
+    } catch(err) {
+      console.error(err);
+      errorBox.textContent = 'Erro: ' + (err.message || 'Tente novamente.');
+      errorBox.classList.add('show');
+      document.getElementById('previewEmpty').style.display = 'flex';
+    } finally {
+      btn.disabled = false; btn.classList.remove('loading');
+      document.getElementById('progressArea').classList.remove('show');
+      for (let i = 1; i <= 4; i++) { const el = document.getElementById('step' + i); el.classList.remove('active','done'); el.querySelector('.step-dot').textContent = i; }
+    }
+  }
+
+  // ── RENDER ──
+  function buildSlideHTML(slide, theme) {
+    const t = `theme-${theme}`;
+    if (!slide) return '';
+    switch (slide.tipo) {
+      case 'capa': return `
+        <div class="slide slide-capa ${t}">
+          <div class="capa-emoji">${slide.emoji||'📚'}</div>
+          <div class="capa-titulo">${slide.titulo||''}</div>
+          <div class="capa-sub">${slide.subtitulo||''}</div>
+          <div class="capa-meta">
+            <span>${slide.professor||document.getElementById('professor').value||'DoceriaPedagógica'}</span>
+            <span>${slide.disciplina||document.getElementById('disciplina').value||''}</span>
+            <span>${new Date().getFullYear()}</span>
+          </div>
+        </div>`;
+
+      case 'topicos': return `
+        <div class="slide slide-body ${t}">
+          <div class="slide-header">
+            <div class="slide-header-emoji">${slide.emoji||'📌'}</div>
+            <div class="slide-header-text">
+              <div class="slide-titulo">${slide.titulo||''}</div>
+              <div class="slide-acento"></div>
+            </div>
+          </div>
+          <div class="topicos-list">
+            ${(slide.topicos||[]).map(tp => `<div class="topico-item"><span class="topico-dot">✦</span><span class="topico-text">${tp}</span></div>`).join('')}
+          </div>
+        </div>`;
+
+      case 'destaque': return `
+        <div class="slide slide-destaque ${t}">
+          <div class="destaque-inner">
+            <div class="destaque-acento">${slide.emoji||'💡'}</div>
+            <div class="destaque-texto">${slide.texto||''}</div>
+            ${slide.sub ? `<div class="destaque-sub">${slide.sub}</div>` : ''}
+          </div>
+        </div>`;
+
+      case 'dois_lados': return `
+        <div class="slide slide-body ${t}">
+          <div class="slide-header">
+            <div class="slide-header-emoji">${slide.emoji||'⚖️'}</div>
+            <div class="slide-header-text">
+              <div class="slide-titulo">${slide.titulo||''}</div>
+              <div class="slide-acento"></div>
+            </div>
+          </div>
+          <div class="dois-grid">
+            <div class="dois-lado">
+              <div class="dois-lado-titulo" style="color:var(--text-mid)">${slide.lado_a?.titulo||'A'}</div>
+              ${(slide.lado_a?.itens||[]).map(it => `<div class="dois-item">${it}</div>`).join('')}
+            </div>
+            <div class="dois-lado">
+              <div class="dois-lado-titulo" style="color:var(--text-mid)">${slide.lado_b?.titulo||'B'}</div>
+              ${(slide.lado_b?.itens||[]).map(it => `<div class="dois-item">${it}</div>`).join('')}
+            </div>
+          </div>
+        </div>`;
+
+      case 'pergunta': return `
+        <div class="slide slide-pergunta ${t}">
+          <div class="pergunta-bg">
+            <div class="pergunta-emoji">${slide.emoji||'🤔'}</div>
+            <div class="pergunta-texto">${slide.pergunta||''}</div>
+            ${slide.dica ? `<div class="pergunta-dica">💡 ${slide.dica}</div>` : ''}
+          </div>
+        </div>`;
+
+      case 'fechamento': return `
+        <div class="slide slide-fechamento ${t}">
+          <div class="fechamento-emoji">${slide.emoji||'⭐'}</div>
+          <div class="fechamento-titulo">${slide.titulo||'Resumindo'}</div>
+          <div class="fechamento-pontos">
+            ${(slide.pontos||[]).map(p => `<div class="fechamento-ponto">${p}</div>`).join('')}
+          </div>
+          ${slide.chamada ? `<div class="fechamento-chamada">${slide.chamada}</div>` : ''}
+        </div>`;
+
+      default: return `<div class="slide slide-body ${t}"><div style="padding:5%">${JSON.stringify(slide)}</div></div>`;
+    }
+  }
+
+  function renderSlide(index) {
+    currentIndex = Math.max(0, Math.min(slidesData.length - 1, index));
+    const slide = slidesData[currentIndex];
+    document.getElementById('slideStage').innerHTML = buildSlideHTML(slide, currentTheme);
+    document.getElementById('slideCounter').textContent = `${currentIndex + 1} / ${slidesData.length}`;
+    const pct = slidesData.length > 1 ? ((currentIndex + 1) / slidesData.length) * 100 : 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+    // update active thumb
+    document.querySelectorAll('.slide-thumb').forEach((t, i) => {
+      t.classList.toggle('active', i === currentIndex);
+    });
+  }
+
+  function renderThumbs() {
+    const container = document.getElementById('slideThumbs');
+    container.innerHTML = slidesData.map((slide, i) => {
+      const html = buildSlideHTML(slide, currentTheme);
+      return `<div class="slide-thumb ${i === currentIndex ? 'active' : ''}" onclick="renderSlide(${i})" title="Slide ${i+1}">
+        <div style="width:480px;height:270px;transform:scale(0.2);transform-origin:top left;pointer-events:none">${html}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function prevSlide() { renderSlide(currentIndex - 1); }
+  function nextSlide() { renderSlide(currentIndex + 1); }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (!slidesData.length) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+    if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+  });
+
+  // Fullscreen
+  function toggleFullscreen() {
+    const el = document.getElementById('slideContainer');
+    if (!document.fullscreenElement) {
+      el.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  document.addEventListener('fullscreenchange', () => {
+    const el = document.getElementById('slideContainer');
+    if (document.fullscreenElement) {
+      el.style.borderRadius = '0';
+      el.style.aspectRatio = '16/9';
+    } else {
+      el.style.borderRadius = '14px';
+    }
+  });
+
+  // ── PDF EXPORT ──
+  async function downloadPDF() {
+    if (!slidesData.length) return;
+    const btn = document.querySelector('.btn-action.primary:last-child');
+    btn.textContent = '⏳ Gerando...'; btn.disabled = true;
+
+    const container = document.getElementById('pdf-container');
+    container.style.display = 'block';
+    container.innerHTML = slidesData.map((slide, i) => `
+      <div class="pdf-slide" style="page-break-after:always; overflow:hidden; position:relative;">
+        ${buildSlideHTML(slide, currentTheme)}
+      </div>`
+    ).join('');
+
+    // Ensure all slide divs fill the PDF slide container
+    container.querySelectorAll('.pdf-slide .slide').forEach(el => {
+      el.style.width = '100%';
+      el.style.height = '100%';
+    });
+
+    const titulo = document.getElementById('playerTitle').textContent.replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_');
+    const opt = {
+      margin: 0,
+      filename: `Slides_${titulo}.pdf`,
+      image: { type: 'jpeg', quality: 0.96 },
+      html2canvas: { scale: 1.5, useCORS: true, logging: false },
+      jsPDF: { unit: 'mm', format: [297, 167], orientation: 'landscape' },
+      pagebreak: { mode: ['css'] }
+    };
+
+    try { await html2pdf().set(opt).from(container).save(); }
+    catch(e) { console.error(e); }
+
+    container.style.display = 'none';
+    btn.textContent = '⬇ PDF'; btn.disabled = false;
+  }
+
+  function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+</script>
+</body>
+</html>
