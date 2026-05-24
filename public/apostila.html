@@ -552,11 +552,16 @@
     .ap-body { padding: 24px 20px; }
   }
 
-  /* Modo PDF — remove chrome visual para captura limpa */
+  /* Modo PDF — captura limpa sem chrome de tela */
   #apostila-doc.pdf-mode .ap-page {
     border-radius: 0;
     box-shadow: none;
     margin-bottom: 0;
+  }
+  /* Força nova página PDF antes de cada ap-page (exceto o primeiro) */
+  #apostila-doc.pdf-mode .ap-page + .ap-page {
+    page-break-before: always;
+    break-before: page;
   }
 
   @media print {
@@ -570,10 +575,11 @@
       border-radius: 0 !important;
       box-shadow: none !important;
       margin-bottom: 0 !important;
-      page-break-after: always;
-      break-after: page;
     }
-    .ap-page:last-child { page-break-after: auto; break-after: auto; }
+    .ap-page + .ap-page {
+      page-break-before: always;
+      break-before: page;
+    }
   }
 </style>
 </head>
@@ -1185,7 +1191,6 @@ Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
 
   async function downloadPDF() {
     const pdfBtn = document.getElementById('pdfBtn');
-    const prevHeader = document.getElementById('prevHeader');
     pdfBtn.disabled = true;
     pdfBtn.textContent = '⏳ Gerando PDF...';
 
@@ -1193,16 +1198,29 @@ Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
     const titulo = (document.getElementById('phTitle').textContent || 'apostila')
       .replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_');
 
-    // Esconde UI e remove chrome visual antes da captura
-    prevHeader.style.display = 'none';
+    // Esconde TODA a UI de tela antes da captura
+    const uiToHide = [
+      document.querySelector('.topbar'),
+      document.querySelector('.form-panel'),
+      document.getElementById('prevHeader'),
+    ].filter(Boolean);
+    uiToHide.forEach(n => n.style.display = 'none');
     el.classList.add('pdf-mode');
+
+    // Aguarda o browser reflow antes de capturar
+    await delay(80);
 
     try {
       await html2pdf().set({
         margin: [18, 20, 18, 20],
         filename: `DoceriaPedagogica_${titulo}.pdf`,
         image: { type: 'jpeg', quality: 0.99 },
-        html2canvas: { scale: 2.5, useCORS: true, logging: false, backgroundColor: '#ffffff', letterRendering: true, scrollX: 0, scrollY: 0 },
+        html2canvas: {
+          scale: 2.5, useCORS: true, logging: false,
+          backgroundColor: '#ffffff', letterRendering: true,
+          scrollX: 0, scrollY: 0,
+          windowWidth: el.scrollWidth
+        },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['css', 'legacy'], avoid: '.ap-activity' }
       }).from(el).save();
@@ -1210,7 +1228,7 @@ Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
 
     // Restaura UI
     el.classList.remove('pdf-mode');
-    prevHeader.style.display = '';
+    uiToHide.forEach(n => n.style.display = '');
     pdfBtn.disabled = false;
     pdfBtn.textContent = '⬇ Baixar PDF';
   }
