@@ -799,7 +799,16 @@
 <!-- ══════════════════════════════════
      SCREEN: LOGIN
 ══════════════════════════════════ -->
-<div class="screen active" id="screen-login">
+<div class="screen active" id="screen-loading">
+  <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;">
+    <div style="text-align:center;">
+      <div style="font-size:2.5rem;margin-bottom:1rem;">🍰</div>
+      <div style="font-size:1.1rem;color:#92400e;font-weight:600;">Carregando...</div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-login">
   <div class="auth-layout">
     <div class="auth-left">
       <a class="auth-logo" href="/">
@@ -1406,36 +1415,29 @@
   let currentOrder = {};
   let timerInterval = null;
 
-  // ── INIT — verifica sessão existente ──
-  (async () => {
-    try {
-      const { data: { session } } = await sb.auth.getSession();
-      if (session) {
-        await loadProfile(session.user);
-        showDashboard();
-      } else {
-        showScreen('screen-login');
-      }
-    } catch (e) {
-      showScreen('screen-login');
-    }
-  })();
+  // ── INIT — detecta sessão via onAuthStateChange ──
+  // Fallback: se nenhum evento disparar em 5s, mostra login
+  const authTimeout = setTimeout(() => {
+    if (!currentUser) showScreen('screen-login');
+  }, 5000);
 
-  // Escuta novos logins, logouts e refresh de token
   sb.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'SIGNED_IN' && session && !currentUser) {
-      try {
-        await loadProfile(session.user);
-        showDashboard();
-      } catch (e) {
+    if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+      if (session && !currentUser) {
+        clearTimeout(authTimeout);
+        try {
+          await loadProfile(session.user);
+          showDashboard();
+        } catch (e) {
+          showScreen('screen-login');
+        }
+      } else if (!session && event === 'INITIAL_SESSION') {
+        // Sem sessão ativa — vai direto para login
+        clearTimeout(authTimeout);
         showScreen('screen-login');
       }
-    } else if (event === 'TOKEN_REFRESHED' && session && !currentUser) {
-      try {
-        await loadProfile(session.user);
-        showDashboard();
-      } catch (e) { /* sessão já ativa, ignora */ }
     } else if (event === 'SIGNED_OUT') {
+      clearTimeout(authTimeout);
       currentUser = null;
       showScreen('screen-login');
     }
