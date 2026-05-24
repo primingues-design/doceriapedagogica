@@ -1415,29 +1415,42 @@
   let currentOrder = {};
   let timerInterval = null;
 
-  // ── INIT — detecta sessão via onAuthStateChange ──
-  // Fallback: se nenhum evento disparar em 5s, mostra login
-  const authTimeout = setTimeout(() => {
-    if (!currentUser) showScreen('screen-login');
-  }, 5000);
+  // ── INIT ──
+  // getSession() lê do localStorage — rápido, sem depender de eventos assíncronos
+  let sessionChecked = false;
 
-  sb.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-      if (session && !currentUser) {
-        clearTimeout(authTimeout);
-        try {
-          await loadProfile(session.user);
-          showDashboard();
-        } catch (e) {
-          showScreen('screen-login');
-        }
-      } else if (!session && event === 'INITIAL_SESSION') {
-        // Sem sessão ativa — vai direto para login
-        clearTimeout(authTimeout);
+  // Fallback absoluto: se a query do Supabase travar, mostra login em 8s
+  const authFallback = setTimeout(() => {
+    if (!sessionChecked) { sessionChecked = true; showScreen('screen-login'); }
+  }, 8000);
+
+  (async () => {
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if (sessionChecked) return;
+      sessionChecked = true;
+      clearTimeout(authFallback);
+      if (session) {
+        await loadProfile(session.user);
+        showDashboard();
+      } else {
         showScreen('screen-login');
       }
+    } catch (e) {
+      if (!sessionChecked) {
+        sessionChecked = true;
+        clearTimeout(authFallback);
+        showScreen('screen-login');
+      }
+    }
+  })();
+
+  // Escuta apenas novos logins e logouts ocorridos enquanto a página está aberta
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session && !currentUser) {
+      try { await loadProfile(session.user); showDashboard(); }
+      catch (e) { showScreen('screen-login'); }
     } else if (event === 'SIGNED_OUT') {
-      clearTimeout(authTimeout);
       currentUser = null;
       showScreen('screen-login');
     }
