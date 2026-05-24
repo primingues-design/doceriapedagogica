@@ -781,15 +781,15 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
-          max_tokens: 4096,
+          max_tokens: 8000,
           system: `Você é uma especialista em educação brasileira, com experiência real em sala de aula, elaboração de materiais didáticos, EJA, educação infantil e ensino de idiomas.
 Gere apostilas pedagógicas completas, bem estruturadas e aplicáveis.
-REGRAS:
-- Nunca infantilize conteúdo para adultos (EJA). Linguagem adulta, respeitosa, contextualizada na vida real.
-- Para inglês/espanhol, gere o conteúdo no idioma solicitado.
-- Textos devem ter substância real — não frases genéricas.
-- Atividades com propósito claro, espaços de resposta adequados.
-- Retorne SOMENTE JSON válido. Sem markdown. Sem texto antes ou depois.`,
+REGRAS ABSOLUTAS:
+- Retorne SOMENTE o objeto JSON, começando com { e terminando com }.
+- Proibido usar markdown, blocos de código, ou qualquer texto fora do JSON.
+- Proibido usar aspas simples dentro de valores de string — use aspas duplas.
+- Nunca infantilize conteúdo para adultos (EJA). Linguagem adulta e contextualizada.
+- Para inglês/espanhol, gere o conteúdo no idioma solicitado.`,
           messages: [{ role: 'user', content: prompt }]
         })
       });
@@ -804,9 +804,11 @@ REGRAS:
 
       let parsed;
       try {
-        parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+        parsed = extractJSON(raw);
       } catch(e) {
-        throw new Error('Formato inesperado da IA. Tente novamente.');
+        // log para debug sem expor ao usuário
+        console.error('JSON parse error. Raw:', raw.slice(0, 300));
+        throw new Error('A IA retornou um formato inesperado. Tente gerar novamente — geralmente funciona na segunda tentativa.');
       }
 
       document.getElementById('progBar').style.width = '100%';
@@ -1182,6 +1184,14 @@ Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
   }
 
   function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  function extractJSON(raw) {
+    let clean = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+    const start = clean.indexOf('{');
+    const end = clean.lastIndexOf('}');
+    if (start !== -1 && end > start) clean = clean.slice(start, end + 1);
+    return JSON.parse(clean);
+  }
 </script>
 </body>
 </html>
