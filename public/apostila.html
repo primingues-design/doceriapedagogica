@@ -362,7 +362,7 @@
     font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--ink);
   }
 
-  .ap-text { font-size: 14px; line-height: 1.9; color: var(--text-mid); margin-bottom: 12px; }
+  .ap-text { font-size: 14px; line-height: 1.9; color: #000; margin-bottom: 12px; }
 
   /* destaque box */
   .ap-destaque {
@@ -378,47 +378,107 @@
   }
   .ap-destaque-text { font-size: 13px; line-height: 1.6; color: var(--text-mid); }
 
+  /* campos do aluno */
+  .ap-student-fields {
+    display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 20px;
+    border: 1.5px solid #ccc; border-radius: 8px; overflow: hidden;
+  }
+  .ap-student-field {
+    flex: 1; min-width: 180px; padding: 10px 14px;
+    font-size: 13px; color: #000; font-weight: 500;
+    border-right: 1px solid #ccc;
+  }
+  .ap-student-field:last-child { border-right: none; }
+
   /* activity card */
   .ap-activity {
-    margin-bottom: 24px; padding: 20px 22px;
+    margin-bottom: 28px; padding: 20px 22px;
     border-radius: 10px; border: 1.5px solid var(--border);
-    background: var(--warm);
+    background: #fff;
+    break-inside: avoid; page-break-inside: avoid;
   }
   .ap-activity-header {
-    display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
   }
   .ap-activity-num {
-    width: 26px; height: 26px; border-radius: 50%;
+    width: 28px; height: 28px; border-radius: 50%;
     background: var(--gold); color: white;
-    font-size: 11px; font-weight: 700;
+    font-size: 12px; font-weight: 700;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
   .ap-activity-type {
-    font-size: 10px; font-weight: 700;
+    font-size: 11px; font-weight: 700;
     letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--teal);
   }
-  .ap-activity-q { font-size: 14px; font-weight: 500; line-height: 1.6; color: var(--text); margin-bottom: 10px; }
-  .ap-answer-lines { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
-  .ap-answer-line { border-bottom: 1.5px solid var(--border-mid); min-height: 30px; margin-bottom: 3px; }
+  .ap-activity-q { font-size: 14px; font-weight: 500; line-height: 1.7; color: #000; margin-bottom: 12px; }
+  .ap-answer-lines { display: flex; flex-direction: column; gap: 0; margin-top: 10px; }
+  .ap-answer-line {
+    border-bottom: 1.5px dotted #555;
+    min-height: 36px; margin-bottom: 2px; display: block;
+  }
   .ap-answer-box {
-    border: 1.5px dashed var(--border-mid); border-radius: 6px;
-    min-height: 80px; margin-top: 10px; padding: 8px 12px;
-    font-size: 11px; color: var(--text-muted); font-style: italic;
+    border: 1.5px solid #ccc; border-radius: 6px;
+    min-height: 90px; margin-top: 12px; padding: 8px 12px;
   }
-  .ap-opcoes { display: flex; flex-direction: column; gap: 7px; margin-top: 10px; }
+  .ap-opcoes { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
   .ap-opcao {
     display: flex; align-items: flex-start; gap: 10px;
-    font-size: 13px; color: var(--text-mid);
+    font-size: 14px; color: #000; line-height: 1.5;
   }
   .ap-opcao-bubble {
-    width: 22px; height: 22px; border-radius: 50%;
-    border: 1.5px solid var(--border-mid);
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 1.5px solid #555;
     display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700; color: var(--text-muted);
-    flex-shrink: 0; margin-top: 1px;
-    background: white;
+    font-size: 12px; font-weight: 700; color: #333;
+    flex-shrink: 0; margin-top: 1px; background: white;
+  }
+
+  /* V ou F */
+  .ap-vf-item {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 14px; color: #000; padding: 5px 0;
+    border-bottom: 1px dotted #ccc; line-height: 1.5;
+  }
+  .ap-vf-bubble {
+    display: flex; gap: 4px; flex-shrink: 0;
+  }
+  .ap-vf-box {
+    width: 24px; height: 24px; border: 1.5px solid #555;
+    border-radius: 4px; display: flex; align-items: center;
+    justify-content: center; font-size: 11px; font-weight: 700; color: #555;
+  }
+
+  /* cruzadinha */
+  .cruzadinha-wrap { margin-top: 12px; }
+  .cruzadinha-grid {
+    display: inline-grid; gap: 2px;
+    border: 2px solid #333; padding: 2px;
+    background: #333; margin-bottom: 16px;
+  }
+  .cruzadinha-cell {
+    width: 26px; height: 26px;
+    background: white; border: none;
+    position: relative; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: transparent;
+  }
+  .cruzadinha-cell.black { background: #222; }
+  .cruzadinha-cell-num {
+    position: absolute; top: 1px; left: 2px;
+    font-size: 6.5px; font-weight: 700; color: var(--gold);
+    line-height: 1;
+  }
+  .cruzadinha-dicas {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 8px;
+  }
+  .cruzadinha-dica-titulo {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .cruzadinha-dica-item {
+    font-size: 13px; color: #000; margin-bottom: 5px; line-height: 1.4;
   }
 
   /* mapa mental placeholder */
@@ -770,44 +830,68 @@ REGRAS:
   }
 
   function buildPrompt(tema, nivel, disciplina, objetivo, obs, tipos, extras) {
-    return `Crie uma apostila pedagógica completa:
+    const temCruzadinha = tipos.includes('Cruzadinha');
+    const temVF = tipos.includes('Verdadeiro ou Falso');
+    const temInterpretacao = tipos.includes('Interpretação de texto');
+
+    return `Crie uma apostila pedagógica completa e bem estruturada.
 
 TEMA: ${tema}
 NÍVEL: ${nivel}
 ${disciplina ? 'DISCIPLINA: ' + disciplina : ''}
 ${objetivo ? 'OBJETIVO: ' + objetivo : ''}
 ${obs ? 'OBSERVAÇÕES: ' + obs : ''}
-TIPOS DE ATIVIDADE: ${tipos || 'Interpretação de texto, Questões abertas, Produção escrita'}
-EXTRAS: ${extras.join(', ') || 'nenhum'}
+TIPOS DE ATIVIDADE SOLICITADOS: ${tipos || 'Interpretação de texto, Questões abertas, Produção escrita'}
+SEÇÕES EXTRAS: ${extras.join(', ') || 'nenhuma'}
 
-Retorne SOMENTE este JSON:
+REGRAS OBRIGATÓRIAS PARA AS ATIVIDADES:
+1. Gere entre 5 e 7 atividades no total.
+${temInterpretacao ? '2. Inclua OBRIGATORIAMENTE ao menos 3 questões de interpretação de texto.\n' : ''}
+3. Múltipla escolha: campo "opcoes" deve ser um ARRAY com 4 itens, cada um começando com a letra: ["A) texto", "B) texto", "C) texto", "D) texto"].
+4. Verdadeiro ou Falso: campo "tipo_resposta" = "vf" e "itens_vf" = array de frases ["Frase 1 sobre o tema.", "Frase 2.", ...] (mínimo 4 frases).
+5. Complete as frases: no enunciado, use ___ (três underlines) para os espaços em branco. Ex: "A célula é a ___ básica da vida."
+6. Questões abertas: use tipo_resposta "linhas" com pelo menos 3 linhas.
+7. Produção escrita: use tipo_resposta "caixa".
+${temCruzadinha ? `8. CRUZADINHA: gere tipo_resposta "cruzadinha" com campo "cruzadinha" contendo grade_size (8 a 12) e array "palavras" com objetos: {"palavra":"XXXX","dica":"descrição","direcao":"H","linha_inicio":1,"coluna_inicio":1}. Use 6-8 palavras. Garanta que as posições não se sobreponham incorretamente.` : ''}
+
+Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
 {
-  "titulo": "título impactante e criativo da apostila",
+  "titulo": "título impactante e criativo",
   "subtitulo": "subtítulo complementar",
   "nivel": "${nivel}",
-  "disciplina": "${disciplina || 'tema livre'}",
-  "introducao_titulo": "título da seção introdutória",
-  "introducao_texto": "texto introdutório rico e adequado ao nível (4-6 parágrafos reais, não genéricos). Para EJA, conecte com a realidade adulta.",
-  "destaque": ${extras.includes('destaque') ? '{"titulo":"Sabia que...","texto":"fato ou conceito-chave marcante relacionado ao tema"}' : 'null'},
-  "mapa_mental": ${extras.includes('mapa_mental') ? '{"centro":"palavra-chave central","ramos":["conceito 1","conceito 2","conceito 3","conceito 4","conceito 5","conceito 6"]}' : 'null'},
+  "disciplina": "${disciplina || tema}",
+  "introducao_titulo": "título da introdução",
+  "introducao_texto": "texto introdutório rico (4-5 parágrafos, linguagem adequada ao nível)",
+  "destaque": ${extras.includes('destaque') ? '{"titulo":"Sabia que...","texto":"fato marcante sobre o tema"}' : 'null'},
+  "mapa_mental": ${extras.includes('mapa_mental') ? '{"centro":"palavra central","ramos":["ramo1","ramo2","ramo3","ramo4","ramo5","ramo6"]}' : 'null'},
   "atividades": [
     {
       "numero": 1,
-      "tipo": "nome do tipo",
-      "enunciado": "enunciado completo e claro",
-      "linhas": 3,
+      "tipo": "Interpretação de Texto",
+      "enunciado": "Leia o trecho abaixo e responda:\n\n[trecho do texto aqui]\n\na) Pergunta de interpretação 1?\nb) Pergunta de interpretação 2?\nc) Pergunta de interpretação 3?",
       "tipo_resposta": "linhas",
-      "opcoes": null
+      "linhas": 4,
+      "opcoes": null,
+      "itens_vf": null,
+      "cruzadinha": null
+    },
+    {
+      "numero": 2,
+      "tipo": "Múltipla Escolha",
+      "enunciado": "Enunciado claro da questão:",
+      "tipo_resposta": "opcoes",
+      "linhas": 0,
+      "opcoes": ["A) opção um", "B) opção dois", "C) opção três", "D) opção quatro"],
+      "itens_vf": null,
+      "cruzadinha": null
     }
   ],
-  "fechamento_titulo": "título da seção de fechamento/reflexão",
-  "fechamento_texto": "texto de fechamento reflexivo, que convide o aluno a continuar pensando sobre o tema (2-3 parágrafos)",
-  "musica": ${extras.includes('musica_pedagogica') ? '{"tipo":"rap/cordel/paródia","letra":"letra completa com tema pedagógico, 2 estrofes + refrão"}' : 'null'},
-  "orientacao_professor": ${extras.includes('plano_de_aula') ? '"orientações completas: objetivo, desenvolvimento (3 etapas), recursos, avaliação e habilidades BNCC relacionadas"' : '"dica rápida de como aplicar esta apostila em sala (2-3 linhas)"'},
+  "fechamento_titulo": "título do fechamento",
+  "fechamento_texto": "texto reflexivo de encerramento (2-3 parágrafos)",
+  "musica": ${extras.includes('musica_pedagogica') ? '{"tipo":"rap/cordel/paródia","letra":"letra pedagógica completa (2 estrofes + refrão)"}' : 'null'},
+  "orientacao_professor": ${extras.includes('plano_de_aula') ? '"objetivo + 3 etapas de desenvolvimento + recursos + avaliação + habilidades BNCC"' : '"dica rápida de aplicação em sala (2 linhas)"'},
   "palavras_chave": ["palavra1","palavra2","palavra3","palavra4"]
-}
-
-Gere entre 4 e 6 atividades variadas. Para múltipla escolha use tipo_resposta:"opcoes" e preencha "opcoes":["A) ...","B) ...","C) ...","D) ..."]. Para produção escrita use tipo_resposta:"caixa". Para complete/V ou F use tipo_resposta:"linhas".`;
+}`;
   }
 
   function renderApostila(d, tema, nivel, disciplina) {
@@ -887,20 +971,40 @@ Gere entre 4 e 6 atividades variadas. Para múltipla escolha use tipo_resposta:"
     const half = Math.ceil(ativs.length / 2);
     const groups = [ativs.slice(0, half), ativs.slice(half)];
 
+    const studentFields = `
+      <div class="ap-student-fields">
+        <div class="ap-student-field">Nome: _________________________________</div>
+        <div class="ap-student-field">Data: _______________</div>
+        <div class="ap-student-field">Turma: ______________</div>
+      </div>`;
+
     groups.forEach((group, gi) => {
       if (!group.length) return;
       let ativsHtml = group.map((at, i) => {
         let resHtml = '';
+        const enunciado = (at.enunciado || '').replace(/\n/g, '<br>');
+
         if (at.tipo_resposta === 'caixa') {
-          resHtml = `<div class="ap-answer-box">Espaço para resposta</div>`;
+          resHtml = `<div class="ap-answer-box"></div>`;
         } else if (at.tipo_resposta === 'opcoes' && at.opcoes?.length) {
-          resHtml = `<div class="ap-opcoes">${at.opcoes.map((op,oi) => `
+          resHtml = `<div class="ap-opcoes">${at.opcoes.map((op, oi) => `
             <div class="ap-opcao">
               <div class="ap-opcao-bubble">${String.fromCharCode(65+oi)}</div>
-              <span>${op.replace(/^[A-D]\)\s*/,'')}</span>
+              <span>${op.replace(/^[A-Da-d]\)\s*/,'')}</span>
             </div>`).join('')}</div>`;
+        } else if (at.tipo_resposta === 'vf' && at.itens_vf?.length) {
+          resHtml = `<div style="margin-top:10px;">${at.itens_vf.map((frase, fi) => `
+            <div class="ap-vf-item">
+              <div class="ap-vf-bubble">
+                <div class="ap-vf-box">V</div>
+                <div class="ap-vf-box">F</div>
+              </div>
+              <span>${frase}</span>
+            </div>`).join('')}</div>`;
+        } else if (at.tipo_resposta === 'cruzadinha' && at.cruzadinha) {
+          resHtml = renderCruzadinha(at.cruzadinha);
         } else {
-          const n = at.linhas || 3;
+          const n = Math.max(at.linhas || 3, 3);
           resHtml = `<div class="ap-answer-lines">${Array(n).fill('<div class="ap-answer-line"></div>').join('')}</div>`;
         }
 
@@ -910,7 +1014,7 @@ Gere entre 4 e 6 atividades variadas. Para múltipla escolha use tipo_resposta:"
               <div class="ap-activity-num">${at.numero || i+1}</div>
               <div class="ap-activity-type">${at.tipo || 'Atividade'}</div>
             </div>
-            <div class="ap-activity-q">${at.enunciado || ''}</div>
+            <div class="ap-activity-q">${enunciado}</div>
             ${resHtml}
           </div>`;
       }).join('');
@@ -920,6 +1024,7 @@ Gere entre 4 e 6 atividades variadas. Para múltipla escolha use tipo_resposta:"
           <div class="ap-body">
             <div class="ap-section">
               <div class="ap-section-label">Atividades — Parte ${gi+1}</div>
+              ${gi === 0 ? studentFields : ''}
               ${ativsHtml}
             </div>
           </div>
@@ -1002,6 +1107,56 @@ Gere entre 4 e 6 atividades variadas. Para múltipla escolha use tipo_resposta:"
     document.getElementById('docWrap').scrollIntoView({ behavior:'smooth', block:'start' });
   }
 
+  function renderCruzadinha(cruz) {
+    if (!cruz || !cruz.palavras?.length) return '';
+    const size = Math.min(Math.max(cruz.grade_size || 10, 8), 14);
+    const grid = Array.from({length: size}, () => Array(size).fill(null));
+    const nums = {};
+
+    cruz.palavras.forEach((p, idx) => {
+      const word = (p.palavra || '').toUpperCase().replace(/\s/g,'');
+      const r = Math.max((p.linha_inicio || 1) - 1, 0);
+      const c = Math.max((p.coluna_inicio || 1) - 1, 0);
+      const dir = (p.direcao || 'H').toUpperCase();
+      const key = `${r},${c}`;
+      if (!nums[key]) nums[key] = idx + 1;
+      for (let i = 0; i < word.length; i++) {
+        const row = dir === 'H' ? r : r + i;
+        const col = dir === 'H' ? c + i : c;
+        if (row < size && col < size) grid[row][col] = word[i];
+      }
+    });
+
+    let cells = '';
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        const num = nums[`${r},${c}`];
+        cells += grid[r][c] !== null
+          ? `<div class="cruzadinha-cell">${num ? `<span class="cruzadinha-cell-num">${num}</span>` : ''}</div>`
+          : `<div class="cruzadinha-cell black"></div>`;
+      }
+    }
+
+    const horiz = cruz.palavras.filter(p => (p.direcao||'H').toUpperCase() === 'H');
+    const vert  = cruz.palavras.filter(p => (p.direcao||'H').toUpperCase() === 'V');
+    const dica = (list, label, cor) => list.length ? `
+      <div>
+        <div class="cruzadinha-dica-titulo" style="color:${cor}">${label}</div>
+        ${list.map(p => {
+          const n = cruz.palavras.indexOf(p) + 1;
+          return `<div class="cruzadinha-dica-item"><strong>${n}.</strong> ${p.dica || p.palavra}</div>`;
+        }).join('')}
+      </div>` : '';
+
+    return `<div class="cruzadinha-wrap">
+      <div class="cruzadinha-grid" style="grid-template-columns:repeat(${size},26px);">${cells}</div>
+      <div class="cruzadinha-dicas">
+        ${dica(horiz, '→ Horizontal', '#c8963e')}
+        ${dica(vert,  '↓ Vertical',   '#2d6e6e')}
+      </div>
+    </div>`;
+  }
+
   async function downloadPDF() {
     const pdfBtn = document.getElementById('pdfBtn');
     pdfBtn.disabled = true;
@@ -1013,12 +1168,12 @@ Gere entre 4 e 6 atividades variadas. Para múltipla escolha use tipo_resposta:"
 
     try {
       await html2pdf().set({
-        margin: [15, 15, 15, 15],
+        margin: [18, 20, 18, 20],
         filename: `DoceriaPedagogica_${titulo}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' },
+        image: { type: 'jpeg', quality: 0.99 },
+        html2canvas: { scale: 2.5, useCORS: true, logging: false, backgroundColor: '#ffffff', letterRendering: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        pagebreak: { mode: ['css', 'legacy'], avoid: '.ap-activity' }
       }).from(el).save();
     } catch(e) { console.error(e); }
 

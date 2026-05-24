@@ -441,45 +441,54 @@
   #pdf-print { display: none; }
   .pdf-page {
     font-family: 'Outfit', sans-serif;
-    padding: 40px 48px; background: white;
+    padding: 32px 40px; background: white;
+    color: #000;
   }
   .pdf-header {
-    background: white;
     border-top: 5px solid var(--gold);
-    border-bottom: 2px solid var(--border);
-    padding: 24px 32px 20px; margin-bottom: 28px;
-    color: var(--text);
+    border-bottom: 2px solid #ccc;
+    padding: 20px 0 16px; margin-bottom: 20px;
   }
   .pdf-header-label {
     font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--text-muted); margin-bottom: 8px;
+    color: #666; margin-bottom: 6px; font-weight: 600;
   }
   .pdf-header-title {
     font-family: 'Playfair Display', serif;
-    font-size: 22px; font-weight: 900; margin-bottom: 6px;
-    color: var(--text);
+    font-size: 22px; font-weight: 900; margin-bottom: 8px; color: #000;
   }
-  .pdf-header-meta { font-size: 12px; color: var(--text-muted); }
-  .pdf-question { margin-bottom: 24px; page-break-inside: avoid; }
+  .pdf-header-meta { font-size: 12px; color: #555; margin-bottom: 14px; }
+  .pdf-student-fields {
+    display: flex; gap: 0; border: 1.5px solid #bbb; border-radius: 6px; overflow: hidden;
+  }
+  .pdf-student-field {
+    flex: 1; padding: 9px 12px; font-size: 13px; color: #000;
+    border-right: 1px solid #bbb; font-weight: 500;
+  }
+  .pdf-student-field:last-child { border-right: none; }
+  .pdf-question {
+    margin-bottom: 22px;
+    page-break-inside: avoid; break-inside: avoid;
+    padding: 16px 18px; border: 1.5px solid #ddd; border-radius: 8px;
+    background: #fafafa;
+  }
   .pdf-q-num {
-    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--gold); margin-bottom: 5px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
   }
-  .pdf-q-text { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 10px; line-height: 1.5; }
+  .pdf-q-text { font-size: 14px; font-weight: 500; color: #000; margin-bottom: 12px; line-height: 1.6; }
   .pdf-option {
-    font-size: 13px; color: var(--text-mid); padding: 6px 0;
-    display: flex; gap: 10px;
+    font-size: 14px; color: #000; padding: 5px 0;
+    display: flex; align-items: flex-start; gap: 10px; line-height: 1.5;
   }
-  .pdf-option.correct-answer { color: var(--green); font-weight: 600; }
   .pdf-option-letter {
-    font-weight: 700; min-width: 20px; color: var(--text-muted);
+    font-weight: 700; min-width: 22px; color: #444; flex-shrink: 0;
   }
-  .pdf-option.correct-answer .pdf-option-letter { color: var(--green); }
   .pdf-footer {
-    margin-top: 32px; padding-top: 16px;
-    border-top: 1px solid var(--border);
+    margin-top: 28px; padding-top: 14px;
+    border-top: 1px solid #ccc;
     display: flex; justify-content: space-between;
-    font-size: 11px; color: var(--text-muted);
+    font-size: 11px; color: #666;
   }
   .pdf-footer-logo { font-family: 'Playfair Display', serif; color: var(--gold); font-weight: 700; }
 
@@ -1178,18 +1187,23 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
         <div class="pdf-q-num">Questão ${i + 1}</div>
         <div class="pdf-q-text">${q.enunciado}</div>
         ${letters.map(l => q.opcoes[l] ? `
-          <div class="pdf-option${l === q.resposta_correta ? ' correct-answer' : ''}">
+          <div class="pdf-option">
             <span class="pdf-option-letter">${l.toUpperCase()})</span>
-            <span>${q.opcoes[l]}${l === q.resposta_correta ? ' ✓' : ''}</span>
+            <span>${q.opcoes[l]}</span>
           </div>` : '').join('')}
       </div>`).join('');
 
     document.getElementById('pdf-print').innerHTML = `
       <div class="pdf-page">
         <div class="pdf-header">
-          <div class="pdf-header-label">DoceriaPedagógica — Quiz Interativo</div>
+          <div class="pdf-header-label">DoceriaPedagógica — Quiz</div>
           <div class="pdf-header-title">${quizData.titulo}</div>
           <div class="pdf-header-meta">${quizData.nivel || ''} • ${quizData.disciplina || ''} • ${questoes.length} questões • ${date}</div>
+          <div class="pdf-student-fields">
+            <div class="pdf-student-field">Nome: _________________________________</div>
+            <div class="pdf-student-field">Data: _______________</div>
+            <div class="pdf-student-field">Turma: ______________</div>
+          </div>
         </div>
         ${questoesHtml}
         <div class="pdf-footer">
@@ -1204,12 +1218,12 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
 
     const titulo = (quizData.titulo || 'Quiz').replace(/[^a-zA-Z0-9\s]/g, '').trim().replace(/\s+/g, '_');
     const opt = {
-      margin: [15, 15, 15, 15],
+      margin: [18, 20, 18, 20],
       filename: `DoceriaPedagogica_Quiz_${titulo}.pdf`,
-      image: { type: 'jpeg', quality: 0.97 },
-      html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' },
+      image: { type: 'jpeg', quality: 0.99 },
+      html2canvas: { scale: 2.5, useCORS: true, logging: false, backgroundColor: '#ffffff', letterRendering: true },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      pagebreak: { mode: ['css', 'legacy'], avoid: '.pdf-question' }
     };
 
     try {
