@@ -563,11 +563,18 @@
       border-radius: 0 !important;
       box-shadow: none !important;
       margin-bottom: 0 !important;
+      page-break-after: always;
+      break-after: page;
+    }
+    .ap-page:last-child {
+      page-break-after: auto !important;
+      break-after: auto !important;
     }
     .ap-page + .ap-page {
       page-break-before: always;
       break-before: page;
     }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   }
 </style>
 </head>
@@ -1195,7 +1202,7 @@ Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
     // Clone com position:fixed top:0 left:0 → coordenadas sempre válidas para o html2canvas
     // z-index abaixo do overlay → invisível ao usuário
     const wrap = document.createElement('div');
-    wrap.style.cssText = 'position:fixed;top:0;left:0;z-index:9999;width:794px;background:#fff;font-family:"Outfit",sans-serif;';
+    wrap.style.cssText = 'position:fixed;top:0;left:0;z-index:9999;width:750px;background:#fff;font-family:"Outfit",sans-serif;';
     wrap.innerHTML = source.innerHTML;
     wrap.querySelectorAll('.ap-page').forEach((p, i) => {
       p.style.borderRadius = '0';
@@ -1207,21 +1214,23 @@ Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
       }
     });
     document.body.appendChild(wrap);
-    await delay(300);
+    await delay(500);
 
     try {
       await html2pdf().set({
-        margin: [18, 20, 18, 20],
+        margin: [15, 12, 15, 12],
         filename: `DoceriaPedagogica_${titulo}.pdf`,
         image: { type: 'jpeg', quality: 0.95 },
         html2canvas: {
-          scale: 2.5, useCORS: true, logging: false,
-          backgroundColor: '#ffffff', letterRendering: true
+          scale: 3,
+          useCORS: true,
+          letterRendering: true,
+          backgroundColor: '#ffffff'
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['css', 'legacy'], avoid: '.ap-activity' }
       }).from(wrap).save();
-    } catch(e) { console.error(e); }
+    } catch(e) { console.error('Erro ao gerar PDF:', e.message, e); }
 
     document.body.removeChild(overlay);
     document.body.removeChild(wrap);
