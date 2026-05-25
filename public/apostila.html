@@ -1193,49 +1193,77 @@ Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
     const titulo = (document.getElementById('phTitle').textContent || 'apostila')
       .replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_');
 
-    // Overlay escuro cobre a tela enquanto o clone renderiza
-    const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,14,12,0.75);z-index:10000;display:flex;align-items:center;justify-content:center;color:#faf7f2;font-family:Outfit,sans-serif;font-size:15px;';
-    overlay.textContent = '⏳ Gerando PDF, aguarde...';
-    document.body.appendChild(overlay);
+    const main        = document.querySelector('.main');
+    const docWrap     = document.querySelector('.doc-wrap');
+    const prevPanel   = document.querySelector('.preview-panel');
 
-    // Clone com position:fixed top:0 left:0 → coordenadas sempre válidas para o html2canvas
-    // z-index abaixo do overlay → invisível ao usuário
-    const wrap = document.createElement('div');
-    wrap.style.cssText = 'position:fixed;top:0;left:0;z-index:9999;width:750px;background:#fff;font-family:"Outfit",sans-serif;';
-    wrap.innerHTML = source.innerHTML;
-    wrap.querySelectorAll('.ap-page').forEach((p, i) => {
-      p.style.borderRadius = '0';
-      p.style.boxShadow = 'none';
-      p.style.marginBottom = '0';
-      if (i > 0) {
-        p.style.pageBreakBefore = 'always';
-        p.style.breakBefore = 'page';
-      }
-    });
-    document.body.appendChild(wrap);
-    await delay(500);
+    const uiEls = [
+      document.querySelector('.topbar'),
+      document.querySelector('.form-panel'),
+      document.querySelector('.preview-header'),
+      document.querySelector('.pages-pill'),
+      document.querySelector('.btn-regen'),
+    ].filter(Boolean);
+
+    const pageSnapshots = [];
 
     try {
+      // Esconde UI e expande a área do documento para 750 px
+      uiEls.forEach(el => { el.dataset.pd = el.style.display; el.style.display = 'none'; });
+      main.dataset.pg = main.style.gridTemplateColumns;
+      main.style.gridTemplateColumns = '1fr';
+      docWrap.dataset.pm = docWrap.style.maxWidth;
+      docWrap.style.maxWidth = '750px';
+      docWrap.style.margin = '0 auto';
+      prevPanel.dataset.pp = prevPanel.style.cssText;
+      prevPanel.style.cssText = 'padding:0;overflow:visible;max-height:none;';
+
+      source.querySelectorAll('.ap-page').forEach((p, i) => {
+        pageSnapshots.push({
+          el: p,
+          borderRadius: p.style.borderRadius,
+          boxShadow: p.style.boxShadow,
+          marginBottom: p.style.marginBottom,
+          pbb: p.style.pageBreakBefore,
+          bb: p.style.breakBefore,
+        });
+        p.style.borderRadius = '0';
+        p.style.boxShadow = 'none';
+        p.style.marginBottom = '0';
+        if (i > 0) { p.style.pageBreakBefore = 'always'; p.style.breakBefore = 'page'; }
+      });
+
+      await delay(400);
+
       await html2pdf().set({
         margin: [15, 12, 15, 12],
         filename: `DoceriaPedagogica_${titulo}.pdf`,
         image: { type: 'jpeg', quality: 0.95 },
-        html2canvas: {
-          scale: 3,
-          useCORS: true,
-          letterRendering: true,
-          backgroundColor: '#ffffff'
-        },
+        html2canvas: { scale: 3, useCORS: true, letterRendering: true, backgroundColor: '#ffffff' },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['css', 'legacy'], avoid: '.ap-activity' }
-      }).from(wrap).save();
-    } catch(e) { console.error('Erro ao gerar PDF:', e.message, e); }
+      }).from(source).save();
 
-    document.body.removeChild(overlay);
-    document.body.removeChild(wrap);
-    pdfBtn.disabled = false;
-    pdfBtn.textContent = '⬇ Baixar PDF';
+    } catch(e) {
+      console.error('Erro ao gerar PDF:', e.message, e);
+    } finally {
+      // Restaura UI
+      uiEls.forEach(el => { el.style.display = el.dataset.pd || ''; delete el.dataset.pd; });
+      main.style.gridTemplateColumns = main.dataset.pg || ''; delete main.dataset.pg;
+      docWrap.style.maxWidth = docWrap.dataset.pm || ''; docWrap.style.margin = ''; delete docWrap.dataset.pm;
+      prevPanel.style.cssText = prevPanel.dataset.pp || ''; delete prevPanel.dataset.pp;
+
+      pageSnapshots.forEach(({ el, borderRadius, boxShadow, marginBottom, pbb, bb }) => {
+        el.style.borderRadius = borderRadius;
+        el.style.boxShadow = boxShadow;
+        el.style.marginBottom = marginBottom;
+        el.style.pageBreakBefore = pbb;
+        el.style.breakBefore = bb;
+      });
+
+      pdfBtn.disabled = false;
+      pdfBtn.textContent = '⬇ Baixar PDF';
+    }
   }
 
   function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
