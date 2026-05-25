@@ -789,15 +789,21 @@ Retorne SOMENTE este JSON (sem markdown):
     {
       "numero": 1,
       "tipo": "nome do tipo de atividade",
-      "enunciado": "enunciado claro e completo da atividade",
+      "enunciado": "instrução/enunciado da atividade (só a instrução, sem os itens)",
       "linhas_resposta": 3,
-      "tipo_resposta": "linhas" // "linhas", "caixa", "opcoes" ou "nenhum"
+      "tipo_resposta": "linhas"
     }
   ],
   "orientacao_professor": "dica rápida de como aplicar esta atividade em sala (2 linhas)"
 }
 
-Gere entre 3 e 5 atividades variadas. Para múltipla escolha, adicione campo "opcoes": ["a) ...", "b) ...", "c) ...", "d) ..."].`;
+REGRAS OBRIGATÓRIAS por tipo:
+- Múltipla escolha: tipo_resposta "opcoes", adicione "opcoes": ["a) ...", "b) ...", "c) ...", "d) ..."]
+- Verdadeiro ou Falso: tipo_resposta "vf", adicione "frases": ["afirmação 1 completa", "afirmação 2", "afirmação 3", "afirmação 4"] — NUNCA coloque as frases dentro do enunciado
+- Associação / Relacione colunas: tipo_resposta "associacao", adicione "coluna_a": ["conceito 1", "conceito 2", "conceito 3", "conceito 4"] e "coluna_b": ["definição 1", "definição 2", "definição 3", "definição 4"] com o MESMO número de itens — NUNCA coloque os itens dentro do enunciado
+- Produção escrita: tipo_resposta "caixa"
+- Questões abertas / Complete / Interpretação: tipo_resposta "linhas", linhas_resposta entre 2 e 5
+Gere entre 3 e 5 atividades variadas.`;
   }
 
   function renderDocument(data, tema, nivel) {
@@ -808,12 +814,15 @@ Gere entre 3 e 5 atividades variadas. Para múltipla escolha, adicione campo "op
 
     let atividadesHtml = '';
     (data.atividades || []).forEach((at, i) => {
-      const isEscrita = /produ[çc][aã]o|escrita/i.test(at.tipo || '');
-      const pageBreak = isEscrita ? 'page-break-before:always;break-before:page;' : '';
+      const isEscrita  = /produ[çc][aã]o|escrita/i.test(at.tipo || '');
+      const isVF       = at.tipo_resposta === 'vf' || /verdadeiro|falso/i.test(at.tipo || '');
+      const isAssoc    = at.tipo_resposta === 'associacao' || /associa[çc]|relacione|coluna/i.test(at.tipo || '');
+      const pageBreak  = isEscrita ? 'page-break-before:always;break-before:page;' : '';
 
       let respostaHtml = '';
+
       if (isEscrita) {
-        // Fix 3: linhas de pauta físicas para produção escrita
+        // 15 linhas de pauta físicas
         const pautas = Array.from({ length: 15 }, () =>
           '<div style="border-bottom:1px solid #aaa;width:100%;height:35px;"></div>'
         ).join('');
@@ -822,8 +831,65 @@ Gere entre 3 e 5 atividades variadas. Para múltipla escolha, adicione campo "op
             <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Meu texto:</div>
             ${pautas}
           </div>`;
+
+      } else if (isVF) {
+        // Usa at.frases (estruturado) ou extrai do enunciado como fallback
+        let frases = Array.isArray(at.frases) && at.frases.length ? at.frases : [];
+        if (!frases.length) {
+          const raw = at.enunciado || '';
+          // tenta separar pelos marcadores ( )
+          const byParens = raw.match(/\(\s*\)[^()\n]+/g);
+          if (byParens && byParens.length > 1) {
+            frases = byParens.map(f => f.trim());
+          } else {
+            frases = raw.split('\n').map(s => s.trim()).filter(Boolean).slice(1);
+          }
+        }
+        const frasesHtml = frases.map(f =>
+          `<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
+            <span style="flex-shrink:0;border:1.5px solid #999;border-radius:3px;min-width:36px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:#999;background:#fff;">( )</span>
+            <span style="font-size:14px;color:var(--text-mid);line-height:1.5;">${f.replace(/^\(\s*\)\s*/, '')}</span>
+          </div>`
+        ).join('');
+        respostaHtml = `<div style="margin-top:12px;">${frasesHtml}</div>`;
+
+      } else if (isAssoc) {
+        const colA = Array.isArray(at.coluna_a) ? at.coluna_a : [];
+        const colB = Array.isArray(at.coluna_b) ? at.coluna_b : [];
+        if (colA.length && colB.length) {
+          const nRows = Math.max(colA.length, colB.length);
+          const linhas = Array.from({ length: nRows }, (_, r) =>
+            `<tr>
+              <td style="padding:8px 12px;border:1px solid #ddd;font-size:13px;color:var(--text-mid);">${colA[r] || ''}</td>
+              <td style="padding:8px 12px;border:1px solid #ddd;font-size:13px;color:var(--text-mid);">${colB[r] || ''}</td>
+            </tr>`
+          ).join('');
+          const respostas = Array.from({ length: colA.length }, (_, r) =>
+            `<div style="font-size:13px;margin-bottom:8px;display:flex;gap:10px;align-items:center;">
+              <span style="font-weight:700;color:var(--text-mid);min-width:18px;">${r + 1}.</span>
+              <span style="border-bottom:1px solid #aaa;flex:1;min-height:22px;"></span>
+            </div>`
+          ).join('');
+          respostaHtml = `
+            <div style="margin-top:12px;overflow-x:auto;">
+              <table style="width:100%;border-collapse:collapse;border:1px solid #ddd;">
+                <thead><tr>
+                  <th style="padding:8px 12px;background:var(--warm);border:1px solid #ddd;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);text-align:left;">Coluna A</th>
+                  <th style="padding:8px 12px;background:var(--warm);border:1px solid #ddd;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);text-align:left;">Coluna B</th>
+                </tr></thead>
+                <tbody>${linhas}</tbody>
+              </table>
+              <div style="margin-top:14px;">
+                <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Respostas:</div>
+                ${respostas}
+              </div>
+            </div>`;
+        } else {
+          // fallback: pre-wrap cobre casos onde a IA não estruturou
+          respostaHtml = `<div class="doc-answer-lines">${Array(4).fill('<div class="doc-answer-line"></div>').join('')}</div>`;
+        }
+
       } else if (at.tipo_resposta === 'opcoes' && at.opcoes) {
-        // Fix 1: cada opção em bloco separado
         const opcoesHtml = at.opcoes.map(op =>
           `<div style="display:block;margin-bottom:8px;">
             <label style="display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text-mid);cursor:pointer;">
@@ -832,17 +898,18 @@ Gere entre 3 e 5 atividades variadas. Para múltipla escolha, adicione campo "op
           </div>`
         ).join('');
         respostaHtml = `<div style="margin-top:10px;">${opcoesHtml}</div>`;
+
       } else if (at.tipo_resposta === 'linhas' || !at.tipo_resposta) {
         const n = at.linhas_resposta || 3;
-        const lines = Array(n).fill('<div class="doc-answer-line"></div>').join('');
-        respostaHtml = `<div class="doc-answer-lines">${lines}</div>`;
+        respostaHtml = `<div class="doc-answer-lines">${Array(n).fill('<div class="doc-answer-line"></div>').join('')}</div>`;
+
       } else if (at.tipo_resposta === 'caixa') {
         respostaHtml = `<div class="doc-answer-box">Espaço para resposta</div>`;
       }
 
       atividadesHtml += `
         <div class="doc-activity" style="${pageBreak}">
-          <div class="doc-activity-num">Atividade ${at.numero || i+1} — ${at.tipo || ''}</div>
+          <div class="doc-activity-num">Atividade ${at.numero || i + 1} — ${at.tipo || ''}</div>
           <div class="doc-activity-title">${at.enunciado || ''}</div>
           ${respostaHtml}
         </div>`;
