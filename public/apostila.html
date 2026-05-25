@@ -1189,7 +1189,9 @@ Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
     // Container isolado: cópia pura do conteúdo, sem nenhum elemento de UI
     // Largura fixa 794px = A4 a 96dpi — independente do layout da tela
     const wrap = document.createElement('div');
-    wrap.style.cssText = 'position:absolute;top:0;left:-9999px;width:794px;background:#fff;font-family:"Outfit",sans-serif;';
+    // Sem posicionamento off-screen: coordenadas negativas geram canvas em branco no html2canvas
+    // O clone fica abaixo do .main (fora do viewport) — invisível ao usuário durante a geração
+    wrap.style.cssText = 'width:794px;background:#fff;font-family:"Outfit",sans-serif;display:block;';
     wrap.innerHTML = source.innerHTML;
     wrap.querySelectorAll('.ap-page').forEach((p, i) => {
       p.style.borderRadius = '0';
