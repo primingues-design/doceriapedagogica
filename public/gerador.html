@@ -448,6 +448,7 @@
   .doc-activity-title {
     font-size: 15px; font-weight: 600;
     margin-bottom: 10px;
+    white-space: pre-wrap;
   }
 
   .doc-activity-body {
@@ -807,23 +808,40 @@ Gere entre 3 e 5 atividades variadas. Para múltipla escolha, adicione campo "op
 
     let atividadesHtml = '';
     (data.atividades || []).forEach((at, i) => {
+      const isEscrita = /produ[çc][aã]o|escrita/i.test(at.tipo || '');
+      const pageBreak = isEscrita ? 'page-break-before:always;break-before:page;' : '';
+
       let respostaHtml = '';
-      if (at.tipo_resposta === 'linhas' || !at.tipo_resposta) {
+      if (isEscrita) {
+        // Fix 3: linhas de pauta físicas para produção escrita
+        const pautas = Array.from({ length: 15 }, () =>
+          '<div style="border-bottom:1px solid #aaa;width:100%;height:35px;"></div>'
+        ).join('');
+        respostaHtml = `
+          <div style="margin-top:14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Meu texto:</div>
+            ${pautas}
+          </div>`;
+      } else if (at.tipo_resposta === 'opcoes' && at.opcoes) {
+        // Fix 1: cada opção em bloco separado
+        const opcoesHtml = at.opcoes.map(op =>
+          `<div style="display:block;margin-bottom:8px;">
+            <label style="display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text-mid);cursor:pointer;">
+              <input type="radio" name="q${i}" style="margin-top:3px;accent-color:var(--teal);flex-shrink:0;"> ${op}
+            </label>
+          </div>`
+        ).join('');
+        respostaHtml = `<div style="margin-top:10px;">${opcoesHtml}</div>`;
+      } else if (at.tipo_resposta === 'linhas' || !at.tipo_resposta) {
         const n = at.linhas_resposta || 3;
         const lines = Array(n).fill('<div class="doc-answer-line"></div>').join('');
         respostaHtml = `<div class="doc-answer-lines">${lines}</div>`;
       } else if (at.tipo_resposta === 'caixa') {
         respostaHtml = `<div class="doc-answer-box">Espaço para resposta</div>`;
-      } else if (at.tipo_resposta === 'opcoes' && at.opcoes) {
-        respostaHtml = `<div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
-          ${at.opcoes.map(op => `<label style="display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text-mid);cursor:pointer;">
-            <input type="radio" name="q${i}" style="margin-top:3px;accent-color:var(--teal);"> ${op}
-          </label>`).join('')}
-        </div>`;
       }
 
       atividadesHtml += `
-        <div class="doc-activity">
+        <div class="doc-activity" style="${pageBreak}">
           <div class="doc-activity-num">Atividade ${at.numero || i+1} — ${at.tipo || ''}</div>
           <div class="doc-activity-title">${at.enunciado || ''}</div>
           ${respostaHtml}
