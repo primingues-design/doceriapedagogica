@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Caça-Palavras & Cruzadinha — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root {
   --ink:#0f0e0c; --cream:#faf7f2; --warm:#f5f0e8;
@@ -198,35 +197,6 @@ input:checked + .toggle-slider::before{transform:translateX(18px)}
 .clue-emoji{font-size:20px;flex-shrink:0;line-height:1.2}
 .clue-text{color:var(--text-mid);line-height:1.4;flex:1}
 
-/* ═══════════════════════════════
-   PDF PRINT AREA
-═══════════════════════════════ */
-#pdf-print{display:none}
-.pdf-page{font-family:'Outfit',sans-serif;background:white;padding:32px 36px}
-.pdf-header{border-top:5px solid var(--gold);border-bottom:1px solid var(--border);padding:18px 0 14px;margin-bottom:24px}
-.pdf-header-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
-.pdf-header-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--text);margin-bottom:3px}
-.pdf-header-meta{font-size:11px;color:var(--text-muted)}
-.pdf-body{display:flex;gap:24px;align-items:flex-start}
-.pdf-grid-wrap{flex-shrink:0}
-.pdf-ws-grid{display:inline-grid;gap:2px;margin-bottom:16px}
-.pdf-ws-cell{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;text-transform:uppercase;background:white;border:1px solid rgba(15,14,12,.15);border-radius:4px;font-family:'Outfit',sans-serif}
-.pdf-cw-grid{display:inline-grid;gap:0;border:2px solid var(--ink)}
-.pdf-cw-cell-b{width:28px;height:28px;background:var(--ink)}
-.pdf-cw-cell-w{width:28px;height:28px;background:white;border:1px solid rgba(15,14,12,.2);position:relative;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:'Outfit',sans-serif;color:var(--text)}
-.pdf-cw-cell-num{position:absolute;top:1px;left:2px;font-size:7px;font-weight:700;color:var(--text-muted)}
-.pdf-words{flex:1}
-.pdf-words-title{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
-.pdf-word-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.pdf-word-item{font-size:12px;color:var(--text);padding:4px 0;border-bottom:1px solid var(--border);display:flex;gap:8px}
-.pdf-clues-wrap{flex:1}
-.pdf-clue-section{margin-bottom:14px}
-.pdf-clue-title{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid var(--border)}
-.pdf-clue-item{display:flex;align-items:flex-start;gap:8px;padding:3px 0;font-size:11px;color:var(--text-mid);border-bottom:1px solid var(--border);line-height:1.4}
-.pdf-clue-num{font-weight:700;color:var(--gold);min-width:26px;flex-shrink:0}
-.pdf-clue-emoji{font-size:14px;flex-shrink:0}
-.pdf-footer{margin-top:20px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted)}
-.pdf-footer-logo{font-family:'Playfair Display',serif;color:var(--gold);font-weight:700}
 
 /* RESPONSIVE */
 @media(max-width:960px){
@@ -382,7 +352,6 @@ input:checked + .toggle-slider::before{transform:translateX(18px)}
           <div class="hud-actions">
             <button class="btn-hud" onclick="wsUseHint()">💡 Dica</button>
             <button class="btn-hud" onclick="wsRevealAll()">👁 Revelar</button>
-            <button class="btn-hud primary" onclick="downloadPDF()">⬇ PDF</button>
           </div>
         </div>
         <div class="ws-container">
@@ -408,7 +377,6 @@ input:checked + .toggle-slider::before{transform:translateX(18px)}
             </div>
             <div class="ws-win-actions">
               <button class="btn-win" onclick="wsRestart()">↺ Jogar novamente</button>
-              <button class="btn-win secondary" onclick="downloadPDF()">⬇ Imprimir PDF</button>
             </div>
           </div>
         </div>
@@ -423,7 +391,6 @@ input:checked + .toggle-slider::before{transform:translateX(18px)}
             <button class="btn-hud primary" onclick="cwCheck()">✓ Verificar</button>
             <button class="btn-hud" onclick="cwHint()">💡 Revelar letra</button>
             <button class="btn-hud danger" onclick="cwRevealAll()">👁 Revelar tudo</button>
-            <button class="btn-hud" onclick="downloadPDF()">⬇ PDF</button>
           </div>
         </div>
         <div class="cw-container">
@@ -437,8 +404,6 @@ input:checked + .toggle-slider::before{transform:translateX(18px)}
     </div>
   </div>
 </div>
-
-<div id="pdf-print"></div>
 
 <script>
 // ═══════════════════════════════
@@ -1223,154 +1188,6 @@ function cwRevealAll(){
     if(cell){cell.classList.remove('correct','wrong');cell.classList.add('revealed');}
   }
   updateCWProgress();
-}
-
-// ═══════════════════════════════
-//  PDF DOWNLOAD
-// ═══════════════════════════════
-async function downloadPDF() {
-  const btn = event.currentTarget;
-  const orig=btn.textContent; btn.textContent='⏳...'; btn.disabled=true;
-  const date=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-  const showEmoji=document.getElementById('toggleEmoji')?.checked??true;
-  const titulo=gameData?.titulo||'Jogo';
-
-  let page1='', page2='';
-
-  if(currentMode==='caca') {
-    const size=wsGridData.length;
-    let gridHtml='';
-    wsGridData.forEach(row=>{
-      row.forEach(letter=>{gridHtml+=`<div class="pdf-ws-cell">${letter}</div>`;});
-    });
-    const wordsHtml=(gameData.palavras||[]).map(p=>`<div class="pdf-word-item"><strong>${escHtml(p.texto.toUpperCase())}</strong>${p.dica?`<span style="color:var(--text-muted);font-size:10px;margin-left:4px;">${escHtml(p.dica)}</span>`:''}</div>`).join('');
-
-    page1=`<div class="pdf-page">
-      <div class="pdf-header">
-        <div class="pdf-header-label">DoceriaPedagógica — Caça-Palavras Interativo</div>
-        <div class="pdf-header-title">${escHtml(titulo)}</div>
-        <div class="pdf-header-meta">${escHtml(gameData.nivel||'')} • ${wsGridData.length}×${wsGridData.length} • ${(gameData.palavras||[]).length} palavras • ${date}</div>
-      </div>
-      <div class="pdf-body">
-        <div class="pdf-grid-wrap">
-          <div class="pdf-ws-grid" style="grid-template-columns:repeat(${size},28px)">${gridHtml}</div>
-        </div>
-        <div class="pdf-words">
-          <div class="pdf-words-title">Encontre as palavras</div>
-          <div class="pdf-word-grid">${wordsHtml}</div>
-        </div>
-      </div>
-      <div class="pdf-footer"><span class="pdf-footer-logo">DoceriaPedagógica</span><span>Caça-palavras gerado por IA</span><span>${date}</span></div>
-    </div>`;
-
-    // Gabarito
-    let gridHtml2='';
-    wsGridData.forEach((row,r)=>{
-      row.forEach((letter,c)=>{
-        const color=wsCellColors[`${r},${c}`]||'';
-        const found=[...wsFoundWords].some(w=>wsPlacements.find(pl=>pl.word===w&&Array.from({length:pl.word.length},(_,i)=>({r:pl.r+pl.dr*i,c:pl.c+pl.dc*i})).some(cl=>cl.r===r&&cl.c===c)));
-        gridHtml2+=`<div class="pdf-ws-cell" style="${found?'background:#d1fae5;border-color:#34d399;':''}font-weight:700">${letter}</div>`;
-      });
-    });
-
-    // rebuild with all words highlighted
-    const allFoundCells=new Set();
-    wsPlacements.forEach(pl=>{for(let i=0;i<pl.word.length;i++) allFoundCells.add(`${pl.r+pl.dr*i},${pl.c+pl.dc*i}`);});
-    let gridHtmlKey='';
-    wsGridData.forEach((row,r)=>{row.forEach((letter,c)=>{
-      const hi=allFoundCells.has(`${r},${c}`);
-      gridHtmlKey+=`<div class="pdf-ws-cell" style="${hi?'background:#d1fae5;border-color:#34d399;font-weight:800;color:#065f46;':''}">${letter}</div>`;
-    });});
-
-    page2=`<div class="pdf-page" style="margin-top:8px">
-      <div class="pdf-header" style="border-top-color:var(--teal)">
-        <div class="pdf-header-label">Gabarito — Uso do Professor</div>
-        <div class="pdf-header-title" style="color:var(--teal)">${escHtml(titulo)}</div>
-        <div class="pdf-header-meta">${date}</div>
-      </div>
-      <div><div class="pdf-ws-grid" style="display:inline-grid;grid-template-columns:repeat(${size},28px);gap:2px">${gridHtmlKey}</div></div>
-      <div class="pdf-footer"><span class="pdf-footer-logo">DoceriaPedagógica</span><span>Gabarito do professor</span><span>${date}</span></div>
-    </div>`;
-
-  } else {
-    // CRUZADINHA PDF
-    const numMap={};
-    cwPlacements.forEach(pl=>{ numMap[`${pl.r-cwMinR},${pl.c-cwMinC}`]=pl.num; });
-    const rows=cwGridData.length;
-
-    let gridHtml='';
-    for(let r=0;r<rows;r++) for(let c=0;c<cwGridData[r].length;c++){
-      const val=cwGridData[r][c];
-      const num=numMap[`${r},${c}`];
-      if(!val) gridHtml+=`<div class="pdf-cw-cell-b"></div>`;
-      else gridHtml+=`<div class="pdf-cw-cell-w">${num?`<span class="pdf-cw-cell-num">${num}</span>`:''}</div>`;
-    }
-
-    const hPl=cwPlacements.filter(p=>p.dir==='H').sort((a,b)=>a.num-b.num);
-    const vPl=cwPlacements.filter(p=>p.dir==='V').sort((a,b)=>a.num-b.num);
-    const hCluesHtml=hPl.map(pl=>`<div class="pdf-clue-item"><span class="pdf-clue-num">${pl.num}→</span>${showEmoji&&pl.emoji?`<span class="pdf-clue-emoji">${pl.emoji}</span>`:''}<span>${escHtml(pl.dica||`${pl.word.length} letras`)}</span></div>`).join('');
-    const vCluesHtml=vPl.map(pl=>`<div class="pdf-clue-item"><span class="pdf-clue-num">${pl.num}↓</span>${showEmoji&&pl.emoji?`<span class="pdf-clue-emoji">${pl.emoji}</span>`:''}<span>${escHtml(pl.dica||`${pl.word.length} letras`)}</span></div>`).join('');
-
-    const cellSize=Math.min(28, Math.floor(220/cwCols));
-    page1=`<div class="pdf-page">
-      <div class="pdf-header">
-        <div class="pdf-header-label">DoceriaPedagógica — Cruzadinha Interativa</div>
-        <div class="pdf-header-title">${escHtml(titulo)}</div>
-        <div class="pdf-header-meta">${escHtml(gameData.nivel||'')} • ${cwPlacements.length} palavras • Nome: ________________ • ${date}</div>
-      </div>
-      <div class="pdf-body">
-        <div class="pdf-grid-wrap">
-          <div class="pdf-cw-grid" style="grid-template-columns:repeat(${cwCols},${cellSize}px);grid-template-rows:repeat(${rows},${cellSize}px)">${gridHtml}</div>
-        </div>
-        <div class="pdf-clues-wrap">
-          <div class="pdf-clue-section">
-            <div class="pdf-clue-title">Horizontais →</div>${hCluesHtml}
-          </div>
-          <div class="pdf-clue-section">
-            <div class="pdf-clue-title">Verticais ↓</div>${vCluesHtml}
-          </div>
-        </div>
-      </div>
-      <div class="pdf-footer"><span class="pdf-footer-logo">DoceriaPedagógica</span><span>Cruzadinha gerada por IA</span><span>${date}</span></div>
-    </div>`;
-
-    let gridHtmlKey='';
-    for(let r=0;r<rows;r++) for(let c=0;c<cwGridData[r].length;c++){
-      const val=cwGridData[r][c];
-      const num=numMap[`${r},${c}`];
-      if(!val) gridHtmlKey+=`<div class="pdf-cw-cell-b"></div>`;
-      else gridHtmlKey+=`<div class="pdf-cw-cell-w" style="font-size:${cellSize>22?12:10}px;color:var(--teal)">${num?`<span class="pdf-cw-cell-num">${num}</span>`:''}${val}</div>`;
-    }
-
-    page2=`<div class="pdf-page" style="margin-top:8px">
-      <div class="pdf-header" style="border-top-color:var(--teal)">
-        <div class="pdf-header-label">Gabarito — Uso do Professor</div>
-        <div class="pdf-header-title" style="color:var(--teal)">${escHtml(titulo)}</div>
-        <div class="pdf-header-meta">${date}</div>
-      </div>
-      <div class="pdf-cw-grid" style="display:inline-grid;grid-template-columns:repeat(${cwCols},${cellSize}px);grid-template-rows:repeat(${rows},${cellSize}px)">${gridHtmlKey}</div>
-      <div class="pdf-footer"><span class="pdf-footer-logo">DoceriaPedagógica</span><span>Gabarito do professor</span><span>${date}</span></div>
-    </div>`;
-  }
-
-  const el=document.getElementById('pdf-print');
-  el.innerHTML=page1+page2;
-  el.style.display='block';
-  const filenameBase=(titulo).replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_');
-
-  try {
-    await html2pdf().set({
-      margin:[15,15,15,15],
-      filename:`DoceriaPedagogica_${currentMode==='caca'?'CacaPalavras':'Cruzadinha'}_${filenameBase}.pdf`,
-      image:{type:'jpeg',quality:0.97},
-      html2canvas:{scale:2,useCORS:true,logging:false,backgroundColor:'#ffffff'},
-      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-      pagebreak:{mode:['avoid-all','css','legacy']}
-    }).from(el).save();
-  } catch(e){console.error(e);}
-
-  el.style.display='none';
-  btn.textContent=orig; btn.disabled=false;
 }
 
 function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
