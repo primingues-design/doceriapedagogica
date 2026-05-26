@@ -1191,42 +1191,43 @@ Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
     const titulo = (document.getElementById('phTitle').textContent || 'apostila')
       .replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_');
 
-    // Esconde só o cabeçalho de prévia (único elemento que sangrava no PDF)
-    const prevHeader = document.getElementById('prevHeader');
-    prevHeader.style.display = 'none';
+    // CSS temporário: remove decoração visual e força quebra entre páginas
+    // (CSS injection não causa reflow, ao contrário de style direto no DOM)
+    const tmpStyle = document.createElement('style');
+    tmpStyle.textContent = `
+      #apostila-doc .ap-page {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        margin-bottom: 0 !important;
+        overflow: visible !important;
+        page-break-after: always;
+        break-after: page;
+      }
+      #apostila-doc .ap-page:last-child {
+        page-break-after: auto !important;
+        break-after: auto !important;
+      }
+    `;
+    document.head.appendChild(tmpStyle);
 
-    // Ajusta visual das páginas para PDF
-    const apPages = source.querySelectorAll('.ap-page');
-    apPages.forEach((p, i) => {
-      p.style.borderRadius = '0';
-      p.style.boxShadow = 'none';
-      p.style.marginBottom = '0';
-      if (i > 0) { p.style.pageBreakBefore = 'always'; p.style.breakBefore = 'page'; }
-    });
-
-    await delay(300);
+    // Scroll da janela ao topo ANTES de capturar — sem isso o #apostila-doc
+    // fica com getBoundingClientRect().top negativo (fora da viewport)
+    // e o html2canvas devolve canvas em branco.
+    window.scrollTo(0, 0);
+    await delay(400);
 
     try {
       await html2pdf().set({
         margin: [15, 12, 15, 12],
         filename: `DoceriaPedagogica_${titulo}.pdf`,
         image: { type: 'jpeg', quality: 0.95 },
-        html2canvas: { scale: 2, useCORS: true, letterRendering: true, backgroundColor: '#ffffff' },
+        html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['css', 'legacy'], avoid: '.ap-activity' }
       }).from(source).save();
     } catch(e) { console.error('Erro ao gerar PDF:', e.message, e); }
 
-    // Restaura
-    prevHeader.style.display = '';
-    apPages.forEach(p => {
-      p.style.borderRadius = '';
-      p.style.boxShadow = '';
-      p.style.marginBottom = '';
-      p.style.pageBreakBefore = '';
-      p.style.breakBefore = '';
-    });
-
+    document.head.removeChild(tmpStyle);
     pdfBtn.disabled = false;
     pdfBtn.textContent = '⬇ Baixar PDF';
   }
