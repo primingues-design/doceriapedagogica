@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jogo da Memória — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root {
     --ink: #0f0e0c;
@@ -430,55 +429,6 @@
     display: flex; align-items: center; justify-content: center; gap: 8px;
   }
   .btn-new-game:hover { background: var(--warm); }
-  .btn-pdf-win {
-    background: var(--ink); color: var(--cream); border: none;
-    padding: 14px 20px; border-radius: 10px; font-size: 13px; font-weight: 600;
-    cursor: pointer; font-family: 'Outfit', sans-serif; transition: all 0.2s;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-  }
-  .btn-pdf-win:hover { background: #2a2926; }
-
-  /* ── PDF HIDDEN AREA ── */
-  #pdf-print { display: none; }
-  .pdf-wrap { font-family: 'Outfit', sans-serif; background: white; padding: 40px 44px; }
-  .pdf-top {
-    border-top: 5px solid var(--gold);
-    border-bottom: 1px solid var(--border);
-    padding: 20px 0 16px; margin-bottom: 28px;
-  }
-  .pdf-lbl {
-    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;
-  }
-  .pdf-titulo {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px; font-weight: 900; color: var(--text); margin-bottom: 4px;
-  }
-  .pdf-meta { font-size: 12px; color: var(--text-muted); }
-  .pdf-pairs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .pdf-pair {
-    display: flex; border-radius: 8px; overflow: hidden;
-    border: 1px solid var(--border-mid); page-break-inside: avoid;
-  }
-  .pdf-side-a {
-    flex: 1; background: #fdf3e3; padding: 10px 12px;
-    font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.4;
-  }
-  .pdf-side-b {
-    flex: 1; background: #e8f4f4; padding: 10px 12px;
-    font-size: 12px; color: var(--text-mid); line-height: 1.4;
-    border-left: 1px solid var(--border-mid);
-  }
-  .pdf-legend {
-    display: flex; gap: 16px; margin-bottom: 14px; font-size: 11px; color: var(--text-muted);
-  }
-  .pdf-legend span { display: flex; align-items: center; gap: 5px; }
-  .pdf-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
-  .pdf-footer {
-    margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--border);
-    display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);
-  }
-  .pdf-footer-logo { font-family: 'Playfair Display', serif; color: var(--gold); font-weight: 700; }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
@@ -627,7 +577,6 @@
             </div>
             <div class="start-actions">
               <button class="btn-start" onclick="startGame()">▶ Começar o Jogo</button>
-              <button class="btn-gabarito" onclick="downloadPDF()">⬇ Gabarito PDF</button>
             </div>
           </div>
         </div>
@@ -675,7 +624,6 @@
             <div class="win-actions">
               <button class="btn-play-again" onclick="startGame()">↺ Jogar novamente</button>
               <button class="btn-new-game" onclick="showStart()">✦ Novo jogo</button>
-              <button class="btn-pdf-win" onclick="downloadPDF()">⬇ PDF</button>
             </div>
           </div>
         </div>
@@ -684,9 +632,6 @@
     </div>
   </div>
 </div>
-
-<!-- PDF HIDDEN -->
-<div id="pdf-print"></div>
 
 <script>
   // ── STATE ──
@@ -1059,61 +1004,6 @@ Retorne APENAS JSON válido, sem markdown, sem texto antes ou depois.`,
     return 'Bom trabalho! Continue praticando!';
   }
 
-  // ── DOWNLOAD PDF (gabarito) ──
-  async function downloadPDF() {
-    if (!gameData) return;
-    const btn = event.currentTarget;
-    const orig = btn.textContent;
-    btn.textContent = '⏳ Gerando...';
-    btn.disabled = true;
-
-    const date = new Date().toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
-    const pares = gameData.pares || [];
-
-    const paresHtml = pares.map((par, i) => `
-      <div class="pdf-pair">
-        <div class="pdf-side-a">${escHtml(par.carta_a)}</div>
-        <div class="pdf-side-b">${escHtml(par.carta_b)}</div>
-      </div>`).join('');
-
-    document.getElementById('pdf-print').innerHTML = `
-      <div class="pdf-wrap">
-        <div class="pdf-top">
-          <div class="pdf-lbl">DoceriaPedagógica — Jogo da Memória — Gabarito</div>
-          <div class="pdf-titulo">${escHtml(gameData.titulo || 'Jogo da Memória')}</div>
-          <div class="pdf-meta">${escHtml(gameData.nivel || '')} • ${escHtml(gameData.disciplina || '')} • ${pares.length} pares • ${date}</div>
-        </div>
-        <div class="pdf-legend">
-          <span><span class="pdf-dot" style="background:#fdf3e3;border:1px solid #c8963e44;"></span>Carta A</span>
-          <span><span class="pdf-dot" style="background:#e8f4f4;border:1px solid #2d6e6e44;"></span>Carta B</span>
-        </div>
-        <div class="pdf-pairs-grid">${paresHtml}</div>
-        <div class="pdf-footer">
-          <span class="pdf-footer-logo">DoceriaPedagógica</span>
-          <span>Gabarito gerado por IA com qualidade pedagógica</span>
-          <span>${date}</span>
-        </div>
-      </div>`;
-
-    const el = document.getElementById('pdf-print');
-    el.style.display = 'block';
-    const titulo = (gameData.titulo || 'Memoria').replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_');
-
-    try {
-      await html2pdf().set({
-        margin: [15,15,15,15],
-        filename: `DoceriaPedagogica_Memoria_${titulo}.pdf`,
-        image: { type:'jpeg', quality:0.97 },
-        html2canvas: { scale:2, useCORS:true, logging:false, backgroundColor:'#ffffff' },
-        jsPDF: { unit:'mm', format:'a4', orientation:'portrait' },
-        pagebreak: { mode:['avoid-all','css','legacy'] }
-      }).from(el).save();
-    } catch(e) { console.error(e); }
-
-    el.style.display = 'none';
-    btn.textContent = orig;
-    btn.disabled = false;
-  }
 </script>
 
 </body>

@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cruzadinha & Caça-palavras — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root {
     --ink: #0f0e0c;
@@ -170,14 +169,6 @@
   .ph-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; }
   .ph-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
   .ph-actions { display: flex; gap: 8px; }
-  .btn-pdf {
-    background: var(--ink); color: var(--cream);
-    padding: 9px 20px; border-radius: 8px; border: none;
-    font-size: 13px; font-weight: 600; cursor: pointer;
-    font-family: 'Outfit', sans-serif; transition: all 0.2s;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .btn-pdf:hover { background: #2a2926; }
   .btn-regen {
     background: white; color: var(--text-mid);
     padding: 9px 14px; border-radius: 8px;
@@ -186,14 +177,6 @@
     font-family: 'Outfit', sans-serif; transition: all 0.2s;
   }
   .btn-regen:hover { background: var(--warm); }
-  .btn-gabari {
-    background: var(--teal-pale); color: var(--teal);
-    padding: 9px 14px; border-radius: 8px;
-    border: 1.5px solid rgba(45,110,110,0.25);
-    font-size: 13px; cursor: pointer;
-    font-family: 'Outfit', sans-serif; transition: all 0.2s;
-  }
-  .btn-gabari:hover { background: #d0ecec; }
 
   .doc-wrap { display: none; max-width: 800px; margin: 0 auto; }
   .doc-wrap.show { display: block; }
@@ -489,9 +472,7 @@
         <label class="answer-toggle">
           <input type="checkbox" id="showAnswers" onchange="toggleAnswers()"> Mostrar respostas
         </label>
-        <button class="btn-gabari" onclick="downloadGabarito()">📋 Gabarito</button>
         <button class="btn-regen" onclick="generate()">↻ Gerar novamente</button>
-        <button class="btn-pdf" onclick="downloadPDF()">⬇ Baixar PDF</button>
       </div>
     </div>
 
@@ -1106,57 +1087,6 @@ function toggleAnswers() {
   }
 }
 
-// ══════════════════════════════════
-//  PDF DOWNLOAD
-// ══════════════════════════════════
-async function downloadPDF() {
-  const btn = document.querySelector('.btn-pdf');
-  btn.disabled = true; btn.textContent = '⏳ Gerando PDF...';
-  const el = document.getElementById('puzzle-doc');
-  const titulo = (document.getElementById('tema').value||'puzzle').replace(/\s+/g,'_');
-  const type = currentMode === 'caca' ? 'CacaPalavras' : 'Cruzadinha';
-  try {
-    await html2pdf().set({
-      margin:[15,15,15,15],
-      filename:`DoceriaPedagogica_${type}_${titulo}.pdf`,
-      image:{type:'jpeg',quality:0.98},
-      html2canvas:{scale:2,useCORS:true,logging:false,backgroundColor:'#ffffff'},
-      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-      pagebreak:{mode:['avoid-all','css','legacy']}
-    }).from(el).save();
-  } catch(e){console.error(e);}
-  btn.disabled = false; btn.textContent = '⬇ Baixar PDF';
-}
-
-async function downloadGabarito() {
-  // Show answers, download, then hide
-  const prev = showingAnswers;
-  showingAnswers = true;
-  document.getElementById('showAnswers').checked = true;
-  toggleAnswers();
-  await delay(200);
-  const btn = document.querySelector('.btn-gabari');
-  btn.textContent = '⏳...'; btn.disabled = true;
-  const el = document.getElementById('puzzle-doc');
-  const titulo = (document.getElementById('tema').value||'puzzle').replace(/\s+/g,'_');
-  const type = currentMode === 'caca' ? 'CacaPalavras' : 'Cruzadinha';
-  try {
-    await html2pdf().set({
-      margin:[15,15,15,15],
-      filename:`Gabarito_${type}_${titulo}.pdf`,
-      image:{type:'jpeg',quality:0.98},
-      html2canvas:{scale:2,useCORS:true,logging:false,backgroundColor:'#ffffff'},
-      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-      pagebreak:{mode:['avoid-all','css','legacy']}
-    }).from(el).save();
-  } catch(e){console.error(e);}
-  btn.disabled = false; btn.textContent = '📋 Gabarito';
-  if (!prev) {
-    showingAnswers = false;
-    document.getElementById('showAnswers').checked = false;
-    toggleAnswers();
-  }
-}
 
 function delay(ms){ return new Promise(r=>setTimeout(r,ms)); }
 </script>
