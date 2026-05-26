@@ -283,7 +283,7 @@
     border-radius: 12px;
     box-shadow: 0 6px 32px rgba(0,0,0,0.08);
     margin-bottom: 16px;
-    overflow: hidden;
+    overflow: visible;
   }
 
   /* CAPA */
@@ -1191,48 +1191,20 @@ Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
     const titulo = (document.getElementById('phTitle').textContent || 'apostila')
       .replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_');
 
-    // CSS temporário: remove decoração visual e força quebra entre páginas
-    // (CSS injection não causa reflow, ao contrário de style direto no DOM)
-    const tmpStyle = document.createElement('style');
-    tmpStyle.textContent = `
-      #apostila-doc .ap-page {
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        margin-bottom: 0 !important;
-        overflow: visible !important;
-        page-break-after: always;
-        break-after: page;
-      }
-      #apostila-doc .ap-page:last-child {
-        page-break-after: auto !important;
-        break-after: auto !important;
-      }
-    `;
-    document.head.appendChild(tmpStyle);
-
-    // Scroll da janela ao topo ANTES de capturar — sem isso o #apostila-doc
-    // fica com getBoundingClientRect().top negativo (fora da viewport)
-    // e o html2canvas devolve canvas em branco.
-    window.scrollTo(0, 0);
-    await delay(400);
-
     try {
       await html2pdf().set({
-        margin: [15, 12, 15, 12],
+        margin: [15, 15, 15, 15],
         filename: `DoceriaPedagogica_${titulo}.pdf`,
-        image: { type: 'jpeg', quality: 0.95 },
+        image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'], avoid: '.ap-activity' }
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
       }).from(source).save();
     } catch(e) { console.error('Erro ao gerar PDF:', e.message, e); }
 
-    document.head.removeChild(tmpStyle);
     pdfBtn.disabled = false;
     pdfBtn.textContent = '⬇ Baixar PDF';
   }
-
-  function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
   function extractJSON(raw) {
     let clean = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
