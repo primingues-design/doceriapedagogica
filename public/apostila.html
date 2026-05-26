@@ -927,23 +927,21 @@ Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
 
     let pages = [];
 
-    // ── CAPA ──
+    // ── CABEÇALHO (substituiu capa decorativa que causava PDF em branco) ──
     pages.push(`
       <div class="ap-page">
-        <div class="ap-capa">
-          <div class="ap-capa-top">
-            <div class="ap-capa-escola">DoceriaPedagógica — Material Didático</div>
-            <div class="ap-capa-tag">${d.disciplina || disciplina || tema}</div>
-            <div class="ap-capa-title">${d.titulo || tema}</div>
-            <div class="ap-capa-sub">${d.subtitulo || ''}</div>
+        <div style="border-top:5px solid var(--gold);border-bottom:1px solid var(--border);padding:32px 48px 28px;background:white;">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">DoceriaPedagógica — Material Didático</div>
+          <div style="font-family:'Playfair Display',serif;font-size:30px;font-weight:900;line-height:1.2;color:var(--text);margin-bottom:8px;">${d.titulo || tema}</div>
+          ${d.subtitulo ? `<div style="font-size:14px;color:var(--text-muted);margin-bottom:16px;">${d.subtitulo}</div>` : '<div style="margin-bottom:16px;"></div>'}
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;">
+            <span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:5px 14px;font-size:12px;">📚 ${d.nivel || nivel}</span>
+            <span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:5px 14px;font-size:12px;">📋 ${d.disciplina || disciplina || tema}</span>
+            <span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:5px 14px;font-size:12px;">📅 ${date}</span>
           </div>
-          <div class="ap-capa-bottom">
-            <div class="ap-capa-info">
-              Nível: ${d.nivel || nivel}<br>
-              Data: ${date}<br>
-              Nome: ___________________________
-            </div>
-            <div class="ap-capa-logo">DoceriaPedagógica</div>
+          <div style="border:1.5px solid var(--border-mid);border-radius:8px;padding:10px 16px;display:flex;gap:32px;font-size:13px;color:var(--text-mid);">
+            <span>Nome: _______________________________________</span>
+            <span>Turma: _______________</span>
           </div>
         </div>
       </div>`);

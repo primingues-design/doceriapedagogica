@@ -575,6 +575,8 @@
         <div class="pill" data-val="Associação / relacione colunas">🔗 Associação</div>
         <div class="pill" data-val="Produção escrita">📝 Produção escrita</div>
         <div class="pill" data-val="Verdadeiro ou falso">✅ Verdadeiro/Falso</div>
+        <div class="pill" data-val="Caça-palavras">🔍 Caça-palavras</div>
+        <div class="pill" data-val="Cruzadinha">🧩 Cruzadinha</div>
       </div>
     </div>
 
@@ -803,6 +805,8 @@ REGRAS OBRIGATÓRIAS por tipo:
 - Associação / Relacione colunas: tipo_resposta "associacao", adicione "coluna_a": ["conceito 1", "conceito 2", "conceito 3", "conceito 4"] e "coluna_b": ["definição 1", "definição 2", "definição 3", "definição 4"] com o MESMO número de itens — NUNCA coloque os itens dentro do enunciado
 - Produção escrita: tipo_resposta "caixa"
 - Questões abertas / Complete / Interpretação: tipo_resposta "linhas", linhas_resposta entre 2 e 5
+- Caça-palavras: tipo_resposta "caca", adicione "palavras": ["PALAVRA1","PALAVRA2","PALAVRA3","PALAVRA4","PALAVRA5","PALAVRA6","PALAVRA7","PALAVRA8"] todas em MAIÚSCULAS relacionadas ao tema — NUNCA coloque as palavras no enunciado
+- Cruzadinha: tipo_resposta "cruzadinha", adicione "horizontais": [{"numero":1,"dica":"dica da palavra horizontal"},{"numero":2,"dica":"..."}] e "verticais": [{"numero":1,"dica":"dica da palavra vertical"},{"numero":2,"dica":"..."}] com 3 a 4 itens cada — NUNCA coloque as dicas no enunciado
 Gere entre 3 e 5 atividades variadas.`;
   }
 
@@ -888,6 +892,39 @@ Gere entre 3 e 5 atividades variadas.`;
           // fallback: pre-wrap cobre casos onde a IA não estruturou
           respostaHtml = `<div class="doc-answer-lines">${Array(4).fill('<div class="doc-answer-line"></div>').join('')}</div>`;
         }
+
+      } else if (at.tipo_resposta === 'caca') {
+        // Caça-palavras: lista de palavras para imprimir
+        const palavras = Array.isArray(at.palavras) ? at.palavras : [];
+        const bancoPalavras = palavras.map(p =>
+          `<span style="display:inline-block;background:var(--warm);border:1px solid var(--border-mid);border-radius:4px;padding:4px 10px;font-size:13px;font-weight:700;letter-spacing:0.06em;color:var(--text);margin:3px;">${p}</span>`
+        ).join('');
+        respostaHtml = `
+          <div style="margin-top:12px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Banco de palavras:</div>
+            <div style="margin-bottom:16px;">${bancoPalavras}</div>
+            <div style="border:1.5px dashed var(--border-mid);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--text-muted);font-style:italic;">
+              Grade do caça-palavras: o professor pode usar o site <strong>palavras.html</strong> para gerar a grade interativa, ou desenhá-la manualmente com as palavras acima escondidas.
+            </div>
+          </div>`;
+
+      } else if (at.tipo_resposta === 'cruzadinha') {
+        // Cruzadinha: dicas numeradas para imprimir
+        const horizontais = Array.isArray(at.horizontais) ? at.horizontais : [];
+        const verticais   = Array.isArray(at.verticais)   ? at.verticais   : [];
+        const renderDicas = (lista, label) => lista.length ? `
+          <div style="margin-bottom:14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">${label}:</div>
+            ${lista.map(d => `<div style="font-size:13px;color:var(--text-mid);margin-bottom:5px;display:flex;gap:8px;"><span style="font-weight:700;min-width:18px;">${d.numero}.</span><span>${d.dica}</span></div>`).join('')}
+          </div>` : '';
+        respostaHtml = `
+          <div style="margin-top:12px;">
+            ${renderDicas(horizontais, 'Horizontais')}
+            ${renderDicas(verticais, 'Verticais')}
+            <div style="border:1.5px dashed var(--border-mid);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--text-muted);font-style:italic;">
+              Grade da cruzadinha: use <strong>palavras.html</strong> para gerar a grade interativa com as dicas acima.
+            </div>
+          </div>`;
 
       } else if (at.tipo_resposta === 'opcoes' && at.opcoes) {
         const opcoesHtml = at.opcoes.map(op =>
