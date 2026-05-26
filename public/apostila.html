@@ -877,6 +877,8 @@ ${temInterpretacao ? '2. Inclua OBRIGATORIAMENTE ao menos 3 questões de interpr
 3. Múltipla escolha: campo "opcoes" deve ser um ARRAY com 4 itens, cada um começando com a letra: ["A) texto", "B) texto", "C) texto", "D) texto"].
 4. Verdadeiro ou Falso: campo "tipo_resposta" = "vf" e "itens_vf" = array de frases ["Frase 1 sobre o tema.", "Frase 2.", ...] (mínimo 4 frases).
 5. Complete as frases: no enunciado, use ___ (três underlines) para os espaços em branco. Ex: "A célula é a ___ básica da vida."
+6. NUNCA inclua "USE CAIXA ALTA" ou instruções de formato no campo enunciado — o enunciado é apenas a instrução pedagógica para o aluno.
+7. Nas atividades de completar sílabas/palavras, use APENAS palavras que realmente contenham a sílaba-alvo no espaço em branco.
 6. Questões abertas: use tipo_resposta "linhas" com pelo menos 3 linhas.
 7. Produção escrita: use tipo_resposta "caixa".
 ${temCruzadinha ? `8. CRUZADINHA: gere tipo_resposta "cruzadinha" com campo "cruzadinha" contendo grade_size (8 a 12) e array "palavras" com objetos: {"palavra":"XXXX","dica":"descrição","direcao":"H","linha_inicio":1,"coluna_inicio":1}. Use 6-8 palavras. Garanta que as posições não se sobreponham incorretamente.` : ''}
@@ -919,6 +921,13 @@ Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
   "orientacao_professor": ${extras.includes('plano_de_aula') ? '"objetivo + 3 etapas de desenvolvimento + recursos + avaliação + habilidades BNCC"' : '"dica rápida de aplicação em sala (2 linhas)"'},
   "palavras_chave": ["palavra1","palavra2","palavra3","palavra4"]
 }`;
+  }
+
+  function cleanEnunciado(text) {
+    return (text || '')
+      .replace(/[.,;]?\s*USE CAIXA ALTA\.?/gi, '')
+      .replace(/[.,;]?\s*Escreva em (caixa alta|maiúsculas?)\.?/gi, '')
+      .trim();
   }
 
   function renderApostila(d, tema, nivel, disciplina) {
@@ -1007,7 +1016,7 @@ Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
       if (!group.length) return;
       let ativsHtml = group.map((at, i) => {
         let resHtml = '';
-        const enunciado = (at.enunciado || '').replace(/\n/g, '<br>');
+        const enunciado = cleanEnunciado(at.enunciado).replace(/\n/g, '<br>');
 
         if (at.tipo_resposta === 'caixa') {
           resHtml = `<div class="ap-answer-box"></div>`;

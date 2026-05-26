@@ -806,8 +806,17 @@ REGRAS OBRIGATÓRIAS por tipo:
 - Produção escrita: tipo_resposta "caixa"
 - Questões abertas / Complete / Interpretação: tipo_resposta "linhas", linhas_resposta entre 2 e 5
 - Caça-palavras: tipo_resposta "caca", adicione "palavras": ["PALAVRA1","PALAVRA2","PALAVRA3","PALAVRA4","PALAVRA5","PALAVRA6","PALAVRA7","PALAVRA8"] todas em MAIÚSCULAS relacionadas ao tema — NUNCA coloque as palavras no enunciado
-- Cruzadinha: tipo_resposta "cruzadinha", adicione "horizontais": [{"numero":1,"dica":"dica da palavra horizontal"},{"numero":2,"dica":"..."}] e "verticais": [{"numero":1,"dica":"dica da palavra vertical"},{"numero":2,"dica":"..."}] com 3 a 4 itens cada — NUNCA coloque as dicas no enunciado
+- Cruzadinha: tipo_resposta "cruzadinha", adicione "palavras": [{"numero":1,"palavra":"INVERNO","dica":"Período frio do ano","linha_inicio":1,"coluna_inicio":3,"direcao":"H"},{"numero":2,"palavra":"AMOR","dica":"Sentimento de carinho","linha_inicio":1,"coluna_inicio":5,"direcao":"V"},...] com 5 a 8 palavras formando um grid de até 10×10, palavras se cruzando em pelo menos 2 letras — NUNCA coloque as dicas no enunciado
+IMPORTANTE: O campo "enunciado" deve conter APENAS a instrução pedagógica para o aluno. NUNCA inclua frases como "USE CAIXA ALTA", "escreva em maiúsculas" ou qualquer instrução de formato no enunciado.
+Nas atividades de completar palavras com sílabas, use APENAS palavras que realmente contenham a sílaba-alvo no espaço em branco.
 Gere entre 3 e 5 atividades variadas.`;
+  }
+
+  function cleanEnunciado(text) {
+    return (text || '')
+      .replace(/[.,;]?\s*USE CAIXA ALTA\.?/gi, '')
+      .replace(/[.,;]?\s*Escreva em (caixa alta|maiúsculas?)\.?/gi, '')
+      .trim();
   }
 
   function renderDocument(data, tema, nivel) {
@@ -909,22 +918,56 @@ Gere entre 3 e 5 atividades variadas.`;
           </div>`;
 
       } else if (at.tipo_resposta === 'cruzadinha') {
-        // Cruzadinha: dicas numeradas para imprimir
-        const horizontais = Array.isArray(at.horizontais) ? at.horizontais : [];
-        const verticais   = Array.isArray(at.verticais)   ? at.verticais   : [];
-        const renderDicas = (lista, label) => lista.length ? `
-          <div style="margin-bottom:14px;">
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">${label}:</div>
-            ${lista.map(d => `<div style="font-size:13px;color:var(--text-mid);margin-bottom:5px;display:flex;gap:8px;"><span style="font-weight:700;min-width:18px;">${d.numero}.</span><span>${d.dica}</span></div>`).join('')}
-          </div>` : '';
-        respostaHtml = `
-          <div style="margin-top:12px;">
-            ${renderDicas(horizontais, 'Horizontais')}
-            ${renderDicas(verticais, 'Verticais')}
-            <div style="border:1.5px dashed var(--border-mid);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--text-muted);font-style:italic;">
-              Grade da cruzadinha: use <strong>palavras.html</strong> para gerar a grade interativa com as dicas acima.
-            </div>
+        const palavrasCruz = Array.isArray(at.palavras) ? at.palavras : [];
+        // fallback: se veio no formato antigo horizontais/verticais, converte
+        const horizOld = Array.isArray(at.horizontais) ? at.horizontais : [];
+        const vertOld  = Array.isArray(at.verticais)   ? at.verticais   : [];
+
+        if (palavrasCruz.length) {
+          // Grade automática a partir de palavras com posições
+          const GRID = 12;
+          const grid = Array.from({length: GRID}, () => Array(GRID).fill(null));
+          const nums = {};
+          palavrasCruz.forEach(p => {
+            const word = (p.palavra || '').toUpperCase().replace(/\s/g, '');
+            const r = Math.max((p.linha_inicio || 1) - 1, 0);
+            const c = Math.max((p.coluna_inicio || 1) - 1, 0);
+            const dir = (p.direcao || 'H').toUpperCase();
+            const key = `${r},${c}`;
+            if (!nums[key]) nums[key] = p.numero;
+            for (let i = 0; i < word.length; i++) {
+              const row = dir === 'H' ? r : r + i;
+              const col = dir === 'H' ? c + i : c;
+              if (row < GRID && col < GRID) grid[row][col] = true;
+            }
+          });
+          let minR = GRID, maxR = 0, minC = GRID, maxC = 0;
+          for (let r = 0; r < GRID; r++) for (let c = 0; c < GRID; c++) {
+            if (grid[r][c]) { minR = Math.min(minR, r); maxR = Math.max(maxR, r); minC = Math.min(minC, c); maxC = Math.max(maxC, c); }
+          }
+          const cols = maxC - minC + 1;
+          const cell = Math.min(26, Math.floor(240 / cols));
+          let cells = '';
+          for (let r = minR; r <= maxR; r++) for (let c = minC; c <= maxC; c++) {
+            const num = nums[`${r},${c}`];
+            if (grid[r][c]) {
+              cells += `<div style="width:${cell}px;height:${cell}px;border:1.5px solid #555;background:white;position:relative;box-sizing:border-box;">${num ? `<span style="position:absolute;top:1px;left:2px;font-size:6px;font-weight:700;color:#666;line-height:1;">${num}</span>` : ''}</div>`;
+            } else {
+              cells += `<div style="width:${cell}px;height:${cell}px;background:#e8e2d8;"></div>`;
+            }
+          }
+          const horiz = palavrasCruz.filter(p => (p.direcao||'H').toUpperCase()==='H').sort((a,b)=>(a.numero||0)-(b.numero||0));
+          const vert  = palavrasCruz.filter(p => (p.direcao||'H').toUpperCase()==='V').sort((a,b)=>(a.numero||0)-(b.numero||0));
+          const dicasHtml = (lista, label) => lista.length ? `<div style="margin-bottom:10px;"><div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px;">${label}:</div>${lista.map(d=>`<div style="font-size:12px;color:var(--text-mid);margin-bottom:4px;display:flex;gap:6px;"><span style="font-weight:700;min-width:20px;">${d.numero}.</span><span>${d.dica}</span></div>`).join('')}</div>` : '';
+          respostaHtml = `<div style="margin-top:12px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
+            <div style="flex-shrink:0;border:2px solid #555;display:inline-grid;grid-template-columns:repeat(${cols},${cell}px);">${cells}</div>
+            <div style="flex:1;min-width:150px;">${dicasHtml(horiz,'Horizontais →')}${dicasHtml(vert,'Verticais ↓')}</div>
           </div>`;
+        } else {
+          // fallback formato antigo: só dicas, sem grade
+          const renderDicas = (lista, label) => lista.length ? `<div style="margin-bottom:14px;"><div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">${label}:</div>${lista.map(d=>`<div style="font-size:13px;color:var(--text-mid);margin-bottom:5px;display:flex;gap:8px;"><span style="font-weight:700;min-width:18px;">${d.numero}.</span><span>${d.dica}</span></div>`).join('')}</div>` : '';
+          respostaHtml = `<div style="margin-top:12px;">${renderDicas(horizOld,'Horizontais')}${renderDicas(vertOld,'Verticais')}</div>`;
+        }
 
       } else if (at.tipo_resposta === 'opcoes' && at.opcoes) {
         const opcoesHtml = at.opcoes.map(op =>
@@ -947,7 +990,7 @@ Gere entre 3 e 5 atividades variadas.`;
       atividadesHtml += `
         <div class="doc-activity" style="${pageBreak}">
           <div class="doc-activity-num">Atividade ${at.numero || i + 1} — ${at.tipo || ''}</div>
-          <div class="doc-activity-title">${at.enunciado || ''}</div>
+          <div class="doc-activity-title">${cleanEnunciado(at.enunciado)}</div>
           ${respostaHtml}
         </div>`;
     });
