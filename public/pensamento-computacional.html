@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pensamento Computacional — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Outfit', sans-serif; background: #fff8f0; color: #1a1410; min-height: 100vh; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: #1a1410; padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.topbar-logo { font-family:'Nunito',sans-serif; font-size:16px; font-weight:900; color:#e8b86d; text-decoration:none; }
+.topbar-back { font-size:13px; color:rgba(255,255,255,0.6); text-decoration:none; display:flex; align-items:center; gap:6px; }
+.topbar-back:hover { color:#fff; }
+
+/* ── SCREENS ── */
+.screen { display:none; }
+.screen.active { display:block; }
+
+/* ══════════════════════════════
+   SCREEN 1 — SELEÇÃO DE MISSÃO
+══════════════════════════════ */
+.select-hero {
+  background: linear-gradient(145deg,#1a2f5c,#2d1f6e,#1a3030);
+  padding: 48px 20px 56px; text-align:center; position:relative; overflow:hidden;
+}
+.select-hero::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background-image: radial-gradient(circle,rgba(255,220,100,.4) 1px,transparent 1px),
+                    radial-gradient(circle,rgba(255,255,255,.2) 1px,transparent 1px);
+  background-size:60px 60px,90px 90px; background-position:0 0,30px 30px;
+  animation: starScroll 20s linear infinite;
+}
+@keyframes starScroll { to { background-position:60px 60px,90px 90px; } }
+.select-hero-emoji { font-size:60px; display:block; margin-bottom:14px; position:relative;
+  animation:bounce 2s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+.select-hero-title {
+  font-family:'Nunito',sans-serif; font-size:clamp(26px,6vw,44px);
+  font-weight:900; color:#fff; line-height:1.15; margin-bottom:12px; position:relative;
+}
+.select-hero-title .hi { color:#ffd060; }
+.select-hero-sub {
+  font-size:clamp(14px,3vw,17px); color:rgba(255,255,255,.8);
+  max-width:500px; margin:0 auto; line-height:1.6; position:relative;
+}
+.eja-badge {
+  display:inline-flex; align-items:center; gap:8px; margin-top:18px; position:relative;
+  background:rgba(255,255,255,.12); border:1.5px solid rgba(255,255,255,.22);
+  border-radius:30px; padding:8px 20px; font-size:14px; font-weight:700; color:#fff;
+}
+.eja-badge span { color:#7fdc9e; }
+
+.select-section { max-width:960px; margin:0 auto; padding:40px 20px 24px; }
+.select-section-title {
+  font-family:'Nunito',sans-serif; font-size:22px; font-weight:900;
+  margin-bottom:6px; color:#1a1410;
+}
+.select-section-sub { font-size:14px; color:#7a6a5a; margin-bottom:32px; }
+
+.mission-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
+  gap:20px;
+}
+.mission-card {
+  background:#fff; border-radius:22px; padding:28px 22px 24px;
+  cursor:pointer; border:3px solid #f0e8de;
+  box-shadow:0 4px 16px rgba(0,0,0,.07);
+  transition:transform .18s,box-shadow .18s,border-color .18s;
+  text-align:center; position:relative; overflow:hidden;
+}
+.mission-card::after {
+  content:''; position:absolute; top:0; left:0; right:0; height:5px;
+  background:var(--mc);
+}
+.mission-card:hover {
+  transform:translateY(-6px) scale(1.02);
+  box-shadow:0 16px 40px rgba(0,0,0,.13);
+  border-color:var(--mc);
+}
+.mission-emoji { font-size:56px; display:block; margin-bottom:14px; }
+.mission-name {
+  font-family:'Nunito',sans-serif; font-size:20px; font-weight:900;
+  color:var(--mc); margin-bottom:8px; line-height:1.2;
+}
+.mission-desc { font-size:14px; color:#7a6a5a; line-height:1.5; margin-bottom:16px; }
+.mission-pill {
+  display:inline-block; font-size:12px; font-weight:700;
+  padding:4px 14px; border-radius:20px;
+  background:var(--mbg); color:var(--mc);
+}
+
+/* ══════════════════════════════
+   SCREEN 2 — JOGO
+══════════════════════════════ */
+.game-topstrip {
+  padding:16px 20px; display:flex; align-items:center; gap:14px;
+  background:#fff; border-bottom:2px solid #f0e8de;
+}
+.btn-back-game {
+  background:none; border:none; font-size:24px; cursor:pointer;
+  color:#5a4f48; padding:4px; line-height:1;
+}
+.btn-back-game:hover { color:#1a1410; }
+.game-title-wrap { flex:1; }
+.game-main-title {
+  font-family:'Nunito',sans-serif; font-size:21px; font-weight:900;
+  display:flex; align-items:center; gap:8px;
+}
+.game-main-sub { font-size:13px; color:#7a6a5a; margin-top:2px; }
+
+.progress-row {
+  padding:12px 20px; display:flex; align-items:center; gap:12px;
+  background:#fffaf5; border-bottom:1px solid #f0e8de;
+}
+.progress-label { font-size:13px; color:#7a6a5a; white-space:nowrap; }
+.progress-bar { flex:1; height:10px; background:#e8dfd6; border-radius:6px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:6px; transition:width .3s; }
+.progress-count { font-family:'Nunito',sans-serif; font-size:14px; font-weight:900; color:var(--gc,#6c5ce7); white-space:nowrap; }
+
+.instruction-box {
+  margin:18px 20px 8px; padding:14px 18px;
+  background:#fffbf4; border:2px dashed #e8d8c0;
+  border-radius:14px; font-size:15px; color:#5a4f48; line-height:1.6;
+}
+.instruction-box strong { color:#1a1410; }
+
+.steps-wrap { padding:12px 20px 8px; max-width:720px; margin:0 auto; }
+.steps-list { display:flex; flex-direction:column; gap:12px; }
+
+.step-card {
+  background:#fff; border-radius:16px; border:3px solid #e8dfd6;
+  padding:16px 16px; display:flex; align-items:center; gap:14px;
+  cursor:pointer; transition:all .18s; user-select:none;
+}
+.step-card:hover:not(.assigned):not(.disabled-card) {
+  border-color:#c0b0a0; transform:translateX(4px);
+  box-shadow:0 4px 14px rgba(0,0,0,.09);
+}
+.step-card.assigned { border-color:var(--gc,#6c5ce7); background:#fafbff; }
+.step-card.assigned:hover { border-color:#e84040; background:#fff8f8; }
+
+.step-badge {
+  width:44px; height:44px; border-radius:12px;
+  background:#f0e8de; display:flex; align-items:center; justify-content:center;
+  font-family:'Nunito',sans-serif; font-size:19px; font-weight:900; color:#b0a090;
+  flex-shrink:0; transition:all .18s;
+}
+.step-card.assigned .step-badge { background:var(--gc,#6c5ce7); color:#fff; }
+
+.step-text { font-size:16px; line-height:1.5; }
+
+.game-footer { padding:20px; max-width:720px; margin:0 auto; }
+.btn-verify {
+  display:block; width:100%; padding:18px;
+  border:none; border-radius:16px;
+  font-family:'Nunito',sans-serif; font-size:20px; font-weight:900; color:#fff;
+  background:var(--gc,#6c5ce7); cursor:pointer;
+  box-shadow:0 6px 20px rgba(0,0,0,.18);
+  transition:opacity .15s,transform .15s;
+}
+.btn-verify:disabled { background:#c8bdb2; box-shadow:none; cursor:not-allowed; opacity:.7; }
+.btn-verify:not(:disabled):hover { opacity:.88; transform:translateY(-2px); }
+.btn-clear {
+  display:block; width:100%; margin-top:12px;
+  background:none; border:none; color:#7a6a5a;
+  font-size:15px; cursor:pointer; padding:6px; text-decoration:underline;
+}
+.btn-clear:hover { color:#1a1410; }
+
+/* ══════════════════════════════
+   SCREEN 3 — RESULTADO
+══════════════════════════════ */
+.result-hero {
+  padding:48px 20px 32px; text-align:center;
+  background:linear-gradient(145deg,#1a2f5c,#2d1f6e,#1a3030);
+}
+.result-stars { font-size:52px; margin-bottom:14px; }
+.result-title {
+  font-family:'Nunito',sans-serif; font-size:clamp(22px,5vw,32px);
+  font-weight:900; color:#fff; margin-bottom:10px;
+}
+.result-score { font-size:16px; color:rgba(255,255,255,.8); }
+.result-score strong { font-size:22px; color:#ffd060; }
+
+.result-section { max-width:720px; margin:0 auto; padding:28px 20px 8px; }
+.result-section-label {
+  font-family:'Nunito',sans-serif; font-size:16px; font-weight:900;
+  color:#5a4f48; margin-bottom:14px; text-transform:uppercase; letter-spacing:.5px;
+}
+.result-list { display:flex; flex-direction:column; gap:10px; }
+.result-item {
+  background:#fff; border-radius:14px; border:2.5px solid;
+  padding:14px 16px; display:flex; align-items:flex-start; gap:12px;
+}
+.result-item.ok { border-color:#2d9e5a; }
+.result-item.fail { border-color:#e84040; }
+.result-num {
+  width:38px; height:38px; border-radius:10px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Nunito',sans-serif; font-size:17px; font-weight:900; color:#fff;
+}
+.result-item.ok .result-num { background:#2d9e5a; }
+.result-item.fail .result-num { background:#e84040; }
+.result-item-body { flex:1; }
+.result-item-text { font-size:15px; line-height:1.45; }
+.result-item-hint { font-size:12px; color:#e84040; margin-top:4px; }
+.result-icon { font-size:22px; flex-shrink:0; }
+
+.result-actions { max-width:720px; margin:0 auto; padding:24px 20px 40px; display:flex; flex-direction:column; gap:12px; }
+.btn-retry {
+  padding:16px; border:3px solid; border-radius:16px;
+  font-family:'Nunito',sans-serif; font-size:18px; font-weight:900;
+  background:#fff; cursor:pointer; transition:all .15s; text-align:center;
+}
+.btn-retry:hover { background:#f8f4f0; }
+.btn-next {
+  padding:16px; border:none; border-radius:16px;
+  font-family:'Nunito',sans-serif; font-size:18px; font-weight:900;
+  color:#fff; cursor:pointer; transition:all .15s; text-align:center;
+}
+.btn-next:hover { opacity:.88; transform:translateY(-2px); }
+.btn-back-missions {
+  padding:10px; background:none; border:none;
+  font-size:15px; color:#7a6a5a; cursor:pointer; text-decoration:underline;
+  text-align:center;
+}
+
+/* ── FOOTER ── */
+.footer { background:#1a1410; padding:28px 20px; text-align:center; }
+.footer-text { font-size:12px; color:rgba(255,255,255,.4); margin-bottom:5px; }
+.footer-brand { font-family:'Nunito',sans-serif; font-size:14px; font-weight:900; color:#e8b86d; }
+
+@media(max-width:480px){
+  .step-text { font-size:15px; }
+  .game-main-title { font-size:18px; }
+  .step-badge { width:38px; height:38px; font-size:17px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="conta.html">✦ DoceriaPedagógica</a>
+  <a class="topbar-back" href="jogos-area.html">← Área do Aluno</a>
+</div>
+
+<!-- ══ SCREEN 1: SELEÇÃO ══ -->
+<div id="screen-select" class="screen active">
+  <div class="select-hero">
+    <span class="select-hero-emoji">🧠</span>
+    <h1 class="select-hero-title">Pensamento<br><span class="hi">Computacional</span></h1>
+    <p class="select-hero-sub">Aprenda a usar a tecnologia do dia a dia colocando os passos na ordem certa!</p>
+    <div class="eja-badge">📚 <span>EJA</span> — Tecnologia na prática</div>
+  </div>
+
+  <div class="select-section">
+    <div class="select-section-title">🕹️ Escolha uma atividade</div>
+    <p class="select-section-sub">Cada atividade tem passos para ordenar. Você consegue colocar tudo na ordem certa?</p>
+    <div class="mission-grid" id="missionGrid"></div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-text">Material preparado pela sua professora com</div>
+    <div class="footer-brand">✦ DoceriaPedagógica</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 2: JOGO ══ -->
+<div id="screen-game" class="screen">
+  <div class="game-topstrip">
+    <button class="btn-back-game" onclick="showSelect()" title="Voltar">←</button>
+    <div class="game-title-wrap">
+      <div class="game-main-title" id="gameTitle"></div>
+      <div class="game-main-sub" id="gameSubtitle"></div>
+    </div>
+  </div>
+  <div class="progress-row">
+    <span class="progress-label">Progresso:</span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <span class="progress-count" id="progressCount">0/0</span>
+  </div>
+  <div class="instruction-box">
+    <strong>Como jogar:</strong> Toque nos passos <strong>na ordem correta</strong> — do 1º ao último.
+    Se errar, toque no passo novamente para desfazer a partir dele.
+  </div>
+  <div class="steps-wrap">
+    <div class="steps-list" id="stepsList"></div>
+  </div>
+  <div class="game-footer">
+    <button class="btn-verify" id="btnVerify" disabled onclick="checkAnswer()">✅ Verificar minha ordem</button>
+    <button class="btn-clear" onclick="clearOrder()">↺ Recomeçar do zero</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 3: RESULTADO ══ -->
+<div id="screen-result" class="screen">
+  <div class="result-hero">
+    <div class="result-stars" id="resultStars"></div>
+    <div class="result-title" id="resultTitle"></div>
+    <div class="result-score" id="resultScore"></div>
+  </div>
+  <div class="result-section">
+    <div class="result-section-label">Sequência correta</div>
+    <div class="result-list" id="resultList"></div>
+  </div>
+  <div class="result-actions">
+    <button class="btn-retry" id="btnRetry" onclick="retryMission()">🔄 Tentar de novo</button>
+    <button class="btn-next" id="btnNext" onclick="nextMission()"></button>
+    <button class="btn-back-missions" onclick="showSelect()">← Escolher outra atividade</button>
+  </div>
+  <div class="footer">
+    <div class="footer-text">Material preparado pela sua professora com</div>
+    <div class="footer-brand">✦ DoceriaPedagógica</div>
+  </div>
+</div>
+
+<script>
+const MISSIONS = [
+  {
+    emoji: '📱',
+    title: 'Baixar um Aplicativo',
+    desc: 'Como instalar um novo app no celular?',
+    color: '#6c5ce7',
+    bg: '#ede9ff',
+    steps: [
+      'Abra a loja de aplicativos (Play Store ou App Store)',
+      'Toque na barra de pesquisa',
+      'Digite o nome do aplicativo que deseja baixar',
+      'Toque em "Instalar" ou "Obter"',
+      'Aguarde o download e a instalação terminarem',
+      'Abra o aplicativo instalado'
+    ]
+  },
+  {
+    emoji: '💬',
+    title: 'Enviar Mensagem no WhatsApp',
+    desc: 'Como mandar uma mensagem para alguém?',
+    color: '#25a85a',
+    bg: '#e4f8ed',
+    steps: [
+      'Abra o WhatsApp no celular',
+      'Toque no ícone de nova conversa (lápis ou +)',
+      'Procure o contato pelo nome',
+      'Toque no nome do contato para abrir a conversa',
+      'Digite sua mensagem no campo de texto',
+      'Toque no botão Enviar (ícone de avião ✈️)'
+    ]
+  },
+  {
+    emoji: '📧',
+    title: 'Enviar um E-mail',
+    desc: 'Como mandar uma mensagem por e-mail?',
+    color: '#d4550a',
+    bg: '#fdebd8',
+    steps: [
+      'Abra o aplicativo de e-mail (ex: Gmail)',
+      'Toque em "Escrever" ou no ícone de lápis ✏️',
+      'Digite o endereço de e-mail de quem vai receber',
+      'Digite o assunto da mensagem',
+      'Escreva o texto do e-mail no campo maior',
+      'Toque em "Enviar"'
+    ]
+  },
+  {
+    emoji: '🚗',
+    title: 'Chamar um Uber',
+    desc: 'Como pedir um carro pelo aplicativo?',
+    color: '#1a1410',
+    bg: '#ece8e4',
+    steps: [
+      'Abra o aplicativo do Uber',
+      'Digite o seu destino na barra de busca',
+      'Escolha o tipo de corrida (UberX, Comfort...)',
+      'Confirme o endereço de partida',
+      'Toque em "Confirmar corrida"',
+      'Aguarde o motorista aceitar',
+      'Encontre o carro pela placa e modelo mostrados'
+    ]
+  },
+  {
+    emoji: '💸',
+    title: 'Fazer um Pix',
+    desc: 'Como transferir dinheiro usando o Pix?',
+    color: '#0086a8',
+    bg: '#e0f4fa',
+    steps: [
+      'Abra o aplicativo do seu banco',
+      'Entre com sua senha ou biometria (digital)',
+      'Toque em "Pix"',
+      'Toque em "Transferir" ou "Fazer Pix"',
+      'Digite a chave Pix de quem vai receber (CPF, telefone...)',
+      'Digite o valor a ser transferido',
+      'Confira os dados e toque em "Confirmar"'
+    ]
+  }
+];
+
+let currentIdx = 0;
+let shuffled = [];   // [{text, correctPos}]
+let userOrder = [];  // null | number for each shuffled step
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showSelect() {
+  ['select','game','result'].forEach(s =>
+    document.getElementById(`screen-${s}`).classList.toggle('active', s === 'select')
+  );
+  window.scrollTo(0, 0);
+}
+
+function showScreen(name) {
+  ['select','game','result'].forEach(s =>
+    document.getElementById(`screen-${s}`).classList.toggle('active', s === name)
+  );
+  window.scrollTo(0, 0);
+}
+
+function renderGrid() {
+  document.getElementById('missionGrid').innerHTML = MISSIONS.map((m, i) => `
+    <div class="mission-card" onclick="startMission(${i})"
+         style="--mc:${m.color};--mbg:${m.bg};">
+      <span class="mission-emoji">${m.emoji}</span>
+      <div class="mission-name">${m.title}</div>
+      <div class="mission-desc">${m.desc}</div>
+      <span class="mission-pill">${m.steps.length} passos para ordenar</span>
+    </div>`
+  ).join('');
+}
+
+function startMission(idx) {
+  currentIdx = idx;
+  const m = MISSIONS[idx];
+  shuffled = shuffle(m.steps.map((text, i) => ({ text, correctPos: i + 1 })));
+  userOrder = new Array(shuffled.length).fill(null);
+
+  document.getElementById('gameTitle').innerHTML = `${m.emoji} ${m.title}`;
+  document.getElementById('gameSubtitle').textContent = m.desc;
+  document.getElementById('progressFill').style.background = m.color;
+  document.getElementById('progressCount').style.color = m.color;
+  document.getElementById('screen-game').style.setProperty('--gc', m.color);
+
+  renderSteps();
+  showScreen('game');
+}
+
+function renderSteps() {
+  const total = shuffled.length;
+  const done = userOrder.filter(x => x !== null).length;
+
+  document.getElementById('progressFill').style.width = `${(done / total) * 100}%`;
+  document.getElementById('progressCount').textContent = `${done}/${total}`;
+  document.getElementById('btnVerify').disabled = done < total;
+
+  document.getElementById('stepsList').innerHTML = shuffled.map((step, i) => {
+    const pos = userOrder[i];
+    const assigned = pos !== null;
+    return `
+      <div class="step-card ${assigned ? 'assigned' : ''}" onclick="clickStep(${i})">
+        <div class="step-badge">${assigned ? pos : '?'}</div>
+        <div class="step-text">${step.text}</div>
+      </div>`;
+  }).join('');
+}
+
+function clickStep(i) {
+  const pos = userOrder[i];
+  if (pos !== null) {
+    for (let j = 0; j < userOrder.length; j++) {
+      if (userOrder[j] !== null && userOrder[j] >= pos) userOrder[j] = null;
+    }
+  } else {
+    userOrder[i] = userOrder.filter(x => x !== null).length + 1;
+  }
+  renderSteps();
+}
+
+function clearOrder() {
+  userOrder = new Array(shuffled.length).fill(null);
+  renderSteps();
+}
+
+function checkAnswer() {
+  const m = MISSIONS[currentIdx];
+  let correct = 0;
+
+  const results = shuffled.map((step, i) => {
+    const ok = userOrder[i] === step.correctPos;
+    if (ok) correct++;
+    return { text: step.text, correctPos: step.correctPos, userPos: userOrder[i], ok };
+  });
+
+  const total = shuffled.length;
+  const pct = Math.round((correct / total) * 100);
+
+  let stars, title;
+  if (pct === 100)      { stars = '⭐⭐⭐'; title = 'Perfeito! Você acertou tudo!'; }
+  else if (pct >= 57)   { stars = '⭐⭐';  title = 'Muito bem! Quase tudo certo!'; }
+  else                  { stars = '⭐';    title = 'Bom esforço! Tente mais uma vez!'; }
+
+  document.getElementById('resultStars').textContent = stars;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultScore').innerHTML =
+    `Você acertou <strong>${correct} de ${total}</strong> passos (${pct}%)`;
+
+  const sorted = [...results].sort((a, b) => a.correctPos - b.correctPos);
+  document.getElementById('resultList').innerHTML = sorted.map(r => `
+    <div class="result-item ${r.ok ? 'ok' : 'fail'}">
+      <div class="result-num">${r.correctPos}</div>
+      <div class="result-item-body">
+        <div class="result-item-text">${r.text}</div>
+        ${!r.ok ? `<div class="result-item-hint">Você colocou como passo ${r.userPos}</div>` : ''}
+      </div>
+      <div class="result-icon">${r.ok ? '✅' : '❌'}</div>
+    </div>`
+  ).join('');
+
+  const nextIdx = (currentIdx + 1) % MISSIONS.length;
+  const nextM = MISSIONS[nextIdx];
+  const btnRetry = document.getElementById('btnRetry');
+  const btnNext  = document.getElementById('btnNext');
+  btnRetry.style.borderColor = m.color;
+  btnRetry.style.color = m.color;
+  btnNext.style.background = m.color;
+  btnNext.textContent = `➡️ ${nextM.emoji} ${nextM.title}`;
+
+  showScreen('result');
+}
+
+function retryMission() { startMission(currentIdx); }
+function nextMission()  { startMission((currentIdx + 1) % MISSIONS.length); }
+
+renderGrid();
+</script>
+</body>
+</html>
