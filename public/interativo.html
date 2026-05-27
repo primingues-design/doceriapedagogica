@@ -409,7 +409,8 @@ input:checked + .toggle-slider::before{transform:translateX(18px)}
 // ═══════════════════════════════
 //  STATE
 // ═══════════════════════════════
-let currentMode = 'caca';
+const _urlModo = new URLSearchParams(location.search).get('modo');
+let currentMode = (_urlModo === 'cruz') ? 'cruz' : 'caca';
 let gameData = null;
 
 // Word search
@@ -1191,6 +1192,9 @@ function cwRevealAll(){
 }
 
 function escHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// Apply URL param mode on load
+if (_urlModo === 'cruz') setMode('cruz');
 </script>
 </body>
 </html>
