@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inglês Interativo — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:#fff8f0;color:#1a1410;min-height:100vh;-webkit-font-smoothing:antialiased}
+
+.topbar{background:#1a1410;padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.topbar-logo{font-family:'Nunito',sans-serif;font-size:16px;font-weight:900;color:#e8b86d;text-decoration:none}
+.topbar-back{color:rgba(255,255,255,0.5);font-size:13px;text-decoration:none;transition:color .2s}
+.topbar-back:hover{color:white}
+
+/* ═══════════════ START SCREEN ═══════════════ */
+#screen-start{display:block}
+#screen-loading,#screen-game,#screen-result{display:none}
+
+.start-hero{text-align:center;padding:48px 24px 32px}
+.owl{font-size:72px;display:block;animation:owlBounce 2s ease-in-out infinite;margin-bottom:12px}
+@keyframes owlBounce{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+.start-title{font-family:'Nunito',sans-serif;font-size:clamp(28px,6vw,40px);font-weight:900;color:#1a1410;margin-bottom:8px}
+.start-title span{color:#58cc02}
+.start-sub{font-size:16px;color:#7a6a5a;margin-bottom:0}
+
+.start-form{max-width:600px;margin:0 auto;padding:0 20px 60px}
+.sf-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8a7a6a;margin-bottom:10px;display:block;margin-top:28px}
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.topic-btn{background:white;border:2px solid #e8e0d8;border-radius:14px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .15s;font-family:'Outfit',sans-serif}
+.topic-btn:hover{border-color:#58cc02;transform:translateY(-2px)}
+.topic-btn.active{border-color:#58cc02;background:#f0fce8;box-shadow:0 0 0 3px rgba(88,204,2,.15)}
+.topic-btn .t-icon{font-size:28px;display:block;margin-bottom:6px}
+.topic-btn .t-name{font-size:13px;font-weight:700;color:#1a1410}
+.topic-btn .t-name-pt{font-size:11px;color:#8a7a6a;margin-top:1px}
+
+.level-row{display:flex;gap:10px}
+.level-btn{flex:1;padding:12px;border:2px solid #e8e0d8;border-radius:12px;background:white;cursor:pointer;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;color:#1a1410;transition:all .15s;text-align:center}
+.level-btn:hover{border-color:#58cc02}
+.level-btn.active{border-color:#58cc02;background:#f0fce8;box-shadow:0 0 0 3px rgba(88,204,2,.15)}
+.level-btn small{display:block;font-size:11px;font-weight:500;color:#8a7a6a;margin-top:2px}
+
+.btn-start{width:100%;margin-top:28px;padding:16px;background:#58cc02;color:white;border:none;border-radius:14px;font-family:'Nunito',sans-serif;font-size:19px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #46a302;transition:all .1s;letter-spacing:.3px}
+.btn-start:hover{background:#4db802;transform:translateY(-1px)}
+.btn-start:active{transform:translateY(2px);box-shadow:0 2px 0 #46a302}
+.btn-start:disabled{background:#b8e0a0;box-shadow:none;cursor:not-allowed;transform:none}
+
+/* ═══════════════ LOADING ═══════════════ */
+#screen-loading{text-align:center;padding:100px 24px}
+.loading-owl{font-size:64px;animation:spin 1.5s linear infinite;display:inline-block;margin-bottom:20px}
+@keyframes spin{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
+.loading-text{font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;color:#1a1410;margin-bottom:8px}
+.loading-sub{font-size:14px;color:#8a7a6a}
+.loading-dots span{animation:dot 1.4s infinite;display:inline-block}
+.loading-dots span:nth-child(2){animation-delay:.2s}
+.loading-dots span:nth-child(3){animation-delay:.4s}
+@keyframes dot{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+/* ═══════════════ GAME SCREEN ═══════════════ */
+.game-topbar{display:flex;align-items:center;gap:12px;padding:16px 20px;max-width:640px;margin:0 auto}
+.btn-quit{background:none;border:none;cursor:pointer;color:#c8b8a8;font-size:22px;padding:4px;transition:color .15s}
+.btn-quit:hover{color:#d95f3b}
+.progress-track{flex:1;height:14px;background:#e8e0d8;border-radius:8px;overflow:hidden}
+.progress-fill{height:100%;background:#58cc02;border-radius:8px;transition:width .4s ease}
+.hearts{display:flex;gap:4px;align-items:center;font-size:22px;min-width:80px;justify-content:flex-end}
+.heart{transition:transform .2s;display:inline-block}
+.heart.lost{filter:grayscale(1);opacity:.3}
+
+.game-body{max-width:640px;margin:0 auto;padding:8px 20px 40px}
+.exercise-card{background:white;border-radius:20px;padding:32px 28px;box-shadow:0 4px 20px rgba(0,0,0,.08);border:2px solid transparent;transition:border-color .2s}
+.exercise-card.correct{border-color:#58cc02;animation:correctPulse .3s ease}
+.exercise-card.wrong{border-color:#ff4b4b;animation:wrongShake .3s ease}
+@keyframes correctPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.015)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+
+.ex-type-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8a7a6a;margin-bottom:6px}
+.ex-question{font-family:'Nunito',sans-serif;font-size:clamp(18px,4vw,24px);font-weight:800;color:#1a1410;line-height:1.3;margin-bottom:6px}
+.ex-context{font-size:14px;color:#8a7a6a;font-style:italic;margin-bottom:20px}
+.ex-hint{font-size:13px;color:#58cc02;margin-top:8px;display:none}
+
+/* Multiple choice */
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.choice-btn{background:white;border:2px solid #e8e0d8;border-radius:12px;padding:14px 12px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;color:#1a1410;text-align:center;transition:all .15s}
+.choice-btn:hover:not(:disabled){border-color:#58cc02;background:#f0fce8;transform:translateY(-1px)}
+.choice-btn.selected{border-color:#58cc02;background:#f0fce8}
+.choice-btn.correct-ans{border-color:#58cc02;background:#d4f5a8;color:#2a7200;font-weight:800}
+.choice-btn.wrong-ans{border-color:#ff4b4b;background:#ffe0e0;color:#c00;font-weight:800}
+.choice-btn:disabled{cursor:default}
+
+/* Translation input */
+.trans-input{width:100%;margin-top:16px;padding:14px 16px;border:2px solid #e8e0d8;border-radius:12px;font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;color:#1a1410;background:var(--cream,#faf7f2);transition:border-color .2s;outline:none}
+.trans-input:focus{border-color:#58cc02}
+.trans-input.correct-ans{border-color:#58cc02;background:#d4f5a8}
+.trans-input.wrong-ans{border-color:#ff4b4b;background:#ffe0e0}
+
+/* Word order */
+.word-bank{display:flex;flex-wrap:wrap;gap:8px;min-height:52px;padding:8px;border:2px dashed #e8e0d8;border-radius:12px;margin-top:16px;align-content:flex-start}
+.word-slot{display:flex;flex-wrap:wrap;gap:8px;min-height:52px;padding:8px;border-bottom:2.5px solid #1a1410;margin-top:16px;margin-bottom:4px;align-content:flex-start}
+.word-chip{background:#e8e0d8;border:2px solid #c8b8a8;border-radius:10px;padding:8px 14px;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;user-select:none;font-family:'Outfit',sans-serif}
+.word-chip:hover{background:#d8f2e4;border-color:#58cc02;transform:translateY(-1px)}
+.word-chip.placed{background:#f0fce8;border-color:#58cc02;color:#2a7200}
+.word-chip.chip-correct{background:#d4f5a8;border-color:#58cc02;color:#2a7200;pointer-events:none}
+.word-chip.chip-wrong{background:#ffe0e0;border-color:#ff4b4b;color:#c00;pointer-events:none}
+.word-chip:disabled,.word-chip[data-used]{opacity:.35;pointer-events:none}
+.word-bank-label,.word-slot-label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#b0a090;width:100%;margin-bottom:2px}
+
+/* Feedback bar */
+.feedback-bar{max-width:640px;margin:0 auto 0;padding:16px 20px;border-radius:0 0 16px 16px;display:none;transition:all .3s}
+.feedback-bar.show-correct{display:flex;align-items:center;gap:12px;background:#d4f5a8;border:2px solid #58cc02;border-radius:12px;margin:8px 20px}
+.feedback-bar.show-wrong{display:flex;align-items:center;gap:12px;background:#ffe0e0;border:2px solid #ff4b4b;border-radius:12px;margin:8px 20px}
+.fb-icon{font-size:28px;flex-shrink:0}
+.fb-msg{flex:1}
+.fb-msg strong{font-size:16px;font-weight:800;display:block;color:#1a1410}
+.fb-msg span{font-size:13px;color:#5a4f48}
+
+.btn-check{width:100%;max-width:640px;display:block;margin:12px auto 0;padding:15px;background:#58cc02;color:white;border:none;border-radius:14px;font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #46a302;transition:all .1s;letter-spacing:.3px}
+.btn-check:hover{background:#4db802;transform:translateY(-1px)}
+.btn-check:active{transform:translateY(2px);box-shadow:0 2px 0 #46a302}
+.btn-check:disabled{background:#b8e0a0;box-shadow:none;cursor:not-allowed;transform:none}
+.btn-check.next-mode{background:#1cb0f6;box-shadow:0 4px 0 #1090cc}
+.btn-check.next-mode:hover{background:#0fa0e0}
+
+/* ═══════════════ RESULT SCREEN ═══════════════ */
+#screen-result{text-align:center;padding:60px 24px 80px;max-width:540px;margin:0 auto}
+.result-owl{font-size:80px;display:block;margin-bottom:8px;animation:owlBounce 1.5s ease-in-out infinite}
+.result-title{font-family:'Nunito',sans-serif;font-size:32px;font-weight:900;margin-bottom:8px}
+.result-stars{font-size:40px;margin-bottom:24px;letter-spacing:8px}
+.result-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:32px}
+.stat-box{background:white;border-radius:14px;padding:16px 10px;border:2px solid #e8e0d8}
+.stat-val{font-family:'Nunito',sans-serif;font-size:28px;font-weight:900;color:#58cc02;display:block}
+.stat-lbl{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8a7a6a;margin-top:2px}
+.btn-again{display:inline-block;padding:15px 40px;background:#58cc02;color:white;border:none;border-radius:14px;font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #46a302;text-decoration:none;transition:all .1s;letter-spacing:.3px;margin-right:10px}
+.btn-again:hover{background:#4db802;transform:translateY(-1px)}
+.btn-home{display:inline-block;padding:15px 32px;background:white;color:#1a1410;border:2px solid #e8e0d8;border-radius:14px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;text-decoration:none;transition:all .1s}
+.btn-home:hover{border-color:#1a1410}
+
+@media(max-width:600px){
+  .choice-grid{grid-template-columns:1fr}
+  .game-topbar,.game-body{padding-left:14px;padding-right:14px}
+  .feedback-bar.show-correct,.feedback-bar.show-wrong{margin:8px 14px}
+  .btn-check{width:calc(100% - 28px);margin-left:14px;margin-right:14px}
+  .result-stats{grid-template-columns:1fr 1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="jogos-area.html">✦ DoceriaPedagógica</a>
+  <a class="topbar-back" href="jogos-area.html">← Jogos</a>
+</div>
+
+<!-- ═══════════ START SCREEN ═══════════ -->
+<div id="screen-start">
+  <div class="start-hero">
+    <span class="owl">🦉</span>
+    <h1 class="start-title">Aprenda <span>Inglês</span>!</h1>
+    <p class="start-sub">Escolha um tema e vamos começar a brincadeira</p>
+  </div>
+
+  <div class="start-form">
+    <label class="sf-label">Escolha o tema</label>
+    <div class="topic-grid" id="topicGrid">
+      <button class="topic-btn" data-topic="Animals" onclick="selectTopic(this)">
+        <span class="t-icon">🐾</span>
+        <div class="t-name">Animals</div>
+        <div class="t-name-pt">Animais</div>
+      </button>
+      <button class="topic-btn" data-topic="Food & Fruits" onclick="selectTopic(this)">
+        <span class="t-icon">🍎</span>
+        <div class="t-name">Food</div>
+        <div class="t-name-pt">Comida</div>
+      </button>
+      <button class="topic-btn" data-topic="Family Members" onclick="selectTopic(this)">
+        <span class="t-icon">👨‍👩‍👧</span>
+        <div class="t-name">Family</div>
+        <div class="t-name-pt">Família</div>
+      </button>
+      <button class="topic-btn" data-topic="Colors and Shapes" onclick="selectTopic(this)">
+        <span class="t-icon">🎨</span>
+        <div class="t-name">Colors</div>
+        <div class="t-name-pt">Cores</div>
+      </button>
+      <button class="topic-btn" data-topic="School and Classroom" onclick="selectTopic(this)">
+        <span class="t-icon">🏫</span>
+        <div class="t-name">School</div>
+        <div class="t-name-pt">Escola</div>
+      </button>
+      <button class="topic-btn" data-topic="Body Parts" onclick="selectTopic(this)">
+        <span class="t-icon">🧍</span>
+        <div class="t-name">Body</div>
+        <div class="t-name-pt">Corpo</div>
+      </button>
+      <button class="topic-btn" data-topic="Daily Greetings" onclick="selectTopic(this)">
+        <span class="t-icon">👋</span>
+        <div class="t-name">Greetings</div>
+        <div class="t-name-pt">Saudações</div>
+      </button>
+      <button class="topic-btn" data-topic="Numbers and Counting" onclick="selectTopic(this)">
+        <span class="t-icon">🔢</span>
+        <div class="t-name">Numbers</div>
+        <div class="t-name-pt">Números</div>
+      </button>
+      <button class="topic-btn" data-topic="House and Furniture" onclick="selectTopic(this)">
+        <span class="t-icon">🏠</span>
+        <div class="t-name">House</div>
+        <div class="t-name-pt">Casa</div>
+      </button>
+      <button class="topic-btn" data-topic="Nature and Weather" onclick="selectTopic(this)">
+        <span class="t-icon">🌦️</span>
+        <div class="t-name">Nature</div>
+        <div class="t-name-pt">Natureza</div>
+      </button>
+    </div>
+
+    <label class="sf-label">Nível</label>
+    <div class="level-row">
+      <button class="level-btn active" id="lvlBasic" onclick="selectLevel('basico',this)">
+        🌱 Iniciante
+        <small>Vocabulário básico</small>
+      </button>
+      <button class="level-btn" id="lvlInter" onclick="selectLevel('intermediario',this)">
+        🌿 Intermediário
+        <small>Frases e expressões</small>
+      </button>
+    </div>
+
+    <button class="btn-start" id="btnStart" onclick="startGame()" disabled>
+      Começar! 🚀
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════ LOADING ═══════════ -->
+<div id="screen-loading">
+  <span class="loading-owl">🦉</span>
+  <div class="loading-text">Preparando seus exercícios<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>
+  <div class="loading-sub">A IA está criando atividades especiais para você!</div>
+</div>
+
+<!-- ═══════════ GAME ═══════════ -->
+<div id="screen-game">
+  <div class="game-topbar">
+    <button class="btn-quit" onclick="quitGame()" title="Sair">✕</button>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="hearts" id="heartsDisplay">
+      <span class="heart" id="h1">❤️</span>
+      <span class="heart" id="h2">❤️</span>
+      <span class="heart" id="h3">❤️</span>
+    </div>
+  </div>
+
+  <div class="game-body">
+    <div class="exercise-card" id="exerciseCard">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+  <div class="feedback-bar" id="feedbackBar">
+    <span class="fb-icon" id="fbIcon"></span>
+    <div class="fb-msg">
+      <strong id="fbTitle"></strong>
+      <span id="fbSub"></span>
+    </div>
+  </div>
+
+  <button class="btn-check" id="btnCheck" onclick="handleCheck()" disabled>
+    Verificar
+  </button>
+</div>
+
+<!-- ═══════════ RESULT ═══════════ -->
+<div id="screen-result">
+  <span class="result-owl">🦉</span>
+  <div class="result-title" id="resultTitle">Incrível!</div>
+  <div class="result-stars" id="resultStars">⭐⭐⭐</div>
+  <div class="result-stats">
+    <div class="stat-box">
+      <span class="stat-val" id="statXP">0</span>
+      <div class="stat-lbl">XP ganhos</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-val" id="statCorrect">0</span>
+      <div class="stat-lbl">Corretas</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-val" id="statAcc">0%</span>
+      <div class="stat-lbl">Precisão</div>
+    </div>
+  </div>
+  <button class="btn-again" onclick="resetGame()">🔄 Jogar de novo</button>
+  <a class="btn-home" href="jogos-area.html">🏠 Início</a>
+</div>
+
+<script>
+// ── STATE ──
+let selectedTopicVal = '', selectedLevelVal = 'basico';
+let exercises = [], currentIdx = 0, hearts = 3, xpEarned = 0, correctCount = 0;
+let orderSelected = []; // for word-order exercises
+let answered = false;
+
+// ── TOPIC / LEVEL SELECTION ──
+function selectTopic(btn) {
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedTopicVal = btn.dataset.topic;
+  document.getElementById('btnStart').disabled = false;
+}
+function selectLevel(val, btn) {
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedLevelVal = val;
+}
+
+// ── START ──
+async function startGame() {
+  show('screen-loading');
+  exercises = []; currentIdx = 0; hearts = 3; xpEarned = 0; correctCount = 0;
+  updateHearts();
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6', max_tokens: 2000,
+        messages: [{ role: 'user', content: buildPrompt(selectedTopicVal, selectedLevelVal) }]
+      })
+    });
+    const json = await res.json();
+    const raw = json.content?.[0]?.text || '';
+    const data = extractJSON(raw);
+    exercises = data.exercicios || [];
+    if (!exercises.length) throw new Error('No exercises');
+  } catch(e) {
+    alert('Não foi possível carregar os exercícios. Verifique a conexão e tente novamente.');
+    show('screen-start'); return;
+  }
+
+  show('screen-game');
+  renderExercise(0);
+}
+
+function buildPrompt(topic, level) {
+  const isBasic = level === 'basico';
+  return `Create an English learning exercise set about "${topic}" for Brazilian students.
+Level: ${isBasic ? 'Beginner (basic vocabulary, simple sentences)' : 'Intermediate (longer sentences, expressions, context)'}
+
+Return ONLY valid JSON (no markdown):
+{
+  "exercicios": [
+    {
+      "tipo": "escolha",
+      "instrucao": "O que significa em português?",
+      "palavra_en": "cat",
+      "frase_en": "I have a cat at home.",
+      "opcoes": ["Cachorro", "Gato", "Pássaro", "Peixe"],
+      "correto": 1
+    },
+    {
+      "tipo": "traducao",
+      "instrucao": "Como se diz em inglês?",
+      "palavra_pt": "cachorro",
+      "resposta": "dog",
+      "dica": "Man's best friend 🐕"
+    },
+    {
+      "tipo": "ordem",
+      "instrucao": "Organize as palavras para formar uma frase:",
+      "traducao_pt": "O gato é fofo.",
+      "palavras": ["is", "The", "cute", "cat"],
+      "resposta": "The cat is cute"
+    }
+  ]
+}
+
+RULES:
+- Generate exactly 8 exercises total
+- Mix all 3 types: at least 3 "escolha", 3 "traducao", 2 "ordem"
+- For "escolha": always 4 options, correto is 0-3 (index)
+- For "traducao": resposta is the English word(s) in lowercase
+- For "ordem": palavras is a shuffled array of 3-5 words; resposta is the correct sentence
+- Level ${isBasic ? 'beginner: use very common words only' : 'intermediate: use complete sentences and expressions'}
+- Keep instructions in Portuguese, English content in English
+- Topic must be "${topic}" — all exercises must relate to this topic`;
+}
+
+// ── RENDER EXERCISE ──
+function renderExercise(idx) {
+  if (idx >= exercises.length) { showResult(); return; }
+  answered = false;
+  orderSelected = [];
+  const ex = exercises[idx];
+  const card = document.getElementById('exerciseCard');
+  const pct = Math.round((idx / exercises.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  hideFeedback();
+  card.classList.remove('correct','wrong');
+  const btn = document.getElementById('btnCheck');
+  btn.textContent = 'Verificar';
+  btn.className = 'btn-check';
+  btn.disabled = true;
+
+  if (ex.tipo === 'escolha') renderEscolha(ex, card);
+  else if (ex.tipo === 'traducao') renderTraducao(ex, card);
+  else if (ex.tipo === 'ordem') renderOrdem(ex, card);
+}
+
+function renderEscolha(ex, card) {
+  const opts = ex.opcoes.map((op, i) =>
+    `<button class="choice-btn" data-idx="${i}" onclick="selectChoice(this)">${op}</button>`
+  ).join('');
+  card.innerHTML = `
+    <div class="ex-type-label">Escolha a tradução correta</div>
+    <div class="ex-question">${ex.palavra_en || ''}</div>
+    ${ex.frase_en ? `<div class="ex-context">"${ex.frase_en}"</div>` : ''}
+    <div class="choice-grid">${opts}</div>`;
+}
+function selectChoice(btn) {
+  if (answered) return;
+  document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('btnCheck').disabled = false;
+}
+
+function renderTraducao(ex, card) {
+  card.innerHTML = `
+    <div class="ex-type-label">Escreva em inglês</div>
+    <div class="ex-question">${ex.instrucao}</div>
+    <div class="ex-context" style="font-size:22px;font-weight:800;font-style:normal;color:#1a1410;margin-bottom:8px;">${ex.palavra_pt}</div>
+    <input class="trans-input" id="transInput" type="text" placeholder="Type in English..."
+      autocomplete="off" autocorrect="off" spellcheck="false"
+      oninput="document.getElementById('btnCheck').disabled=this.value.trim().length===0"
+      onkeydown="if(event.key==='Enter'&&!document.getElementById('btnCheck').disabled)handleCheck()">
+    <div class="ex-hint" id="exHint">💡 Dica: ${ex.dica || ''}</div>`;
+  setTimeout(() => document.getElementById('transInput')?.focus(), 100);
+}
+
+function renderOrdem(ex, card) {
+  const shuffled = [...ex.palavras];
+  const bankHtml = shuffled.map((w, i) =>
+    `<div class="word-chip" data-word="${w}" data-bank-idx="${i}" onclick="pickWord(this)">${w}</div>`
+  ).join('');
+  card.innerHTML = `
+    <div class="ex-type-label">Organize as palavras</div>
+    <div class="ex-question">${ex.instrucao}</div>
+    <div class="ex-context">${ex.traducao_pt}</div>
+    <div class="word-slot" id="wordSlot">
+      <div class="word-slot-label">Sua resposta:</div>
+    </div>
+    <div class="word-bank" id="wordBank">
+      <div class="word-bank-label">Palavras disponíveis:</div>
+      ${bankHtml}
+    </div>`;
+}
+function pickWord(chip) {
+  if (answered) return;
+  const word = chip.dataset.word;
+  const slot = document.getElementById('wordSlot');
+  if (chip.parentElement.id === 'wordBank') {
+    // Move to slot
+    chip.classList.add('placed');
+    chip.onclick = () => returnWord(chip);
+    slot.appendChild(chip);
+    orderSelected.push(word);
+  } else {
+    returnWord(chip);
+  }
+  document.getElementById('btnCheck').disabled = orderSelected.length === 0;
+}
+function returnWord(chip) {
+  const word = chip.dataset.word;
+  const bank = document.getElementById('wordBank');
+  chip.classList.remove('placed');
+  chip.onclick = () => pickWord(chip);
+  bank.appendChild(chip);
+  orderSelected = orderSelected.filter((_, i) => {
+    if (_ === word) { word._removed = true; return false; }
+    return true;
+  });
+  // simpler: rebuild from slot
+  orderSelected = Array.from(document.getElementById('wordSlot').querySelectorAll('.word-chip')).map(c => c.dataset.word);
+  document.getElementById('btnCheck').disabled = orderSelected.length === 0;
+}
+
+// ── CHECK ──
+function handleCheck() {
+  if (answered) { nextExercise(); return; }
+  answered = true;
+  const ex = exercises[currentIdx];
+  let isCorrect = false;
+
+  if (ex.tipo === 'escolha') {
+    const sel = document.querySelector('.choice-btn.selected');
+    const idx = parseInt(sel?.dataset.idx ?? '-1');
+    isCorrect = idx === ex.correto;
+    document.querySelectorAll('.choice-btn').forEach((b, i) => {
+      b.disabled = true;
+      if (i === ex.correto) b.classList.add('correct-ans');
+      else if (i === idx && !isCorrect) b.classList.add('wrong-ans');
+    });
+  } else if (ex.tipo === 'traducao') {
+    const input = document.getElementById('transInput');
+    const typed = (input?.value || '').trim().toLowerCase();
+    const expected = (ex.resposta || '').trim().toLowerCase();
+    isCorrect = typed === expected || expected.split('/').map(s=>s.trim()).includes(typed);
+    input.disabled = true;
+    input.classList.add(isCorrect ? 'correct-ans' : 'wrong-ans');
+    if (!isCorrect && ex.dica) document.getElementById('exHint').style.display = 'block';
+  } else if (ex.tipo === 'ordem') {
+    const assembled = orderSelected.join(' ');
+    const expected = (ex.resposta || '').trim();
+    isCorrect = assembled.toLowerCase() === expected.toLowerCase();
+    document.querySelectorAll('#wordSlot .word-chip').forEach(c =>
+      c.classList.add(isCorrect ? 'chip-correct' : 'chip-wrong'));
+    document.querySelectorAll('#wordBank .word-chip').forEach(c =>
+      c.style.pointerEvents = 'none');
+  }
+
+  const card = document.getElementById('exerciseCard');
+  card.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  if (isCorrect) {
+    xpEarned += 10; correctCount++;
+    showFeedback(true, '✅ Correto!', randomPraise());
+  } else {
+    hearts = Math.max(0, hearts - 1);
+    updateHearts();
+    const correctStr = ex.tipo === 'escolha' ? ex.opcoes[ex.correto]
+      : ex.tipo === 'traducao' ? ex.resposta
+      : ex.resposta;
+    showFeedback(false, '❌ Quase lá!', `A resposta correta é: <strong>${correctStr}</strong>`);
+  }
+
+  const btn = document.getElementById('btnCheck');
+  btn.textContent = currentIdx < exercises.length - 1 ? 'Continuar →' : 'Ver resultado →';
+  btn.className = 'btn-check next-mode';
+  btn.disabled = false;
+
+  if (hearts === 0) {
+    setTimeout(() => showResult(), 1200);
+  }
+}
+
+function nextExercise() {
+  currentIdx++;
+  if (currentIdx >= exercises.length || hearts === 0) { showResult(); return; }
+  renderExercise(currentIdx);
+}
+
+// ── HELPERS ──
+function updateHearts() {
+  [1,2,3].forEach(i => {
+    const el = document.getElementById('h'+i);
+    if (el) el.classList.toggle('lost', i > hearts);
+  });
+}
+function showFeedback(ok, title, sub) {
+  const bar = document.getElementById('feedbackBar');
+  bar.className = 'feedback-bar ' + (ok ? 'show-correct' : 'show-wrong');
+  document.getElementById('fbIcon').textContent = ok ? '🎉' : '💪';
+  document.getElementById('fbTitle').textContent = title;
+  document.getElementById('fbSub').innerHTML = sub;
+}
+function hideFeedback() {
+  document.getElementById('feedbackBar').className = 'feedback-bar';
+}
+const praises = ['Excelente! 🌟','Muito bem! 🎊','Incrível! 🚀','Perfeito! 💫','Show de bola! 🏆','Arrasou! ✨'];
+function randomPraise() { return praises[Math.floor(Math.random()*praises.length)]; }
+
+function show(id) {
+  ['screen-start','screen-loading','screen-game','screen-result'].forEach(s =>
+    document.getElementById(s).style.display = s === id ? 'block' : 'none'
+  );
+}
+function quitGame() { if(confirm('Sair do jogo? O progresso será perdido.')) { show('screen-start'); } }
+function resetGame() { show('screen-start'); }
+
+// ── RESULT ──
+function showResult() {
+  document.getElementById('progressFill').style.width = '100%';
+  const total = exercises.length;
+  const acc = total ? Math.round((correctCount / total) * 100) : 0;
+  const stars = acc >= 90 ? '⭐⭐⭐' : acc >= 60 ? '⭐⭐' : '⭐';
+  const title = acc >= 90 ? 'Incrível! Você arrasou! 🏆'
+    : acc >= 60 ? 'Muito bem! Continue assim! 🎉'
+    : 'Bom esforço! Pratique mais! 💪';
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultStars').textContent = stars;
+  document.getElementById('statXP').textContent = xpEarned;
+  document.getElementById('statCorrect').textContent = `${correctCount}/${total}`;
+  document.getElementById('statAcc').textContent = acc + '%';
+  show('screen-result');
+}
+
+function extractJSON(raw) {
+  let s = raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+  const a = s.indexOf('{'), b = s.lastIndexOf('}');
+  if (a === -1 || b === -1) throw new Error('No JSON');
+  return JSON.parse(s.slice(a, b+1));
+}
+</script>
+</body>
+</html>
