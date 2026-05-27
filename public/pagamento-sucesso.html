@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagamento confirmado — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.card {
+  background: #fff; border-radius: 28px;
+  padding: 48px 40px; max-width: 480px; width: 100%;
+  text-align: center;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+}
+.check-circle {
+  width: 88px; height: 88px; border-radius: 50%;
+  background: linear-gradient(135deg, #2d9e5a, #4fd48a);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px; font-size: 44px;
+  box-shadow: 0 8px 32px rgba(45,158,90,0.4);
+  animation: pop .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes pop { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+h1 {
+  font-family: 'Nunito', sans-serif; font-size: 28px; font-weight: 900;
+  color: #1a1410; margin-bottom: 12px;
+}
+.subtitle { font-size: 16px; color: #5a4f48; line-height: 1.6; margin-bottom: 32px; }
+.plan-box {
+  background: linear-gradient(135deg, #e8f5ee, #d0f0e0);
+  border: 2px solid #a8dcc0; border-radius: 16px;
+  padding: 18px 24px; margin-bottom: 32px;
+}
+.plan-box-label { font-size: 12px; color: #5a8a6a; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.plan-box-name { font-family: 'Nunito', sans-serif; font-size: 22px; font-weight: 900; color: #1b5c3a; margin-top: 4px; }
+.plan-box-sub { font-size: 13px; color: #5a8a6a; margin-top: 4px; }
+.btn {
+  display: block; width: 100%; padding: 16px;
+  border: none; border-radius: 14px;
+  font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 900;
+  color: #fff; background: #2d9e5a; cursor: pointer;
+  text-decoration: none; transition: opacity .15s;
+  box-shadow: 0 6px 20px rgba(45,158,90,0.3);
+}
+.btn:hover { opacity: .88; }
+.footer-note { margin-top: 20px; font-size: 12px; color: #9a8a80; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="check-circle">✅</div>
+  <h1>Pagamento confirmado!</h1>
+  <p class="subtitle">
+    Seu plano foi ativado com sucesso.<br>
+    Pode começar a criar materiais agora mesmo!
+  </p>
+  <div class="plan-box">
+    <div class="plan-box-label">Plano ativado</div>
+    <div class="plan-box-name" id="planName">Carregando…</div>
+    <div class="plan-box-sub" id="planSub"></div>
+  </div>
+  <a class="btn" href="conta.html">🏠 Ir para o Painel</a>
+  <p class="footer-note">Você também receberá um e-mail de confirmação do Mercado Pago.</p>
+</div>
+<script>
+const params = new URLSearchParams(location.search);
+const ref = params.get('external_reference') || '';
+const productId = ref.split('|')[1] || '';
+
+const NAMES = {
+  plan_pro_mensal: ['Pro — Mensal', 'Válido por 30 dias • renove quando quiser'],
+  plan_escola:     ['Escola — Mensal', 'Até 10 professores • válido por 30 dias'],
+  pack_10:  ['10 créditos extras', 'Adicionados à sua conta'],
+  pack_30:  ['30 créditos extras', 'Adicionados à sua conta'],
+  pack_60:  ['60 créditos extras', 'Adicionados à sua conta'],
+  pack_120: ['120 créditos extras','Adicionados à sua conta'],
+};
+
+const [name, sub] = NAMES[productId] || ['Plano ativado', 'Obrigada por assinar!'];
+document.getElementById('planName').textContent = name;
+document.getElementById('planSub').textContent  = sub;
+</script>
+</body>
+</html>

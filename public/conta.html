@@ -1219,59 +1219,59 @@
 
         <!-- PLANS -->
         <div class="plans-grid">
-          <div class="plan-card current">
-            <div class="plan-badge current-badge">Seu plano atual</div>
+          <div class="plan-card" id="plan-card-free">
+            <div class="plan-badge current-badge" id="plan-badge-free">Seu plano atual</div>
             <div class="plan-name">Gratuito</div>
             <div class="plan-price">R$0</div>
             <div class="plan-period">para sempre</div>
             <div class="plan-credits-box">
-              <div class="plan-credits-num">5</div>
-              <div class="plan-credits-label">créditos por mês<br>renovam todo mês</div>
+              <div class="plan-credits-num">4</div>
+              <div class="plan-credits-label">materiais por mês<br>renovam no 1º de cada mês</div>
             </div>
             <ul class="plan-features">
-              <li class="plan-feature"><span class="plan-check">✓</span>Atividades e apostilas</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Acesso a todos os geradores</li>
               <li class="plan-feature"><span class="plan-check">✓</span>PDF para impressão</li>
-              <li class="plan-feature"><span class="plan-check">✓</span>Todos os níveis</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Todos os níveis de ensino</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Jogos gratuitos para alunos</li>
             </ul>
-            <button class="btn-plan btn-plan-current">Plano atual</button>
+            <button class="btn-plan btn-plan-current" id="btn-free">Plano atual</button>
           </div>
 
-          <div class="plan-card featured">
-            <div class="plan-badge popular">Mais popular</div>
+          <div class="plan-card featured" id="plan-card-pro">
+            <div class="plan-badge popular">🚀 Lançamento</div>
             <div class="plan-name">Pro</div>
-            <div class="plan-price">R$39</div>
+            <div class="plan-price">R$19,90</div>
             <div class="plan-period">/mês • cancele quando quiser</div>
             <div class="plan-credits-box">
-              <div class="plan-credits-num">60</div>
-              <div class="plan-credits-label">créditos por mês<br>+ 10 bônus no 1º mês</div>
+              <div class="plan-credits-num">∞</div>
+              <div class="plan-credits-label">materiais ilimitados<br>sem limite mensal</div>
             </div>
             <ul class="plan-features">
-              <li class="plan-feature"><span class="plan-check">✓</span>Tudo do plano gratuito</li>
-              <li class="plan-feature"><span class="plan-check">✓</span>Jogos + Cruzadinha</li>
-              <li class="plan-feature"><span class="plan-check">✓</span>Mapa mental + Tema gerador</li>
-              <li class="plan-feature"><span class="plan-check">✓</span>Música pedagógica</li>
-              <li class="plan-feature"><span class="plan-check">✓</span>Plano de aula BNCC</li>
-              <li class="plan-feature"><span class="plan-check">✓</span>Créditos não expiram</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Materiais ilimitados</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Todos os geradores</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>PDF sem marca d'água</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Suporte prioritário</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Novidades em primeira mão</li>
             </ul>
-            <button class="btn-plan btn-plan-gold" onclick="openPayment('Pro Mensal','R$ 39,00','plan_pro_mensal')">Assinar Pro com PIX</button>
+            <button class="btn-plan btn-plan-gold" id="btn-pro" onclick="doCheckout('plan_pro_mensal',this)">⚡ Assinar por R$19,90</button>
           </div>
 
-          <div class="plan-card">
+          <div class="plan-card" id="plan-card-escola">
             <div class="plan-name">Escola</div>
-            <div class="plan-price">R$199</div>
+            <div class="plan-price">R$179,90</div>
             <div class="plan-period">/mês • até 10 professores</div>
             <div class="plan-credits-box">
-              <div class="plan-credits-num">400</div>
-              <div class="plan-credits-label">créditos por mês<br>compartilhados na equipe</div>
+              <div class="plan-credits-num">∞</div>
+              <div class="plan-credits-label">materiais ilimitados<br>para toda a equipe</div>
             </div>
             <ul class="plan-features">
               <li class="plan-feature"><span class="plan-check">✓</span>Tudo do Pro</li>
-              <li class="plan-feature"><span class="plan-check">✓</span>10 professores inclusos</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Até 10 professores</li>
               <li class="plan-feature"><span class="plan-check">✓</span>Painel administrativo</li>
-              <li class="plan-feature"><span class="plan-check">✓</span>Logo da escola</li>
+              <li class="plan-feature"><span class="plan-check">✓</span>Logo da escola nos PDFs</li>
               <li class="plan-feature"><span class="plan-check">✓</span>Suporte prioritário</li>
             </ul>
-            <button class="btn-plan btn-plan-outline" onclick="openPayment('Plano Escola','R$ 199,00','plan_escola')">Contratar para escola</button>
+            <button class="btn-plan btn-plan-outline" id="btn-escola" onclick="doCheckout('plan_escola',this)">🏫 Contratar para escola</button>
           </div>
         </div>
 
@@ -1680,18 +1680,44 @@
     if (bar) bar.style.width = barPct + '%';
   }
 
-  // ── PAYMENT ──
-  function openPayment(name, price, productId) {
-    currentOrder = { name, price, productId };
-    document.getElementById('order-name').textContent = name;
-    document.getElementById('order-price').textContent = price;
-    document.getElementById('order-sub').textContent =
-      productId.startsWith('plan') ? 'Assinatura recorrente • cancele quando quiser' : 'Créditos avulsos • não expiram';
+  // ── PAYMENT — Mercado Pago Checkout ──
+  async function doCheckout(productId, btnEl) {
+    if (!currentUser) { showScreen('screen-login'); return; }
+    const origText = btnEl.textContent;
+    btnEl.disabled = true;
+    btnEl.textContent = '⏳ Aguarde...';
 
-    document.getElementById('pay-step-1').style.display = 'block';
-    document.getElementById('pay-step-2').style.display = 'none';
-    document.getElementById('pay-step-3').style.display = 'none';
-    document.getElementById('modal-payment').classList.add('show');
+    try {
+      const r = await fetch('/api/mp-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId,
+          email: currentUser.email,
+          userId: currentUser.id,
+        }),
+      });
+      const data = await r.json();
+      if (data.init_point) {
+        window.location.href = data.init_point;
+      } else {
+        alert('Erro ao iniciar o pagamento: ' + (data.error || 'tente novamente'));
+        btnEl.disabled = false;
+        btnEl.textContent = origText;
+      }
+    } catch (e) {
+      alert('Erro de conexão. Verifique sua internet e tente novamente.');
+      btnEl.disabled = false;
+      btnEl.textContent = origText;
+    }
+  }
+
+  // Legacy openPayment kept for credit packs (uses same doCheckout flow)
+  function openPayment(name, price, productId) {
+    // Find or create a temporary button element to pass in
+    const btn = document.createElement('button');
+    btn.textContent = 'Comprar';
+    doCheckout(productId, btn);
   }
 
   function closeModal() {
@@ -1704,57 +1730,15 @@
     el.classList.add('selected');
   }
 
-  function goToPixScreen() {
-    document.getElementById('pay-step-1').style.display = 'none';
-    document.getElementById('pay-step-2').style.display = 'block';
-    buildQR();
-    startTimer();
-  }
-
-  function buildQR() {
-    const grid = document.getElementById('qrGrid');
-    grid.innerHTML = '';
-    for (let i = 0; i < 64; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'pix-cell';
-      // corner markers
-      const r = Math.floor(i/8), c = i%8;
-      const corner = (r<3&&c<3)||(r<3&&c>4)||(r>4&&c<3);
-      cell.style.opacity = corner ? '1' : (Math.random() > 0.45 ? '1' : '0.1');
-      grid.appendChild(cell);
-    }
-  }
-
-  function startTimer() {
-    let seconds = 899;
-    const el = document.getElementById('timer-count');
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-      seconds--;
-      if (seconds <= 0) { clearInterval(timerInterval); el.textContent = '00:00'; return; }
-      const m = Math.floor(seconds/60).toString().padStart(2,'0');
-      const s = (seconds%60).toString().padStart(2,'0');
-      el.textContent = `${m}:${s}`;
-    }, 1000);
-  }
-
-  function copyPix() {
-    const key = document.getElementById('pix-key-text').textContent.trim();
-    navigator.clipboard?.writeText(key).catch(()=>{});
-    const btn = document.querySelector('.btn-copy');
-    btn.textContent = '✅ Copiado!';
-    setTimeout(() => btn.textContent = '📋 Copiar chave PIX', 2000);
-  }
-
+  // Kept for reference — no longer used in the main flow
   function simulateSuccess() {
     if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
     document.getElementById('pay-step-2').style.display = 'none';
     document.getElementById('pay-step-3').style.display = 'block';
 
-    // Add credits / update plan
     const pid = currentOrder.productId;
     const creditsMap = {
-      plan_pro_mensal: 70, plan_escola: 400,
+      plan_pro_mensal: 999, plan_escola: 999,
       pack_10: 10, pack_30: 30, pack_60: 60, pack_120: 120
     };
     const added = creditsMap[pid] || 10;

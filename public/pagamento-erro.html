@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagamento não concluído — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: linear-gradient(135deg, #1a0a0a, #2e0a0a, #1a1410);
+  min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.card {
+  background: #fff; border-radius: 28px; padding: 48px 40px;
+  max-width: 480px; width: 100%; text-align: center;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+}
+.icon-circle {
+  width: 88px; height: 88px; border-radius: 50%;
+  background: linear-gradient(135deg, #d93030, #f05050);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px; font-size: 44px;
+  box-shadow: 0 8px 32px rgba(217,48,48,0.4);
+  animation: pop .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes pop { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+h1 { font-family: 'Nunito', sans-serif; font-size: 26px; font-weight: 900; color: #1a1410; margin-bottom: 12px; }
+.subtitle { font-size: 15px; color: #5a4f48; line-height: 1.7; margin-bottom: 28px; }
+.info-box {
+  background: #fff8f8; border: 2px solid #f0c8c8; border-radius: 14px;
+  padding: 16px 20px; margin-bottom: 28px; text-align: left;
+}
+.info-box p { font-size: 14px; color: #6a3030; line-height: 1.6; }
+.btn {
+  display: block; width: 100%; padding: 16px; border: none; border-radius: 14px;
+  font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 900;
+  color: #fff; background: #c8963e; cursor: pointer; text-decoration: none;
+  transition: opacity .15s; box-shadow: 0 6px 20px rgba(200,150,62,0.3);
+  margin-bottom: 12px;
+}
+.btn:hover { opacity: .88; }
+.btn-outline {
+  display: block; width: 100%; padding: 14px; border: 2.5px solid #e8dfd6;
+  border-radius: 14px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700;
+  color: #5a4f48; background: #fff; cursor: pointer; text-decoration: none; transition: background .15s;
+}
+.btn-outline:hover { background: #f8f4f0; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon-circle">❌</div>
+  <h1>Pagamento não concluído</h1>
+  <p class="subtitle">
+    Não foi possível processar seu pagamento desta vez.<br>
+    Não se preocupe — nenhum valor foi cobrado.
+  </p>
+  <div class="info-box">
+    <p>
+      Possíveis motivos: dados do cartão incorretos, saldo insuficiente ou limite indisponível.
+      Você pode tentar novamente com outro método de pagamento.
+    </p>
+  </div>
+  <a class="btn" href="conta.html?plans=1">🔄 Tentar novamente</a>
+  <a class="btn-outline" href="conta.html">← Voltar ao Painel</a>
+</div>
+</body>
+</html>

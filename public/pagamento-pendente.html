@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagamento pendente — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.card {
+  background: #fff; border-radius: 28px; padding: 48px 40px;
+  max-width: 480px; width: 100%; text-align: center;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+}
+.icon-circle {
+  width: 88px; height: 88px; border-radius: 50%;
+  background: linear-gradient(135deg, #e8a800, #ffd040);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px; font-size: 44px;
+  box-shadow: 0 8px 32px rgba(232,168,0,0.4);
+  animation: pop .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes pop { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+h1 { font-family: 'Nunito', sans-serif; font-size: 26px; font-weight: 900; color: #1a1410; margin-bottom: 12px; }
+.subtitle { font-size: 15px; color: #5a4f48; line-height: 1.7; margin-bottom: 28px; }
+.info-box {
+  background: #fffbea; border: 2px solid #f0d880; border-radius: 14px;
+  padding: 16px 20px; margin-bottom: 28px; text-align: left;
+}
+.info-box p { font-size: 14px; color: #6a5a20; line-height: 1.6; }
+.info-box strong { color: #1a1410; }
+.btn {
+  display: block; width: 100%; padding: 16px; border: none; border-radius: 14px;
+  font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 900;
+  color: #fff; background: #e8a800; cursor: pointer; text-decoration: none;
+  transition: opacity .15s; box-shadow: 0 6px 20px rgba(232,168,0,0.3);
+}
+.btn:hover { opacity: .88; }
+.btn-outline {
+  display: block; width: 100%; padding: 14px; border: 2.5px solid #e8dfd6;
+  border-radius: 14px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700;
+  color: #5a4f48; background: #fff; cursor: pointer; text-decoration: none;
+  margin-top: 12px; transition: background .15s;
+}
+.btn-outline:hover { background: #f8f4f0; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon-circle">⏳</div>
+  <h1>Pagamento em análise</h1>
+  <p class="subtitle">
+    Seu pagamento foi registrado e está sendo processado.<br>
+    Assim que for confirmado, seu plano será ativado automaticamente.
+  </p>
+  <div class="info-box">
+    <p>
+      <strong>Se você pagou por boleto:</strong> a confirmação pode levar até 3 dias úteis.<br><br>
+      <strong>Se você pagou por PIX:</strong> a confirmação é quase imediata. Verifique se o pagamento foi aprovado no app do banco.
+    </p>
+  </div>
+  <a class="btn" href="conta.html">🏠 Ir para o Painel</a>
+  <a class="btn-outline" href="https://www.mercadopago.com.br/activities" target="_blank">Ver status no Mercado Pago</a>
+</div>
+</body>
+</html>
