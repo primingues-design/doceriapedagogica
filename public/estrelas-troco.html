@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estrelas do Troco — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Outfit', sans-serif; background: #fff8f0; color: #1a1410; min-height: 100vh; overflow-x: hidden; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: #1a1410; padding: 13px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 200;
+}
+.topbar-logo { font-family:'Nunito',sans-serif; font-size:16px; font-weight:900; color:#e8b86d; text-decoration:none; }
+.topbar-back { font-size:13px; color:rgba(255,255,255,.6); text-decoration:none; }
+.topbar-back:hover { color:#fff; }
+
+/* ── SCREENS ── */
+.screen { display:none; }
+.screen.active { display:block; }
+
+/* ══════════════════════════════════════════════
+   SCREEN 1 — SELEÇÃO DE NÍVEL
+══════════════════════════════════════════════ */
+.start-hero {
+  background: linear-gradient(160deg,#06082e 0%,#0d1b4a 50%,#1a0d40 100%);
+  padding: 52px 20px 60px; text-align:center; position:relative; overflow:hidden;
+}
+.start-hero::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1px),
+    radial-gradient(circle,rgba(255,230,80,.6) 1px,transparent 1px),
+    radial-gradient(circle,rgba(255,255,255,.4) 1px,transparent 1px);
+  background-size: 70px 70px, 110px 110px, 180px 180px;
+  background-position: 10px 10px, 55px 55px, 30px 90px;
+}
+.start-emoji { font-size:64px; display:block; margin-bottom:14px; position:relative;
+  animation: bounce 2.2s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.start-title {
+  font-family:'Nunito',sans-serif; font-size:clamp(28px,7vw,50px);
+  font-weight:900; color:#fff; line-height:1.1; margin-bottom:14px; position:relative;
+}
+.start-title .hi { color:#ffd060; }
+.start-sub {
+  font-size:clamp(14px,3.5vw,18px); color:rgba(255,255,255,.8);
+  max-width:480px; margin:0 auto 24px; line-height:1.6; position:relative;
+}
+.eja-chip {
+  display:inline-flex; align-items:center; gap:8px; position:relative;
+  background:rgba(255,255,255,.1); border:1.5px solid rgba(255,255,255,.2);
+  border-radius:30px; padding:8px 20px; font-size:14px; font-weight:700; color:#fff;
+}
+.eja-chip span { color:#7fdc9e; }
+
+.level-section { max-width:900px; margin:0 auto; padding:44px 20px 20px; }
+.level-section-title {
+  font-family:'Nunito',sans-serif; font-size:22px; font-weight:900;
+  text-align:center; margin-bottom:6px;
+}
+.level-section-sub { font-size:14px; color:#7a6a5a; text-align:center; margin-bottom:36px; }
+
+.level-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:20px; }
+
+.level-card {
+  border-radius:22px; padding:30px 24px 26px; cursor:pointer;
+  border:3px solid transparent; text-align:center;
+  box-shadow:0 4px 18px rgba(0,0,0,.1);
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+  position:relative; overflow:hidden;
+}
+.level-card:hover { transform:translateY(-6px) scale(1.02); box-shadow:0 16px 40px rgba(0,0,0,.18); }
+.level-card::after { content:''; position:absolute; top:0; left:0; right:0; height:6px; background:var(--lc); }
+.level-stars { font-size:28px; margin-bottom:12px; }
+.level-name {
+  font-family:'Nunito',sans-serif; font-size:24px; font-weight:900;
+  color:var(--lc); margin-bottom:8px;
+}
+.level-desc { font-size:14px; color:#6a5a50; line-height:1.55; margin-bottom:16px; }
+.level-example {
+  background:rgba(0,0,0,.06); border-radius:10px; padding:8px 12px;
+  font-size:13px; color:#5a4a40; font-style:italic; line-height:1.4;
+}
+.level-play-btn {
+  display:block; margin-top:18px; padding:13px 20px;
+  border:none; border-radius:14px; background:var(--lc); color:#fff;
+  font-family:'Nunito',sans-serif; font-size:17px; font-weight:900; cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,.2); transition:opacity .15s;
+}
+.level-play-btn:hover { opacity:.88; }
+
+/* ══════════════════════════════════════════════
+   SCREEN 2 — JOGO
+══════════════════════════════════════════════ */
+#screen-game { display:none; flex-direction:column; height:calc(100vh - 46px); }
+#screen-game.active { display:flex; }
+
+/* Question panel */
+.question-panel {
+  background:linear-gradient(135deg,#0d1b4a,#1a0d40);
+  padding:18px 20px 16px; flex-shrink:0; position:relative; z-index:10;
+  border-bottom: 3px solid rgba(255,220,80,.2);
+}
+.q-progress { font-size:12px; color:rgba(255,255,255,.5); font-weight:700; margin-bottom:8px; letter-spacing:.5px; }
+.q-text {
+  font-size:clamp(15px,3.5vw,19px); color:#fff; line-height:1.55;
+  max-width:700px;
+}
+.q-text strong { color:#ffd060; }
+.qval { color:#7fea9e; font-weight:700; }
+.q-hint-row { margin-top:8px; font-size:13px; color:rgba(255,255,255,.5); }
+.q-hint-row strong { color:rgba(255,255,255,.75); }
+
+/* Sky area */
+.sky {
+  flex:1; position:relative; overflow:hidden; min-height:300px;
+  background: radial-gradient(ellipse at 50% 0%, #1a2060 0%, #080820 60%, #040410 100%);
+}
+.sky::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1px),
+    radial-gradient(circle,rgba(255,240,120,.5) 1px,transparent 1px),
+    radial-gradient(circle,rgba(255,255,255,.3) 1px,transparent 1px);
+  background-size:90px 90px, 130px 130px, 200px 200px;
+  background-position:15px 20px, 65px 70px, 110px 110px;
+  animation:starTwinkle 4s ease-in-out infinite alternate;
+}
+@keyframes starTwinkle { from{opacity:.7} to{opacity:1} }
+
+/* Stars (game elements) */
+.star-el {
+  position:absolute; width:96px;
+  display:flex; flex-direction:column; align-items:center;
+  cursor:pointer; touch-action:none; user-select:none;
+  transition:transform .1s;
+}
+.star-el:active { transform:scale(.94); }
+.star-el.hit { animation:starHit .8s ease-out forwards; pointer-events:none; }
+@keyframes starHit {
+  0%   { transform:scale(1); opacity:1; }
+  30%  { transform:scale(1.5); opacity:1; }
+  100% { transform:scale(2.2) translateY(-60px); opacity:0; }
+}
+.star-el.wrong-flash { animation:wrongFlash .35s ease-out; }
+@keyframes wrongFlash { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+
+.star-shape-wrap {
+  width:80px; height:80px; position:relative;
+  animation:starPulse 2.4s ease-in-out infinite;
+}
+@keyframes starPulse {
+  0%,100%{ filter:drop-shadow(0 0 6px var(--sc)); }
+  50%    { filter:drop-shadow(0 0 16px var(--sc)); }
+}
+.star-shape-wrap:hover { filter:brightness(1.2); }
+.star-shape {
+  position:absolute; inset:0;
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  background:radial-gradient(circle at 38% 32%, var(--scl) 0%, var(--sc) 70%);
+}
+.star-badge {
+  margin-top:-4px; padding:5px 10px;
+  background:rgba(0,0,0,.75); color:#fff;
+  border-radius:20px; font-family:'Nunito',sans-serif;
+  font-size:clamp(13px,3vw,16px); font-weight:900;
+  white-space:nowrap; text-align:center;
+  border:2px solid var(--sc); position:relative; z-index:2;
+  box-shadow:0 2px 8px rgba(0,0,0,.4);
+}
+
+/* Hint overlay */
+#hint-overlay {
+  position:absolute; inset:0; z-index:50;
+  background:rgba(4,4,20,.88);
+  display:none; align-items:center; justify-content:center; padding:20px;
+}
+.hint-box {
+  background:#fff; border-radius:24px; padding:30px 24px;
+  max-width:380px; width:100%; text-align:center;
+  box-shadow:0 0 60px rgba(0,0,0,.6);
+  animation:hintPop .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes hintPop { from{transform:scale(.8);opacity:0} to{transform:scale(1);opacity:1} }
+.hint-icon { font-size:48px; margin-bottom:12px; }
+.hint-title {
+  font-family:'Nunito',sans-serif; font-size:22px; font-weight:900;
+  margin-bottom:10px; color:#1a1410;
+}
+.hint-calc {
+  font-size:16px; color:#4a4040; line-height:1.6; margin-bottom:20px;
+  background:#fffbf0; border-radius:12px; padding:12px 16px;
+  border:2px dashed #f0d880;
+}
+.hint-answer { color:#1a9e40; font-size:1.15em; }
+.hint-btn {
+  display:block; width:100%; padding:16px;
+  border:none; border-radius:16px;
+  font-family:'Nunito',sans-serif; font-size:18px; font-weight:900;
+  color:#fff; background:#2d7acd; cursor:pointer;
+  box-shadow:0 4px 14px rgba(45,122,205,.4);
+  transition:opacity .15s;
+}
+.hint-btn:hover { opacity:.88; }
+
+/* Success flash */
+.sky-success-flash {
+  position:absolute; inset:0; pointer-events:none; z-index:40;
+  background:rgba(100,255,150,.12);
+  animation:successFlash .6s ease-out forwards;
+}
+@keyframes successFlash { from{opacity:1} to{opacity:0} }
+
+/* ══════════════════════════════════════════════
+   SCREEN 3 — RESULTADO
+══════════════════════════════════════════════ */
+.result-sky {
+  background:linear-gradient(160deg,#06082e,#0d1b4a,#1a0d40);
+  padding:52px 20px 40px; text-align:center; position:relative; overflow:hidden;
+}
+.result-sky::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background-image:radial-gradient(circle,rgba(255,255,255,.6) 1px,transparent 1px);
+  background-size:80px 80px; background-position:15px 15px;
+}
+.result-stars-big { font-size:56px; position:relative; margin-bottom:14px; }
+.result-title {
+  font-family:'Nunito',sans-serif; font-size:clamp(22px,5vw,36px);
+  font-weight:900; color:#fff; margin-bottom:10px; position:relative;
+}
+.result-subtitle { font-size:16px; color:rgba(255,255,255,.75); position:relative; }
+.result-subtitle strong { color:#ffd060; font-size:1.2em; }
+
+.result-body { max-width:500px; margin:0 auto; padding:36px 20px 20px; }
+.result-stat {
+  background:#fff; border-radius:18px; padding:20px 24px;
+  margin-bottom:16px; display:flex; align-items:center; gap:16px;
+  box-shadow:0 4px 16px rgba(0,0,0,.08);
+}
+.result-stat-icon { font-size:36px; flex-shrink:0; }
+.result-stat-text { flex:1; }
+.result-stat-label { font-size:13px; color:#7a6a5a; margin-bottom:4px; }
+.result-stat-val { font-family:'Nunito',sans-serif; font-size:22px; font-weight:900; }
+
+.result-actions { max-width:500px; margin:0 auto; padding:0 20px 40px; display:flex; flex-direction:column; gap:12px; }
+.btn-play-again {
+  padding:17px; border:none; border-radius:16px;
+  font-family:'Nunito',sans-serif; font-size:19px; font-weight:900;
+  color:#fff; cursor:pointer; transition:all .15s;
+  box-shadow:0 6px 20px rgba(0,0,0,.2);
+}
+.btn-play-again:hover { opacity:.88; transform:translateY(-2px); }
+.btn-level-menu {
+  padding:15px; background:#fff; border:3px solid #e8dfd6;
+  border-radius:16px; font-family:'Nunito',sans-serif;
+  font-size:16px; font-weight:900; color:#5a4f48; cursor:pointer; transition:all .15s;
+}
+.btn-level-menu:hover { background:#f8f4f0; border-color:#c8b8a8; }
+
+/* ── FOOTER ── */
+.footer { background:#1a1410; padding:24px 20px; text-align:center; }
+.footer-text { font-size:12px; color:rgba(255,255,255,.4); margin-bottom:5px; }
+.footer-brand { font-family:'Nunito',sans-serif; font-size:14px; font-weight:900; color:#e8b86d; }
+
+@media(max-width:480px){
+  .question-panel { padding:14px 16px 12px; }
+  .q-text { font-size:15px; }
+  .star-el { width:84px; }
+  .star-shape-wrap { width:70px; height:70px; }
+  .star-badge { font-size:13px; padding:4px 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="conta.html">✦ DoceriaPedagógica</a>
+  <a class="topbar-back" href="jogos-area.html">← Área do Aluno</a>
+</div>
+
+<!-- ══ SCREEN 1: SELEÇÃO DE NÍVEL ══ -->
+<div id="screen-start" class="screen active">
+  <div class="start-hero">
+    <span class="start-emoji">🌟</span>
+    <h1 class="start-title">Estrelas<br><span class="hi">do Troco</span></h1>
+    <p class="start-sub">Clique na estrela com o valor certo do troco antes que ela caia! Aprenda matemática do dia a dia.</p>
+    <div class="eja-chip">📚 <span>EJA</span> — Matemática na vida real</div>
+  </div>
+
+  <div class="level-section">
+    <div class="level-section-title">✨ Escolha o nível</div>
+    <p class="level-section-sub">Comece pelo Fácil e vá avançando conforme se sentir confiante!</p>
+    <div class="level-grid">
+
+      <div class="level-card" onclick="startGame('facil')"
+           style="background:#f0fdf4; --lc:#2d9e5a;">
+        <div class="level-stars">⭐</div>
+        <div class="level-name">Fácil</div>
+        <div class="level-desc">Notas de R$10 e R$20. Valores exatos, sem centavos.</div>
+        <div class="level-example">Café R$4 → pagou R$10 → troco?</div>
+        <button class="level-play-btn">Jogar no Fácil</button>
+      </div>
+
+      <div class="level-card" onclick="startGame('medio')"
+           style="background:#fffbea; --lc:#d4900a;">
+        <div class="level-stars">⭐⭐</div>
+        <div class="level-name">Médio</div>
+        <div class="level-desc">Valores maiores com notas de R$20 e R$50.</div>
+        <div class="level-example">Frango R$13 → pagou R$20 → troco?</div>
+        <button class="level-play-btn">Jogar no Médio</button>
+      </div>
+
+      <div class="level-card" onclick="startGame('desafio')"
+           style="background:#fdf0ff; --lc:#8a2be2;">
+        <div class="level-stars">⭐⭐⭐</div>
+        <div class="level-name">Desafio</div>
+        <div class="level-desc">Inclui centavos, como na vida real no mercado!</div>
+        <div class="level-example">Café R$4,50 → pagou R$5 → troco?</div>
+        <button class="level-play-btn">Jogar no Desafio</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-text">Material preparado pela sua professora com</div>
+    <div class="footer-brand">✦ DoceriaPedagógica</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 2: JOGO ══ -->
+<div id="screen-game" class="screen">
+  <div class="question-panel">
+    <div class="q-progress" id="qProgress">Pergunta 1 de 10</div>
+    <div class="q-text" id="qText"></div>
+    <div class="q-hint-row">Encontre o <strong>troco correto</strong> e toque na estrela!</div>
+  </div>
+  <div class="sky" id="sky">
+    <div id="hint-overlay"></div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 3: RESULTADO ══ -->
+<div id="screen-result" class="screen">
+  <div class="result-sky">
+    <div class="result-stars-big" id="resultStars"></div>
+    <div class="result-title" id="resultTitle"></div>
+    <div class="result-subtitle" id="resultSubtitle"></div>
+  </div>
+  <div class="result-body">
+    <div class="result-stat">
+      <div class="result-stat-icon">🎯</div>
+      <div class="result-stat-text">
+        <div class="result-stat-label">Acertos</div>
+        <div class="result-stat-val" id="resultAcertos"></div>
+      </div>
+    </div>
+    <div class="result-stat">
+      <div class="result-stat-icon">📊</div>
+      <div class="result-stat-text">
+        <div class="result-stat-label">Nível jogado</div>
+        <div class="result-stat-val" id="resultNivel"></div>
+      </div>
+    </div>
+  </div>
+  <div class="result-actions">
+    <button class="btn-play-again" id="btnPlayAgain" onclick="replayLevel()"></button>
+    <button class="btn-play-again" id="btnNextLevel" style="display:none;" onclick="goNextLevel()"></button>
+    <button class="btn-level-menu" onclick="showScreen('screen-start')">← Escolher outro nível</button>
+  </div>
+  <div class="footer">
+    <div class="footer-text">Material preparado pela sua professora com</div>
+    <div class="footer-brand">✦ DoceriaPedagógica</div>
+  </div>
+</div>
+
+<script>
+/* ── Questions (all values in cents) ──────────────────────── */
+const QUESTIONS = {
+  facil: [
+    {item:'um café',           price:400,  paid:1000, change:600  },
+    {item:'uma água',          price:200,  paid:1000, change:800  },
+    {item:'um suco',           price:500,  paid:1000, change:500  },
+    {item:'um pão',            price:300,  paid:1000, change:700  },
+    {item:'um pastel',         price:600,  paid:1000, change:400  },
+    {item:'um biscoito',       price:700,  paid:1000, change:300  },
+    {item:'uma laranja',       price:800,  paid:1000, change:200  },
+    {item:'um chocolate',      price:500,  paid:2000, change:1500 },
+    {item:'um sabão em barra', price:800,  paid:2000, change:1200 },
+    {item:'um pacote de arroz',price:1200, paid:2000, change:800  },
+  ],
+  medio: [
+    {item:'um frango',         price:1300, paid:2000, change:700  },
+    {item:'um arroz',          price:1800, paid:2000, change:200  },
+    {item:'um litro de leite', price:600,  paid:2000, change:1400 },
+    {item:'um feijão',         price:1100, paid:2000, change:900  },
+    {item:'um litro de óleo',  price:1400, paid:2000, change:600  },
+    {item:'um shampoo',        price:1700, paid:2000, change:300  },
+    {item:'um kg de tomate',   price:900,  paid:2000, change:1100 },
+    {item:'um macarrão',       price:400,  paid:2000, change:1600 },
+    {item:'um detergente',     price:1500, paid:5000, change:3500 },
+    {item:'uma camiseta',      price:3500, paid:5000, change:1500 },
+  ],
+  desafio: [
+    {item:'um café',           price:450,  paid:500,  change:50   },
+    {item:'uma bala',          price:50,   paid:100,  change:50   },
+    {item:'um biscoito',       price:350,  paid:500,  change:150  },
+    {item:'uma água',          price:250,  paid:500,  change:250  },
+    {item:'um suco',           price:450,  paid:1000, change:550  },
+    {item:'um pão',            price:150,  paid:200,  change:50   },
+    {item:'um pastel',         price:750,  paid:1000, change:250  },
+    {item:'um chiclete',       price:125,  paid:200,  change:75   },
+    {item:'uma maçã',          price:275,  paid:500,  change:225  },
+    {item:'uma manga',         price:325,  paid:500,  change:175  },
+  ]
+};
+
+const SPEEDS   = { facil:22, medio:30, desafio:40 }; // px/s
+const NEXT_LVL = { facil:'medio', medio:'desafio', desafio:null };
+const LVL_NAME = { facil:'Fácil ⭐', medio:'Médio ⭐⭐', desafio:'Desafio ⭐⭐⭐' };
+
+/* ── Colour palette for stars by change value ───────────── */
+function starColors(cents) {
+  if (cents <=  100) return { sc:'#a0b8c8', scl:'#c8dde8' }; // silver (moedas)
+  if (cents <=  500) return { sc:'#2db842', scl:'#6ae87a' }; // green
+  if (cents <= 1000) return { sc:'#1890e0', scl:'#60c0f8' }; // blue (nota R$10)
+  if (cents <= 2000) return { sc:'#e8a800', scl:'#ffd840' }; // gold (nota R$20)
+  if (cents <= 4000) return { sc:'#e86c00', scl:'#ffa040' }; // orange (nota R$50)
+  return                     { sc:'#9030d0', scl:'#c870f8' }; // purple
+}
+
+/* ── State ──────────────────────────────────────────────── */
+let level = 'facil';
+let qList = [], qIdx = 0, score = 0;
+let starData = [];
+let running  = false, animId = null, lastTs = null;
+let currentQ = null;
+
+/* ── Utilities ───────────────────────────────────────────── */
+function fmt(cents) {
+  const r = Math.floor(cents / 100);
+  const c = cents % 100;
+  return `R$ ${r},${c.toString().padStart(2,'0')}`;
+}
+
+function paidLabel(cents) {
+  return cents <= 200 ? `moeda de ${fmt(cents)}` : `nota de ${fmt(cents)}`;
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getDistractors(correct, lvl) {
+  const step = lvl === 'desafio' ? 25 : 100;
+  const pool = new Set();
+  for (let off of [step, step*2, step*3, step*4, step*6]) {
+    if (correct - off > 0) pool.add(correct - off);
+    pool.add(correct + off);
+  }
+  pool.delete(correct);
+  return shuffle([...pool]).slice(0, 2);
+}
+
+/* ── Screen management ──────────────────────────────────── */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+/* ── Game start ─────────────────────────────────────────── */
+function startGame(lvl) {
+  level  = lvl;
+  qList  = shuffle([...QUESTIONS[lvl]]);
+  qIdx   = 0;
+  score  = 0;
+  showScreen('screen-game');
+  loadQuestion();
+}
+
+/* ── Load a question ─────────────────────────────────────── */
+function loadQuestion() {
+  if (qIdx >= qList.length) { endGame(); return; }
+
+  currentQ = qList[qIdx];
+  const { item, price, paid, change } = currentQ;
+
+  document.getElementById('qProgress').textContent =
+    `Pergunta ${qIdx + 1} de ${qList.length}`;
+  document.getElementById('qText').innerHTML =
+    `🛒 Você comprou <strong>${item}</strong> por <span class="qval">${fmt(price)}</span>` +
+    ` e pagou com uma <strong>${paidLabel(paid)}</strong>. Qual é o seu <strong>troco?</strong>`;
+
+  document.getElementById('hint-overlay').style.display = 'none';
+
+  spawnStars();
+}
+
+/* ── Spawn falling stars ─────────────────────────────────── */
+function spawnStars() {
+  const sky = document.getElementById('sky');
+  sky.querySelectorAll('.star-el').forEach(e => e.remove());
+  starData = [];
+
+  const correct    = currentQ.change;
+  const distract   = getDistractors(correct, level);
+  const values     = shuffle([correct, ...distract]);
+  const areaW      = sky.clientWidth;
+  const starW      = window.innerWidth <= 480 ? 84 : 96;
+  const sectionW   = areaW / values.length;
+
+  values.forEach((val, i) => {
+    const { sc, scl } = starColors(val);
+    const baseX   = sectionW * i + (sectionW - starW) / 2;
+    const jitter  = (Math.random() - 0.5) * Math.min(sectionW * 0.28, 36);
+    const x       = Math.max(8, Math.min(areaW - starW - 8, Math.round(baseX + jitter)));
+    const y       = -(110 + i * 28 + Math.random() * 20);
+
+    const el = document.createElement('div');
+    el.className = 'star-el';
+    el.style.cssText = `left:${x}px; top:${y}px; --sc:${sc}; --scl:${scl};`;
+    el.innerHTML =
+      `<div class="star-shape-wrap"><div class="star-shape"></div></div>` +
+      `<div class="star-badge">${fmt(val)}</div>`;
+
+    el.addEventListener('pointerdown', e => { e.preventDefault(); clickStar(i); });
+
+    sky.appendChild(el);
+    starData.push({ el, val, isCorrect: val === correct, y, x });
+  });
+
+  startAnim();
+}
+
+/* ── Animation loop ──────────────────────────────────────── */
+function startAnim() {
+  running = true;
+  lastTs  = null;
+  if (animId) cancelAnimationFrame(animId);
+  animId = requestAnimationFrame(gameLoop);
+}
+
+function stopAnim() {
+  running = false;
+  if (animId) { cancelAnimationFrame(animId); animId = null; }
+}
+
+function gameLoop(ts) {
+  if (!running) return;
+  if (!lastTs) lastTs = ts;
+  const dt  = Math.min((ts - lastTs) / 1000, 0.05); // cap dt to 50ms
+  lastTs = ts;
+
+  const sky    = document.getElementById('sky');
+  const skyH   = sky.clientHeight;
+  const speed  = SPEEDS[level];
+  let missed   = false;
+
+  for (const sd of starData) {
+    sd.y += speed * dt;
+    sd.el.style.top = sd.y + 'px';
+    if (sd.y > skyH + 10) { missed = true; break; }
+  }
+
+  if (missed) { stopAnim(); showHint('miss'); return; }
+  animId = requestAnimationFrame(gameLoop);
+}
+
+/* ── Star click ──────────────────────────────────────────── */
+function clickStar(idx) {
+  if (!running) return;
+  const sd = starData[idx];
+  stopAnim();
+
+  if (sd.isCorrect) {
+    // ✅ Correct!
+    sd.el.classList.add('hit');
+    score++;
+    const flash = document.createElement('div');
+    flash.className = 'sky-success-flash';
+    document.getElementById('sky').appendChild(flash);
+    setTimeout(() => { flash.remove(); qIdx++; loadQuestion(); }, 900);
+  } else {
+    // ❌ Wrong
+    sd.el.classList.add('wrong-flash');
+    showHint('wrong');
+  }
+}
+
+/* ── Hint overlay ────────────────────────────────────────── */
+function showHint(reason) {
+  const { price, paid, change } = currentQ;
+  const overlay = document.getElementById('hint-overlay');
+
+  const icon  = reason === 'miss'  ? '⏰' : '🤔';
+  const title = reason === 'miss'  ? 'Sem estresse!' : 'Quase lá!';
+  const msg   = reason === 'miss'
+    ? `O tempo acabou, mas tudo bem!`
+    : `Não foi dessa vez, mas você está aprendendo!`;
+
+  overlay.innerHTML = `
+    <div class="hint-box">
+      <div class="hint-icon">${icon}</div>
+      <div class="hint-title">${title}</div>
+      <div class="hint-calc">
+        ${msg}<br><br>
+        <strong>${fmt(paid)}</strong> − <strong>${fmt(price)}</strong>
+        = <strong class="hint-answer">${fmt(change)}</strong><br>
+        <span style="font-size:13px;color:#7a6a5a;">O troco certo era <strong class="hint-answer">${fmt(change)}</strong></span>
+      </div>
+      <button class="hint-btn" onclick="retryQuestion()">🔄 Tentar de novo</button>
+    </div>`;
+
+  overlay.style.display = 'flex';
+}
+
+function retryQuestion() { loadQuestion(); }
+
+/* ── End of game ─────────────────────────────────────────── */
+function endGame() {
+  stopAnim();
+  const total = qList.length;
+  const pct   = Math.round((score / total) * 100);
+
+  let stars, title;
+  if      (pct >= 80) { stars = '⭐⭐⭐'; title = 'Você é uma estrela! Incrível! 🎉'; }
+  else if (pct >= 50) { stars = '⭐⭐';  title = 'Muito bem! Continue assim! 👏';    }
+  else                { stars = '⭐';    title = 'Bom esforço! Tente de novo! 💪';   }
+
+  document.getElementById('resultStars').textContent    = stars;
+  document.getElementById('resultTitle').textContent    = title;
+  document.getElementById('resultSubtitle').innerHTML   =
+    `Você acertou <strong>${score}</strong> de <strong>${total}</strong> perguntas (${pct}%)`;
+  document.getElementById('resultAcertos').textContent  = `${score} / ${total}`;
+  document.getElementById('resultNivel').textContent    = LVL_NAME[level];
+
+  // Replay button
+  const btnReplay = document.getElementById('btnPlayAgain');
+  const colors    = { facil:'#2d9e5a', medio:'#d4900a', desafio:'#8a2be2' };
+  btnReplay.style.background = colors[level];
+  btnReplay.textContent      = `🔄 Jogar ${LVL_NAME[level]} de novo`;
+
+  // Next level button
+  const nextLvl    = NEXT_LVL[level];
+  const btnNext    = document.getElementById('btnNextLevel');
+  if (nextLvl && pct >= 50) {
+    btnNext.style.display     = 'block';
+    btnNext.style.background  = colors[nextLvl];
+    btnNext.textContent       = `➡️ Subir para ${LVL_NAME[nextLvl]}`;
+  } else {
+    btnNext.style.display = 'none';
+  }
+
+  showScreen('screen-result');
+}
+
+function replayLevel()  { startGame(level); }
+function goNextLevel()  { startGame(NEXT_LVL[level]); }
+</script>
+</body>
+</html>
