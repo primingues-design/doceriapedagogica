@@ -337,18 +337,26 @@ async function downloadPDF() {
       </div>
     </div>`;
 
+  const _clone=el.cloneNode(true);
+  el.innerHTML=orig;
+
+  const _wrap=document.createElement('div');
+  _wrap.style.cssText='position:fixed;top:-9999px;left:0;width:1200px;max-width:none;';
+  _wrap.appendChild(_clone);
+  document.body.appendChild(_wrap);
+
   try {
     await html2pdf().set({
       margin:[15,15,15,15],
       filename:`DoceriaPedagogica_CacaPalavras_${titulo}.pdf`,
       image:{type:'jpeg',quality:0.98},
-      html2canvas:{scale:2,useCORS:true,logging:false,backgroundColor:'#ffffff'},
+      html2canvas:{scale:2,useCORS:true,logging:false,backgroundColor:'#ffffff',windowWidth:1200},
       jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
       pagebreak:{mode:['avoid-all','css','legacy']}
-    }).from(el).save();
+    }).from(_clone).save();
   } catch(e){console.error(e);}
 
-  el.innerHTML=orig;
+  document.body.removeChild(_wrap);
   btn.disabled=false; btn.textContent='⬇ Baixar PDF';
 }
 

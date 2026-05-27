@@ -660,15 +660,23 @@ Retorne APENAS JSON válido, sem markdown, sem texto antes ou depois.`,
     btn.textContent = '⏳ Gerando PDF...'; btn.disabled = true;
     const element = document.getElementById('document-preview');
     const titulo = document.getElementById('previewTitle').textContent.replace(/[^a-zA-Z0-9\s]/g, '').trim().replace(/\s+/g, '_');
+
+    const _clone = element.cloneNode(true);
+    const _wrap = document.createElement('div');
+    _wrap.style.cssText = 'position:fixed;top:-9999px;left:0;width:1200px;max-width:none;';
+    _wrap.appendChild(_clone);
+    document.body.appendChild(_wrap);
+
     const opt = {
       margin: [15, 15, 15, 15],
       filename: `Alfabetizacao_${titulo}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' },
+      html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', windowWidth: 1200 },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
       pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
-    try { await html2pdf().set(opt).from(element).save(); } catch(e) { console.error(e); }
+    try { await html2pdf().set(opt).from(_clone).save(); } catch(e) { console.error(e); }
+    document.body.removeChild(_wrap);
     btn.textContent = '⬇ Baixar PDF'; btn.disabled = false;
   }
 

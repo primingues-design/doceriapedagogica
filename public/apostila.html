@@ -1200,16 +1200,22 @@ Retorne SOMENTE JSON válido, sem markdown, sem texto extra:
     const titulo = (document.getElementById('phTitle').textContent || 'apostila')
       .replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_');
 
+    const _clone = source.cloneNode(true);
+    const _wrap = document.createElement('div');
+    _wrap.style.cssText = 'position:fixed;top:-9999px;left:0;width:1200px;max-width:none;';
+    _wrap.appendChild(_clone);
+    document.body.appendChild(_wrap);
     try {
       await html2pdf().set({
         margin: [15, 15, 15, 15],
         filename: `DoceriaPedagogica_${titulo}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' },
+        html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', windowWidth: 1200 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-      }).from(source).save();
+      }).from(_clone).save();
     } catch(e) { console.error('Erro ao gerar PDF:', e.message, e); }
+    document.body.removeChild(_wrap);
 
     pdfBtn.disabled = false;
     pdfBtn.textContent = '⬇ Baixar PDF';

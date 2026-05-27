@@ -828,14 +828,13 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
     btn.textContent = '⏳ Gerando...'; btn.disabled = true;
 
     const container = document.getElementById('pdf-container');
-    container.style.display = 'block';
+    container.style.cssText = 'display:block;position:fixed;top:-9999px;left:0;width:1200px;max-width:none;';
     container.innerHTML = slidesData.map((slide, i) => `
       <div class="pdf-slide" style="page-break-after:always; overflow:hidden; position:relative;">
         ${buildSlideHTML(slide, currentTheme)}
       </div>`
     ).join('');
 
-    // Ensure all slide divs fill the PDF slide container
     container.querySelectorAll('.pdf-slide .slide').forEach(el => {
       el.style.width = '100%';
       el.style.height = '100%';
@@ -846,7 +845,7 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
       margin: 0,
       filename: `Slides_${titulo}.pdf`,
       image: { type: 'jpeg', quality: 0.96 },
-      html2canvas: { scale: 1.5, useCORS: true, logging: false },
+      html2canvas: { scale: 1.5, useCORS: true, logging: false, windowWidth: 1200 },
       jsPDF: { unit: 'mm', format: [297, 167], orientation: 'landscape' },
       pagebreak: { mode: ['css'] }
     };
