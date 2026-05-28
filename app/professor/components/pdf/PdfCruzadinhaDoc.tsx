@@ -12,14 +12,13 @@ interface Props {
   isElementary: boolean;
 }
 
-export function PdfCruzadinhaDoc({ titulo, nivel, resultado, config, data, isElementary }: Props) {
+export function PdfCruzadinhaDoc({ titulo, nivel, resultado, config, data }: Props) {
   const { gridData, placements, colunas } = resultado;
 
   const margH = config.pagina.margemEsquerda + config.pagina.margemDireita;
   const availW = 595 - margH;
-  const cluesW = 190;
-  const gridMaxW = availW - cluesW - 12;
-  const tamanhoCelula = Math.min(22, Math.floor(gridMaxW / colunas));
+  // Grid ocupa toda a largura — células maiores e mais legíveis
+  const tamanhoCelula = Math.min(28, Math.floor(availW / colunas));
 
   const numeroPorPos: Record<string, number> = {};
   placements.forEach(pl => { numeroPorPos[`${pl.r},${pl.c}`] = pl.numero; });
@@ -65,10 +64,9 @@ export function PdfCruzadinhaDoc({ titulo, nivel, resultado, config, data, isEle
       color: '#888888',
     },
     corpo: {
-      flexDirection: 'row',
-      gap: 12,
+      flexDirection: 'column',
     },
-    gridWrap: { flexShrink: 0 },
+    gridWrap: { marginBottom: 14 },
     linha: { flexDirection: 'row' },
     celulaVazia: {
       width: tamanhoCelula,
@@ -98,9 +96,10 @@ export function PdfCruzadinhaDoc({ titulo, nivel, resultado, config, data, isEle
       color: '#2d6e6e',
     },
     cluesWrap: {
-      width: cluesW,
-      flexShrink: 0,
+      flexDirection: 'row',
+      gap: 16,
     },
+    clueColuna: { flex: 1 },
     clueSecao: { marginBottom: 10 },
     clueSecaoTitulo: {
       fontSize: 8,
@@ -121,21 +120,17 @@ export function PdfCruzadinhaDoc({ titulo, nivel, resultado, config, data, isEle
       borderBottomColor: '#eeeeee',
     },
     clueNum: {
-      fontSize: 8.5,
+      fontSize: 9,
       fontFamily: config.tipografia.fonteTitulo,
       color: config.cores.primaria,
-      minWidth: 18,
-    },
-    clueEmoji: {
-      fontSize: 10,
-      marginRight: 3,
+      minWidth: 20,
     },
     clueTexto: {
-      fontSize: 8.5,
+      fontSize: 9,
       fontFamily: config.tipografia.fonteCorpo,
       color: '#333333',
       flex: 1,
-      lineHeight: 1.3,
+      lineHeight: 1.35,
     },
     camposAluno: {
       flexDirection: 'row',
@@ -187,7 +182,7 @@ export function PdfCruzadinhaDoc({ titulo, nivel, resultado, config, data, isEle
     );
   }
 
-  function renderClues(lista: PosicaoPalavra[], label: string) {
+  function renderSecaoDicas(lista: PosicaoPalavra[], label: string) {
     if (!lista.length) return null;
     return (
       <View style={styles.clueSecao}>
@@ -195,7 +190,6 @@ export function PdfCruzadinhaDoc({ titulo, nivel, resultado, config, data, isEle
         {lista.map((p, i) => (
           <View key={i} style={styles.clueItem}>
             <Text style={styles.clueNum}>{p.numero}.</Text>
-            {isElementary && p.emoji ? <Text style={styles.clueEmoji}>{p.emoji}</Text> : null}
             <Text style={styles.clueTexto}>{p.dica}</Text>
           </View>
         ))}
@@ -203,64 +197,58 @@ export function PdfCruzadinhaDoc({ titulo, nivel, resultado, config, data, isEle
     );
   }
 
+  function renderPagina(preenchida: boolean, isGaba: boolean) {
+    return (
+      <Page size="A4" orientation="portrait" style={styles.pagina}>
+        <View style={isGaba ? [styles.cabecalho, styles.cabecalhoGaba] : styles.cabecalho}>
+          <Text style={styles.labelTopo}>
+            {isGaba ? 'Gabarito — Uso do Professor' : 'DoceriaPedagógica — Cruzadinha'}
+          </Text>
+          <Text style={isGaba ? [styles.tituloPdf, styles.tituloGaba] : styles.tituloPdf}>{titulo}</Text>
+          <Text style={styles.meta}>
+            {isGaba ? data : `${nivel} • ${placements.length} palavras • ${data}`}
+          </Text>
+        </View>
+
+        <View style={styles.corpo}>
+          {renderGrid(preenchida)}
+
+          <View style={styles.cluesWrap}>
+            <View style={styles.clueColuna}>
+              {renderSecaoDicas(horiz, 'Horizontais →')}
+            </View>
+            <View style={styles.clueColuna}>
+              {renderSecaoDicas(vert, 'Verticais ↓')}
+            </View>
+          </View>
+        </View>
+
+        {!isGaba && (
+          <View style={styles.camposAluno}>
+            <View style={styles.campo}>
+              <Text style={styles.labelCampo}>Nome:</Text>
+              <View style={styles.linhaCampo} />
+            </View>
+            <View style={[styles.campo, { flex: 0.45 }]}>
+              <Text style={styles.labelCampo}>Data:</Text>
+              <View style={styles.linhaCampo} />
+            </View>
+          </View>
+        )}
+
+        <View style={styles.rodape} fixed>
+          <Text style={styles.rodapeTexto}>Doceria Pedagógica</Text>
+          <Text style={styles.rodapeTexto}>{isGaba ? 'Gabarito do professor' : 'Cruzadinha gerada por IA'}</Text>
+          <Text style={styles.rodapeTexto}>{data}</Text>
+        </View>
+      </Page>
+    );
+  }
+
   return (
     <Document>
-      {/* Página 1 — Folha do aluno */}
-      <Page size="A4" orientation="portrait" style={styles.pagina}>
-        <View style={styles.cabecalho}>
-          <Text style={styles.labelTopo}>DoceriaPedagógica — Cruzadinha</Text>
-          <Text style={styles.tituloPdf}>{titulo}</Text>
-          <Text style={styles.meta}>{nivel} • {placements.length} palavras • {data}</Text>
-        </View>
-
-        <View style={styles.corpo}>
-          {renderGrid(false)}
-          <View style={styles.cluesWrap}>
-            {renderClues(horiz, 'Horizontais →')}
-            {renderClues(vert, 'Verticais ↓')}
-          </View>
-        </View>
-
-        <View style={styles.camposAluno}>
-          <View style={styles.campo}>
-            <Text style={styles.labelCampo}>Nome:</Text>
-            <View style={styles.linhaCampo} />
-          </View>
-          <View style={[styles.campo, { flex: 0.45 }]}>
-            <Text style={styles.labelCampo}>Data:</Text>
-            <View style={styles.linhaCampo} />
-          </View>
-        </View>
-
-        <View style={styles.rodape} fixed>
-          <Text style={styles.rodapeTexto}>Doceria Pedagógica</Text>
-          <Text style={styles.rodapeTexto}>Cruzadinha gerada por IA</Text>
-          <Text style={styles.rodapeTexto}>{data}</Text>
-        </View>
-      </Page>
-
-      {/* Página 2 — Gabarito */}
-      <Page size="A4" orientation="portrait" style={styles.pagina}>
-        <View style={[styles.cabecalho, styles.cabecalhoGaba]}>
-          <Text style={styles.labelTopo}>Gabarito — Uso do Professor</Text>
-          <Text style={[styles.tituloPdf, styles.tituloGaba]}>{titulo}</Text>
-          <Text style={styles.meta}>{data}</Text>
-        </View>
-
-        <View style={styles.corpo}>
-          {renderGrid(true)}
-          <View style={styles.cluesWrap}>
-            {renderClues(horiz, 'Horizontais →')}
-            {renderClues(vert, 'Verticais ↓')}
-          </View>
-        </View>
-
-        <View style={styles.rodape} fixed>
-          <Text style={styles.rodapeTexto}>Doceria Pedagógica</Text>
-          <Text style={styles.rodapeTexto}>Gabarito do professor</Text>
-          <Text style={styles.rodapeTexto}>{data}</Text>
-        </View>
-      </Page>
+      {renderPagina(false, false)}
+      {renderPagina(true, true)}
     </Document>
   );
 }
