@@ -77,22 +77,49 @@ export function PdfMatematicaDoc({ problemas, opLabel, difLabel, nivel, data }: 
       fontSize: 9, fontFamily: 'Helvetica-Bold',
       color: '#8a8785', marginBottom: 4, letterSpacing: 0.5,
     },
-    cardInner: { flex: 1, alignItems: 'flex-end', justifyContent: 'flex-start' },
-    carrySpace: { height: 12 },
-    numRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' },
-    signBlank: { width: signFontSize },
+    // Layout da conta em formato vertical
+    cardBody: {
+      flexDirection: 'column',  // empilha linhas verticalmente
+      flex: 1,
+    },
+    carrySpace: { height: 14 },
+    // Cada linha de número ocupa 100% da largura, alinhada à direita
+    numLine: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      width: '100%',
+      marginBottom: 3,
+    },
+    signLine: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      width: '100%',
+      marginBottom: 2,
+    },
     opNumber: {
-      fontFamily: 'Courier', fontSize: numFontSize,
-      fontWeight: 'bold', color: '#0f0e0c', letterSpacing: 2,
+      fontFamily: 'Courier',
+      fontSize: numFontSize,
+      fontWeight: 'bold',
+      color: '#0f0e0c',
+      letterSpacing: 1,
     },
-    signRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' },
     opSign: {
-      fontFamily: 'Helvetica-Bold', fontSize: signFontSize,
-      color: '#2d6e6e', width: signFontSize, textAlign: 'center',
+      fontFamily: 'Helvetica-Bold',
+      fontSize: signFontSize,
+      color: '#2d6e6e',
+      marginRight: 4,
+      textAlign: 'center',
     },
-    opBar: { width: cardW - 24, borderTopWidth: 2, borderTopColor: '#0f0e0c', marginVertical: 5 },
+    opBar: {
+      width: '100%',
+      borderTopWidth: 2,
+      borderTopColor: '#0f0e0c',
+      marginTop: 3,
+      marginBottom: 6,
+    },
     restoLbl: { fontSize: 9, color: '#8a8785', fontFamily: 'Helvetica', marginTop: 2 },
-    answerArea: { flex: 1, minHeight: 30 },
+    answerArea: { flex: 1 },
 
     // Rodapé
     footer: {
@@ -133,16 +160,18 @@ export function PdfMatematicaDoc({ problemas, opLabel, difLabel, nivel, data }: 
     return (
       <View key={idx} style={styles.card}>
         <Text style={styles.cardNum}>{idx + 1}.</Text>
-        <View style={styles.cardInner}>
+        <View style={styles.cardBody}>
           <View style={styles.carrySpace} />
-          <View style={styles.numRow}>
-            <View style={{ width: signFontSize }} />
+          {/* num1 — direita, sem sinal */}
+          <View style={styles.numLine}>
             <Text style={styles.opNumber}>{p.num1}</Text>
           </View>
-          <View style={styles.signRow}>
+          {/* sinal + num2 — direita */}
+          <View style={styles.signLine}>
             <Text style={styles.opSign}>{p.sign}</Text>
             <Text style={styles.opNumber}>{p.num2}</Text>
           </View>
+          {/* barra horizontal */}
           <View style={styles.opBar} />
           {isDiv && (p.resto ?? 0) > 0 && (
             <Text style={styles.restoLbl}>Resto: ____</Text>
