@@ -8,7 +8,7 @@ import { PdfMatematicaDoc } from '@/app/professor/components/pdf/PdfMatematicaDo
 
 const OPERACOES: { val: OpKey | 'mista'; label: string }[] = [
   { val: 'adicao',        label: 'Adição +' },
-  { val: 'subtracao',     label: 'Subtração −' },
+  { val: 'subtracao',     label: 'Subtração -' },
   { val: 'multiplicacao', label: 'Multiplicação ×' },
   { val: 'divisao',       label: 'Divisão ÷' },
   { val: 'mista',         label: 'Mista' },

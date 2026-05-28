@@ -41,7 +41,7 @@ function genSubtracao(dif: Dificuldade): Problema {
     do { num1 = rand(201, 999); num2 = rand(100, num1 - 10); }
     while ((num1 % 10) >= (num2 % 10) || (Math.floor(num1 / 10) % 10) >= (Math.floor(num2 / 10) % 10));
   }
-  return { num1, num2, res: num1 - num2, sign: '−', opKey: 'subtracao', label: 'Subtração' };
+  return { num1, num2, res: num1 - num2, sign: '-', opKey: 'subtracao', label: 'Subtração' };
 }
 
 function genMultiplicacao(dif: Dificuldade): Problema {
@@ -54,7 +54,7 @@ function genMultiplicacao(dif: Dificuldade): Problema {
   } else {
     num1 = rand(12, 199); num2 = rand(11, 25);
   }
-  return { num1, num2, res: num1 * num2, sign: '×', opKey: 'multiplicacao', label: 'Multiplicação' };
+  return { num1, num2, res: num1 * num2, sign: 'x', opKey: 'multiplicacao', label: 'Multiplicação' };
 }
 
 function genDivisao(dif: Dificuldade): Problema {
@@ -69,7 +69,7 @@ function genDivisao(dif: Dificuldade): Problema {
     num2 = rand(11, 20); res = rand(10, 40); resto = rand(1, num2 - 1);
     num1 = num2 * res + resto;
   }
-  return { num1, num2, res, resto, sign: '÷', opKey: 'divisao', label: 'Divisão' };
+  return { num1, num2, res, resto, sign: ':', opKey: 'divisao', label: 'Divisão' };
 }
 
 const OP_FNS: Record<OpKey, (d: Dificuldade) => Problema> = {

@@ -229,7 +229,7 @@ export function PdfMatematicaDoc({ problemas, opLabel, difLabel, nivel, data }: 
             return (
               <View key={i} style={styles.gabaItem}>
                 <Text style={styles.gabaNum}>{i + 1}.</Text>
-                <Text style={styles.gabaEq}>{p.num1}{p.sign}{p.num2}={p.res}{restoStr}</Text>
+                <Text style={styles.gabaEq}>{p.num1} {p.sign} {p.num2} = {p.res}{restoStr}</Text>
               </View>
             );
           })}
