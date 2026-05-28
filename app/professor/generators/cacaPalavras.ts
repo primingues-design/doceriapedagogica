@@ -12,7 +12,16 @@ export interface OpcoesCacaPalavras {
   permitirDiagonais?: boolean;
 }
 
+export interface ResultadoCacaPalavras {
+  bloco: BlocoCacaPalavras;
+  gabarito: CelulaCacaPalavras[][];
+}
+
 export function gerarCacaPalavras(opcoes: OpcoesCacaPalavras): BlocoCacaPalavras {
+  return gerarCacaPalavrasComGabarito(opcoes).bloco;
+}
+
+export function gerarCacaPalavrasComGabarito(opcoes: OpcoesCacaPalavras): ResultadoCacaPalavras {
   const { palavras, tamanhoGrid = 15, permitirDiagonais = false } = opcoes;
 
   const palavrasLimpas = palavras
@@ -26,38 +35,61 @@ export function gerarCacaPalavras(opcoes: OpcoesCacaPalavras): BlocoCacaPalavras
   );
 
   const palavrasColocadas: string[] = [];
+  const celulasDePalavras = new Set<string>();
 
   for (const palavra of palavrasLimpas) {
-    const colocada = tentarColocarPalavra(grid, palavra, tamanho, permitirDiagonais);
-    if (colocada) palavrasColocadas.push(palavra);
+    const pos = tentarColocarPalavraComRetorno(grid, palavra, tamanho, permitirDiagonais);
+    if (pos) {
+      palavrasColocadas.push(palavra);
+      const { li, ci, dl, dc } = pos;
+      for (let i = 0; i < palavra.length; i++) {
+        celulasDePalavras.add(`${li + i * dl},${ci + i * dc}`);
+      }
+    }
   }
 
-  const gridFinal: CelulaCacaPalavras[][] = grid.map(linha =>
-    linha.map(letra => ({
+  const gridFinal: CelulaCacaPalavras[][] = grid.map((linha, r) =>
+    linha.map((letra, c) => ({
       letra: letra || letraAleatoria(),
       destacada: false,
     }))
   );
 
+  // Preenche letras aleatórias faltantes na grid interna
+  for (let r = 0; r < tamanho; r++) {
+    for (let c = 0; c < tamanho; c++) {
+      if (!gridFinal[r][c].letra) gridFinal[r][c].letra = letraAleatoria();
+    }
+  }
+
+  const gabarito: CelulaCacaPalavras[][] = gridFinal.map((linha, r) =>
+    linha.map((celula, c) => ({
+      letra: celula.letra,
+      destacada: celulasDePalavras.has(`${r},${c}`),
+    }))
+  );
+
   return {
-    id: `caca-palavras-${Date.now()}`,
-    tipo: 'caca-palavras',
-    grid: gridFinal,
-    palavras: palavrasColocadas,
+    bloco: {
+      id: `caca-palavras-${Date.now()}`,
+      tipo: 'caca-palavras',
+      grid: gridFinal,
+      palavras: palavrasColocadas,
+    },
+    gabarito,
   };
 }
 
-function tentarColocarPalavra(
+interface Posicao { li: number; ci: number; dl: number; dc: number; }
+
+function tentarColocarPalavraComRetorno(
   grid: string[][],
   palavra: string,
   tamanho: number,
   permitirDiagonais: boolean
-): boolean {
+): Posicao | null {
   const direcoes = [
-    [0, 1],
-    [1, 0],
-    [0, -1],
-    [-1, 0],
+    [0, 1], [1, 0], [0, -1], [-1, 0],
     ...(permitirDiagonais ? [[1, 1], [1, -1], [-1, 1], [-1, -1]] : []),
   ];
 
@@ -68,11 +100,11 @@ function tentarColocarPalavra(
 
     if (podeColocar(grid, palavra, li, ci, dir[0], dir[1], tamanho)) {
       colocarPalavra(grid, palavra, li, ci, dir[0], dir[1]);
-      return true;
+      return { li, ci, dl: dir[0], dc: dir[1] };
     }
   }
 
-  return false;
+  return null;
 }
 
 function podeColocar(
