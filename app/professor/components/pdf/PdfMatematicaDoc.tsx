@@ -14,10 +14,14 @@ export function PdfMatematicaDoc({ problemas, opLabel, difLabel, nivel, data }: 
   const qty = problemas.length;
   const cols = qty <= 6 ? 2 : qty <= 9 ? 3 : 4;
 
-  // Tamanho da fonte dos números varia com a dificuldade
   const numFontSize = difLabel === 'Difícil' ? 18 : difLabel === 'Médio' ? 20 : 22;
   const signFontSize = numFontSize + 2;
-  const cardMinH = difLabel === 'Difícil' ? 120 : difLabel === 'Médio' ? 105 : 88;
+  const cardH = difLabel === 'Difícil' ? 130 : difLabel === 'Médio' ? 112 : 96;
+
+  // Larguras exatas para evitar sobreposição de linhas no grid
+  const GAP = 12;
+  const contentW = 515; // 595 - 40 - 40
+  const cardW = Math.floor((contentW - (cols - 1) * GAP) / cols);
 
   const styles = StyleSheet.create({
     page: {
@@ -27,7 +31,6 @@ export function PdfMatematicaDoc({ problemas, opLabel, difLabel, nivel, data }: 
       paddingLeft: 40,
       paddingRight: 40,
     },
-    // Cabeçalho
     header: {
       borderTopWidth: 4,
       borderTopColor: '#2d6e6e',
@@ -43,39 +46,39 @@ export function PdfMatematicaDoc({ problemas, opLabel, difLabel, nivel, data }: 
     },
     headerMeta: { fontSize: 10, color: '#8a8785', fontFamily: 'Helvetica', marginBottom: 10 },
     nameRow: {
-      flexDirection: 'row', gap: 24,
+      flexDirection: 'row', gap: 20,
       fontSize: 10, color: '#8a8785', fontFamily: 'Helvetica',
     },
     nameField: { flexDirection: 'row', alignItems: 'center' },
     nameLabel: { fontSize: 10, fontFamily: 'Helvetica', color: '#8a8785', marginRight: 4 },
-    nameLine: { width: 120, borderBottomWidth: 1, borderBottomColor: '#cccccc', height: 14 },
+    nameLine: { width: 110, borderBottomWidth: 1, borderBottomColor: '#cccccc', height: 14 },
 
-    // Grid de operações
+    // Grid — sem gap (usamos marginRight/marginBottom nos cards)
     grid: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      gap: 14,
-      marginTop: 4,
     },
 
-    // Card de operação
+    // Card com largura e altura exatas
     card: {
-      width: `${Math.floor(100 / cols) - 3}%`,
-      minHeight: cardMinH,
+      width: cardW,
+      height: cardH,
+      marginRight: GAP,
+      marginBottom: GAP,
       backgroundColor: '#faf7f2',
       borderWidth: 1,
       borderColor: '#e0dbd4',
       borderRadius: 7,
       paddingHorizontal: 12,
       paddingTop: 8,
-      paddingBottom: 10,
+      paddingBottom: 8,
     },
     cardNum: {
       fontSize: 9, fontFamily: 'Helvetica-Bold',
-      color: '#8a8785', marginBottom: 6, letterSpacing: 0.5,
+      color: '#8a8785', marginBottom: 4, letterSpacing: 0.5,
     },
-    cardInner: { alignItems: 'flex-end' },
-    carrySpace: { height: 14 },
+    cardInner: { flex: 1, alignItems: 'flex-end', justifyContent: 'flex-start' },
+    carrySpace: { height: 12 },
     numRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' },
     signBlank: { width: signFontSize },
     opNumber: {
@@ -87,7 +90,7 @@ export function PdfMatematicaDoc({ problemas, opLabel, difLabel, nivel, data }: 
       fontFamily: 'Helvetica-Bold', fontSize: signFontSize,
       color: '#2d6e6e', width: signFontSize, textAlign: 'center',
     },
-    opBar: { borderTopWidth: 2, borderTopColor: '#0f0e0c', marginVertical: 5 },
+    opBar: { width: cardW - 24, borderTopWidth: 2, borderTopColor: '#0f0e0c', marginVertical: 5 },
     restoLbl: { fontSize: 9, color: '#8a8785', fontFamily: 'Helvetica', marginTop: 2 },
     answerArea: { flex: 1, minHeight: 30 },
 
