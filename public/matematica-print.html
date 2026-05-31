@@ -5,14 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gerador de Matemática — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root {
   --ink:#0f0e0c; --cream:#faf7f2; --warm:#f5f0e8;
-  --gold:#c8963e; --gold-light:#e8b86d; --gold-pale:#fdf3e3;
-  --teal:#2d6e6e; --teal-light:#4a9b9b; --teal-pale:#e8f4f4;
-  --coral:#d95f3b; --coral-pale:#fdeee9;
-  --green:#2d7d4e; --green-pale:#e8f5ee;
+  --gold:#c8963e; --teal:#2d6e6e; --coral:#d95f3b;
+  --green:#2d7d4e;
   --text:#1a1917; --text-mid:#4a4845; --text-muted:#8a8785;
   --border:rgba(15,14,12,0.1); --border-mid:rgba(15,14,12,0.18);
 }
@@ -42,6 +39,11 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
 .pill-dif.active.dificil{background:var(--coral)}
 .pill-qty.active{background:var(--ink)}
 
+.toggle-wrap{margin-bottom:16px}
+.toggle-row{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;font-weight:600;color:var(--text)}
+.toggle-row input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--teal)}
+.toggle-hint{font-size:11px;color:var(--text-muted);margin-top:3px;margin-left:24px}
+
 .btn-gen{width:100%;padding:13px;background:var(--teal);color:white;border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity 0.2s;margin-top:4px}
 .btn-gen:hover{opacity:0.88}
 
@@ -49,23 +51,18 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
 .preview-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 .preview-lbl{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)}
 .btn-dl{background:var(--gold);color:white;border:none;border-radius:8px;padding:9px 20px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:none;transition:opacity 0.2s}
-.btn-dl:hover:not(:disabled){opacity:0.88}
-.btn-dl:disabled{opacity:0.5;cursor:not-allowed}
+.btn-dl:hover{opacity:0.88}
 
 .preview-empty{background:white;border:1.5px dashed var(--border-mid);border-radius:16px;padding:80px 32px;text-align:center;color:var(--text-muted)}
 #doc-preview{background:white;border:1px solid var(--border);border-radius:16px;padding:40px 44px;display:none}
 
-/* ── Sheet header ── */
 .sh-header{border-top:5px solid var(--teal);border-bottom:1px solid var(--border);padding:18px 0 14px;margin-bottom:32px}
 .sh-lbl{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
 .sh-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--text);margin-bottom:4px}
 .sh-meta{font-size:11px;color:var(--text-muted)}
 .sh-name-row{margin-top:14px;display:flex;gap:32px;font-size:12px;color:var(--text-muted)}
 
-/* ── Operation grid ── */
 .ops-grid{display:grid;gap:24px 20px;margin-top:8px}
-
-/* ── Operation card ── */
 .op-card{background:var(--cream);border:1px solid var(--border-mid);border-radius:10px;padding:14px 16px 10px;display:flex;flex-direction:column}
 .op-num-lbl{font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:8px;letter-spacing:0.06em}
 .op-inner{display:flex;flex-direction:column;align-items:flex-end;width:100%}
@@ -77,8 +74,7 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
 .op-bar{width:100%;border-top:2.5px solid var(--ink);margin:6px 0 8px}
 .op-answer-area{width:100%;flex:1;min-height:40px}
 
-/* ── Gabarito ── */
-.gaba-section{page-break-before:always;break-before:page;padding-top:8px}
+#print-teacher{display:none;margin-top:40px;padding-top:40px;border-top:2px dashed var(--border-mid)}
 .gaba-header{border-top:3px solid var(--coral);padding-top:14px;margin-bottom:18px}
 .gaba-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:900;color:var(--coral);margin-bottom:2px}
 .gaba-sub{font-size:11px;color:var(--text-muted)}
@@ -89,6 +85,28 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
 
 .sh-footer{margin-top:28px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted)}
 .sh-footer-logo{font-family:'Playfair Display',serif;color:var(--gold);font-weight:700}
+
+/* Letra Grande */
+body.letra-grande .sh-title{font-size:28px}
+body.letra-grande .sh-meta{font-size:13px}
+body.letra-grande .sh-name-row{font-size:14px}
+body.letra-grande .op-number{font-size:32px;letter-spacing:3px}
+body.letra-grande .op-sign{font-size:28px}
+body.letra-grande .gaba-eq{font-size:14px}
+body.letra-grande .gaba-item{font-size:13px}
+
+/* ═══ IMPRESSÃO ═══ */
+@media print {
+  @page { size: A4 portrait; margin: 10mm 12mm; }
+  body { background: white !important; }
+  .topbar, .main > .form-panel, .preview-top { display: none !important; }
+  .main { display: block !important; padding: 0 !important; }
+  .preview-panel { display: block !important; }
+  #doc-preview { display: block !important; border: none !important; border-radius: 0 !important; padding: 0 !important; margin: 0 !important; }
+  #print-student { display: block !important; }
+  #print-teacher { display: block !important; page-break-before: always; margin-top: 0 !important; padding-top: 0 !important; border-top: none !important; }
+  .preview-empty { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -99,8 +117,6 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
 </div>
 
 <div class="main">
-
-  <!-- FORM -->
   <div class="form-panel">
     <div class="form-title">➗ Gerador de Matemática</div>
 
@@ -138,156 +154,96 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
       <option>EJA</option>
     </select>
 
+    <div class="toggle-wrap">
+      <label class="toggle-row">
+        <input type="checkbox" id="letraGrande" onchange="onLetraGrandeChange()">
+        <span>🔡 Letra Grande</span>
+      </label>
+      <div class="toggle-hint">Recomendado para EJA e Educação Infantil</div>
+    </div>
+
     <button class="btn-gen" onclick="generate()">✨ Gerar Folha</button>
   </div>
 
-  <!-- PREVIEW -->
   <div class="preview-panel">
     <div class="preview-top">
       <div class="preview-lbl">Pré-visualização</div>
-      <button class="btn-dl" id="btnDL" onclick="downloadPDF()">⬇ Baixar PDF</button>
+      <button class="btn-dl" id="btnDL" onclick="printPDF()">🖨️ Imprimir / Salvar PDF</button>
     </div>
     <div class="preview-empty" id="emptyState">
       <div style="font-size:48px;margin-bottom:12px;opacity:0.3;">➗</div>
       <div style="font-size:15px;font-weight:600;">Configure os filtros e clique em Gerar</div>
       <div style="font-size:13px;margin-top:6px;color:var(--text-muted)">O PDF inclui folha do aluno + gabarito do professor</div>
     </div>
-    <div id="doc-preview"></div>
+    <div id="doc-preview">
+      <div id="print-student"></div>
+      <div id="print-teacher"></div>
+    </div>
   </div>
-
 </div>
 
 <script>
-// ── PILL GROUPS ──
-document.querySelectorAll('.pill-group').forEach(g => {
-  g.querySelectorAll('.pill').forEach(p =>
-    p.addEventListener('click', () => {
-      g.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+document.querySelectorAll('.pill-group').forEach(g=>{
+  g.querySelectorAll('.pill').forEach(p=>
+    p.addEventListener('click',()=>{
+      g.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
       p.classList.add('active');
     })
   );
 });
-function getPill(id) { return document.getElementById(id)?.querySelector('.pill.active')?.dataset.val || null; }
+function getPill(id){return document.getElementById(id)?.querySelector('.pill.active')?.dataset.val||null;}
+function rand(min,max){return min+Math.floor(Math.random()*(max-min+1));}
 
-// ── RANDOM HELPERS ──
-function rand(min, max) { return min + Math.floor(Math.random() * (max - min + 1)); }
-
-// ── PROBLEM GENERATORS ──
-
-function genAdicao(dif) {
-  if (dif === 'facil') {
-    // Sem reserva: soma de unidades < 10, números 1 a 18
-    let a, b;
-    do { a = rand(1, 18); b = rand(1, 18); }
-    while ((a % 10) + (b % 10) >= 10 || a + b > 25);
-    return { num1: a, num2: b, res: a + b };
-  }
-  if (dif === 'medio') {
-    // Com reserva nas unidades, 2 dígitos
-    let a, b;
-    do { a = rand(12, 89); b = rand(12, 89); }
-    while ((a % 10) + (b % 10) < 10);
-    return { num1: a, num2: b, res: a + b };
-  }
-  // dificil: 3–4 dígitos, múltiplas reservas
-  let a = rand(101, 999), b = rand(101, 999);
-  return { num1: a, num2: b, res: a + b };
+function genAdicao(dif){
+  if(dif==='facil'){let a,b;do{a=rand(1,18);b=rand(1,18);}while((a%10)+(b%10)>=10||a+b>25);return{num1:a,num2:b,res:a+b};}
+  if(dif==='medio'){let a,b;do{a=rand(12,89);b=rand(12,89);}while((a%10)+(b%10)<10);return{num1:a,num2:b,res:a+b};}
+  let a=rand(101,999),b=rand(101,999);return{num1:a,num2:b,res:a+b};
 }
-
-function genSubtracao(dif) {
-  if (dif === 'facil') {
-    // Sem reagrupamento: unidade do minuendo >= unidade do subtraendo
-    let a, b;
-    do { a = rand(5, 25); b = rand(1, a - 1); }
-    while ((a % 10) < (b % 10) || b === 0);
-    return { num1: a, num2: b, res: a - b };
-  }
-  if (dif === 'medio') {
-    // Com reagrupamento (emprestar da dezena)
-    let a, b;
-    do { a = rand(21, 99); b = rand(10, a - 5); }
-    while ((a % 10) >= (b % 10));
-    return { num1: a, num2: b, res: a - b };
-  }
-  // dificil: 3 dígitos, múltiplos reagrupamentos
-  let a, b;
-  do { a = rand(201, 999); b = rand(100, a - 10); }
-  while ((a % 10) >= (b % 10) || (Math.floor(a/10)%10) >= (Math.floor(b/10)%10));
-  return { num1: a, num2: b, res: a - b };
+function genSubtracao(dif){
+  if(dif==='facil'){let a,b;do{a=rand(5,25);b=rand(1,a-1);}while((a%10)<(b%10)||b===0);return{num1:a,num2:b,res:a-b};}
+  if(dif==='medio'){let a,b;do{a=rand(21,99);b=rand(10,a-5);}while((a%10)>=(b%10));return{num1:a,num2:b,res:a-b};}
+  let a,b;do{a=rand(201,999);b=rand(100,a-10);}while((a%10)>=(b%10)||(Math.floor(a/10)%10)>=(Math.floor(b/10)%10));return{num1:a,num2:b,res:a-b};
 }
-
-function genMultiplicacao(dif) {
-  if (dif === 'facil') {
-    // Tabuada simples 2–10
-    const a = rand(2, 10), b = rand(2, 10);
-    return { num1: a, num2: b, res: a * b };
-  }
-  if (dif === 'medio') {
-    // 2–3 dígitos × 1 dígito com reserva
-    let a, b;
-    do { a = rand(12, 99); b = rand(3, 9); }
-    while (a * b < 20);
-    return { num1: a, num2: b, res: a * b };
-  }
-  // dificil: 2–3 dígitos × 2 dígitos
-  const a = rand(12, 199), b = rand(11, 25);
-  return { num1: a, num2: b, res: a * b };
+function genMultiplicacao(dif){
+  if(dif==='facil'){const a=rand(2,10),b=rand(2,10);return{num1:a,num2:b,res:a*b};}
+  if(dif==='medio'){let a,b;do{a=rand(12,99);b=rand(3,9);}while(a*b<20);return{num1:a,num2:b,res:a*b};}
+  const a=rand(12,199),b=rand(11,25);return{num1:a,num2:b,res:a*b};
 }
-
-function genDivisao(dif) {
-  if (dif === 'facil') {
-    // Exata da tabuada
-    const div = rand(2, 10), quot = rand(2, 10);
-    return { num1: div * quot, num2: div, res: quot, resto: 0 };
-  }
-  if (dif === 'medio') {
-    // Exata, números maiores
-    const div = rand(3, 12), quot = rand(11, 30);
-    return { num1: div * quot, num2: div, res: quot, resto: 0 };
-  }
-  // dificil: com resto ou divisor de 2 dígitos
-  const div = rand(11, 20), quot = rand(10, 40), resto = rand(1, div - 1);
-  return { num1: div * quot + resto, num2: div, res: quot, resto };
+function genDivisao(dif){
+  if(dif==='facil'){const div=rand(2,10),quot=rand(2,10);return{num1:div*quot,num2:div,res:quot,resto:0};}
+  if(dif==='medio'){const div=rand(3,12),quot=rand(11,30);return{num1:div*quot,num2:div,res:quot,resto:0};}
+  const div=rand(11,20),quot=rand(10,40),resto=rand(1,div-1);return{num1:div*quot+resto,num2:div,res:quot,resto};
 }
-
-const OP_MAP = {
-  adicao:       { fn: genAdicao,        sign: '+',  label: 'Adição' },
-  subtracao:    { fn: genSubtracao,     sign: '−',  label: 'Subtração' },
-  multiplicacao:{ fn: genMultiplicacao, sign: '×',  label: 'Multiplicação' },
-  divisao:      { fn: genDivisao,       sign: '÷',  label: 'Divisão' },
+const OP_MAP={
+  adicao:{fn:genAdicao,sign:'+',label:'Adição'},
+  subtracao:{fn:genSubtracao,sign:'−',label:'Subtração'},
+  multiplicacao:{fn:genMultiplicacao,sign:'×',label:'Multiplicação'},
+  divisao:{fn:genDivisao,sign:'÷',label:'Divisão'},
 };
-const MIXED_OPS = ['adicao', 'subtracao', 'multiplicacao', 'divisao'];
+const MIXED_OPS=['adicao','subtracao','multiplicacao','divisao'];
 
-function generateAll(op, dif, qty) {
-  const problems = [];
-  for (let i = 0; i < qty; i++) {
-    const key = op === 'mista' ? MIXED_OPS[i % 4] : op;
-    const { fn, sign, label } = OP_MAP[key];
-    const p = fn(dif);
-    problems.push({ ...p, sign, opKey: key, label });
+function generateAll(op,dif,qty){
+  const problems=[];
+  for(let i=0;i<qty;i++){
+    const key=op==='mista'?MIXED_OPS[i%4]:op;
+    const{fn,sign,label}=OP_MAP[key];
+    const p=fn(dif);
+    problems.push({...p,sign,opKey:key,label});
   }
   return problems;
 }
 
-// ── CARD HTML ──
-function opCardHTML(p, idx, cardH) {
-  const isDiv = p.opKey === 'divisao';
-  const restoLine = isDiv && p.resto > 0
-    ? `<div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Resto: ____</div>` : '';
-  const carryH = cardH > 90 ? '22px' : '16px';
+function opCardHTML(p,idx,cardH){
+  const isDiv=p.opKey==='divisao';
+  const restoLine=isDiv&&p.resto>0?`<div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Resto: ____</div>`:'';
+  const carryH=cardH>90?'22px':'16px';
   return `
     <div class="op-card" style="min-height:${cardH}px;">
-      <div class="op-num-lbl">${idx + 1}.</div>
+      <div class="op-num-lbl">${idx+1}.</div>
       <div class="op-inner">
         <div class="carry-space" style="height:${carryH};"></div>
-        <div class="op-row">
-          <span class="op-sign-blank"></span>
-          <span class="op-number">${p.num1}</span>
-        </div>
-        <div class="op-row">
-          <span class="op-sign">${p.sign}</span>
-          <span class="op-number">${p.num2}</span>
-        </div>
+        <div class="op-row"><span class="op-sign-blank"></span><span class="op-number">${p.num1}</span></div>
+        <div class="op-row"><span class="op-sign">${p.sign}</span><span class="op-number">${p.num2}</span></div>
         <div class="op-bar"></div>
         ${restoLine}
         <div class="op-answer-area"></div>
@@ -295,19 +251,14 @@ function opCardHTML(p, idx, cardH) {
     </div>`;
 }
 
-// ── GABARITO HTML ──
-function gabaHTML(problems) {
-  const date = new Date().toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
-  const items = problems.map((p, i) => {
-    const isDiv = p.opKey === 'divisao';
-    const restoStr = isDiv && p.resto > 0 ? ` (R: ${p.resto})` : '';
-    return `<div class="gaba-item">
-      <span class="gaba-n">${i+1}.</span>
-      <span class="gaba-eq">${p.num1} ${p.sign} ${p.num2} = ${p.res}${restoStr}</span>
-    </div>`;
+function gabaHTML(problems){
+  const date=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  const items=problems.map((p,i)=>{
+    const restoStr=p.opKey==='divisao'&&p.resto>0?` (R: ${p.resto})`:'';
+    return `<div class="gaba-item"><span class="gaba-n">${i+1}.</span><span class="gaba-eq">${p.num1} ${p.sign} ${p.num2} = ${p.res}${restoStr}</span></div>`;
   }).join('');
   return `
-    <div class="gaba-section">
+    <div style="padding-top:8px;">
       <div class="gaba-header">
         <div class="gaba-title">Gabarito — Uso Exclusivo do Professor</div>
         <div class="gaba-sub">Material gerado por DoceriaPedagógica • ${date}</div>
@@ -316,34 +267,27 @@ function gabaHTML(problems) {
     </div>`;
 }
 
-// ── GENERATE & RENDER ──
-let lastProblems = null, lastMeta = null;
+let lastProblems=null,lastMeta=null;
 
-function generate() {
-  const op  = getPill('opPills')  || 'adicao';
-  const dif = getPill('difPills') || 'facil';
-  const qty = parseInt(getPill('qtyPills') || '9');
-  const nivel = document.getElementById('inNivel').value;
+function generate(){
+  const op=getPill('opPills')||'adicao';
+  const dif=getPill('difPills')||'facil';
+  const qty=parseInt(getPill('qtyPills')||'9');
+  const nivel=document.getElementById('inNivel').value;
+  const problems=generateAll(op,dif,qty);
+  lastProblems=problems;
+  const opLabel=op==='mista'?'Operações Mistas':OP_MAP[op].label;
+  const difLabel={facil:'Fácil',medio:'Médio',dificil:'Difícil'}[dif];
+  const date=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  lastMeta={opLabel,difLabel,nivel,qty,date};
+  const cols=qty<=6?2:qty<=9?3:4;
+  const cardH=dif==='dificil'?130:dif==='medio'?110:90;
+  const cardsHTML=problems.map((p,i)=>opCardHTML(p,i,cardH)).join('');
 
-  const problems = generateAll(op, dif, qty);
-  lastProblems = problems;
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('doc-preview').style.display='block';
 
-  const opLabel = op === 'mista' ? 'Operações Mistas' : OP_MAP[op].label;
-  const difLabel = { facil:'Fácil', medio:'Médio', dificil:'Difícil' }[dif];
-  const date = new Date().toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
-  lastMeta = { opLabel, difLabel, nivel, qty, date };
-
-  // Grid columns
-  const cols = qty <= 6 ? 2 : qty <= 9 ? 3 : 4;
-  // Card height: more space for harder/larger numbers
-  const cardH = dif === 'dificil' ? 130 : dif === 'medio' ? 110 : 90;
-
-  const cardsHTML = problems.map((p, i) => opCardHTML(p, i, cardH)).join('');
-
-  document.getElementById('emptyState').style.display = 'none';
-  const el = document.getElementById('doc-preview');
-  el.style.display = 'block';
-  el.innerHTML = `
+  document.getElementById('print-student').innerHTML=`
     <div class="sh-header">
       <div class="sh-lbl">DoceriaPedagógica — Folha de Matemática</div>
       <div class="sh-title">${opLabel} — Nível ${difLabel}</div>
@@ -361,42 +305,22 @@ function generate() {
       <span>${date}</span>
     </div>`;
 
-  document.getElementById('btnDL').style.display = 'inline-block';
+  document.getElementById('print-teacher').innerHTML=gabaHTML(problems);
+  document.getElementById('print-teacher').style.display='block';
+  document.getElementById('btnDL').style.display='inline-block';
 }
 
-// ── PDF ──
-async function downloadPDF() {
-  const btn = document.getElementById('btnDL');
-  btn.disabled = true; btn.textContent = '⏳ Gerando PDF...';
+function printPDF(){ window.print(); }
 
-  const el = document.getElementById('doc-preview');
-  const orig = el.innerHTML;
-  el.innerHTML += gabaHTML(lastProblems);
-
-  const _clone = el.cloneNode(true);
-  el.innerHTML = orig;
-
-  const _wrap = document.createElement('div');
-  _wrap.style.cssText = 'position:fixed;top:-9999px;left:0;width:1200px;max-width:none;';
-  _wrap.appendChild(_clone);
-  document.body.appendChild(_wrap);
-
-  const fname = `DoceriaPedagogica_Matematica_${(lastMeta?.opLabel||'').replace(/\s/g,'_')}_${lastMeta?.difLabel||''}.pdf`;
-
-  try {
-    await html2pdf().set({
-      margin: [15, 15, 15, 15],
-      filename: fname,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', windowWidth: 1200 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-    }).from(_clone).save();
-  } catch(e) { console.error(e); }
-
-  document.body.removeChild(_wrap);
-  btn.disabled = false; btn.textContent = '⬇ Baixar PDF';
+function onLetraGrandeChange(){
+  document.body.classList.toggle('letra-grande',document.getElementById('letraGrande').checked);
 }
+
+document.getElementById('inNivel').addEventListener('change',function(){
+  const isAccessivel=/infantil|eja/i.test(this.value);
+  document.getElementById('letraGrande').checked=isAccessivel;
+  document.body.classList.toggle('letra-grande',isAccessivel);
+});
 </script>
 </body>
 </html>

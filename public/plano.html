@@ -5,141 +5,148 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Plano de Aula — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root {
-    --ink: #0f0e0c;
-    --cream: #faf7f2;
-    --warm: #f5f0e8;
-    --gold: #c8963e;
-    --gold-light: #e8b86d;
-    --gold-pale: #fdf3e3;
-    --teal: #2d6e6e;
-    --teal-light: #4a9b9b;
-    --teal-pale: #e8f4f4;
-    --coral: #d95f3b;
-    --coral-pale: #fdeee9;
-    --coral2: #c8503e;
-    --coral2-pale: #fce8e5;
-    --text: #1a1917;
-    --text-mid: #4a4845;
-    --text-muted: #8a8785;
-    --border: rgba(15,14,12,0.1);
-    --border-mid: rgba(15,14,12,0.18);
-    --success: #2d6e6e;
+    --ink:#0f0e0c; --cream:#faf7f2; --warm:#f5f0e8;
+    --gold:#c8963e; --gold-light:#e8b86d; --gold-pale:#fdf3e3;
+    --teal:#2d6e6e; --teal-pale:#e8f4f4;
+    --coral:#d95f3b; --coral-pale:#fdeee9; --coral2:#c8503e;
+    --text:#1a1917; --text-mid:#4a4845; --text-muted:#8a8785;
+    --border:rgba(15,14,12,0.1); --border-mid:rgba(15,14,12,0.18);
   }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Outfit', sans-serif; background: var(--warm); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
 
-  .topbar { background: var(--ink); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
-  .topbar-logo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 900; color: var(--cream); display: flex; align-items: center; gap: 10px; text-decoration: none; }
-  .topbar-logo-mark { width: 28px; height: 28px; background: var(--gold); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 13px; }
-  .topbar-back { font-size: 13px; color: rgba(250,247,242,0.5); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
-  .topbar-back:hover { color: var(--cream); }
+  .topbar{background:var(--ink);padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+  .topbar-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--cream);display:flex;align-items:center;gap:10px;text-decoration:none}
+  .topbar-logo-mark{width:28px;height:28px;background:var(--gold);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
+  .topbar-back{font-size:13px;color:rgba(250,247,242,0.5);text-decoration:none;transition:color 0.2s}
+  .topbar-back:hover{color:var(--cream)}
 
-  .main { display: grid; grid-template-columns: 420px 1fr; min-height: calc(100vh - 56px); }
+  .main{display:grid;grid-template-columns:420px 1fr;min-height:calc(100vh - 56px)}
 
-  .form-panel { background: var(--cream); border-right: 1px solid var(--border); padding: 32px 28px; overflow-y: auto; max-height: calc(100vh - 56px); position: sticky; top: 56px; }
-  .form-panel-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; margin-bottom: 6px; }
-  .form-panel-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; line-height: 1.5; }
+  .form-panel{background:var(--cream);border-right:1px solid var(--border);padding:32px 28px;overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px}
+  .form-panel-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;margin-bottom:6px}
+  .form-panel-sub{font-size:13px;color:var(--text-muted);margin-bottom:28px;line-height:1.5}
 
-  .field { margin-bottom: 20px; }
-  .field-label { font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; display: block; margin-bottom: 7px; }
-  .field-required { color: var(--coral); }
-  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field{margin-bottom:20px}
+  .field-label{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.07em;text-transform:uppercase;display:block;margin-bottom:7px}
+  .field-required{color:var(--coral)}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
-  input[type="text"], select, textarea { width: 100%; background: white; border: 1.5px solid var(--border-mid); border-radius: 9px; padding: 11px 14px; font-size: 14px; color: var(--text); font-family: 'Outfit', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
-  input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--coral); box-shadow: 0 0 0 3px rgba(217,95,59,0.1); }
-  textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
-  select option { background: white; }
+  input[type="text"],select,textarea{width:100%;background:white;border:1.5px solid var(--border-mid);border-radius:9px;padding:11px 14px;font-size:14px;color:var(--text);font-family:'Outfit',sans-serif;transition:border-color 0.2s,box-shadow 0.2s;outline:none}
+  input[type="text"]:focus,select:focus,textarea:focus{border-color:var(--coral);box-shadow:0 0 0 3px rgba(217,95,59,0.1)}
+  textarea{resize:vertical;min-height:80px;line-height:1.6}
 
-  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+  /* toggle letra grande */
+  .lg-wrap{margin-bottom:20px;padding:12px 14px;background:white;border:1.5px solid var(--border-mid);border-radius:9px}
+  .lg-row{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;font-weight:600;color:var(--text)}
+  .lg-row input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--coral)}
+  .lg-hint{font-size:11px;color:var(--text-muted);margin-top:3px;margin-left:24px}
 
-  .generate-btn { width: 100%; background: var(--coral); color: white; border: none; padding: 15px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Outfit', sans-serif; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s; margin-top: 4px; }
-  .generate-btn:hover:not(:disabled) { background: var(--coral2); transform: translateY(-1px); }
-  .generate-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
-  .generate-btn .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
-  .generate-btn.loading .spinner { display: block; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+  .generate-btn{width:100%;background:var(--coral);color:white;border:none;padding:15px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s;margin-top:4px}
+  .generate-btn:hover:not(:disabled){background:var(--coral2);transform:translateY(-1px)}
+  .generate-btn:disabled{opacity:0.55;cursor:not-allowed;transform:none}
+  .generate-btn .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;display:none}
+  .generate-btn.loading .spinner{display:block}
+  @keyframes spin{to{transform:rotate(360deg)}}
 
-  .progress-area { display: none; margin-top: 16px; }
-  .progress-area.show { display: block; }
-  .progress-steps { display: flex; flex-direction: column; gap: 8px; }
-  .progress-step { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted); transition: color 0.3s; }
-  .progress-step.active { color: var(--coral); }
-  .progress-step.done { color: var(--success); }
-  .step-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border-mid); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: all 0.3s; }
-  .progress-step.active .step-dot { border-color: var(--coral); background: var(--coral-pale); }
-  .progress-step.done .step-dot { border-color: var(--success); background: var(--success); color: white; }
+  .progress-area{display:none;margin-top:16px}
+  .progress-area.show{display:block}
+  .progress-steps{display:flex;flex-direction:column;gap:8px}
+  .progress-step{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-muted);transition:color 0.3s}
+  .progress-step.active{color:var(--coral)}
+  .progress-step.done{color:var(--teal)}
+  .step-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--border-mid);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all 0.3s}
+  .progress-step.active .step-dot{border-color:var(--coral);background:var(--coral-pale)}
+  .progress-step.done .step-dot{border-color:var(--teal);background:var(--teal);color:white}
 
-  .error-box { display: none; background: var(--coral-pale); border: 1px solid rgba(217,95,59,0.3); border-radius: 10px; padding: 14px 16px; font-size: 13px; color: var(--coral); margin-top: 14px; line-height: 1.5; }
-  .error-box.show { display: block; }
+  .error-box{display:none;background:var(--coral-pale);border:1px solid rgba(217,95,59,0.3);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--coral);margin-top:14px;line-height:1.5}
+  .error-box.show{display:block}
 
-  .preview-panel { padding: 32px; overflow-y: auto; }
-  .preview-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 400px; text-align: center; color: var(--text-muted); }
-  .preview-empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
-  .preview-empty-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--text-mid); margin-bottom: 8px; }
-  .preview-empty-sub { font-size: 14px; line-height: 1.6; max-width: 320px; }
+  .preview-panel{padding:32px;overflow-y:auto}
+  .preview-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:400px;text-align:center;color:var(--text-muted)}
+  .preview-empty-icon{font-size:48px;margin-bottom:16px;opacity:0.4}
+  .preview-empty-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-mid);margin-bottom:8px}
+  .preview-empty-sub{font-size:14px;line-height:1.6;max-width:320px}
 
-  .preview-header { display: none; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-  .preview-header.show { display: flex; }
-  .preview-material-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; }
-  .preview-material-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
-  .preview-actions { display: flex; gap: 10px; }
-  .btn-download { background: var(--ink); color: var(--cream); padding: 10px 22px; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
-  .btn-download:hover { background: #2a2926; }
-  .btn-regenerate { background: white; color: var(--text-mid); padding: 10px 18px; border-radius: 8px; border: 1.5px solid var(--border-mid); font-size: 13px; font-weight: 500; cursor: pointer; font-family: 'Outfit', sans-serif; transition: all 0.2s; }
-  .btn-regenerate:hover { background: var(--warm); }
+  .preview-header{display:none;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+  .preview-header.show{display:flex}
+  .preview-material-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700}
+  .preview-material-meta{font-size:12px;color:var(--text-muted);margin-top:3px}
+  .preview-actions{display:flex;gap:10px}
+  .btn-download{background:var(--ink);color:var(--cream);padding:10px 22px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
+  .btn-download:hover{background:#2a2926}
+  .btn-regenerate{background:white;color:var(--text-mid);padding:10px 18px;border-radius:8px;border:1.5px solid var(--border-mid);font-size:13px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
+  .btn-regenerate:hover{background:var(--warm)}
 
-  .doc-wrapper { display: none; max-width: 760px; margin: 0 auto; }
-  .doc-wrapper.show { display: block; }
-  #document-preview { background: white; border-radius: 12px; box-shadow: 0 8px 40px rgba(0,0,0,0.1); overflow: hidden; font-family: 'Outfit', sans-serif; }
+  .doc-wrapper{display:none;max-width:760px;margin:0 auto}
+  .doc-wrapper.show{display:block}
+  #document-preview{background:white;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,0.1);overflow:hidden;font-family:'Outfit',sans-serif}
 
-  /* Document styles */
-  .doc-header { background: white; border-top: 5px solid var(--coral); border-bottom: 1px solid var(--border); padding: 28px 48px 24px; }
-  .doc-header-school { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; }
-  .doc-header-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; line-height: 1.2; margin-bottom: 8px; }
-  .doc-header-title em { color: var(--coral); font-style: italic; }
-  .doc-header-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
-  .doc-header-badge { background: var(--warm); border: 1px solid var(--border-mid); border-radius: 6px; padding: 4px 12px; font-size: 11px; font-weight: 500; color: var(--text-mid); }
-  .doc-body { padding: 36px 48px; }
+  .doc-header{background:white;border-top:5px solid var(--coral);border-bottom:1px solid var(--border);padding:28px 48px 24px}
+  .doc-header-school{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px}
+  .doc-header-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;line-height:1.2;margin-bottom:8px}
+  .doc-header-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .doc-header-badge{background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:4px 12px;font-size:11px;font-weight:500;color:var(--text-mid)}
+  .doc-body{padding:36px 48px}
 
-  .plan-section { margin-bottom: 28px; }
-  .plan-section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--coral); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
-  .plan-section-label::after { content: ''; flex: 1; height: 1px; background: var(--coral-pale); }
-  .plan-text { font-size: 14px; line-height: 1.85; color: var(--text-mid); }
+  .plan-section{margin-bottom:28px}
+  .plan-section-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--coral);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+  .plan-section-label::after{content:'';flex:1;height:1px;background:var(--coral-pale)}
+  .plan-text{font-size:14px;line-height:1.85;color:var(--text-mid)}
+  .plan-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .plan-list li{font-size:14px;line-height:1.6;color:var(--text-mid);padding-left:20px;position:relative}
+  .plan-list li::before{content:'✦';position:absolute;left:0;color:var(--coral);font-size:10px;top:4px}
+  .plan-bncc-list{display:flex;flex-wrap:wrap;gap:8px}
+  .plan-bncc-tag{background:var(--teal-pale);border:1px solid rgba(45,110,110,0.2);border-radius:6px;padding:4px 12px;font-size:12px;font-weight:600;color:var(--teal)}
+  .plan-recursos{display:flex;flex-wrap:wrap;gap:8px}
+  .plan-recurso-tag{background:var(--gold-pale);border:1px solid rgba(200,150,62,0.2);border-radius:6px;padding:4px 12px;font-size:12px;color:var(--text-mid)}
 
-  .plan-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .plan-list li { font-size: 14px; line-height: 1.6; color: var(--text-mid); padding-left: 20px; position: relative; }
-  .plan-list li::before { content: '✦'; position: absolute; left: 0; color: var(--coral); font-size: 10px; top: 4px; }
+  .plan-momento{background:var(--warm);border-radius:10px;padding:18px 20px;margin-bottom:12px;border-left:4px solid var(--border-mid)}
+  .plan-momento.inicio{border-left-color:var(--teal)}
+  .plan-momento.desenvolvimento{border-left-color:var(--gold)}
+  .plan-momento.fechamento{border-left-color:var(--coral)}
+  .plan-momento-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .plan-momento-title{font-size:13px;font-weight:700}
+  .plan-momento-dur{font-size:11px;background:white;border:1px solid var(--border-mid);border-radius:10px;padding:2px 8px;color:var(--text-muted)}
+  .plan-momento-desc{font-size:14px;line-height:1.7;color:var(--text-mid)}
 
-  .plan-bncc-list { display: flex; flex-wrap: wrap; gap: 8px; }
-  .plan-bncc-tag { background: var(--teal-pale); border: 1px solid rgba(45,110,110,0.2); border-radius: 6px; padding: 4px 12px; font-size: 12px; font-weight: 600; color: var(--teal); }
+  .doc-footer{background:var(--warm);border-top:1px solid var(--border);padding:20px 48px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text-muted)}
+  .doc-footer-logo{font-family:'Playfair Display',serif;font-weight:700;color:var(--gold)}
 
-  .plan-recursos { display: flex; flex-wrap: wrap; gap: 8px; }
-  .plan-recurso-tag { background: var(--gold-pale); border: 1px solid rgba(200,150,62,0.2); border-radius: 6px; padding: 4px 12px; font-size: 12px; color: var(--text-mid); }
+  /* Letra Grande */
+  body.letra-grande .plan-text{font-size:16px}
+  body.letra-grande .plan-list li{font-size:16px}
+  body.letra-grande .plan-momento-desc{font-size:16px}
+  body.letra-grande .doc-header-title{font-size:30px}
+  body.letra-grande .plan-bncc-tag{font-size:14px}
+  body.letra-grande .plan-recurso-tag{font-size:14px}
 
-  .plan-momento { background: var(--warm); border-radius: 10px; padding: 18px 20px; margin-bottom: 12px; border-left: 4px solid var(--border-mid); }
-  .plan-momento.inicio { border-left-color: var(--teal); }
-  .plan-momento.desenvolvimento { border-left-color: var(--gold); }
-  .plan-momento.fechamento { border-left-color: var(--coral); }
-  .plan-momento-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .plan-momento-title { font-size: 13px; font-weight: 700; }
-  .plan-momento-dur { font-size: 11px; background: white; border: 1px solid var(--border-mid); border-radius: 10px; padding: 2px 8px; color: var(--text-muted); }
-  .plan-momento-desc { font-size: 14px; line-height: 1.7; color: var(--text-mid); }
+  @media(max-width:860px){
+    .main{grid-template-columns:1fr}
+    .form-panel{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--border)}
+    .preview-panel{padding:20px}
+    .doc-body{padding:24px 20px}
+    .doc-header{padding:24px 20px}
+    .doc-footer{padding:16px 20px}
+    .field-row{grid-template-columns:1fr}
+  }
 
-  .doc-footer { background: var(--warm); border-top: 1px solid var(--border); padding: 20px 48px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
-  .doc-footer-logo { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--gold); }
-
-  @media (max-width: 860px) {
-    .main { grid-template-columns: 1fr; }
-    .form-panel { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--border); }
-    .preview-panel { padding: 20px; }
-    .doc-body { padding: 24px 20px; }
-    .doc-header { padding: 24px 20px; }
-    .doc-footer { padding: 16px 20px; }
-    .field-row { grid-template-columns: 1fr; }
+  /* ═══ IMPRESSÃO ═══ */
+  @media print {
+    @page { size: A4 portrait; margin: 10mm 12mm; }
+    body { background: white !important; }
+    .topbar, .form-panel, .preview-header, .preview-empty { display: none !important; }
+    .main { display: block !important; }
+    .preview-panel { padding: 0 !important; overflow: visible !important; }
+    .doc-wrapper { max-width: none !important; display: block !important; }
+    #document-preview { border-radius: 0 !important; box-shadow: none !important; }
+    .plan-momento { page-break-inside: avoid; break-inside: avoid; }
+    .plan-section { page-break-inside: avoid; break-inside: avoid; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   }
 </style>
 </head>
@@ -154,8 +161,6 @@
 </div>
 
 <div class="main">
-
-  <!-- FORM PANEL -->
   <div class="form-panel">
     <div class="form-panel-title">Plano de Aula</div>
     <div class="form-panel-sub">Preencha as informações abaixo. A IA cria um plano completo com BNCC, desenvolvimento em 3 momentos e avaliação.</div>
@@ -208,12 +213,12 @@
 
     <div class="field">
       <label class="field-label">Objetivos de aprendizagem</label>
-      <textarea id="objetivos" rows="3" placeholder="Ex: Identificar frações no cotidiano, compreender numerador e denominador, resolver situações-problema com frações simples..."></textarea>
+      <textarea id="objetivos" rows="3" placeholder="Ex: Identificar frações no cotidiano, compreender numerador e denominador..."></textarea>
     </div>
 
     <div class="field">
       <label class="field-label">Habilidade BNCC (opcional)</label>
-      <input type="text" id="bncc" placeholder="Ex: EF05MA07, EF06LP01 — deixe em branco para sugerir automaticamente" />
+      <input type="text" id="bncc" placeholder="Ex: EF05MA07 — deixe em branco para sugerir automaticamente" />
     </div>
 
     <div class="field">
@@ -223,7 +228,15 @@
 
     <div class="field">
       <label class="field-label">Observações adicionais</label>
-      <input type="text" id="obs" placeholder="Ex: turma agitada, foco em EJA, aluno com dislexia incluído..." />
+      <input type="text" id="obs" placeholder="Ex: turma agitada, foco em EJA, aluno com dislexia..." />
+    </div>
+
+    <div class="lg-wrap">
+      <label class="lg-row">
+        <input type="checkbox" id="letraGrande" onchange="onLetraGrandeChange()">
+        <span>🔡 Letra Grande</span>
+      </label>
+      <div class="lg-hint">Recomendado para EJA e Educação Infantil</div>
     </div>
 
     <hr class="divider">
@@ -246,17 +259,15 @@
     </div>
   </div>
 
-  <!-- PREVIEW PANEL -->
   <div class="preview-panel">
-
     <div class="preview-header" id="previewHeader">
-      <div class="preview-header-left">
+      <div>
         <div class="preview-material-title" id="previewTitle">Plano gerado</div>
         <div class="preview-material-meta" id="previewMeta"></div>
       </div>
       <div class="preview-actions">
         <button class="btn-regenerate" onclick="generatePlano()">↻ Gerar novamente</button>
-        <button class="btn-download" onclick="downloadPDF()">⬇ Baixar PDF</button>
+        <button class="btn-download" onclick="printPDF()">🖨️ Imprimir / Salvar PDF</button>
       </div>
     </div>
 
@@ -269,192 +280,159 @@
     <div class="doc-wrapper" id="docWrapper">
       <div id="document-preview"></div>
     </div>
-
   </div>
 </div>
 
 <script>
-  function setStep(n) {
-    for (let i = 1; i <= 4; i++) {
-      const el = document.getElementById('step' + i);
-      el.classList.remove('active', 'done');
-      if (i < n) { el.classList.add('done'); el.querySelector('.step-dot').textContent = '✓'; }
-      else if (i === n) el.classList.add('active');
-      else el.querySelector('.step-dot').textContent = i;
+  function onLetraGrandeChange(){
+    document.body.classList.toggle('letra-grande',document.getElementById('letraGrande').checked);
+  }
+
+  document.getElementById('nivel').addEventListener('change',function(){
+    const isAccessivel=/infantil|eja/i.test(this.value);
+    document.getElementById('letraGrande').checked=isAccessivel;
+    document.body.classList.toggle('letra-grande',isAccessivel);
+  });
+
+  function setStep(n){
+    for(let i=1;i<=4;i++){
+      const el=document.getElementById('step'+i);
+      el.classList.remove('active','done');
+      if(i<n){el.classList.add('done');el.querySelector('.step-dot').textContent='✓';}
+      else if(i===n) el.classList.add('active');
+      else el.querySelector('.step-dot').textContent=i;
     }
   }
 
-  async function generatePlano() {
-    const tema = document.getElementById('tema').value.trim();
-    const disciplina = document.getElementById('disciplina').value.trim();
-    const nivel = document.getElementById('nivel').value;
-    const duracao = document.getElementById('duracao').value;
-    const objetivos = document.getElementById('objetivos').value.trim();
-    const bncc = document.getElementById('bncc').value.trim();
-    const recursos = document.getElementById('recursos').value.trim();
-    const obs = document.getElementById('obs').value.trim();
-
-    const errorBox = document.getElementById('errorBox');
+  async function generatePlano(){
+    const tema=document.getElementById('tema').value.trim();
+    const disciplina=document.getElementById('disciplina').value.trim();
+    const nivel=document.getElementById('nivel').value;
+    const duracao=document.getElementById('duracao').value;
+    const objetivos=document.getElementById('objetivos').value.trim();
+    const bncc=document.getElementById('bncc').value.trim();
+    const recursos=document.getElementById('recursos').value.trim();
+    const obs=document.getElementById('obs').value.trim();
+    const errorBox=document.getElementById('errorBox');
     errorBox.classList.remove('show');
+    if(!tema){errorBox.textContent='Preencha o tema ou conteúdo da aula.';errorBox.classList.add('show');document.getElementById('tema').focus();return;}
+    if(!disciplina){errorBox.textContent='Preencha a disciplina.';errorBox.classList.add('show');document.getElementById('disciplina').focus();return;}
+    if(!nivel){errorBox.textContent='Selecione o nível ou turma.';errorBox.classList.add('show');document.getElementById('nivel').focus();return;}
 
-    if (!tema) { errorBox.textContent = 'Preencha o tema ou conteúdo da aula.'; errorBox.classList.add('show'); document.getElementById('tema').focus(); return; }
-    if (!disciplina) { errorBox.textContent = 'Preencha a disciplina.'; errorBox.classList.add('show'); document.getElementById('disciplina').focus(); return; }
-    if (!nivel) { errorBox.textContent = 'Selecione o nível ou turma.'; errorBox.classList.add('show'); document.getElementById('nivel').focus(); return; }
-
-    const btn = document.getElementById('generateBtn');
-    btn.disabled = true; btn.classList.add('loading');
+    const btn=document.getElementById('generateBtn');
+    btn.disabled=true;btn.classList.add('loading');
     document.getElementById('progressArea').classList.add('show');
-    document.getElementById('previewEmpty').style.display = 'none';
+    document.getElementById('previewEmpty').style.display='none';
     document.getElementById('previewHeader').classList.remove('show');
     document.getElementById('docWrapper').classList.remove('show');
 
-    setStep(1); await delay(600); setStep(2);
+    setStep(1);await delay(600);setStep(2);
 
-    const prompt = `Crie um plano de aula completo com os dados abaixo:
-
+    const prompt=`Crie um plano de aula completo:
 TEMA: ${tema}
 DISCIPLINA: ${disciplina}
 NÍVEL/TURMA: ${nivel}
 DURAÇÃO: ${duracao}
-${objetivos ? 'OBJETIVOS SUGERIDOS: ' + objetivos : ''}
-${bncc ? 'HABILIDADE BNCC: ' + bncc : 'Sugira as habilidades BNCC mais adequadas'}
-${recursos ? 'RECURSOS DISPONÍVEIS: ' + recursos : ''}
-${obs ? 'OBSERVAÇÕES: ' + obs : ''}
+${objetivos?'OBJETIVOS: '+objetivos:''}
+${bncc?'HABILIDADE BNCC: '+bncc:'Sugira as habilidades BNCC mais adequadas'}
+${recursos?'RECURSOS: '+recursos:''}
+${obs?'OBSERVAÇÕES: '+obs:''}
 
-Retorne SOMENTE este JSON (sem markdown):
+Retorne SOMENTE JSON (sem markdown):
 {
-  "titulo": "título do plano (criativo e descritivo)",
+  "titulo": "título criativo e descritivo",
   "disciplina": "${disciplina}",
   "nivel": "${nivel}",
   "duracao": "${duracao}",
   "objetivo_geral": "objetivo geral em uma frase clara",
-  "objetivos_especificos": ["objetivo específico 1", "objetivo específico 2", "objetivo específico 3"],
-  "habilidades_bncc": ["EF__XX__ — descrição resumida da habilidade"],
-  "recursos": ["recurso 1", "recurso 2", "recurso 3"],
+  "objetivos_especificos": ["obj 1","obj 2","obj 3"],
+  "habilidades_bncc": ["EF__XX__ — descrição resumida"],
+  "recursos": ["recurso 1","recurso 2","recurso 3"],
   "desenvolvimento": {
-    "inicio": { "duracao": "XX min", "titulo": "Sensibilização / Motivação", "descricao": "Descrição detalhada do momento inicial, como engajar os alunos, questionamentos iniciais, ativação do conhecimento prévio (3-4 linhas)" },
-    "desenvolvimento": { "duracao": "XX min", "titulo": "Desenvolvimento", "descricao": "Descrição detalhada das atividades principais, metodologias, como o professor conduz o conteúdo, atividades dos alunos (4-5 linhas)" },
-    "fechamento": { "duracao": "XX min", "titulo": "Fechamento / Síntese", "descricao": "Como encerrar a aula, síntese do conteúdo, atividade de fixação ou avaliação formativa (2-3 linhas)" }
+    "inicio": {"duracao":"XX min","titulo":"Sensibilização / Motivação","descricao":"descrição detalhada (3-4 linhas)"},
+    "desenvolvimento": {"duracao":"XX min","titulo":"Desenvolvimento","descricao":"descrição detalhada (4-5 linhas)"},
+    "fechamento": {"duracao":"XX min","titulo":"Fechamento / Síntese","descricao":"descrição detalhada (2-3 linhas)"}
   },
-  "avaliacao": "Como o professor avaliará a aprendizagem — instrumentos, critérios e momento da avaliação (2-3 linhas)",
-  "adaptacoes": "Sugestão de adaptação para alunos com necessidades especiais ou dificuldades (1-2 linhas)",
-  "referencias": ["Referência ou recurso didático recomendado 1", "Referência 2"]
+  "avaliacao": "como avaliar a aprendizagem (2-3 linhas)",
+  "adaptacoes": "adaptações para necessidades especiais (1-2 linhas)",
+  "referencias": ["referência 1","referência 2"]
 }`;
 
-    try {
-      const response = await fetch('/api/claude', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 4000,
-          system: `Você é uma pedagoga especialista em currículo brasileiro, BNCC e elaboração de planos de aula.
-Crie planos pedagógicos de alta qualidade, práticos e aplicáveis, alinhados à BNCC.
-Adapte o plano ao nível informado: use linguagem acessível para crianças pequenas e linguagem respeitosa para adultos (EJA).
-Retorne APENAS JSON válido, sem markdown, sem texto antes ou depois.`,
-          messages: [{ role: 'user', content: prompt }]
+    try{
+      const response=await fetch('/api/claude',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-6',max_tokens:4000,
+          system:`Você é pedagoga especialista em currículo brasileiro e BNCC. Crie planos pedagógicos práticos e aplicáveis. Para EJA use linguagem respeitosa e contextos adultos. Retorne APENAS JSON válido, sem markdown.`,
+          messages:[{role:'user',content:prompt}]
         })
       });
-
       setStep(3);
-      if (!response.ok) { const err = await response.json().catch(() => ({})); throw new Error(err?.error?.message || `Erro ${response.status}`); }
-
-      const data = await response.json();
-      const raw = data.content?.[0]?.text || '';
-      setStep(4); await delay(400);
-
+      if(!response.ok) throw new Error(`Erro ${response.status}`);
+      const data=await response.json();
+      const raw=data.content?.[0]?.text||'';
+      setStep(4);await delay(400);
       let parsed;
-      try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
-      catch(e) { throw new Error('A IA retornou um formato inesperado. Tente gerar novamente.'); }
-
-      renderDocument(parsed, tema, nivel);
-
-    } catch (err) {
+      try{parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());}
+      catch(e){throw new Error('Formato inesperado. Tente novamente.');}
+      renderDocument(parsed,tema,nivel);
+    }catch(err){
       console.error(err);
-      errorBox.textContent = 'Erro ao gerar: ' + (err.message || 'Tente novamente.');
+      errorBox.textContent='Erro ao gerar: '+(err.message||'Tente novamente.');
       errorBox.classList.add('show');
-      document.getElementById('previewEmpty').style.display = 'flex';
-    } finally {
-      btn.disabled = false; btn.classList.remove('loading');
+      document.getElementById('previewEmpty').style.display='flex';
+    }finally{
+      btn.disabled=false;btn.classList.remove('loading');
       document.getElementById('progressArea').classList.remove('show');
-      for (let i = 1; i <= 4; i++) { const el = document.getElementById('step' + i); el.classList.remove('active','done'); el.querySelector('.step-dot').textContent = i; }
+      for(let i=1;i<=4;i++){const el=document.getElementById('step'+i);el.classList.remove('active','done');el.querySelector('.step-dot').textContent=i;}
     }
   }
 
-  function renderDocument(d, tema, nivel) {
-    const date = new Date().toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
+  function renderDocument(d,tema,nivel){
+    const date=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+    document.getElementById('previewTitle').textContent=d.titulo||'Plano de Aula';
+    document.getElementById('previewMeta').textContent=`${d.disciplina||''} • ${d.nivel||nivel} • ${d.duracao||''} • ${date}`;
 
-    document.getElementById('previewTitle').textContent = d.titulo || 'Plano de Aula';
-    document.getElementById('previewMeta').textContent = `${d.disciplina || ''} • ${d.nivel || nivel} • ${d.duracao || ''} • ${date}`;
-
-    const li = arr => (arr||[]).map(x => `<li>${x}</li>`).join('');
-    const tags = (arr, cls) => (arr||[]).map(x => `<span class="${cls}">${x}</span>`).join('');
-
-    const dev = d.desenvolvimento || {};
-    const momentos = [
-      { key:'inicio', cls:'inicio', icon:'🟢' },
-      { key:'desenvolvimento', cls:'desenvolvimento', icon:'🟡' },
-      { key:'fechamento', cls:'fechamento', icon:'🔴' }
-    ].map(m => {
-      const mom = dev[m.key] || {};
-      return `<div class="plan-momento ${m.cls}">
+    const li=arr=>(arr||[]).map(x=>`<li>${x}</li>`).join('');
+    const tags=(arr,cls)=>(arr||[]).map(x=>`<span class="${cls}">${x}</span>`).join('');
+    const dev=d.desenvolvimento||{};
+    const momentos=[
+      {key:'inicio',cls:'inicio',icon:'🟢'},
+      {key:'desenvolvimento',cls:'desenvolvimento',icon:'🟡'},
+      {key:'fechamento',cls:'fechamento',icon:'🔴'}
+    ].map(m=>{
+      const mom=dev[m.key]||{};
+      return`<div class="plan-momento ${m.cls}">
         <div class="plan-momento-header">
           <span>${m.icon}</span>
-          <span class="plan-momento-title">${mom.titulo || m.key}</span>
-          <span class="plan-momento-dur">${mom.duracao || ''}</span>
+          <span class="plan-momento-title">${mom.titulo||m.key}</span>
+          <span class="plan-momento-dur">${mom.duracao||''}</span>
         </div>
-        <div class="plan-momento-desc">${mom.descricao || ''}</div>
+        <div class="plan-momento-desc">${mom.descricao||''}</div>
       </div>`;
     }).join('');
 
-    const adaptacoesHtml = d.adaptacoes ? `
-      <div class="plan-section">
-        <div class="plan-section-label">♿ Adaptações e Inclusão</div>
-        <div class="plan-text">${d.adaptacoes}</div>
-      </div>` : '';
+    const adaptacoesHtml=d.adaptacoes?`<div class="plan-section"><div class="plan-section-label">♿ Adaptações e Inclusão</div><div class="plan-text">${d.adaptacoes}</div></div>`:'';
+    const refHtml=d.referencias?.length?`<div class="plan-section"><div class="plan-section-label">📚 Referências e Recursos</div><ul class="plan-list">${li(d.referencias)}</ul></div>`:'';
 
-    const refHtml = d.referencias?.length ? `
-      <div class="plan-section">
-        <div class="plan-section-label">📚 Referências e Recursos</div>
-        <ul class="plan-list">${li(d.referencias)}</ul>
-      </div>` : '';
-
-    document.getElementById('document-preview').innerHTML = `
+    document.getElementById('document-preview').innerHTML=`
       <div class="doc-header">
         <div class="doc-header-school">DoceriaPedagógica — Plano de Aula</div>
-        <div class="doc-header-title">${d.titulo || tema}</div>
+        <div class="doc-header-title">${d.titulo||tema}</div>
         <div class="doc-header-meta">
-          <span class="doc-header-badge">📚 ${d.disciplina || ''}</span>
-          <span class="doc-header-badge">🎓 ${d.nivel || nivel}</span>
-          <span class="doc-header-badge">⏱ ${d.duracao || ''}</span>
+          <span class="doc-header-badge">📚 ${d.disciplina||''}</span>
+          <span class="doc-header-badge">🎓 ${d.nivel||nivel}</span>
+          <span class="doc-header-badge">⏱ ${d.duracao||''}</span>
           <span class="doc-header-badge">📅 ${date}</span>
         </div>
       </div>
       <div class="doc-body">
-        <div class="plan-section">
-          <div class="plan-section-label">🎯 Objetivo Geral</div>
-          <div class="plan-text">${d.objetivo_geral || ''}</div>
-        </div>
-        <div class="plan-section">
-          <div class="plan-section-label">✦ Objetivos Específicos</div>
-          <ul class="plan-list">${li(d.objetivos_especificos)}</ul>
-        </div>
-        <div class="plan-section">
-          <div class="plan-section-label">📐 Habilidades BNCC</div>
-          <div class="plan-bncc-list">${tags(d.habilidades_bncc, 'plan-bncc-tag')}</div>
-        </div>
-        <div class="plan-section">
-          <div class="plan-section-label">🖊 Recursos Necessários</div>
-          <div class="plan-recursos">${tags(d.recursos, 'plan-recurso-tag')}</div>
-        </div>
-        <div class="plan-section">
-          <div class="plan-section-label">📖 Desenvolvimento da Aula</div>
-          ${momentos}
-        </div>
-        <div class="plan-section">
-          <div class="plan-section-label">✅ Avaliação</div>
-          <div class="plan-text">${d.avaliacao || ''}</div>
-        </div>
+        <div class="plan-section"><div class="plan-section-label">🎯 Objetivo Geral</div><div class="plan-text">${d.objetivo_geral||''}</div></div>
+        <div class="plan-section"><div class="plan-section-label">✦ Objetivos Específicos</div><ul class="plan-list">${li(d.objetivos_especificos)}</ul></div>
+        <div class="plan-section"><div class="plan-section-label">📐 Habilidades BNCC</div><div class="plan-bncc-list">${tags(d.habilidades_bncc,'plan-bncc-tag')}</div></div>
+        <div class="plan-section"><div class="plan-section-label">🖊 Recursos Necessários</div><div class="plan-recursos">${tags(d.recursos,'plan-recurso-tag')}</div></div>
+        <div class="plan-section"><div class="plan-section-label">📖 Desenvolvimento da Aula</div>${momentos}</div>
+        <div class="plan-section"><div class="plan-section-label">✅ Avaliação</div><div class="plan-text">${d.avaliacao||''}</div></div>
         ${adaptacoesHtml}
         ${refHtml}
       </div>
@@ -462,41 +440,16 @@ Retorne APENAS JSON válido, sem markdown, sem texto antes ou depois.`,
         <span class="doc-footer-logo">DoceriaPedagógica</span>
         <span>Plano gerado por IA com qualidade pedagógica • ${date}</span>
         <span>Professor(a): ___________________________</span>
-      </div>
-    `;
+      </div>`;
 
     document.getElementById('docWrapper').classList.add('show');
     document.getElementById('previewHeader').classList.add('show');
-    document.getElementById('previewEmpty').style.display = 'none';
-    document.getElementById('docWrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('previewEmpty').style.display='none';
+    document.getElementById('docWrapper').scrollIntoView({behavior:'smooth',block:'start'});
   }
 
-  async function downloadPDF() {
-    const btn = document.querySelector('.btn-download');
-    btn.textContent = '⏳ Gerando PDF...'; btn.disabled = true;
-    const element = document.getElementById('document-preview');
-    const titulo = document.getElementById('previewTitle').textContent.replace(/[^a-zA-Z0-9\s]/g, '').trim().replace(/\s+/g, '_');
-
-    const _clone = element.cloneNode(true);
-    const _wrap = document.createElement('div');
-    _wrap.style.cssText = 'position:fixed;top:-9999px;left:0;width:1200px;max-width:none;';
-    _wrap.appendChild(_clone);
-    document.body.appendChild(_wrap);
-
-    const opt = {
-      margin: [15, 15, 15, 15],
-      filename: `PlanoDeAula_${titulo}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', windowWidth: 1200 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-    };
-    try { await html2pdf().set(opt).from(_clone).save(); } catch(e) { console.error(e); }
-    document.body.removeChild(_wrap);
-    btn.textContent = '⬇ Baixar PDF'; btn.disabled = false;
-  }
-
-  function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+  function printPDF(){ window.print(); }
+  function delay(ms){return new Promise(r=>setTimeout(r,ms));}
 </script>
 </body>
 </html>
