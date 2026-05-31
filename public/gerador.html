@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gerador de Atividade — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root {
     --ink: #0f0e0c;
@@ -524,6 +523,18 @@
     .doc-header { padding: 24px 20px; }
     .doc-footer { padding: 16px 20px; }
   }
+
+  @media print {
+    @page { size: A4 portrait; margin: 10mm 12mm; }
+    body { background: white !important; }
+    .topbar, .form-panel, .preview-header, .preview-actions,
+    .btn-download, .btn-regenerate, .preview-empty { display: none !important; }
+    .main { display: block !important; padding: 0 !important; }
+    .preview-panel { display: block !important; padding: 0 !important; overflow: visible !important; }
+    .doc-wrapper { display: block !important; max-width: none !important; margin: 0 !important; }
+    #document-preview { border: none !important; border-radius: 0 !important; box-shadow: none !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
 </style>
 </head>
 <body>
@@ -632,7 +643,7 @@
       </div>
       <div class="preview-actions">
         <button class="btn-regenerate" onclick="generateActivity()">↻ Gerar novamente</button>
-        <button class="btn-download" onclick="downloadPDF()">⬇ Baixar PDF</button>
+        <button class="btn-download" onclick="downloadPDF()">🖨️ Imprimir / Salvar PDF</button>
       </div>
     </div>
 
@@ -1041,39 +1052,7 @@ Gere entre 3 e 5 atividades variadas.`;
     document.getElementById('docWrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  async function downloadPDF() {
-    const btn = document.querySelector('.btn-download');
-    btn.textContent = '⏳ Gerando PDF...';
-    btn.disabled = true;
-
-    const element = document.getElementById('document-preview');
-    const titulo = document.getElementById('previewTitle').textContent.replace(/[^a-zA-Z0-9\s]/g, '').trim().replace(/\s+/g, '_');
-
-    const _clone = element.cloneNode(true);
-    const _wrap = document.createElement('div');
-    _wrap.style.cssText = 'position:fixed;top:-9999px;left:0;width:1200px;max-width:none;';
-    _wrap.appendChild(_clone);
-    document.body.appendChild(_wrap);
-
-    const opt = {
-      margin: [15, 15, 15, 15],
-      filename: `DoceriaPedagogica_${titulo}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff', windowWidth: 1200 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-    };
-
-    try {
-      await html2pdf().set(opt).from(_clone).save();
-    } catch(e) {
-      console.error(e);
-    }
-    document.body.removeChild(_wrap);
-
-    btn.textContent = '⬇ Baixar PDF';
-    btn.disabled = false;
-  }
+  function downloadPDF() { window.print(); }
 
   function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 </script>

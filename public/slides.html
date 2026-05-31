@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Apresentação de Slides — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root {
     --ink: #0f0e0c; --cream: #faf7f2; --warm: #f5f0e8;
@@ -324,6 +323,15 @@
     .form-panel { position:static; max-height:none; border-right:none; border-bottom:1px solid var(--border); }
     .preview-panel { padding:16px; }
   }
+
+  @media print {
+    @page { size: A4 landscape; margin: 0; }
+    body { background: white !important; }
+    .topbar, .main { display: none !important; }
+    #pdf-container { display: block !important; }
+    .pdf-slide { width: 297mm; height: 167mm; page-break-after: always; overflow: hidden; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
 </style>
 </head>
 <body>
@@ -475,7 +483,7 @@
           </div>
           <button class="btn-action" onclick="toggleFullscreen()" title="Tela cheia (F)">⛶ Tela cheia</button>
           <button class="btn-action primary" onclick="generateBtn_regen()">↻ Regerar</button>
-          <button class="btn-action primary" onclick="downloadPDF()">⬇ PDF</button>
+          <button class="btn-action primary" onclick="downloadPDF()">🖨️ Imprimir / Salvar PDF</button>
         </div>
       </div>
 
@@ -822,39 +830,19 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
   });
 
   // ── PDF EXPORT ──
-  async function downloadPDF() {
+  function downloadPDF() {
     if (!slidesData.length) return;
-    const btn = document.querySelector('.btn-action.primary:last-child');
-    btn.textContent = '⏳ Gerando...'; btn.disabled = true;
-
     const container = document.getElementById('pdf-container');
-    container.style.cssText = 'display:block;position:fixed;top:-9999px;left:0;width:1200px;max-width:none;';
-    container.innerHTML = slidesData.map((slide, i) => `
-      <div class="pdf-slide" style="page-break-after:always; overflow:hidden; position:relative;">
+    container.innerHTML = slidesData.map((slide) => `
+      <div class="pdf-slide">
         ${buildSlideHTML(slide, currentTheme)}
       </div>`
     ).join('');
-
     container.querySelectorAll('.pdf-slide .slide').forEach(el => {
       el.style.width = '100%';
       el.style.height = '100%';
     });
-
-    const titulo = document.getElementById('playerTitle').textContent.replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_');
-    const opt = {
-      margin: 0,
-      filename: `Slides_${titulo}.pdf`,
-      image: { type: 'jpeg', quality: 0.96 },
-      html2canvas: { scale: 1.5, useCORS: true, logging: false, windowWidth: 1200 },
-      jsPDF: { unit: 'mm', format: [297, 167], orientation: 'landscape' },
-      pagebreak: { mode: ['css'] }
-    };
-
-    try { await html2pdf().set(opt).from(container).save(); }
-    catch(e) { console.error(e); }
-
-    container.style.display = 'none';
-    btn.textContent = '⬇ PDF'; btn.disabled = false;
+    window.print();
   }
 
   function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
