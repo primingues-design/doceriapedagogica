@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mão na Massa — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0f0e0c;--cream:#faf7f2;--warm:#f5f0e8;
+    --gold:#c8963e;--gold-pale:#fdf3e3;
+    --teal:#2d6e6e;--teal-pale:#e8f4f4;
+    --coral:#d95f3b;--coral-pale:#fdeee9;
+    --green:#3d9e6e;--green-pale:#e8f5ee;
+    --text:#1a1917;--text-mid:#4a4845;--text-muted:#8a8785;
+    --border:rgba(15,14,12,0.1);--border-mid:rgba(15,14,12,0.18);
+    --ac:#d95f3b;--ac-pale:#fdeee9;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+  .topbar{background:var(--ink);padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+  .topbar-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--cream);display:flex;align-items:center;gap:10px;text-decoration:none}
+  .topbar-logo-mark{width:28px;height:28px;background:var(--gold);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
+  .topbar-back{font-size:13px;color:rgba(250,247,242,0.5);text-decoration:none;transition:color 0.2s}
+  .topbar-back:hover{color:var(--cream)}
+
+  .main{display:grid;grid-template-columns:420px 1fr;min-height:calc(100vh - 56px)}
+
+  .form-panel{background:var(--cream);border-right:1px solid var(--border);padding:32px 28px;overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px}
+  .form-panel-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;margin-bottom:6px}
+  .form-panel-sub{font-size:13px;color:var(--text-muted);margin-bottom:28px;line-height:1.5}
+
+  .field{margin-bottom:20px}
+  .field-label{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.07em;text-transform:uppercase;display:block;margin-bottom:7px}
+  .field-required{color:var(--coral)}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+  input[type="text"],select,textarea{width:100%;background:white;border:1.5px solid var(--border-mid);border-radius:9px;padding:11px 14px;font-size:14px;color:var(--text);font-family:'Outfit',sans-serif;transition:border-color 0.2s,box-shadow 0.2s;outline:none}
+  input[type="text"]:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(217,95,59,0.12)}
+
+  .pill-group{display:flex;flex-wrap:wrap;gap:7px}
+  .pill{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border-mid);background:white;color:var(--text-muted);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s;font-family:'Outfit',sans-serif;user-select:none}
+  .pill.active{border-color:var(--ac);background:var(--ac-pale);color:var(--ac);font-weight:600}
+  .pill:hover:not(.active){background:var(--warm)}
+
+  .divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+  .generate-btn{width:100%;background:var(--ac);color:white;border:none;padding:15px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s;margin-top:4px}
+  .generate-btn:hover:not(:disabled){background:#b84d2e;transform:translateY(-1px)}
+  .generate-btn:disabled{opacity:0.55;cursor:not-allowed;transform:none}
+  .generate-btn .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;display:none}
+  .generate-btn.loading .spinner{display:block}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .progress-area{display:none;margin-top:16px}
+  .progress-area.show{display:block}
+  .progress-steps{display:flex;flex-direction:column;gap:8px}
+  .progress-step{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-muted);transition:color 0.3s}
+  .progress-step.active{color:var(--ac)}
+  .progress-step.done{color:var(--green)}
+  .step-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--border-mid);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all 0.3s}
+  .progress-step.active .step-dot{border-color:var(--ac);background:var(--ac-pale)}
+  .progress-step.done .step-dot{border-color:var(--green);background:var(--green);color:white}
+
+  .error-box{display:none;background:var(--coral-pale);border:1px solid rgba(217,95,59,0.3);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--coral);margin-top:14px;line-height:1.5}
+  .error-box.show{display:block}
+
+  .preview-panel{padding:32px;overflow-y:auto}
+  .preview-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:400px;text-align:center;color:var(--text-muted)}
+  .preview-empty-icon{font-size:48px;margin-bottom:16px;opacity:0.4}
+  .preview-empty-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-mid);margin-bottom:8px}
+  .preview-empty-sub{font-size:14px;line-height:1.6;max-width:320px}
+
+  .result-header{display:none;margin-bottom:24px}
+  .result-header.show{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  .result-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;margin-bottom:8px}
+  .result-badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{display:inline-flex;background:white;border:1px solid var(--border-mid);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:500;color:var(--text-mid)}
+  .badge.facil{background:#e8f5ee;border-color:var(--green);color:var(--green)}
+  .badge.medio{background:var(--gold-pale);border-color:var(--gold);color:var(--gold)}
+  .badge.desafiador{background:var(--ac-pale);border-color:var(--ac);color:var(--ac)}
+  .btn-regen{background:white;color:var(--text-mid);padding:10px 18px;border-radius:8px;border:1.5px solid var(--border-mid);font-size:13px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;flex-shrink:0}
+  .btn-regen:hover{background:var(--warm)}
+
+  .result-wrapper{display:none;max-width:780px}
+  .result-wrapper.show{display:block}
+
+  /* ── RESULTADO ── */
+  .descricao-card{background:var(--ac-pale);border:1.5px solid rgba(217,95,59,0.25);border-radius:12px;padding:16px 20px;margin-bottom:20px;font-size:15px;color:var(--text-mid);line-height:1.6}
+  .descricao-card strong{color:var(--ac)}
+
+  .materiais-table{background:white;border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:20px}
+  .materiais-thead{background:var(--ink);color:var(--cream);display:grid;grid-template-columns:2fr 1fr 2fr;padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase}
+  .material-row{display:grid;grid-template-columns:2fr 1fr 2fr;padding:10px 16px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-mid);align-items:center}
+  .material-row:last-child{border-bottom:none}
+  .material-row:nth-child(even){background:rgba(15,14,12,0.02)}
+  .onde-tag{font-size:12px;color:var(--teal);background:var(--teal-pale);border-radius:5px;padding:2px 8px;display:inline-block}
+
+  .section-label{font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin:20px 0 10px}
+
+  .etapa-card{background:white;border-radius:12px;border:1px solid var(--border);margin-bottom:10px;overflow:hidden}
+  .etapa-header{background:var(--ac);color:white;padding:12px 18px;display:flex;align-items:center;gap:12px}
+  .etapa-num{width:28px;height:28px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+  .etapa-titulo{font-size:14px;font-weight:600;flex:1}
+  .etapa-dur{font-size:12px;background:rgba(255,255,255,0.15);border-radius:10px;padding:2px 9px;flex-shrink:0}
+  .etapa-body{padding:14px 18px}
+  .etapa-instrucao{font-size:14px;color:var(--text-mid);line-height:1.6;margin-bottom:12px}
+  .etapa-dica{background:#fffbea;border-radius:7px;padding:9px 12px;font-size:13px;color:#7a6010;display:flex;gap:8px;margin-bottom:8px}
+  .etapa-erro{background:#fff5f5;border-radius:7px;padding:9px 12px;font-size:13px;color:#9b3020;display:flex;gap:8px}
+
+  .resultado-card{background:var(--green-pale);border:1.5px solid rgba(61,158,110,0.3);border-radius:12px;padding:16px 20px;margin-bottom:16px}
+  .resultado-label{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+  .resultado-text{font-size:14px;color:var(--text-mid);line-height:1.5}
+
+  .habilidades-card{background:var(--ink);color:var(--cream);border-radius:12px;padding:16px 20px;margin-bottom:16px}
+  .habilidades-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,247,242,0.5);margin-bottom:8px}
+  .habilidades-text{font-size:14px;color:rgba(250,247,242,0.85);line-height:1.6}
+
+  .perguntas-list{background:white;border-radius:10px;border:1px solid var(--border);padding:16px 20px;margin-bottom:12px}
+  .perguntas-title{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
+  .pergunta-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text-mid);line-height:1.5}
+  .pergunta-item:last-child{border-bottom:none}
+  .pergunta-q{width:20px;height:20px;background:var(--ac-pale);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--ac);flex-shrink:0;margin-top:1px}
+
+  .variacoes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+  .variacao-card{background:white;border-radius:10px;border:1px solid var(--border);padding:14px 16px}
+  .variacao-label{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px}
+  .variacao-label.simples{color:var(--green)}
+  .variacao-label.avancada{color:var(--ac)}
+  .variacao-text{font-size:13px;color:var(--text-mid);line-height:1.5}
+
+  .avaliacao-card{background:var(--gold-pale);border:1px solid rgba(200,150,62,0.3);border-radius:10px;padding:14px 18px;margin-bottom:12px}
+  .avaliacao-label{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+  .avaliacao-text{font-size:14px;color:var(--text-mid);line-height:1.5}
+
+  .eja-card{background:var(--gold-pale);border:1px solid rgba(200,150,62,0.25);border-radius:10px;padding:14px 18px;margin-bottom:16px}
+  .eja-title{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+  .eja-text{font-size:14px;color:var(--text-mid);line-height:1.5}
+
+  @media(max-width:860px){
+    .main{grid-template-columns:1fr}
+    .form-panel{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--border)}
+    .preview-panel{padding:20px}
+    .field-row{grid-template-columns:1fr}
+    .variacoes{grid-template-columns:1fr}
+    .materiais-thead,.material-row{grid-template-columns:1fr 80px 1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/conta.html">
+    <div class="topbar-logo-mark">✦</div>
+    DoceriaPedagógica
+  </a>
+  <a class="topbar-back" href="/conta.html">← Voltar ao painel</a>
+</div>
+
+<div class="main">
+  <div class="form-panel">
+    <div class="form-panel-title">🔨 Mão na Massa</div>
+    <div class="form-panel-sub">Projetos práticos, maker e experimentos — o aluno constrói, experimenta e aprende fazendo.</div>
+
+    <div class="field">
+      <label class="field-label">Tema / projeto <span class="field-required">*</span></label>
+      <input type="text" id="tema" placeholder="Ex: ponte de palito, circuito elétrico, composteira, mapa em relevo..." />
+    </div>
+
+    <div class="field">
+      <label class="field-label">Nível / turma <span class="field-required">*</span></label>
+      <select id="nivel">
+        <option value="">Selecione...</option>
+        <option value="Educação Infantil (4-5 anos)">Educação Infantil</option>
+        <option value="Fundamental I — Anos Iniciais (1º ao 5º ano)">Fundamental I (1º–5º ano)</option>
+        <option value="Fundamental II — Anos Finais (6º ao 9º ano)">Fundamental II (6º–9º ano)</option>
+        <option value="Ensino Médio">Ensino Médio</option>
+        <option value="EJA — Ensino Fundamental">EJA — Fundamental</option>
+        <option value="EJA — Ensino Médio">EJA — Médio</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Disciplina / área</label>
+      <input type="text" id="disciplina" placeholder="Ex: Ciências, Artes, Matemática, interdisciplinar..." />
+    </div>
+
+    <div class="field">
+      <label class="field-label">Recursos disponíveis</label>
+      <div class="pill-group" id="recursosPills">
+        <div class="pill active" data-val="material reciclado">♻️ Material reciclado</div>
+        <div class="pill active" data-val="papelaria básica">✂️ Papelaria básica</div>
+        <div class="pill" data-val="ferramentas simples (cola quente, tesoura, régua)">🔧 Ferramentas simples</div>
+        <div class="pill" data-val="sem recursos extras — improvisa com o que há na sala">🤲 Sem recursos</div>
+        <div class="pill" data-val="laboratório de ciências">🔬 Laboratório</div>
+        <div class="pill" data-val="área externa ou jardim da escola">🌿 Área externa</div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label">Tempo disponível</label>
+        <select id="tempo">
+          <option value="30 minutos">30 min</option>
+          <option value="1 hora" selected>1 hora</option>
+          <option value="2 horas">2 horas</option>
+          <option value="mais de 2 horas (projeto longo)">Mais de 2h</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Nº de alunos</label>
+        <select id="numAlunos">
+          <option value="até 10 alunos">Até 10</option>
+          <option value="11 a 25 alunos" selected>11 a 25</option>
+          <option value="26 a 40 alunos">26 a 40</option>
+          <option value="mais de 40 alunos">Mais de 40</option>
+        </select>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <button class="generate-btn" id="generateBtn" onclick="generateProjeto()">
+      <div class="spinner"></div>
+      🔨 Gerar Projeto Mão na Massa
+    </button>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <div class="progress-area" id="progressArea">
+      <div class="progress-steps">
+        <div class="progress-step" id="step1"><div class="step-dot">1</div><span>Avaliando recursos e viabilidade...</span></div>
+        <div class="progress-step" id="step2"><div class="step-dot">2</div><span>Criando lista de materiais...</span></div>
+        <div class="progress-step" id="step3"><div class="step-dot">3</div><span>Detalhando etapas do projeto...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="preview-panel">
+    <div class="result-header" id="resultHeader">
+      <div>
+        <div class="result-title" id="resultTitle"></div>
+        <div class="result-badges" id="resultBadges"></div>
+      </div>
+      <button class="btn-regen" onclick="generateProjeto()">↻ Gerar novo projeto</button>
+    </div>
+
+    <div class="preview-empty" id="previewEmpty">
+      <div class="preview-empty-icon">🔨</div>
+      <div class="preview-empty-title">Seu projeto aparece aqui</div>
+      <div class="preview-empty-sub">Preencha o formulário e clique em <strong>Gerar Projeto Mão na Massa</strong> — materiais, etapas detalhadas e dicas para conduzir a aula.</div>
+    </div>
+
+    <div class="result-wrapper" id="resultWrapper"></div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('#recursosPills .pill').forEach(p => p.addEventListener('click', () => p.classList.toggle('active')));
+  function getRecursos() { return [...document.querySelectorAll('#recursosPills .pill.active')].map(p => p.dataset.val).join(', ') || 'material reciclado e papelaria básica'; }
+
+  function setStep(n) {
+    for (let i = 1; i <= 3; i++) {
+      const el = document.getElementById('step' + i);
+      el.classList.remove('active', 'done');
+      if (i < n) { el.classList.add('done'); el.querySelector('.step-dot').textContent = '✓'; }
+      else if (i === n) el.classList.add('active');
+      else el.querySelector('.step-dot').textContent = i;
+    }
+  }
+
+  async function generateProjeto() {
+    const tema = document.getElementById('tema').value.trim();
+    const nivel = document.getElementById('nivel').value;
+    const disciplina = document.getElementById('disciplina').value.trim();
+    const recursos = getRecursos();
+    const tempo = document.getElementById('tempo').value;
+    const numAlunos = document.getElementById('numAlunos').value;
+    const errorBox = document.getElementById('errorBox');
+    errorBox.classList.remove('show');
+    if (!tema) { errorBox.textContent = 'Preencha o tema ou projeto.'; errorBox.classList.add('show'); document.getElementById('tema').focus(); return; }
+    if (!nivel) { errorBox.textContent = 'Selecione o nível ou turma.'; errorBox.classList.add('show'); document.getElementById('nivel').focus(); return; }
+
+    const btn = document.getElementById('generateBtn');
+    btn.disabled = true; btn.classList.add('loading');
+    document.getElementById('progressArea').classList.add('show');
+    document.getElementById('previewEmpty').style.display = 'none';
+    document.getElementById('resultHeader').classList.remove('show');
+    document.getElementById('resultWrapper').classList.remove('show');
+
+    setStep(1); await delay(700); setStep(2);
+
+    const prompt = `Você é uma professora maker e especialista em educação mão na massa.
+Crie um projeto prático e viável para "${tema}" para ${nivel}.
+
+Recursos disponíveis: ${recursos}
+Tempo: ${tempo}
+Número de alunos: ${numAlunos}
+${disciplina ? 'Disciplina/área: ' + disciplina : ''}
+
+O projeto deve ser:
+- REALMENTE FAZÍVEL com os recursos informados
+- Seguro para a faixa etária
+- Engajante e com resultado visível
+- Conectado ao currículo (BNCC)
+
+Retorne SOMENTE este JSON (sem markdown):
+{
+  "nome_projeto": "nome criativo do projeto",
+  "descricao_curta": "o que os alunos vão construir/fazer em 1 frase",
+  "nivel_dificuldade": "Fácil",
+  "materiais": [
+    {"item": "nome do material", "quantidade": "quantidade por grupo", "onde_encontrar": "onde achar/comprar barato"}
+  ],
+  "etapas": [
+    {
+      "numero": 1,
+      "titulo": "título da etapa",
+      "duracao": "X min",
+      "instrucao": "instrução clara e detalhada do que fazer",
+      "dica_professor": "como o professor facilita esta etapa",
+      "possivel_erro": "erro comum nesta etapa e como evitar"
+    }
+  ],
+  "resultado_esperado": "o que o aluno vai ter/ver ao final",
+  "como_avaliar": "como o professor avalia sem prova — observação, produto final, apresentação",
+  "conexao_curriculo": "Como conectar ao conteúdo curricular — disciplina e habilidades BNCC",
+  "variacao_simples": "versão mais simples se faltar material ou tempo",
+  "variacao_avancada": "versão mais complexa para turmas avançadas",
+  "causas_e_consequencias": "O que este projeto ensina além do conteúdo — habilidades socioemocionais, pensamento crítico, colaboração",
+  "perguntas_reflexao": [
+    "Pergunta 1 para discutir após o projeto",
+    "Pergunta 2",
+    "Pergunta 3"
+  ],
+  "adaptacao_eja": "Como adaptar para adultos do EJA com contexto profissional/cotidiano"
+}
+
+REGRAS:
+- Materiais devem ser REALISTAS para escola pública brasileira
+- Segurança em primeiro lugar — alertar sobre riscos
+- Para EJA: projetos com aplicação prática no cotidiano adulto
+- Etapas claras o suficiente para professor sem experiência maker conduzir
+- nivel_dificuldade deve ser exatamente: "Fácil", "Médio" ou "Desafiador"`;
+
+    try {
+      const response = await fetch('/api/claude', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6', max_tokens: 3000,
+          system: 'Você é especialista em educação maker e projetos mão na massa para escola pública brasileira. Retorne APENAS JSON válido, sem markdown.',
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      setStep(3);
+      if (!response.ok) throw new Error('Erro ' + response.status);
+      const data = await response.json();
+      const raw = data.content?.[0]?.text || '';
+      let parsed;
+      try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
+      catch (e) { throw new Error('Formato inesperado. Tente novamente.'); }
+      renderProjeto(parsed, tema, nivel, disciplina);
+    } catch (err) {
+      errorBox.textContent = 'Erro ao gerar: ' + (err.message || 'Tente novamente.');
+      errorBox.classList.add('show');
+      document.getElementById('previewEmpty').style.display = 'flex';
+    } finally {
+      btn.disabled = false; btn.classList.remove('loading');
+      document.getElementById('progressArea').classList.remove('show');
+      for (let i = 1; i <= 3; i++) { const el = document.getElementById('step' + i); el.classList.remove('active', 'done'); el.querySelector('.step-dot').textContent = i; }
+    }
+  }
+
+  function getDifBadgeClass(nivel) {
+    if (/fácil|facil/i.test(nivel)) return 'facil';
+    if (/médio|medio/i.test(nivel)) return 'medio';
+    return 'desafiador';
+  }
+
+  function renderProjeto(d, tema, nivel, disciplina) {
+    document.getElementById('resultTitle').textContent = d.nome_projeto || tema;
+    const difClass = getDifBadgeClass(d.nivel_dificuldade || '');
+    document.getElementById('resultBadges').innerHTML = `
+      <span class="badge ${difClass}">⚡ ${d.nivel_dificuldade || 'Médio'}</span>
+      <span class="badge">🎓 ${nivel}</span>
+      ${disciplina ? '<span class="badge">📚 ' + disciplina + '</span>' : ''}`;
+
+    const materiaisRows = (d.materiais || []).map(m => `
+      <div class="material-row">
+        <span>${m.item || ''}</span>
+        <span>${m.quantidade || ''}</span>
+        <span class="onde-tag">${m.onde_encontrar || ''}</span>
+      </div>`).join('');
+
+    const etapasHtml = (d.etapas || []).map(e => `
+      <div class="etapa-card">
+        <div class="etapa-header">
+          <div class="etapa-num">${e.numero || ''}</div>
+          <div class="etapa-titulo">${e.titulo || ''}</div>
+          ${e.duracao ? `<div class="etapa-dur">⏱ ${e.duracao}</div>` : ''}
+        </div>
+        <div class="etapa-body">
+          <div class="etapa-instrucao">${e.instrucao || ''}</div>
+          ${e.dica_professor ? `<div class="etapa-dica"><span>💡</span><span>${e.dica_professor}</span></div>` : ''}
+          ${e.possivel_erro ? `<div class="etapa-erro"><span>⚠️</span><span>${e.possivel_erro}</span></div>` : ''}
+        </div>
+      </div>`).join('');
+
+    const perguntasHtml = (d.perguntas_reflexao || []).map((p, i) => `
+      <div class="pergunta-item">
+        <div class="pergunta-q">${i + 1}</div>
+        <span>${p}</span>
+      </div>`).join('');
+
+    const ejaHtml = d.adaptacao_eja ? `
+      <div class="eja-card">
+        <div class="eja-title">✦ Adaptação para EJA</div>
+        <div class="eja-text">${d.adaptacao_eja}</div>
+      </div>` : '';
+
+    document.getElementById('resultWrapper').innerHTML = `
+      <div class="descricao-card"><strong>O que vamos construir:</strong> ${d.descricao_curta || ''}</div>
+      <div class="section-label">📦 Lista de materiais</div>
+      <div class="materiais-table">
+        <div class="materiais-thead"><span>Material</span><span>Qtd/grupo</span><span>Onde encontrar</span></div>
+        ${materiaisRows}
+      </div>
+      <div class="section-label">🔧 Etapas do projeto</div>
+      ${etapasHtml}
+      <div class="resultado-card" style="margin-top:16px">
+        <div class="resultado-label">🎯 Resultado esperado</div>
+        <div class="resultado-text">${d.resultado_esperado || ''}</div>
+      </div>
+      <div class="habilidades-card">
+        <div class="habilidades-label">🧠 O que este projeto desenvolve além do conteúdo</div>
+        <div class="habilidades-text">${d.causas_e_consequencias || ''}</div>
+      </div>
+      ${d.perguntas_reflexao?.length ? `<div class="perguntas-list"><div class="perguntas-title">💬 Perguntas de reflexão após o projeto</div>${perguntasHtml}</div>` : ''}
+      ${d.variacao_simples || d.variacao_avancada ? `
+      <div class="variacoes">
+        ${d.variacao_simples ? `<div class="variacao-card"><div class="variacao-label simples">▼ Versão mais simples</div><div class="variacao-text">${d.variacao_simples}</div></div>` : ''}
+        ${d.variacao_avancada ? `<div class="variacao-card"><div class="variacao-label avancada">▲ Versão avançada</div><div class="variacao-text">${d.variacao_avancada}</div></div>` : ''}
+      </div>` : ''}
+      ${d.como_avaliar ? `<div class="avaliacao-card"><div class="avaliacao-label">📋 Como avaliar</div><div class="avaliacao-text">${d.como_avaliar}</div></div>` : ''}
+      ${d.conexao_curriculo ? `<div style="font-size:12px;color:var(--teal);background:var(--teal-pale);border-radius:7px;padding:8px 14px;margin-bottom:12px;font-weight:600">📚 ${d.conexao_curriculo}</div>` : ''}
+      ${ejaHtml}`;
+
+    document.getElementById('resultWrapper').classList.add('show');
+    document.getElementById('resultHeader').classList.add('show');
+    document.getElementById('previewEmpty').style.display = 'none';
+    document.getElementById('resultWrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+</script>
+</body>
+</html>

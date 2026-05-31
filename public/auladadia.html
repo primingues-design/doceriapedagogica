@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula do Dia — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0f0e0c;--cream:#faf7f2;--warm:#f5f0e8;
+    --gold:#c8963e;--gold-light:#e8b86d;--gold-pale:#fdf3e3;
+    --teal:#2d6e6e;--teal-pale:#e8f4f4;
+    --coral:#d95f3b;--coral-pale:#fdeee9;
+    --text:#1a1917;--text-mid:#4a4845;--text-muted:#8a8785;
+    --border:rgba(15,14,12,0.1);--border-mid:rgba(15,14,12,0.18);
+    --ac:#c8963e;--ac-pale:#fdf3e3;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+  .topbar{background:var(--ink);padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+  .topbar-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--cream);display:flex;align-items:center;gap:10px;text-decoration:none}
+  .topbar-logo-mark{width:28px;height:28px;background:var(--gold);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
+  .topbar-back{font-size:13px;color:rgba(250,247,242,0.5);text-decoration:none;transition:color 0.2s}
+  .topbar-back:hover{color:var(--cream)}
+
+  .main{display:grid;grid-template-columns:420px 1fr;min-height:calc(100vh - 56px)}
+
+  .form-panel{background:var(--cream);border-right:1px solid var(--border);padding:32px 28px;overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px}
+  .form-panel-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;margin-bottom:6px}
+  .form-panel-sub{font-size:13px;color:var(--text-muted);margin-bottom:24px;line-height:1.5}
+
+  .date-chip{display:inline-flex;align-items:center;gap:6px;background:var(--ac-pale);border:1px solid var(--ac);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:600;color:var(--ac);margin-bottom:24px}
+
+  .field{margin-bottom:20px}
+  .field-label{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.07em;text-transform:uppercase;display:block;margin-bottom:7px}
+  .field-required{color:var(--coral)}
+
+  input[type="text"],select,textarea{width:100%;background:white;border:1.5px solid var(--border-mid);border-radius:9px;padding:11px 14px;font-size:14px;color:var(--text);font-family:'Outfit',sans-serif;transition:border-color 0.2s,box-shadow 0.2s;outline:none}
+  input[type="text"]:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(200,150,62,0.12)}
+
+  .tema-sugerido-wrap{position:relative}
+  .tema-sugerido-wrap input{padding-right:46px}
+  .btn-sugerir-outro{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--ac);color:white;border:none;border-radius:6px;padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;transition:background 0.2s}
+  .btn-sugerir-outro:hover{background:#a07830}
+  .btn-sugerir-outro:disabled{opacity:0.5;cursor:not-allowed}
+  .tema-motivo{font-size:12px;color:var(--text-muted);margin-top:6px;line-height:1.4;font-style:italic;min-height:16px}
+
+  .divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+  .generate-btn{width:100%;background:var(--ac);color:white;border:none;padding:15px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s;margin-top:4px}
+  .generate-btn:hover:not(:disabled){background:#a07830;transform:translateY(-1px)}
+  .generate-btn:disabled{opacity:0.55;cursor:not-allowed;transform:none}
+  .generate-btn .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;display:none}
+  .generate-btn.loading .spinner{display:block}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .progress-area{display:none;margin-top:16px}
+  .progress-area.show{display:block}
+  .progress-steps{display:flex;flex-direction:column;gap:8px}
+  .progress-step{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-muted);transition:color 0.3s}
+  .progress-step.active{color:var(--ac)}
+  .progress-step.done{color:var(--teal)}
+  .step-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--border-mid);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all 0.3s}
+  .progress-step.active .step-dot{border-color:var(--ac);background:var(--ac-pale)}
+  .progress-step.done .step-dot{border-color:var(--teal);background:var(--teal);color:white}
+
+  .error-box{display:none;background:var(--coral-pale);border:1px solid rgba(217,95,59,0.3);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--coral);margin-top:14px;line-height:1.5}
+  .error-box.show{display:block}
+
+  .preview-panel{padding:32px;overflow-y:auto}
+  .preview-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:400px;text-align:center;color:var(--text-muted)}
+  .preview-empty-icon{font-size:48px;margin-bottom:16px;opacity:0.4}
+  .preview-empty-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text-mid);margin-bottom:8px}
+  .preview-empty-sub{font-size:14px;line-height:1.6;max-width:320px}
+
+  .result-header{display:none;margin-bottom:24px}
+  .result-header.show{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  .result-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;margin-bottom:6px}
+  .result-meta{font-size:12px;color:var(--text-muted)}
+  .btn-regen{background:white;color:var(--text-mid);padding:10px 18px;border-radius:8px;border:1.5px solid var(--border-mid);font-size:13px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;flex-shrink:0}
+  .btn-regen:hover{background:var(--warm)}
+
+  .result-wrapper{display:none;max-width:780px}
+  .result-wrapper.show{display:block}
+
+  /* ── CARDS DO RESULTADO ── */
+  .gancho-card{background:var(--ink);color:var(--cream);border-radius:12px;padding:20px 24px;margin-bottom:16px}
+  .gancho-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-light);margin-bottom:8px}
+  .gancho-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;margin-bottom:6px}
+  .gancho-text{font-size:14px;color:rgba(250,247,242,0.8);line-height:1.6}
+
+  .contexto-card{background:var(--ac-pale);border:1.5px solid rgba(200,150,62,0.3);border-radius:12px;padding:18px 22px;margin-bottom:16px}
+  .contexto-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ac);margin-bottom:8px}
+  .contexto-text{font-size:14px;color:var(--text-mid);line-height:1.6}
+
+  .dev-card{background:white;border-radius:12px;border:1px solid var(--border);margin-bottom:10px;overflow:hidden}
+  .dev-header{background:var(--ac);color:white;padding:11px 18px;display:flex;align-items:center;gap:10px}
+  .dev-num{width:24px;height:24px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+  .dev-label{font-size:13px;font-weight:600}
+  .dev-body{padding:14px 18px}
+  .dev-desc{font-size:14px;color:var(--text-mid);line-height:1.6;margin-bottom:10px}
+  .dev-exemplo-label{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px}
+  .dev-exemplo{font-size:13px;color:var(--teal);background:var(--teal-pale);border-radius:7px;padding:8px 12px;line-height:1.5}
+
+  .reflexao-card{background:white;border:2px solid var(--ac);border-radius:10px;padding:16px 20px;margin-bottom:16px}
+  .reflexao-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ac);margin-bottom:8px}
+  .reflexao-text{font-size:15px;font-weight:600;font-family:'Playfair Display',serif;font-style:italic;color:var(--text)}
+
+  .pesquisa-card{background:white;border-radius:10px;border:1px solid var(--border);padding:16px 20px;margin-bottom:12px}
+  .pesquisa-title{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
+  .pesquisa-item{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text-mid);line-height:1.5}
+  .pesquisa-item:last-child{border-bottom:none}
+  .pesquisa-dot{width:6px;height:6px;background:var(--ac);border-radius:50%;flex-shrink:0;margin-top:7px}
+
+  .bncc-pill{display:inline-flex;background:var(--teal-pale);color:var(--teal);border-radius:6px;padding:4px 12px;font-size:12px;font-weight:600;margin-bottom:12px}
+
+  .eja-card{background:var(--gold-pale);border:1px solid rgba(200,150,62,0.3);border-radius:10px;padding:16px 20px;margin-bottom:16px}
+  .eja-title{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+  .eja-text{font-size:14px;color:var(--text-mid);line-height:1.5}
+
+  @media(max-width:860px){
+    .main{grid-template-columns:1fr}
+    .form-panel{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--border)}
+    .preview-panel{padding:20px}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/conta.html">
+    <div class="topbar-logo-mark">✦</div>
+    DoceriaPedagógica
+  </a>
+  <a class="topbar-back" href="/conta.html">← Voltar ao painel</a>
+</div>
+
+<div class="main">
+  <div class="form-panel">
+    <div class="form-panel-title">📰 Aula do Dia</div>
+    <div class="form-panel-sub">A IA sugere um tema pedagógico baseado em notícias e datas de hoje — aula atual e relevante para os alunos.</div>
+
+    <div id="dateChip" class="date-chip">📅 Carregando data...</div>
+
+    <div class="field">
+      <label class="field-label">Nível / turma <span class="field-required">*</span></label>
+      <select id="nivel">
+        <option value="">Selecione...</option>
+        <option value="Educação Infantil (4-5 anos)">Educação Infantil</option>
+        <option value="Fundamental I — Anos Iniciais (1º ao 5º ano)">Fundamental I (1º–5º ano)</option>
+        <option value="Fundamental II — Anos Finais (6º ao 9º ano)">Fundamental II (6º–9º ano)</option>
+        <option value="Ensino Médio">Ensino Médio</option>
+        <option value="EJA — Ensino Fundamental">EJA — Fundamental</option>
+        <option value="EJA — Ensino Médio">EJA — Médio</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Disciplina (opcional)</label>
+      <input type="text" id="disciplina" placeholder="Ex: Ciências, Português, Geografia..." />
+    </div>
+
+    <div class="field">
+      <label class="field-label">Tema sugerido pela IA</label>
+      <div class="tema-sugerido-wrap">
+        <input type="text" id="temaSugerido" placeholder="Aguardando sugestão..." />
+        <button class="btn-sugerir-outro" id="btnSugerir" onclick="sugerirTema()" title="Gerar nova sugestão">🔄</button>
+      </div>
+      <div class="tema-motivo" id="temaMotivo">Carregando sugestão para hoje...</div>
+    </div>
+
+    <hr class="divider">
+
+    <button class="generate-btn" id="generateBtn" onclick="generateAula()" disabled>
+      <div class="spinner"></div>
+      ✨ Gerar Aula do Dia
+    </button>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <div class="progress-area" id="progressArea">
+      <div class="progress-steps">
+        <div class="progress-step" id="step1"><div class="step-dot">1</div><span>Pesquisando contexto atual...</span></div>
+        <div class="progress-step" id="step2"><div class="step-dot">2</div><span>Criando gancho de abertura...</span></div>
+        <div class="progress-step" id="step3"><div class="step-dot">3</div><span>Desenvolvendo atividades...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="preview-panel">
+    <div class="result-header" id="resultHeader">
+      <div>
+        <div class="result-title" id="resultTitle"></div>
+        <div class="result-meta" id="resultMeta"></div>
+      </div>
+      <button class="btn-regen" onclick="generateAula()">↻ Gerar nova versão</button>
+    </div>
+
+    <div class="preview-empty" id="previewEmpty">
+      <div class="preview-empty-icon">📰</div>
+      <div class="preview-empty-title">Sua aula do dia aparece aqui</div>
+      <div class="preview-empty-sub">Selecione o nível, confirme o tema sugerido e clique em <strong>Gerar Aula do Dia</strong>.</div>
+    </div>
+
+    <div class="result-wrapper" id="resultWrapper"></div>
+  </div>
+</div>
+
+<script>
+  const DIAS = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+  const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const ESTACOES = { 3:'outono',4:'outono',5:'outono',6:'inverno',7:'inverno',8:'inverno',9:'primavera',10:'primavera',11:'primavera',12:'verão',1:'verão',2:'verão' };
+
+  function getDateInfo() {
+    const now = new Date();
+    const dia = now.getDate();
+    const mes = now.getMonth();
+    const ano = now.getFullYear();
+    const diaSemana = DIAS[now.getDay()];
+    const dataHoje = `${dia} de ${MESES[mes]} de ${ano}`;
+    const estacao = ESTACOES[mes + 1];
+    return { dataHoje, diaSemana, estacao, ano };
+  }
+
+  const { dataHoje, diaSemana, estacao } = getDateInfo();
+  document.getElementById('dateChip').textContent = '📅 ' + dataHoje;
+
+  function setStep(n) {
+    for (let i = 1; i <= 3; i++) {
+      const el = document.getElementById('step' + i);
+      el.classList.remove('active', 'done');
+      if (i < n) { el.classList.add('done'); el.querySelector('.step-dot').textContent = '✓'; }
+      else if (i === n) el.classList.add('active');
+      else el.querySelector('.step-dot').textContent = i;
+    }
+  }
+
+  async function sugerirTema() {
+    const btn = document.getElementById('btnSugerir');
+    const input = document.getElementById('temaSugerido');
+    const motivo = document.getElementById('temaMotivo');
+    const errorBox = document.getElementById('errorBox');
+    errorBox.classList.remove('show');
+    btn.disabled = true;
+    btn.textContent = '⏳';
+    input.value = '';
+    motivo.textContent = 'Gerando sugestão...';
+
+    const prompt = `Hoje é ${dataHoje} (dia da semana: ${diaSemana}).
+
+Você é uma professora brasileira criativa e antenada.
+Sugira UM tema pedagógico relevante para hoje, considerando:
+
+1. Efemérides brasileiras desta data (datas comemorativas, dias mundiais, aniversários históricos)
+2. Acontecimentos recentes e relevantes no Brasil e no mundo (últimas 2 semanas)
+3. Estação do ano atual no Brasil (${estacao})
+4. Contexto escolar brasileiro (calendário letivo, BNCC)
+
+Retorne SOMENTE este JSON:
+{
+  "tema_sugerido": "nome do tema (máx 6 palavras)",
+  "motivo": "Por que este tema é relevante HOJE — máx 2 frases",
+  "efemeride": "Data comemorativa ou evento que justifica (se houver)",
+  "conexao_bncc": "Área de conhecimento BNCC relacionada",
+  "disciplinas_possiveis": ["Disciplina 1", "Disciplina 2", "Disciplina 3"]
+}`;
+
+    try {
+      const response = await fetch('/api/claude', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6', max_tokens: 600,
+          system: 'Sugira temas pedagógicos relevantes para hoje. Retorne APENAS JSON válido, sem markdown.',
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      if (!response.ok) throw new Error('Erro ' + response.status);
+      const data = await response.json();
+      const raw = data.content?.[0]?.text || '';
+      let parsed;
+      try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
+      catch (e) { throw new Error('Formato inesperado.'); }
+      input.value = parsed.tema_sugerido || '';
+      motivo.textContent = parsed.motivo || '';
+      document.getElementById('generateBtn').disabled = false;
+    } catch (err) {
+      motivo.textContent = 'Erro ao sugerir tema. Você pode digitar um tema manualmente.';
+      input.value = '';
+      document.getElementById('generateBtn').disabled = false;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🔄';
+    }
+  }
+
+  async function generateAula() {
+    const tema = document.getElementById('temaSugerido').value.trim();
+    const nivel = document.getElementById('nivel').value;
+    const disciplina = document.getElementById('disciplina').value.trim();
+    const errorBox = document.getElementById('errorBox');
+    errorBox.classList.remove('show');
+    if (!nivel) { errorBox.textContent = 'Selecione o nível ou turma.'; errorBox.classList.add('show'); document.getElementById('nivel').focus(); return; }
+    if (!tema) { errorBox.textContent = 'Aguarde a sugestão de tema ou digite um tema.'; errorBox.classList.add('show'); document.getElementById('temaSugerido').focus(); return; }
+
+    const btn = document.getElementById('generateBtn');
+    btn.disabled = true; btn.classList.add('loading');
+    document.getElementById('progressArea').classList.add('show');
+    document.getElementById('previewEmpty').style.display = 'none';
+    document.getElementById('resultHeader').classList.remove('show');
+    document.getElementById('resultWrapper').classList.remove('show');
+
+    setStep(1); await delay(700); setStep(2);
+
+    const prompt = `Hoje é ${dataHoje}.
+Tema: "${tema}"
+Nível: ${nivel}
+${disciplina ? 'Disciplina: ' + disciplina : ''}
+
+Você é uma professora experiente e criativa.
+Crie uma aula completa e ATUAL sobre este tema para hoje.
+
+IMPORTANTE: A aula deve conectar o tema com a realidade ATUAL do aluno brasileiro.
+Use exemplos, notícias e contextos de hoje — não de anos atrás.
+
+Retorne SOMENTE este JSON (sem markdown):
+{
+  "titulo_aula": "título criativo e atual",
+  "gancho_inicial": "Como começar a aula de forma impactante — uma notícia, imagem, pergunta ou dado surpreendente sobre o tema hoje",
+  "contexto_atual": "O que está acontecendo AGORA relacionado a este tema (notícias, tendências, dados recentes)",
+  "desenvolvimento": [
+    {
+      "parte": "1. Exploração (X min)",
+      "descricao": "O que fazer — atividade ou discussão",
+      "exemplo_atual": "Exemplo concreto e atual para usar"
+    },
+    {
+      "parte": "2. Aprofundamento (X min)",
+      "descricao": "...",
+      "exemplo_atual": "..."
+    },
+    {
+      "parte": "3. Aplicação (X min)",
+      "descricao": "...",
+      "exemplo_atual": "..."
+    }
+  ],
+  "pergunta_reflexao": "Pergunta final que conecta o tema ao dia a dia do aluno",
+  "para_pesquisar": ["Sugestão de pesquisa 1 para alunos", "Sugestão 2"],
+  "conexao_bncc": "Habilidades BNCC relacionadas",
+  "adaptacao_eja": "Como adaptar para adultos do EJA"
+}
+
+REGRAS:
+- Conteúdo ATUAL — use o que está acontecendo hoje no Brasil e no mundo
+- Linguagem adequada ao nível: ${nivel}
+- Para EJA: exemplos do cotidiano adulto, nunca infantilizar
+- Seja específico — datas, números, nomes reais quando possível`;
+
+    try {
+      const response = await fetch('/api/claude', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6', max_tokens: 2500,
+          system: 'Você é pedagoga criativa especialista em aulas atuais e contextualizadas. Retorne APENAS JSON válido, sem markdown.',
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      setStep(3);
+      if (!response.ok) throw new Error('Erro ' + response.status);
+      const data = await response.json();
+      const raw = data.content?.[0]?.text || '';
+      let parsed;
+      try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
+      catch (e) { throw new Error('Formato inesperado. Tente novamente.'); }
+      renderAula(parsed, tema, nivel, disciplina);
+    } catch (err) {
+      errorBox.textContent = 'Erro ao gerar: ' + (err.message || 'Tente novamente.');
+      errorBox.classList.add('show');
+      document.getElementById('previewEmpty').style.display = 'flex';
+    } finally {
+      btn.disabled = false; btn.classList.remove('loading');
+      document.getElementById('progressArea').classList.remove('show');
+      for (let i = 1; i <= 3; i++) { const el = document.getElementById('step' + i); el.classList.remove('active', 'done'); el.querySelector('.step-dot').textContent = i; }
+    }
+  }
+
+  function renderAula(d, tema, nivel, disciplina) {
+    document.getElementById('resultTitle').textContent = d.titulo_aula || tema;
+    document.getElementById('resultMeta').textContent = `📅 Aula do Dia — ${dataHoje} • ${nivel}`;
+
+    const devHtml = (d.desenvolvimento || []).map((p, i) => `
+      <div class="dev-card">
+        <div class="dev-header">
+          <div class="dev-num">${i + 1}</div>
+          <div class="dev-label">${p.parte || ''}</div>
+        </div>
+        <div class="dev-body">
+          <div class="dev-desc">${p.descricao || ''}</div>
+          ${p.exemplo_atual ? `<div class="dev-exemplo-label">Exemplo atual</div><div class="dev-exemplo">💡 ${p.exemplo_atual}</div>` : ''}
+        </div>
+      </div>`).join('');
+
+    const pesquisaHtml = (d.para_pesquisar || []).map(p => `
+      <div class="pesquisa-item">
+        <div class="pesquisa-dot"></div>
+        <span>${p}</span>
+      </div>`).join('');
+
+    const ejaHtml = d.adaptacao_eja ? `
+      <div class="eja-card">
+        <div class="eja-title">✦ Adaptação para EJA</div>
+        <div class="eja-text">${d.adaptacao_eja}</div>
+      </div>` : '';
+
+    document.getElementById('resultWrapper').innerHTML = `
+      <div class="gancho-card">
+        <div class="gancho-label">⚡ Gancho inicial — como começar a aula</div>
+        <div class="gancho-text">${d.gancho_inicial || ''}</div>
+      </div>
+      <div class="contexto-card">
+        <div class="contexto-label">🌍 O que está acontecendo agora</div>
+        <div class="contexto-text">${d.contexto_atual || ''}</div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:var(--text-mid);margin:16px 0 10px;letter-spacing:0.03em">Desenvolvimento da aula</div>
+      ${devHtml}
+      <div class="reflexao-card">
+        <div class="reflexao-label">💭 Pergunta de reflexão</div>
+        <div class="reflexao-text">${d.pergunta_reflexao || ''}</div>
+      </div>
+      ${d.para_pesquisar?.length ? `<div class="pesquisa-card"><div class="pesquisa-title">🔍 Para os alunos pesquisarem</div>${pesquisaHtml}</div>` : ''}
+      ${d.conexao_bncc ? `<div class="bncc-pill">📚 BNCC: ${d.conexao_bncc}</div>` : ''}
+      ${ejaHtml}`;
+
+    document.getElementById('resultWrapper').classList.add('show');
+    document.getElementById('resultHeader').classList.add('show');
+    document.getElementById('previewEmpty').style.display = 'none';
+    document.getElementById('resultWrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  // Auto-load theme suggestion on page load
+  window.addEventListener('DOMContentLoaded', () => sugerirTema());
+</script>
+</body>
+</html>
