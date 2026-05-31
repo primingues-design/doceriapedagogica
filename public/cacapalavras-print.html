@@ -5,22 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Caça-Palavras — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root {
   --ink:#0f0e0c; --cream:#faf7f2; --warm:#f5f0e8;
-  --gold:#c8963e; --gold-light:#e8b86d; --gold-pale:#fdf3e3;
-  --teal:#2d6e6e; --teal-light:#4a9b9b; --teal-pale:#e8f4f4;
-  --coral:#d95f3b; --coral-pale:#fdeee9;
-  --text:#1a1917; --text-mid:#4a4845; --text-muted:#8a8785;
+  --gold:#c8963e; --teal:#2d6e6e; --coral:#d95f3b;
+  --text:#1a1917; --text-muted:#8a8785;
   --border:rgba(15,14,12,0.1); --border-mid:rgba(15,14,12,0.18);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);min-height:100vh;}
 
 .topbar{background:var(--ink);padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
-.topbar-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--gold);letter-spacing:-0.5px}
-.topbar-back{color:rgba(255,255,255,0.6);font-size:13px;text-decoration:none;transition:color 0.2s}
+.topbar-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--gold)}
+.topbar-back{color:rgba(255,255,255,0.6);font-size:13px;text-decoration:none}
 .topbar-back:hover{color:white}
 
 .main{max-width:1240px;margin:0 auto;padding:32px 24px;display:grid;grid-template-columns:320px 1fr;gap:28px}
@@ -36,6 +33,11 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
 .pill{padding:5px 12px;border:1.5px solid var(--border-mid);border-radius:20px;font-size:12px;cursor:pointer;background:white;transition:all 0.15s;user-select:none}
 .pill.active{background:var(--teal);color:white;border-color:var(--teal);font-weight:600}
 
+.toggle-wrap{margin-bottom:16px}
+.toggle-row{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;font-weight:600;color:var(--text)}
+.toggle-row input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--teal)}
+.toggle-hint{font-size:11px;color:var(--text-muted);margin-top:3px;margin-left:24px}
+
 .btn-generate{width:100%;padding:13px;background:var(--teal);color:white;border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity 0.2s;margin-top:4px}
 .btn-generate:hover:not(:disabled){opacity:0.88}
 .btn-generate:disabled{opacity:0.5;cursor:not-allowed}
@@ -47,32 +49,50 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
 .preview-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 .preview-label{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)}
 .btn-download{background:var(--gold);color:white;border:none;border-radius:8px;padding:9px 20px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:none;transition:opacity 0.2s}
-.btn-download:hover:not(:disabled){opacity:0.88}
-.btn-download:disabled{opacity:0.5;cursor:not-allowed}
+.btn-download:hover{opacity:0.88}
 
 .preview-empty{background:white;border:1.5px dashed var(--border-mid);border-radius:16px;padding:80px 32px;text-align:center;color:var(--text-muted)}
-#doc-preview{background:white;border:1px solid var(--border);border-radius:16px;padding:40px 44px;display:none}
+#doc-preview{background:white;border:1px solid var(--border);border-radius:16px;padding:32px 36px;display:none}
 
-/* ── Print sheet ── */
-.sh-header{border-top:5px solid var(--teal);border-bottom:1px solid var(--border);padding:18px 0 14px;margin-bottom:28px}
-.sh-label{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
-.sh-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--text);margin-bottom:4px}
+.sh-header{border-top:5px solid var(--teal);border-bottom:1px solid var(--border);padding:14px 0 12px;margin-bottom:20px}
+.sh-label{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:5px}
+.sh-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--text);margin-bottom:3px}
 .sh-meta{font-size:11px;color:var(--text-muted)}
-.sh-body{display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap}
-
-.ws-grid-print{display:inline-grid;gap:2px}
-.ws-cell-print{width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;background:white;border:1px solid rgba(15,14,12,0.15);border-radius:2px;font-family:'Outfit',sans-serif;color:var(--text)}
-.ws-cell-print.hi{background:#d1fae5;border-color:#34d399;color:#065f46}
-
-.words-panel{flex:1;min-width:180px}
-.words-title{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
-.word-list{display:grid;grid-template-columns:1fr 1fr;gap:5px 16px}
-.word-item{font-size:13px;color:var(--text);padding:5px 0;border-bottom:1px solid var(--border)}
+.sh-body{display:flex;gap:20px;align-items:flex-start;flex-wrap:nowrap;width:100%}
+.ws-grid-wrap{flex-shrink:0}
+.ws-cell{display:flex;align-items:center;justify-content:center;font-weight:700;background:white;border:1px solid rgba(15,14,12,0.15);border-radius:2px;font-family:'Outfit',sans-serif;color:var(--text)}
+.ws-cell.hi{background:#d1fae5;border-color:#34d399;color:#065f46}
+.words-panel{flex:1;min-width:0}
+.words-title{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+.word-list{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px}
+.word-item{font-size:12px;padding:4px 0;border-bottom:1px solid var(--border)}
 .word-item strong{display:block;font-weight:700}
-.word-item span{font-size:11px;color:var(--text-muted)}
-.name-row{margin-top:20px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:24px;font-size:12px;color:var(--text-muted)}
-.sh-footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted)}
+.word-item span{font-size:10px;color:var(--text-muted);line-height:1.3}
+.name-row{margin-top:16px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--text-muted)}
+.sh-footer{margin-top:20px;padding-top:8px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted)}
 .sh-footer-logo{font-family:'Playfair Display',serif;color:var(--gold);font-weight:700}
+
+#print-teacher{display:none;margin-top:40px;padding-top:40px;border-top:2px dashed var(--border-mid)}
+
+/* Letra Grande */
+body.letra-grande .sh-title{font-size:26px}
+body.letra-grande .sh-meta{font-size:13px}
+body.letra-grande .word-item strong{font-size:14px}
+body.letra-grande .word-item span{font-size:12px}
+body.letra-grande .name-row{font-size:14px}
+
+/* ═══ IMPRESSÃO ═══ */
+@media print {
+  @page { size: A4 portrait; margin: 10mm 12mm; }
+  body { background: white !important; }
+  .topbar, .main > .form-panel, .preview-top { display: none !important; }
+  .main { display: block !important; padding: 0 !important; }
+  .preview-panel { display: block !important; }
+  #doc-preview { display: block !important; border: none !important; border-radius: 0 !important; padding: 0 !important; margin: 0 !important; }
+  #print-student { display: block !important; }
+  #print-teacher { display: block !important; page-break-before: always; margin-top: 0 !important; padding-top: 0 !important; border-top: none !important; }
+  .preview-empty { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -114,6 +134,14 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
       <div class="pill" data-val="hard">Todas — Difícil</div>
     </div>
 
+    <div class="toggle-wrap">
+      <label class="toggle-row">
+        <input type="checkbox" id="letraGrande" onchange="onLetraGrandeChange()">
+        <span>🔡 Letra Grande</span>
+      </label>
+      <div class="toggle-hint">Recomendado para EJA e Educação Infantil</div>
+    </div>
+
     <div class="progress-wrap" id="progWrap">
       <div class="progress-bar" id="progBar"></div>
     </div>
@@ -123,247 +151,213 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
   <div class="preview-panel">
     <div class="preview-top">
       <div class="preview-label">Pré-visualização</div>
-      <button class="btn-download" id="btnDL" onclick="downloadPDF()">⬇ Baixar PDF</button>
+      <button class="btn-download" id="btnDL" onclick="printPDF()">🖨️ Imprimir / Salvar PDF</button>
     </div>
     <div class="preview-empty" id="emptyState">
       <div style="font-size:48px;margin-bottom:12px;opacity:0.3;">🔤</div>
       <div style="font-size:15px;font-weight:600;">Preencha o formulário e clique em Gerar</div>
       <div style="font-size:13px;margin-top:6px;color:var(--text-muted)">O PDF inclui folha do aluno + gabarito do professor</div>
     </div>
-    <div id="doc-preview"></div>
+    <div id="doc-preview">
+      <div id="print-student"></div>
+      <div id="print-teacher"></div>
+    </div>
   </div>
 </div>
 
 <script>
-let wsGrid = [], wsPlacements = [], lastData = null;
+let wsGrid=[], wsPlacements=[], lastData=null;
 
-document.querySelectorAll('.pill-group').forEach(g =>
-  g.querySelectorAll('.pill').forEach(p =>
-    p.addEventListener('click', () => {
-      g.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+document.querySelectorAll('.pill-group').forEach(g=>
+  g.querySelectorAll('.pill').forEach(p=>
+    p.addEventListener('click',()=>{
+      g.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
       p.classList.add('active');
     })
   )
 );
-function getPill(id) { return document.getElementById(id)?.querySelector('.pill.active')?.dataset.val || null; }
+function getPill(id){return document.getElementById(id)?.querySelector('.pill.active')?.dataset.val||null}
 
-function norm(str) {
+function norm(str){
   return str.normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().replace(/[^A-Z]/g,'');
 }
 
-function placeWords(words, size, diff) {
-  const dirs = {
-    easy:  [[0,1],[1,0]],
+function calcCell(size){
+  const map={10:32,12:26,15:22};
+  return map[size]||26;
+}
+
+function calcFont(size){
+  const map={10:15,12:13,15:12};
+  return map[size]||13;
+}
+
+function placeWords(words,size,diff){
+  const dirs={
+    easy:[[0,1],[1,0]],
     medium:[[0,1],[1,0],[1,1],[1,-1]],
-    hard:  [[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]]
-  }[diff] || [[0,1],[1,0]];
-  const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const grid = Array.from({length:size}, () => Array(size).fill(null));
-  const placements = [];
-  for (const word of words) {
-    let placed = false;
-    for (let t=0; t<400 && !placed; t++) {
-      const [dr,dc] = dirs[Math.floor(Math.random()*dirs.length)];
-      const minR = dr<0?word.length-1:0, maxR = dr>0?size-word.length:dr<0?word.length-1:size-1;
-      const minC = dc<0?word.length-1:0, maxC = dc>0?size-word.length:dc<0?word.length-1:size-1;
-      if (maxR<minR||maxC<minC) continue;
-      const r = minR+Math.floor(Math.random()*(maxR-minR+1));
-      const c = minC+Math.floor(Math.random()*(maxC-minC+1));
+    hard:[[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]]
+  }[diff]||[[0,1],[1,0]];
+  const ALPHA='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const grid=Array.from({length:size},()=>Array(size).fill(null));
+  const placements=[];
+  for(const word of words){
+    let placed=false;
+    for(let t=0;t<400&&!placed;t++){
+      const [dr,dc]=dirs[Math.floor(Math.random()*dirs.length)];
+      const minR=dr<0?word.length-1:0,maxR=dr>0?size-word.length:dr<0?word.length-1:size-1;
+      const minC=dc<0?word.length-1:0,maxC=dc>0?size-word.length:dc<0?word.length-1:size-1;
+      if(maxR<minR||maxC<minC)continue;
+      const r=minR+Math.floor(Math.random()*(maxR-minR+1));
+      const c=minC+Math.floor(Math.random()*(maxC-minC+1));
       let ok=true;
-      for (let i=0;i<word.length;i++) {
-        const nr=r+dr*i, nc=c+dc*i;
-        if (nr<0||nr>=size||nc<0||nc>=size||
-           (grid[nr][nc]!==null&&grid[nr][nc]!==word[i])) { ok=false; break; }
+      for(let i=0;i<word.length;i++){
+        const nr=r+dr*i,nc=c+dc*i;
+        if(nr<0||nr>=size||nc<0||nc>=size||(grid[nr][nc]!==null&&grid[nr][nc]!==word[i])){ok=false;break;}
       }
-      if (ok) {
-        for (let i=0;i<word.length;i++) grid[r+dr*i][c+dc*i]=word[i];
-        placements.push({word,r,c,dr,dc});
-        placed=true;
+      if(ok){
+        for(let i=0;i<word.length;i++)grid[r+dr*i][c+dc*i]=word[i];
+        placements.push({word,r,c,dr,dc});placed=true;
       }
     }
   }
-  for (let r=0;r<size;r++) for(let c=0;c<size;c++)
-    if (grid[r][c]===null) grid[r][c]=ALPHA[Math.floor(Math.random()*26)];
-  return {grid, placements};
+  for(let r=0;r<size;r++)for(let c=0;c<size;c++)
+    if(grid[r][c]===null)grid[r][c]=ALPHA[Math.floor(Math.random()*26)];
+  return{grid,placements};
 }
 
-async function generate() {
-  const tema = document.getElementById('inTema').value.trim();
-  const nivel = document.getElementById('inNivel').value;
-  if (!tema) { document.getElementById('inTema').focus(); return; }
-  const btn = document.getElementById('btnGen');
-  btn.disabled=true; btn.textContent='⏳ Gerando...';
-  document.getElementById('progWrap').style.display='block';
-  document.getElementById('progBar').style.width='25%';
-  try {
-    const res = await fetch('/api/claude', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model:'claude-sonnet-4-6', max_tokens:1024,
-        messages:[{role:'user', content:buildPrompt(tema,nivel)}]
-      })
-    });
-    document.getElementById('progBar').style.width='70%';
-    const json = await res.json();
-    const raw = json.content?.[0]?.text || '';
-    const data = extractJSON(raw);
-    lastData = {data, tema, nivel};
-    renderPreview(data, nivel);
-    document.getElementById('progBar').style.width='100%';
-  } catch(e) {
-    alert('Erro ao gerar. Verifique sua conexão e tente novamente.');
-    console.error(e);
+function buildGridHtml(grid,size,hiSet){
+  const cell=calcCell(size),font=calcFont(size);
+  let h='';
+  for(let r=0;r<size;r++)for(let c=0;c<size;c++){
+    const hi=hiSet&&hiSet.has(`${r},${c}`);
+    h+=`<div class="ws-cell${hi?' hi':''}" style="width:${cell}px;height:${cell}px;font-size:${font}px;">${grid[r][c]}</div>`;
   }
-  document.getElementById('progWrap').style.display='none';
-  btn.disabled=false; btn.textContent='✨ Gerar Caça-Palavras';
+  return`<div style="display:inline-grid;grid-template-columns:repeat(${size},${cell}px);gap:2px;">${h}</div>`;
 }
 
-function buildPrompt(tema, nivel) {
-  return `Crie um caça-palavras sobre "${tema}" para o nível "${nivel}".
-
-Retorne SOMENTE este JSON válido (sem markdown, sem texto extra):
-{
-  "titulo": "título criativo do caça-palavras",
-  "palavras": [
-    {"texto": "PALAVRA", "dica": "definição breve adequada ao nível"},
-    {"texto": "OUTRA", "dica": "definição"}
-  ]
-}
-
-REGRAS OBRIGATÓRIAS:
-- Gere 10 a 14 palavras relacionadas ao tema "${tema}"
-- Palavras em MAIÚSCULAS, SEM acentos, SEM espaços: Ã→A, Ç→C, É→E, Ó→O, Ú→U, Â→A, Ê→E, Ô→O, Í→I, Á→A
-- Comprimento entre 4 e 10 letras
-- Dicas claras e adequadas ao nível ${nivel}
-- NUNCA coloque "USE CAIXA ALTA" nas dicas`;
-}
-
-function renderPreview(data, nivel) {
-  const size = parseInt(getPill('sizePills')||'12');
-  const diff = getPill('dirPills')||'easy';
-  const date = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-  const wordObjs = data.palavras||[];
-  const words = wordObjs.map(p => norm(p.texto)).filter(w => w.length>=3 && w.length<=size-1);
-  const {grid, placements} = placeWords(words, size, diff);
-  wsGrid=grid; wsPlacements=placements;
-
-  let gridHtml='';
-  for(let r=0;r<size;r++) for(let c=0;c<size;c++)
-    gridHtml+=`<div class="ws-cell-print">${grid[r][c]}</div>`;
-
-  const wordListHtml = wordObjs.map(p=>{
+function buildWordListHtml(wordObjs){
+  return wordObjs.map(p=>{
     const t=norm(p.texto);
-    return `<div class="word-item"><strong>${t}</strong>${p.dica?`<span>${p.dica}</span>`:''}</div>`;
+    return`<div class="word-item"><strong>${t}</strong>${p.dica?`<span>${p.dica}</span>`:''}</div>`;
   }).join('');
+}
 
-  const dirLabel={'easy':'→ e ↓','medium':'→, ↓ e diagonais','hard':'todas as direções'}[diff]||'';
-
-  document.getElementById('emptyState').style.display='none';
-  const el = document.getElementById('doc-preview');
-  el.style.display='block';
+function renderSheet(containerId,opts){
+  const{titulo,nivel,words,wordObjs,size,dirLabel,date,gridHtml,isTeacher}=opts;
+  const el=document.getElementById(containerId);
+  const accentColor=isTeacher?'var(--coral)':'var(--teal)';
+  const labelText=isTeacher?'Gabarito — Uso do Professor':'DoceriaPedagógica — Caça-Palavras';
+  const wordsSectionTitle=isTeacher?'Palavras escondidas:':'Encontre as palavras:';
   el.innerHTML=`
-    <div class="sh-header">
-      <div class="sh-label">DoceriaPedagógica — Caça-Palavras</div>
-      <div class="sh-title">${data.titulo||'Caça-Palavras'}</div>
-      <div class="sh-meta">${nivel} • ${words.length} palavras • Grade ${size}×${size} • Direções: ${dirLabel} • ${date}</div>
+    <div class="sh-header" style="border-top-color:${accentColor}">
+      <div class="sh-label">${labelText}</div>
+      <div class="sh-title" style="color:${isTeacher?'var(--coral)':'var(--text)'};">${titulo}</div>
+      <div class="sh-meta">${isTeacher?date:`${nivel} • ${words.length} palavras • Grade ${size}×${size} • Direções: ${dirLabel} • ${date}`}</div>
     </div>
     <div class="sh-body">
-      <div style="flex-shrink:0;">
-        <div class="ws-grid-print" style="grid-template-columns:repeat(${size},26px);">${gridHtml}</div>
-      </div>
+      <div class="ws-grid-wrap">${gridHtml}</div>
       <div class="words-panel">
-        <div class="words-title">Encontre as palavras:</div>
-        <div class="word-list">${wordListHtml}</div>
-        <div class="name-row">
-          <span>Nome: _______________________________________</span>
-          <span>Data: ________________</span>
-        </div>
+        <div class="words-title">${wordsSectionTitle}</div>
+        <div class="word-list">${buildWordListHtml(wordObjs)}</div>
+        ${!isTeacher?`<div class="name-row">Nome: _________________________________&nbsp;&nbsp;Data: _______________</div>`:''}
       </div>
     </div>
     <div class="sh-footer">
       <span class="sh-footer-logo">DoceriaPedagógica</span>
-      <span>Caça-palavras gerado por IA</span>
+      <span>${isTeacher?'Gabarito do professor':'Caça-palavras gerado por IA'}</span>
       <span>${date}</span>
     </div>`;
+}
+
+async function generate(){
+  const tema=document.getElementById('inTema').value.trim();
+  const nivel=document.getElementById('inNivel').value;
+  if(!tema){document.getElementById('inTema').focus();return}
+  const btn=document.getElementById('btnGen');
+  btn.disabled=true;btn.textContent='⏳ Gerando...';
+  document.getElementById('progWrap').style.display='block';
+  document.getElementById('progBar').style.width='25%';
+  try{
+    const res=await fetch('/api/claude',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1024,messages:[{role:'user',content:buildPrompt(tema,nivel)}]})
+    });
+    document.getElementById('progBar').style.width='70%';
+    const json=await res.json();
+    const raw=json.content?.[0]?.text||'';
+    const data=extractJSON(raw);
+    lastData={data,tema,nivel};
+    renderPreview(data,nivel);
+    document.getElementById('progBar').style.width='100%';
+  }catch(e){
+    alert('Erro ao gerar. Verifique sua conexão e tente novamente.');
+    console.error(e);
+  }
+  document.getElementById('progWrap').style.display='none';
+  btn.disabled=false;btn.textContent='✨ Gerar Caça-Palavras';
+}
+
+function buildPrompt(tema,nivel){
+  return`Crie um caça-palavras sobre "${tema}" para o nível "${nivel}".
+Retorne SOMENTE este JSON válido (sem markdown, sem texto extra):
+{"titulo":"título criativo","palavras":[{"texto":"PALAVRA","dica":"definição breve"}]}
+REGRAS: 10 a 14 palavras, MAIÚSCULAS sem acentos sem espaços, 4 a 10 letras, dicas adequadas ao nível ${nivel}.`;
+}
+
+function renderPreview(data,nivel){
+  const size=parseInt(getPill('sizePills')||'12');
+  const diff=getPill('dirPills')||'easy';
+  const date=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  const wordObjs=data.palavras||[];
+  const words=wordObjs.map(p=>norm(p.texto)).filter(w=>w.length>=3&&w.length<=size-1);
+  const{grid,placements}=placeWords(words,size,diff);
+  wsGrid=grid;wsPlacements=placements;
+
+  const foundCells=new Set();
+  placements.forEach(pl=>{for(let i=0;i<pl.word.length;i++)foundCells.add(`${pl.r+pl.dr*i},${pl.c+pl.dc*i}`)});
+
+  const gridAluno=buildGridHtml(grid,size,null);
+  const gridGabarito=buildGridHtml(grid,size,foundCells);
+
+  const dirLabel={'easy':'→ e ↓','medium':'→, ↓ e diagonais','hard':'todas as direções'}[diff]||'';
+  const opts={titulo:data.titulo||'Caça-Palavras',nivel,words,wordObjs,size,dirLabel,date};
+
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('doc-preview').style.display='block';
+
+  renderSheet('print-student',{...opts,gridHtml:gridAluno,isTeacher:false});
+  renderSheet('print-teacher',{...opts,gridHtml:gridGabarito,isTeacher:true});
+  document.getElementById('print-teacher').style.display='block';
   document.getElementById('btnDL').style.display='inline-block';
 }
 
-async function downloadPDF() {
-  const btn=document.getElementById('btnDL');
-  btn.disabled=true; btn.textContent='⏳ Gerando PDF...';
-  const size=wsGrid.length;
-  const date=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-  const titulo=(lastData?.data?.titulo||'caca-palavras').replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_');
-  const nivel=lastData?.nivel||'';
-  const wordObjs=lastData?.data?.palavras||[];
-
-  const foundCells=new Set();
-  wsPlacements.forEach(pl=>{
-    for(let i=0;i<pl.word.length;i++) foundCells.add(`${pl.r+pl.dr*i},${pl.c+pl.dc*i}`);
-  });
-
-  let gabaGrid='';
-  for(let r=0;r<size;r++) for(let c=0;c<size;c++) {
-    const hi=foundCells.has(`${r},${c}`);
-    gabaGrid+=`<div class="ws-cell-print${hi?' hi':''}">${wsGrid[r][c]}</div>`;
-  }
-  const wordListHtml=wordObjs.map(p=>{
-    const t=norm(p.texto);
-    return `<div class="word-item"><strong>${t}</strong>${p.dica?`<span>${p.dica}</span>`:''}</div>`;
-  }).join('');
-
-  const el=document.getElementById('doc-preview');
-  const orig=el.innerHTML;
-  el.innerHTML+=`
-    <div style="page-break-before:always;">
-      <div class="sh-header" style="border-top-color:var(--coral);">
-        <div class="sh-label">Gabarito — Uso do Professor</div>
-        <div class="sh-title" style="color:var(--coral);">${lastData?.data?.titulo||'Caça-Palavras'}</div>
-        <div class="sh-meta">${date}</div>
-      </div>
-      <div class="sh-body">
-        <div style="flex-shrink:0;">
-          <div class="ws-grid-print" style="grid-template-columns:repeat(${size},26px);">${gabaGrid}</div>
-        </div>
-        <div class="words-panel">
-          <div class="words-title">Palavras escondidas:</div>
-          <div class="word-list">${wordListHtml}</div>
-        </div>
-      </div>
-      <div class="sh-footer">
-        <span class="sh-footer-logo">DoceriaPedagógica</span>
-        <span>Gabarito do professor</span>
-        <span>${date}</span>
-      </div>
-    </div>`;
-
-  const _clone=el.cloneNode(true);
-  el.innerHTML=orig;
-
-  const _wrap=document.createElement('div');
-  _wrap.style.cssText='position:fixed;top:-9999px;left:0;width:1200px;max-width:none;';
-  _wrap.appendChild(_clone);
-  document.body.appendChild(_wrap);
-
-  try {
-    await html2pdf().set({
-      margin:[15,15,15,15],
-      filename:`DoceriaPedagogica_CacaPalavras_${titulo}.pdf`,
-      image:{type:'jpeg',quality:0.98},
-      html2canvas:{scale:2,useCORS:true,logging:false,backgroundColor:'#ffffff',windowWidth:1200},
-      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-      pagebreak:{mode:['avoid-all','css','legacy']}
-    }).from(_clone).save();
-  } catch(e){console.error(e);}
-
-  document.body.removeChild(_wrap);
-  btn.disabled=false; btn.textContent='⬇ Baixar PDF';
+function printPDF(){
+  window.print();
 }
 
-function extractJSON(raw) {
+function onLetraGrandeChange(){
+  document.body.classList.toggle('letra-grande',document.getElementById('letraGrande').checked);
+  if(lastData)renderPreview(lastData.data,lastData.nivel);
+}
+
+document.getElementById('inNivel').addEventListener('change',function(){
+  const nivel=this.value;
+  const isAccessivel=/infantil|eja/i.test(nivel);
+  document.getElementById('letraGrande').checked=isAccessivel;
+  document.body.classList.toggle('letra-grande',isAccessivel);
+  if(isAccessivel){
+    document.querySelectorAll('#sizePills .pill').forEach(p=>
+      p.classList.toggle('active',p.dataset.val==='10')
+    );
+  }
+  if(lastData)renderPreview(lastData.data,nivel);
+});
+
+function extractJSON(raw){
   let s=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
-  const a=s.indexOf('{'), b=s.lastIndexOf('}');
-  if(a===-1||b===-1) throw new Error('JSON not found');
+  const a=s.indexOf('{'),b=s.lastIndexOf('}');
+  if(a===-1||b===-1)throw new Error('JSON not found');
   return JSON.parse(s.slice(a,b+1));
 }
 </script>

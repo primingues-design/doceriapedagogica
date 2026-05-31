@@ -5,13 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cruzadinha — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root {
   --ink:#0f0e0c; --cream:#faf7f2; --warm:#f5f0e8;
-  --gold:#c8963e; --gold-light:#e8b86d; --gold-pale:#fdf3e3;
-  --teal:#2d6e6e; --teal-light:#4a9b9b; --teal-pale:#e8f4f4;
-  --coral:#d95f3b; --coral-pale:#fdeee9;
+  --gold:#c8963e; --teal:#2d6e6e; --coral:#d95f3b;
   --text:#1a1917; --text-mid:#4a4845; --text-muted:#8a8785;
   --border:rgba(15,14,12,0.1); --border-mid:rgba(15,14,12,0.18);
 }
@@ -32,6 +29,11 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
 .form-input,.form-select{width:100%;border:1.5px solid var(--border-mid);border-radius:8px;padding:10px 12px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--text);background:var(--cream);transition:border-color 0.2s;margin-bottom:16px}
 .form-input:focus,.form-select:focus{outline:none;border-color:var(--gold)}
 
+.toggle-wrap{margin-bottom:16px}
+.toggle-row{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;font-weight:600;color:var(--text)}
+.toggle-row input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--teal)}
+.toggle-hint{font-size:11px;color:var(--text-muted);margin-top:3px;margin-left:24px}
+
 .btn-generate{width:100%;padding:13px;background:var(--gold);color:white;border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity 0.2s;margin-top:4px}
 .btn-generate:hover:not(:disabled){opacity:0.88}
 .btn-generate:disabled{opacity:0.5;cursor:not-allowed}
@@ -43,27 +45,22 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
 .preview-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 .preview-label{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)}
 .btn-download{background:var(--gold);color:white;border:none;border-radius:8px;padding:9px 20px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:none;transition:opacity 0.2s}
-.btn-download:hover:not(:disabled){opacity:0.88}
-.btn-download:disabled{opacity:0.5;cursor:not-allowed}
+.btn-download:hover{opacity:0.88}
 
 .preview-empty{background:white;border:1.5px dashed var(--border-mid);border-radius:16px;padding:80px 32px;text-align:center;color:var(--text-muted)}
 #doc-preview{background:white;border:1px solid var(--border);border-radius:16px;padding:40px 44px;display:none}
 
-/* ── Print sheet ── */
 .sh-header{border-top:5px solid var(--gold);border-bottom:1px solid var(--border);padding:18px 0 14px;margin-bottom:28px}
 .sh-label{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
 .sh-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--text);margin-bottom:4px}
 .sh-meta{font-size:11px;color:var(--text-muted)}
 .sh-body{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap}
 
-/* Crossword grid */
 .cw-grid-print{display:inline-grid;border:2px solid #444;gap:0}
 .cw-cell-blank{background:#e8e2d8}
-.cw-cell-white{background:white;border:1.5px solid #555;position:relative;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;font-family:'Outfit',sans-serif;color:var(--text)}
-.cw-cell-white.answer-fill{color:var(--teal)}
+.cw-cell-white{background:white;border:1.5px solid #555;position:relative;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Outfit',sans-serif;color:var(--text)}
 .cw-num{position:absolute;top:1px;left:2px;font-size:6px;font-weight:700;color:#888;line-height:1}
 
-/* Clues panel */
 .clues-panel{flex:1;min-width:160px}
 .clue-section{margin-bottom:14px}
 .clue-section-title{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid var(--border)}
@@ -74,6 +71,27 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
 .name-row{margin-top:20px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:24px;font-size:12px;color:var(--text-muted)}
 .sh-footer{margin-top:24px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted)}
 .sh-footer-logo{font-family:'Playfair Display',serif;color:var(--gold);font-weight:700}
+
+#print-teacher{display:none;margin-top:40px;padding-top:40px;border-top:2px dashed var(--border-mid)}
+
+body.letra-grande .sh-title{font-size:26px}
+body.letra-grande .sh-meta{font-size:13px}
+body.letra-grande .clue-item{font-size:14px}
+body.letra-grande .clue-section-title{font-size:12px}
+body.letra-grande .name-row{font-size:14px}
+
+/* ═══ IMPRESSÃO ═══ */
+@media print {
+  @page { size: A4 portrait; margin: 10mm 12mm; }
+  body { background: white !important; }
+  .topbar, .main > .form-panel, .preview-top { display: none !important; }
+  .main { display: block !important; padding: 0 !important; }
+  .preview-panel { display: block !important; }
+  #doc-preview { display: block !important; border: none !important; border-radius: 0 !important; padding: 0 !important; margin: 0 !important; }
+  #print-student { display: block !important; }
+  #print-teacher { display: block !important; page-break-before: always; margin-top: 0 !important; padding-top: 0 !important; border-top: none !important; }
+  .preview-empty { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -101,6 +119,14 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
       <option>EJA — Fundamental</option>
     </select>
 
+    <div class="toggle-wrap">
+      <label class="toggle-row">
+        <input type="checkbox" id="letraGrande" onchange="onLetraGrandeChange()">
+        <span>🔡 Letra Grande</span>
+      </label>
+      <div class="toggle-hint">Recomendado para EJA e Educação Infantil</div>
+    </div>
+
     <div class="progress-wrap" id="progWrap">
       <div class="progress-bar" id="progBar"></div>
     </div>
@@ -110,40 +136,42 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
   <div class="preview-panel">
     <div class="preview-top">
       <div class="preview-label">Pré-visualização</div>
-      <button class="btn-download" id="btnDL" onclick="downloadPDF()">⬇ Baixar PDF</button>
+      <button class="btn-download" id="btnDL" onclick="printPDF()">🖨️ Imprimir / Salvar PDF</button>
     </div>
     <div class="preview-empty" id="emptyState">
       <div style="font-size:48px;margin-bottom:12px;opacity:0.3;">🧩</div>
       <div style="font-size:15px;font-weight:600;">Preencha o formulário e clique em Gerar</div>
       <div style="font-size:13px;margin-top:6px;color:var(--text-muted)">O PDF inclui grade do aluno + gabarito do professor</div>
     </div>
-    <div id="doc-preview"></div>
+    <div id="doc-preview">
+      <div id="print-student"></div>
+      <div id="print-teacher"></div>
+    </div>
   </div>
 </div>
 
 <script>
-// ── STATE ──
-let cwGridData=[], cwPlacements=[], cwMinR=0, cwMinC=0, cwCols=0, lastData=null;
+let cwGridData=[], cwPlacements=[], cwMinR=0, cwMinC=0, cwCols=0;
+let lastData=null, lastTitulo='', lastNivel='', lastDate='';
 
-function norm(str) {
+function norm(str){
   return str.normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().replace(/[^A-Z]/g,'');
 }
 
-// ── CROSSWORD LAYOUT (adapted from interativo.html) ──
-function buildCrossword(words) {
+function buildCrossword(words){
   const sorted=[...words].sort((a,b)=>b.texto.length-a.texto.length).slice(0,14);
   const SIZE=21;
   const grid=Array.from({length:SIZE},()=>Array(SIZE).fill(null));
   const placements=[]; let num=1;
 
   const first=sorted[0];
-  const sc=Math.floor((SIZE-first.texto.length)/2), sr=Math.floor(SIZE/2);
+  const sc=Math.floor((SIZE-first.texto.length)/2),sr=Math.floor(SIZE/2);
   for(let i=0;i<first.texto.length;i++) grid[sr][sc+i]=first.texto[i];
   placements.push({word:first.texto,dica:first.dica,emoji:first.emoji||'',r:sr,c:sc,dir:'H',num:num++});
 
   for(let wi=1;wi<sorted.length;wi++){
-    const {texto:word,dica,emoji}=sorted[wi];
-    let best=null, bestScore=-1;
+    const{texto:word,dica,emoji}=sorted[wi];
+    let best=null,bestScore=-1;
     for(const pl of placements){
       for(let pi=0;pi<pl.word.length;pi++){
         for(let wii=0;wii<word.length;wii++){
@@ -153,18 +181,15 @@ function buildCrossword(words) {
           if(newDir==='V'){r=pl.r-wii;c=pl.c+pi;}
           else{r=pl.r+pi;c=pl.c-wii;}
           if(r<1||c<1||r+(newDir==='V'?word.length:1)>=SIZE-1||c+(newDir==='H'?word.length:1)>=SIZE-1) continue;
-          let fits=true, cross=0;
+          let fits=true,cross=0;
           for(let li=0;li<word.length;li++){
-            const lr=newDir==='V'?r+li:r, lc=newDir==='H'?c+li:c;
+            const lr=newDir==='V'?r+li:r,lc=newDir==='H'?c+li:c;
             const ex=grid[lr][lc];
             if(ex!==null&&ex!==word[li]){fits=false;break;}
             if(ex===word[li]) cross++;
             if(ex===null){
-              if(newDir==='H'){
-                if(li>0&&(grid[lr-1]?.[lc]!==null||grid[lr+1]?.[lc]!==null)){fits=false;break;}
-              } else {
-                if(li>0&&(grid[lr]?.[lc-1]!==null||grid[lr]?.[lc+1]!==null)){fits=false;break;}
-              }
+              if(newDir==='H'){if(li>0&&(grid[lr-1]?.[lc]!==null||grid[lr+1]?.[lc]!==null)){fits=false;break;}}
+              else{if(li>0&&(grid[lr]?.[lc-1]!==null||grid[lr]?.[lc+1]!==null)){fits=false;break;}}
             }
           }
           if(fits){
@@ -195,10 +220,9 @@ function buildCrossword(words) {
     for(let c=mnC;c<=mxC;c++) row.push(grid[r][c]);
     trimmed.push(row);
   }
-  return {gridData:trimmed, placements, minR:mnR, minC:mnC, cols};
+  return{gridData:trimmed,placements,minR:mnR,minC:mnC,cols};
 }
 
-// ── GENERATE ──
 async function generate(){
   const tema=document.getElementById('inTema').value.trim();
   const nivel=document.getElementById('inNivel').value;
@@ -210,10 +234,7 @@ async function generate(){
   try{
     const res=await fetch('/api/claude',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-6',max_tokens:1500,
-        messages:[{role:'user',content:buildPrompt(tema,nivel)}]
-      })
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:buildPrompt(tema,nivel)}]})
     });
     document.getElementById('progBar').style.width='70%';
     const json=await res.json();
@@ -231,74 +252,69 @@ async function generate(){
 }
 
 function buildPrompt(tema,nivel){
-  const isElementary=/infantil|[1-5]º|fundamental.{0,5}i$|eja.{0,5}alfab/i.test(nivel);
+  const isElementary=/infantil|[1-5]º|eja.{0,5}alfab/i.test(nivel);
   const emojiRule=isElementary
-    ? 'campo "emoji": adicione um emoji que represente visualmente a palavra (ex: ☀️ para sol, 🐘 para elefante). Escolha o emoji mais intuitivo possível.'
-    : 'campo "emoji": use string vazia ""';
-  return `Crie uma cruzadinha sobre "${tema}" para o nível "${nivel}".
-
+    ?'campo "emoji": adicione um emoji que represente visualmente a palavra.'
+    :'campo "emoji": use string vazia ""';
+  return`Crie uma cruzadinha sobre "${tema}" para o nível "${nivel}".
 Retorne SOMENTE este JSON válido (sem markdown, sem texto extra):
-{
-  "titulo": "título criativo da cruzadinha",
-  "palavras": [
-    {"texto": "INVERNO", "dica": "Estação do ano com muito frio", "emoji": "❄️"},
-    {"texto": "AMOR", "dica": "Sentimento de carinho entre pessoas", "emoji": "❤️"}
-  ]
+{"titulo":"título criativo","palavras":[{"texto":"INVERNO","dica":"Estação do ano com muito frio","emoji":"❄️"}]}
+REGRAS: 8 a 12 palavras, MAIÚSCULAS sem acentos, 4 a 10 letras, dicas adequadas ao nível ${nivel}, ${emojiRule}`;
 }
 
-REGRAS OBRIGATÓRIAS:
-- Gere 8 a 12 palavras relacionadas ao tema "${tema}"
-- Palavras em MAIÚSCULAS, SEM acentos: Ã→A, Ç→C, É→E, Ó→O, Ú→U, Â→A, Ê→E, Ô→O, Í→I, Á→A
-- Comprimento entre 4 e 10 letras
-- Dicas claras e adequadas ao nível ${nivel}
-- ${emojiRule}
-- NUNCA coloque "USE CAIXA ALTA" nas dicas`;
-}
-
-// ── RENDER ──
-function renderPreview(data, nivel) {
+function renderPreview(data,nivel){
   const date=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-  const words=(data.palavras||[]).map(p=>({...p, texto:norm(p.texto)})).filter(p=>p.texto.length>=3);
+  const words=(data.palavras||[]).map(p=>({...p,texto:norm(p.texto)})).filter(p=>p.texto.length>=3);
   if(!words.length){alert('Nenhuma palavra válida retornada. Tente novamente.');return;}
   const cw=buildCrossword(words);
   cwGridData=cw.gridData; cwPlacements=cw.placements; cwMinR=cw.minR; cwMinC=cw.minC; cwCols=cw.cols;
+  lastTitulo=data.titulo||'Cruzadinha'; lastNivel=nivel; lastDate=date;
+  updateSheets();
+}
+
+function updateSheets(){
+  if(!cwGridData.length||!lastNivel) return;
+  const isLG=document.body.classList.contains('letra-grande');
+  const cellPx=isLG
+    ?Math.min(32,Math.max(22,Math.floor(310/cwCols)))
+    :Math.min(26,Math.max(18,Math.floor(260/cwCols)));
 
   document.getElementById('emptyState').style.display='none';
-  const el=document.getElementById('doc-preview');
-  el.style.display='block';
-  el.innerHTML=buildSheetHTML(data.titulo||'Cruzadinha', nivel, date, false)+
-    buildCluesHTML(cw.placements, nivel);
+  document.getElementById('doc-preview').style.display='block';
+  document.getElementById('print-student').innerHTML=buildSheetHTML(false,cellPx)+buildCluesHTML(false);
+  document.getElementById('print-teacher').innerHTML=buildSheetHTML(true,cellPx)+buildCluesHTML(true);
+  document.getElementById('print-teacher').style.display='block';
   document.getElementById('btnDL').style.display='inline-block';
 }
 
-function buildGridHTML(filled, cellPx) {
+function buildGridHTML(filled,cellPx){
   const numMap={};
-  cwPlacements.forEach(pl=>{ numMap[`${pl.r-cwMinR},${pl.c-cwMinC}`]=pl.num; });
+  cwPlacements.forEach(pl=>{numMap[`${pl.r-cwMinR},${pl.c-cwMinC}`]=pl.num;});
   let html='';
   for(let r=0;r<cwGridData.length;r++) for(let c=0;c<cwGridData[r].length;c++){
     const val=cwGridData[r][c];
     const num=numMap[`${r},${c}`];
     if(val===null){
       html+=`<div class="cw-cell-blank" style="width:${cellPx}px;height:${cellPx}px;"></div>`;
-    } else {
-      const letter=filled?`<span style="font-size:${cellPx>22?13:11}px;font-weight:700;color:var(--teal);">${val}</span>`:'';
+    }else{
+      const letterSize=Math.max(10,Math.floor(cellPx*0.5));
+      const letter=filled?`<span style="font-size:${letterSize}px;font-weight:700;color:var(--teal);">${val}</span>`:'';
       html+=`<div class="cw-cell-white" style="width:${cellPx}px;height:${cellPx}px;">${num?`<span class="cw-num">${num}</span>`:''} ${letter}</div>`;
     }
   }
   return html;
 }
 
-function buildSheetHTML(titulo, nivel, date, isGaba) {
+function buildSheetHTML(isGaba,cellPx){
   const rows=cwGridData.length;
-  const cellPx=Math.min(26, Math.max(18, Math.floor(260/cwCols)));
-  const gridHtml=buildGridHTML(isGaba, cellPx);
+  const gridHtml=buildGridHTML(isGaba,cellPx);
   const color=isGaba?'var(--coral)':'var(--gold)';
   const label=isGaba?'Gabarito — Uso do Professor':'DoceriaPedagógica — Cruzadinha';
-  return `
+  return`
     <div class="sh-header" style="border-top-color:${color};">
       <div class="sh-label">${label}</div>
-      <div class="sh-title" style="${isGaba?'color:var(--coral);':''}">${titulo}</div>
-      <div class="sh-meta">${nivel} • ${cwPlacements.length} palavras • ${date}</div>
+      <div class="sh-title" style="${isGaba?'color:var(--coral);':''}">${lastTitulo}</div>
+      <div class="sh-meta">${lastNivel} • ${cwPlacements.length} palavras • ${lastDate}</div>
     </div>
     <div class="sh-body">
       <div style="flex-shrink:0;">
@@ -306,10 +322,10 @@ function buildSheetHTML(titulo, nivel, date, isGaba) {
       </div>`;
 }
 
-function buildCluesHTML(placements, nivel) {
-  const isElementary=/infantil|[1-5]º|fundamental.{0,5}i$|eja.{0,5}alfab/i.test(nivel);
-  const horiz=placements.filter(p=>p.dir==='H').sort((a,b)=>a.num-b.num);
-  const vert=placements.filter(p=>p.dir==='V').sort((a,b)=>a.num-b.num);
+function buildCluesHTML(isGaba){
+  const isElementary=/infantil|[1-5]º|eja.{0,5}alfab/i.test(lastNivel);
+  const horiz=cwPlacements.filter(p=>p.dir==='H').sort((a,b)=>a.num-b.num);
+  const vert=cwPlacements.filter(p=>p.dir==='V').sort((a,b)=>a.num-b.num);
   const clueSection=(list,label)=>list.length?`
     <div class="clue-section">
       <div class="clue-section-title">${label}</div>
@@ -319,60 +335,35 @@ function buildCluesHTML(placements, nivel) {
           ${isElementary&&p.emoji?`<span class="clue-emoji">${p.emoji}</span>`:''}
           <span>${p.dica}</span>
         </div>`).join('')}
-    </div>`:''
-  ;
-  return `
+    </div>`:'';
+  return`
       <div class="clues-panel">
         ${clueSection(horiz,'Horizontais →')}
         ${clueSection(vert,'Verticais ↓')}
       </div>
     </div>
-    <div class="name-row">
-      <span>Nome: _______________________________________</span>
-      <span>Data: ________________</span>
-    </div>
+    ${!isGaba?`<div class="name-row"><span>Nome: _______________________________________</span><span>Data: ________________</span></div>`:''}
     <div class="sh-footer">
       <span class="sh-footer-logo">DoceriaPedagógica</span>
-      <span>Cruzadinha gerada por IA</span>
-      <span>${new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'})}</span>
+      <span>${isGaba?'Gabarito do professor':'Cruzadinha gerada por IA'}</span>
+      <span>${lastDate}</span>
     </div>`;
 }
 
-// ── PDF ──
-async function downloadPDF(){
-  const btn=document.getElementById('btnDL');
-  btn.disabled=true; btn.textContent='⏳ Gerando PDF...';
-  const nivel=lastData?.nivel||'';
-  const titulo=(lastData?.data?.titulo||'cruzadinha').replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_');
-  const date=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-  const dispTitulo=lastData?.data?.titulo||'Cruzadinha';
+function printPDF(){window.print();}
 
-  const el=document.getElementById('doc-preview');
-  const orig=el.innerHTML;
-  el.innerHTML+=`<div style="page-break-before:always;">${buildSheetHTML(dispTitulo,nivel,date,true)}${buildCluesHTML(cwPlacements,nivel).replace('Nome:','').replace('Data:','')}</div>`;
-
-  const _clone=el.cloneNode(true);
-  el.innerHTML=orig;
-
-  const _wrap=document.createElement('div');
-  _wrap.style.cssText='position:fixed;top:-9999px;left:0;width:1200px;max-width:none;';
-  _wrap.appendChild(_clone);
-  document.body.appendChild(_wrap);
-
-  try{
-    await html2pdf().set({
-      margin:[15,15,15,15],
-      filename:`DoceriaPedagogica_Cruzadinha_${titulo}.pdf`,
-      image:{type:'jpeg',quality:0.98},
-      html2canvas:{scale:2,useCORS:true,logging:false,backgroundColor:'#ffffff',windowWidth:1200},
-      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-      pagebreak:{mode:['avoid-all','css','legacy']}
-    }).from(_clone).save();
-  }catch(e){console.error(e);}
-
-  document.body.removeChild(_wrap);
-  btn.disabled=false; btn.textContent='⬇ Baixar PDF';
+function onLetraGrandeChange(){
+  document.body.classList.toggle('letra-grande',document.getElementById('letraGrande').checked);
+  updateSheets();
 }
+
+document.getElementById('inNivel').addEventListener('change',function(){
+  const nivel=this.value;
+  const isAccessivel=/infantil|eja/i.test(nivel);
+  document.getElementById('letraGrande').checked=isAccessivel;
+  document.body.classList.toggle('letra-grande',isAccessivel);
+  updateSheets();
+});
 
 function extractJSON(raw){
   let s=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
