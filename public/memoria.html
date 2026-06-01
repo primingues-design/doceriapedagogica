@@ -257,15 +257,16 @@
   /* ── CARD GRID ── */
   .card-grid {
     display: grid;
-    gap: 12px;
+    gap: clamp(6px, 2vw, 12px);
     margin-bottom: 16px;
+    width: 100%;
   }
 
   /* ── MEMORY CARD (flip animation) ── */
   .mem-card {
     perspective: 1000px;
     cursor: pointer;
-    height: 110px;
+    aspect-ratio: 1 / 1;
   }
   .mem-card.no-click { pointer-events: none; }
 
@@ -286,7 +287,7 @@
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     display: flex; align-items: center; justify-content: center;
-    padding: 12px;
+    padding: clamp(6px, 2vw, 12px);
   }
 
   /* FRENTE (dorso) */
@@ -296,7 +297,7 @@
     flex-direction: column; gap: 6px;
   }
   .card-front-mark {
-    font-size: 22px; color: var(--gold); opacity: 0.7;
+    font-size: clamp(14px, 3.5vw, 22px); color: var(--gold); opacity: 0.7;
     font-family: 'Playfair Display', serif;
   }
   .card-front-label {
@@ -308,9 +309,10 @@
   .card-back {
     transform: rotateY(180deg);
     text-align: center;
-    font-size: 13px; font-weight: 500; line-height: 1.4;
+    font-size: clamp(10px, 1.5vw, 13px); font-weight: 500; line-height: 1.4;
     border: 2px solid var(--border-mid);
     background: white; color: var(--text);
+    overflow: hidden;
   }
   .card-back.side-a {
     background: var(--gold-pale);
@@ -439,6 +441,20 @@
     .start-hero { padding: 28px 24px; }
     .win-stats { grid-template-columns: 1fr 1fr; }
     .win-pairs-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .topbar { padding: 10px 14px; gap: 8px; }
+    .topbar-nav { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .topbar-nav::-webkit-scrollbar { display: none; }
+    .topbar-logo { font-size: 15px; }
+    .topbar-logo-mark { width: 24px; height: 24px; font-size: 11px; }
+    .game-hud { gap: 8px; }
+    .hud-chip { font-size: 12px; padding: 6px 10px; }
+    .progress-bar-wrap { min-width: 100px; }
+    .start-meta { gap: 8px; }
+    .start-meta-val { font-size: 16px; }
+    .card-front-label { font-size: 9px; }
   }
 </style>
 </head>
@@ -857,13 +873,27 @@ Retorne APENAS JSON válido, sem markdown, sem texto antes ou depois.`,
     }
   }
 
+  // ── GRID COLUMNS (responsive) ──
+  function calcGridCols(n) {
+    const w = window.innerWidth;
+    if (w < 480) return Math.min(3, n <= 12 ? 3 : 3);
+    if (w < 768) return n <= 16 ? 4 : 4;
+    return n <= 12 ? 4 : n <= 16 ? 4 : n <= 20 ? 5 : 6;
+  }
+
+  function updateGridCols() {
+    const grid = document.getElementById('cardGrid');
+    if (!grid || cards.length === 0) return;
+    grid.style.gridTemplateColumns = `repeat(${calcGridCols(cards.length)}, 1fr)`;
+  }
+
+  window.addEventListener('resize', updateGridCols);
+
   // ── RENDER GRID ──
   function renderGrid() {
     const grid = document.getElementById('cardGrid');
-    const n = cards.length; // 12, 16, 20, or 24
-    // cols: 4 for ≤16, 5 for 20, 6 for 24
-    const cols = n <= 12 ? 4 : n <= 16 ? 4 : n <= 20 ? 5 : 6;
-    grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    const n = cards.length;
+    grid.style.gridTemplateColumns = `repeat(${calcGridCols(n)}, 1fr)`;
     grid.innerHTML = '';
 
     cards.forEach((card, idx) => {
