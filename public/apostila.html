@@ -181,7 +181,7 @@
 
   /* ═══ IMPRESSÃO ═══ */
   @media print {
-    @page { size: A4 portrait; margin: 10mm 12mm; }
+    @page { size: A4 portrait; margin: 12mm 14mm; }
     body { background: white !important; }
     .topbar, .form-panel, .preview-header, .preview-empty,
     .btn-pdf, .btn-regen, .pages-pill { display: none !important; }
@@ -189,14 +189,22 @@
     .preview-panel { padding: 0 !important; overflow: visible !important; max-height: none !important; }
     .doc-wrap { max-width: none !important; display: block !important; }
     #apostila-doc { display: block !important; }
+    /* sem quebra forçada — conteúdo flui entre páginas A4 naturalmente */
     .ap-page {
       border-radius: 0 !important;
       box-shadow: none !important;
       margin-bottom: 0 !important;
-      page-break-after: always;
-      break-after: page;
     }
-    .ap-page:last-child { page-break-after: auto !important; break-after: auto !important; }
+    /* cada atividade não quebra no meio */
+    .ap-activity { break-inside: avoid; page-break-inside: avoid; }
+    /* fechamento e orientação não quebram no meio */
+    .ap-fechamento, .ap-orientacao { break-inside: avoid; page-break-inside: avoid; }
+    /* cabeçalho compacto no print */
+    .ap-cover-header { padding: 14px 32px 12px !important; }
+    .ap-cover-title  { font-size: 22px !important; line-height: 1.2 !important; }
+    .ap-cover-badges { margin-bottom: 10px !important; }
+    .ap-body  { padding: 20px 32px !important; }
+    .ap-body-sm { padding: 14px 32px !important; }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   }
 </style>
@@ -491,16 +499,16 @@ REGRAS FINAIS: Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) t
     // cabeçalho
     pages.push(`
       <div class="ap-page">
-        <div style="border-top:5px solid var(--gold);border-bottom:1px solid var(--border);padding:32px 48px 28px;background:white;">
-          <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;">DoceriaPedagógica — Atividade</div>
-          <div style="font-family:'Playfair Display',serif;font-size:30px;font-weight:900;line-height:1.2;color:var(--text);margin-bottom:8px;">${d.titulo||tema}</div>
-          ${d.subtitulo?`<div style="font-size:14px;color:var(--text-muted);margin-bottom:16px;">${d.subtitulo}</div>`:'<div style="margin-bottom:16px;"></div>'}
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;">
-            <span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:5px 14px;font-size:12px;">📚 ${d.nivel||nivel}</span>
-            <span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:5px 14px;font-size:12px;">📋 ${d.disciplina||disciplina||tema}</span>
-            <span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:5px 14px;font-size:12px;">📅 ${date}</span>
+        <div class="ap-cover-header" style="border-top:5px solid var(--gold);border-bottom:1px solid var(--border);padding:22px 40px 18px;background:white;">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">DoceriaPedagógica — Atividade</div>
+          <div class="ap-cover-title" style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;line-height:1.2;color:var(--text);margin-bottom:6px;">${d.titulo||tema}</div>
+          ${d.subtitulo?`<div style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">${d.subtitulo}</div>`:''}
+          <div class="ap-cover-badges" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+            <span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:4px 12px;font-size:11px;">📚 ${d.nivel||nivel}</span>
+            <span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:4px 12px;font-size:11px;">📋 ${d.disciplina||disciplina||tema}</span>
+            <span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:4px 12px;font-size:11px;">📅 ${date}</span>
           </div>
-          <div style="border:1.5px solid var(--border-mid);border-radius:8px;padding:10px 16px;display:flex;gap:32px;font-size:13px;color:var(--text-mid);">
+          <div style="border:1.5px solid var(--border-mid);border-radius:8px;padding:8px 14px;display:flex;gap:32px;font-size:13px;color:var(--text-mid);">
             <span>Nome: _______________________________________</span>
             <span>Turma: _______________</span>
           </div>
@@ -532,14 +540,10 @@ REGRAS FINAIS: Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) t
         </div>`);
     }
 
-    // atividades — divide em grupos de até 6 para não sobrecarregar uma página
+    // atividades — todas em um bloco só; o print quebra páginas naturalmente entre questões
     const ativs=d.atividades||[];
-    const tamGrupo = ativs.length <= 6 ? ativs.length : Math.ceil(ativs.length/2);
-    const grupos=[];
-    for(let i=0;i<ativs.length;i+=tamGrupo) grupos.push(ativs.slice(i,i+tamGrupo));
-    grupos.forEach((group,gi)=>{
-      if(!group.length) return;
-      const ativsHtml=group.map((at,i)=>{
+    if(ativs.length){
+      const ativsHtml=ativs.map((at,i)=>{
         const enunciado=cleanEnunciado(at.enunciado).replace(/\n/g,'<br>');
         let resHtml='';
         if(at.tipo_resposta==='caixa') resHtml=`<div class="ap-answer-box"></div>`;
@@ -549,9 +553,8 @@ REGRAS FINAIS: Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) t
         else{const n=Math.max(at.linhas||3,3);resHtml=`<div class="ap-answer-lines">${Array(n).fill('<div class="ap-answer-line"></div>').join('')}</div>`;}
         return `<div class="ap-activity"><div class="ap-activity-header"><div class="ap-activity-num">${at.numero||i+1}</div><div class="ap-activity-type">${at.tipo||'Atividade'}</div></div><div class="ap-activity-q">${enunciado}</div>${resHtml}</div>`;
       }).join('');
-      const partLabel = grupos.length > 1 ? `Atividades — Parte ${gi+1}` : 'Atividades';
-      pages.push(`<div class="ap-page"><div class="ap-body"><div class="ap-section"><div class="ap-section-label">${partLabel}</div>${ativsHtml}</div></div><div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>${d.titulo||tema} • ${d.nivel||nivel}</span><span>Pág. ${pages.length+1}</span></div></div>`);
-    });
+      pages.push(`<div class="ap-page"><div class="ap-body"><div class="ap-section"><div class="ap-section-label">Atividades</div>${ativsHtml}</div></div><div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>${d.titulo||tema} • ${d.nivel||nivel}</span><span></span></div></div>`);
+    }
 
     // música
     if(d.musica){
