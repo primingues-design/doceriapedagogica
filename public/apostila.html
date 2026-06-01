@@ -427,14 +427,34 @@ REGRAS: Retorne SOMENTE JSON válido começando com { e terminando com }. Sem ma
   }
 
   function buildPrompt(tema,nivel,disciplina,objetivo,obs,tipos,extras){
-    return `Crie uma atividade pedagógica completa.
+    const semTipos = !tipos;
+    const comIntro = !semTipos;
+    const comFechamento = !semTipos;
+
+    const tiposBloco = semTipos
+      ? `TIPOS DE ATIVIDADE: nenhum tipo pré-definido selecionado pelo professor.
+INSTRUÇÃO ESPECIAL: gere APENAS o que as OBSERVAÇÕES solicitam. Não invente introdução, não invente fechamento, não invente atividades extras. Siga o pedido à risca.`
+      : `TIPOS DE ATIVIDADE (gere SOMENTE estes, nada mais): ${tipos}`;
+
+    const numAtividades = semTipos
+      ? 'Quantidade exata conforme as OBSERVAÇÕES solicitam. Se pedir 6, gere 6. Se pedir 10, gere 10.'
+      : '5 a 7 atividades variadas';
+
+    return `Crie uma atividade pedagógica.
 TEMA: ${tema}
 NÍVEL: ${nivel}
 ${disciplina?'DISCIPLINA: '+disciplina:''}
 ${objetivo?'OBJETIVO: '+objetivo:''}
-${obs?'OBSERVAÇÕES: '+obs:''}
-TIPOS DE ATIVIDADE: ${tipos||'Interpretação de texto, Questões abertas, Produção escrita'}
+${obs?'OBSERVAÇÕES (siga à risca): '+obs:''}
+${tiposBloco}
 SEÇÕES EXTRAS: ${extras.join(', ')||'nenhuma'}
+NÚMERO DE ATIVIDADES: ${numAtividades}
+
+REGRAS OBRIGATÓRIAS:
+- Gere SOMENTE os tipos de atividade listados. PROIBIDO gerar outros tipos.
+- Se as OBSERVAÇÕES pedirem número específico de perguntas/questões, respeite EXATAMENTE.
+- introducao_titulo e introducao_texto devem ser ${comIntro?'"texto aqui"':'null — NÃO gere introdução'}.
+- fechamento_titulo e fechamento_texto devem ser ${comFechamento?'"texto aqui"':'null — NÃO gere fechamento'}.
 
 Retorne SOMENTE JSON válido:
 {
@@ -442,21 +462,21 @@ Retorne SOMENTE JSON válido:
   "subtitulo": "subtítulo complementar",
   "nivel": "${nivel}",
   "disciplina": "${disciplina||tema}",
-  "introducao_titulo": "título da introdução",
-  "introducao_texto": "texto introdutório (4-5 parágrafos)",
+  "introducao_titulo": ${comIntro?'"título da introdução"':'null'},
+  "introducao_texto": ${comIntro?'"texto introdutório (3-4 parágrafos)"':'null'},
   "destaque": ${extras.includes('destaque')?'{"titulo":"Sabia que...","texto":"fato marcante"}':'null'},
-  "mapa_mental": ${extras.includes('mapa_mental')?'{"centro":"palavra central","ramos":["ramo1","ramo2","ramo3","ramo4","ramo5"]}':'null'},
+  "mapa_mental": ${(extras.includes('mapa_mental')&&comIntro)?'{"centro":"palavra central","ramos":["ramo1","ramo2","ramo3","ramo4","ramo5"]}':'null'},
   "atividades": [
     {"numero":1,"tipo":"tipo da atividade","enunciado":"instrução para o aluno","tipo_resposta":"linhas","linhas":4,"opcoes":null,"itens_vf":null,"cruzadinha":null}
   ],
-  "fechamento_titulo": "título do fechamento",
-  "fechamento_texto": "texto reflexivo de encerramento",
+  "fechamento_titulo": ${comFechamento?'"título do fechamento"':'null'},
+  "fechamento_texto": ${comFechamento?'"texto reflexivo de encerramento"':'null'},
   "musica": ${extras.includes('musica_pedagogica')?'{"tipo":"rap/cordel","letra":"letra completa"}':'null'},
   "orientacao_professor": "dica de aplicação em sala",
   "palavras_chave": ["palavra1","palavra2","palavra3"]
 }
 
-REGRAS: 5 a 7 atividades. Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) texto"]. VF: tipo_resposta="vf", itens_vf=["frase1","frase2","frase3","frase4"]. Produção escrita: tipo_resposta="caixa". NUNCA coloque instruções de formato no enunciado.`;
+REGRAS FINAIS: Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) texto"]. VF: tipo_resposta="vf", itens_vf=["frase1","frase2","frase3","frase4"]. Produção escrita: tipo_resposta="caixa". NUNCA coloque instruções de formato no enunciado.`;
   }
 
   function cleanEnunciado(text){
@@ -487,8 +507,7 @@ REGRAS: 5 a 7 atividades. Múltipla escolha: opcoes=["A) texto","B) texto","C) t
         </div>
       </div>`);
 
-    // introdução
-    const paragsIntro=(d.introducao_texto||'').split('\n').filter(p=>p.trim());
+    // introdução — só renderiza se a IA gerou conteúdo
     let destaqueHtml='';
     if(d.destaque) destaqueHtml=`<div class="ap-destaque"><div class="ap-destaque-label">💡 ${d.destaque.titulo||'Destaque'}</div><div class="ap-destaque-text">${d.destaque.texto||''}</div></div>`;
     let mapaHtml='';
@@ -496,26 +515,30 @@ REGRAS: 5 a 7 atividades. Múltipla escolha: opcoes=["A) texto","B) texto","C) t
       const ramos=(d.mapa_mental.ramos||[]).map(r=>`<div class="ap-mapa-item">${r}</div>`).join('');
       mapaHtml=`<div class="ap-section"><div class="ap-section-label">Mapa Mental</div><div class="ap-mapa"><div class="ap-mapa-center">${d.mapa_mental.centro||d.titulo}</div><div class="ap-mapa-grid">${ramos}</div></div></div>`;
     }
-    pages.push(`
-      <div class="ap-page">
-        <div class="ap-body">
-          <div class="ap-section">
-            <div class="ap-section-label">Introdução</div>
-            <div class="ap-section-title">${d.introducao_titulo||'Vamos começar'}</div>
-            ${paragsIntro.map(p=>`<p class="ap-text">${p.trim()}</p>`).join('')}
-            ${destaqueHtml}
+    if(d.introducao_texto){
+      const paragsIntro=d.introducao_texto.split('\n').filter(p=>p.trim());
+      pages.push(`
+        <div class="ap-page">
+          <div class="ap-body">
+            <div class="ap-section">
+              <div class="ap-section-label">Introdução</div>
+              <div class="ap-section-title">${d.introducao_titulo||'Vamos começar'}</div>
+              ${paragsIntro.map(p=>`<p class="ap-text">${p.trim()}</p>`).join('')}
+              ${destaqueHtml}
+            </div>
+            ${mapaHtml}
           </div>
-          ${mapaHtml}
-        </div>
-        <div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>${d.titulo||tema} • ${d.nivel||nivel}</span><span>Pág. 2</span></div>
-      </div>`);
+          <div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>${d.titulo||tema} • ${d.nivel||nivel}</span><span>Pág. 2</span></div>
+        </div>`);
+    }
 
-    // atividades
+    // atividades — divide em grupos de até 6 para não sobrecarregar uma página
     const ativs=d.atividades||[];
-    const half=Math.ceil(ativs.length/2);
-    [ativs.slice(0,half),ativs.slice(half)].forEach((group,gi)=>{
+    const tamGrupo = ativs.length <= 6 ? ativs.length : Math.ceil(ativs.length/2);
+    const grupos=[];
+    for(let i=0;i<ativs.length;i+=tamGrupo) grupos.push(ativs.slice(i,i+tamGrupo));
+    grupos.forEach((group,gi)=>{
       if(!group.length) return;
-      const studentFields=gi===0?`<div class="ap-student-fields"><div class="ap-student-field">Nome: _________________________________</div><div class="ap-student-field">Data: _______________</div><div class="ap-student-field">Turma: ______________</div></div>`:'';
       const ativsHtml=group.map((at,i)=>{
         const enunciado=cleanEnunciado(at.enunciado).replace(/\n/g,'<br>');
         let resHtml='';
@@ -526,7 +549,8 @@ REGRAS: 5 a 7 atividades. Múltipla escolha: opcoes=["A) texto","B) texto","C) t
         else{const n=Math.max(at.linhas||3,3);resHtml=`<div class="ap-answer-lines">${Array(n).fill('<div class="ap-answer-line"></div>').join('')}</div>`;}
         return `<div class="ap-activity"><div class="ap-activity-header"><div class="ap-activity-num">${at.numero||i+1}</div><div class="ap-activity-type">${at.tipo||'Atividade'}</div></div><div class="ap-activity-q">${enunciado}</div>${resHtml}</div>`;
       }).join('');
-      pages.push(`<div class="ap-page"><div class="ap-body"><div class="ap-section"><div class="ap-section-label">Atividades — Parte ${gi+1}</div>${studentFields}${ativsHtml}</div></div><div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>${d.titulo||tema} • ${d.nivel||nivel}</span><span>Pág. ${gi+3}</span></div></div>`);
+      const partLabel = grupos.length > 1 ? `Atividades — Parte ${gi+1}` : 'Atividades';
+      pages.push(`<div class="ap-page"><div class="ap-body"><div class="ap-section"><div class="ap-section-label">${partLabel}</div>${ativsHtml}</div></div><div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>${d.titulo||tema} • ${d.nivel||nivel}</span><span>Pág. ${pages.length+1}</span></div></div>`);
     });
 
     // música
@@ -535,11 +559,17 @@ REGRAS: 5 a 7 atividades. Múltipla escolha: opcoes=["A) texto","B) texto","C) t
       pages.push(`<div class="ap-page"><div class="ap-body"><div class="ap-section"><div class="ap-section-label">🎵 ${d.musica.tipo||'Música pedagógica'}</div><div class="ap-section-title">Aprendendo com música</div><div style="background:var(--gold-pale);border-radius:10px;padding:24px 28px;border-left:4px solid var(--gold);">${versos.map(v=>`<p style="font-size:14px;line-height:2;color:var(--text-mid);">${v}</p>`).join('')}</div></div></div><div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>${d.titulo||tema}</span><span>Pág. ${pages.length+1}</span></div></div>`);
     }
 
-    // fechamento
-    const paragsFech=(d.fechamento_texto||'').split('\n').filter(p=>p.trim());
+    // fechamento — só renderiza se a IA gerou conteúdo
     let orientHtml='';
     if(d.orientacao_professor) orientHtml=`<div class="ap-orientacao"><div class="ap-orientacao-label">💡 ${isOn('togPlano')?'Plano de aula & orientações':'Orientação ao professor'}</div><div class="ap-orientacao-text">${d.orientacao_professor}</div></div>`;
-    pages.push(`<div class="ap-page"><div class="ap-fechamento"><div class="ap-fechamento-label">Fechamento</div><div class="ap-fechamento-title">${d.fechamento_titulo||'Para refletir'}</div>${paragsFech.map(p=>`<p class="ap-fechamento-text">${p.trim()}</p>`).join('')}</div><div class="ap-body-sm">${orientHtml}${d.palavras_chave?.length?`<div style="margin-top:16px;"><div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Palavras-chave</div><div style="display:flex;flex-wrap:wrap;gap:7px;">${d.palavras_chave.map(p=>`<span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text-muted);">${p}</span>`).join('')}</div></div>`:''}</div><div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>Material gerado por IA • ${date}</span><span>Pág. ${pages.length+1}</span></div></div>`);
+    if(d.fechamento_texto){
+      const paragsFech=d.fechamento_texto.split('\n').filter(p=>p.trim());
+      pages.push(`<div class="ap-page"><div class="ap-fechamento"><div class="ap-fechamento-label">Fechamento</div><div class="ap-fechamento-title">${d.fechamento_titulo||'Para refletir'}</div>${paragsFech.map(p=>`<p class="ap-fechamento-text">${p.trim()}</p>`).join('')}</div><div class="ap-body-sm">${orientHtml}${d.palavras_chave?.length?`<div style="margin-top:16px;"><div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Palavras-chave</div><div style="display:flex;flex-wrap:wrap;gap:7px;">${d.palavras_chave.map(p=>`<span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text-muted);">${p}</span>`).join('')}</div></div>`:''}</div><div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>Material gerado por IA • ${date}</span><span>Pág. ${pages.length+1}</span></div></div>`);
+    } else if(orientHtml){
+      // sem fechamento mas tem orientação ao professor — adiciona na última página de atividades
+      const lastPage=document.querySelector('#apostila-doc .ap-page:last-child .ap-body');
+      if(lastPage) lastPage.insertAdjacentHTML('beforeend', orientHtml);
+    }
 
     docEl.innerHTML=pages.join('');
     const total=pages.length;
