@@ -461,34 +461,41 @@ NÚMERO DE ATIVIDADES: ${numAtividades}
 REGRAS OBRIGATÓRIAS:
 - Gere SOMENTE os tipos de atividade listados. PROIBIDO gerar outros tipos.
 - Se as OBSERVAÇÕES pedirem número específico de perguntas/questões, respeite EXATAMENTE.
-- introducao_titulo e introducao_texto devem ser ${comIntro?'"texto aqui"':'null — NÃO gere introdução'}.
-- fechamento_titulo e fechamento_texto devem ser ${comFechamento?'"texto aqui"':'null — NÃO gere fechamento'}.
+- ${comIntro?'Escreva introdução e fechamento com conteúdo REAL sobre o tema. PROIBIDO escrever placeholders como "texto aqui" ou "escreva aqui".':'introducao_titulo, introducao_texto, fechamento_titulo e fechamento_texto devem ser null.'}
 
 Retorne SOMENTE JSON válido:
 {
-  "titulo": "título criativo",
+  "titulo": "título criativo sobre ${tema}",
   "subtitulo": "subtítulo complementar",
   "nivel": "${nivel}",
   "disciplina": "${disciplina||tema}",
-  "introducao_titulo": ${comIntro?'"título da introdução"':'null'},
-  "introducao_texto": ${comIntro?'"texto introdutório (3-4 parágrafos)"':'null'},
-  "destaque": ${extras.includes('destaque')?'{"titulo":"Sabia que...","texto":"fato marcante"}':'null'},
+  "introducao_titulo": ${comIntro?`"título criativo para introdução sobre ${tema}"`:'null'},
+  "introducao_texto": ${comIntro?`"escreva 3 parágrafos reais e completos contextualizando ${tema} para ${nivel}"`:'null'},
+  "destaque": ${extras.includes('destaque')?'{"titulo":"Sabia que...","texto":"fato marcante e real sobre o tema"}':'null'},
   "mapa_mental": ${(extras.includes('mapa_mental')&&comIntro)?'{"centro":"palavra central","ramos":["ramo1","ramo2","ramo3","ramo4","ramo5"]}':'null'},
   "atividades": [
     {"numero":1,"tipo":"tipo da atividade","enunciado":"instrução para o aluno","tipo_resposta":"linhas","linhas":4,"opcoes":null,"itens_vf":null,"cruzadinha":null}
   ],
-  "fechamento_titulo": ${comFechamento?'"título do fechamento"':'null'},
-  "fechamento_texto": ${comFechamento?'"texto reflexivo de encerramento"':'null'},
-  "musica": ${extras.includes('musica_pedagogica')?'{"tipo":"rap/cordel","letra":"letra completa"}':'null'},
-  "orientacao_professor": "dica de aplicação em sala",
+  "fechamento_titulo": ${comFechamento?`"título para o fechamento sobre ${tema}"`:'null'},
+  "fechamento_texto": ${comFechamento?`"escreva 2 parágrafos reais de reflexão e encerramento sobre ${tema}"`:'null'},
+  "musica": ${extras.includes('musica_pedagogica')?'{"tipo":"rap/cordel","letra":"letra completa e real sobre o tema"}':'null'},
+  "orientacao_professor": "dica prática real de aplicação em sala",
   "palavras_chave": ["palavra1","palavra2","palavra3"]
 }
 
-REGRAS FINAIS: Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) texto"]. VF: tipo_resposta="vf", itens_vf=["frase1","frase2","frase3","frase4"]. Produção escrita: tipo_resposta="caixa". NUNCA coloque instruções de formato no enunciado.`;
+REGRAS FINAIS: Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) texto"]. VF: tipo_resposta="vf", itens_vf=["frase1","frase2","frase3","frase4"]. Produção escrita: tipo_resposta="caixa". NUNCA coloque instruções de formato no enunciado. NUNCA escreva placeholders como "texto aqui", "escreva aqui" ou similares.`;
   }
 
   function cleanEnunciado(text){
     return(text||'').replace(/[.,;]?\s*USE CAIXA ALTA\.?/gi,'').replace(/[.,;]?\s*Escreva em (caixa alta|maiúsculas?)\.?/gi,'').trim();
+  }
+
+  function isPlaceholder(text){
+    if(!text||text.trim().length<30) return true;
+    const t=text.toLowerCase();
+    return t.includes('texto aqui')||t.includes('escreva aqui')||t.includes('[escreva')||
+           t.includes('texto introdutório')||t.includes('texto reflexivo')||
+           t.includes('escreva 3')||t.includes('escreva 2 parágrafos');
   }
 
   function renderApostila(d,tema,nivel,disciplina){
@@ -523,7 +530,7 @@ REGRAS FINAIS: Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) t
       const ramos=(d.mapa_mental.ramos||[]).map(r=>`<div class="ap-mapa-item">${r}</div>`).join('');
       mapaHtml=`<div class="ap-section"><div class="ap-section-label">Mapa Mental</div><div class="ap-mapa"><div class="ap-mapa-center">${d.mapa_mental.centro||d.titulo}</div><div class="ap-mapa-grid">${ramos}</div></div></div>`;
     }
-    if(d.introducao_texto){
+    if(d.introducao_texto && !isPlaceholder(d.introducao_texto)){
       const paragsIntro=d.introducao_texto.split('\n').filter(p=>p.trim());
       pages.push(`
         <div class="ap-page">
@@ -565,7 +572,7 @@ REGRAS FINAIS: Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) t
     // fechamento — só renderiza se a IA gerou conteúdo
     let orientHtml='';
     if(d.orientacao_professor) orientHtml=`<div class="ap-orientacao"><div class="ap-orientacao-label">💡 ${isOn('togPlano')?'Plano de aula & orientações':'Orientação ao professor'}</div><div class="ap-orientacao-text">${d.orientacao_professor}</div></div>`;
-    if(d.fechamento_texto){
+    if(d.fechamento_texto && !isPlaceholder(d.fechamento_texto)){
       const paragsFech=d.fechamento_texto.split('\n').filter(p=>p.trim());
       pages.push(`<div class="ap-page"><div class="ap-fechamento"><div class="ap-fechamento-label">Fechamento</div><div class="ap-fechamento-title">${d.fechamento_titulo||'Para refletir'}</div>${paragsFech.map(p=>`<p class="ap-fechamento-text">${p.trim()}</p>`).join('')}</div><div class="ap-body-sm">${orientHtml}${d.palavras_chave?.length?`<div style="margin-top:16px;"><div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Palavras-chave</div><div style="display:flex;flex-wrap:wrap;gap:7px;">${d.palavras_chave.map(p=>`<span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text-muted);">${p}</span>`).join('')}</div></div>`:''}</div><div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>Material gerado por IA • ${date}</span><span>Pág. ${pages.length+1}</span></div></div>`);
     } else if(orientHtml){
