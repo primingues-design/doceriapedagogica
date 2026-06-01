@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Letras Móveis — Doceria Pedagógica</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #FFF0DC;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .gw {
+      width: 100%;
+      max-width: 540px;
+      background: #FFF8F0;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(255, 107, 0, 0.15);
+    }
+
+    /* HEADER */
+    .hdr {
+      background: #FF6B00;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-family: 'Fredoka One', cursive;
+      color: #fff;
+      font-size: 20px;
+      letter-spacing: 0.3px;
+    }
+    .logo span { color: #FFE0B2; }
+    .pts {
+      background: rgba(255,255,255,0.22);
+      border-radius: 20px;
+      padding: 4px 14px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    /* SCREENS */
+    .screen { display: none; padding: 20px; }
+    .screen.active { display: block; }
+
+    /* HOME */
+    .home-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 26px;
+      color: #D84900;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .home-sub {
+      text-align: center;
+      color: #FF7A00;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 22px;
+    }
+    .cats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .cat {
+      background: #fff;
+      border: 2.5px solid #FFD0A0;
+      border-radius: 14px;
+      padding: 14px 8px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s;
+      user-select: none;
+    }
+    .cat:hover { border-color: #FF6B00; background: #FFF0E0; transform: translateY(-2px); }
+    .cat.sel { border-color: #FF6B00; background: #FFF0E0; box-shadow: 0 0 0 3px #FFD0A0; }
+    .cat-em { font-size: 32px; }
+    .cat-lbl { font-size: 11px; font-weight: 800; color: #D84900; text-align: center; line-height: 1.3; }
+    .cat-tag { font-size: 11px; background: #FF6B00; color: #fff; border-radius: 8px; padding: 2px 8px; font-weight: 800; }
+
+    /* BOTÕES PRINCIPAIS */
+    .sbtn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: #FF6B00;
+      color: #fff;
+      font-family: 'Fredoka One', cursive;
+      font-size: 19px;
+      border: none;
+      border-radius: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.3px;
+    }
+    .sbtn:hover { background: #E05A00; transform: scale(1.02); }
+    .sbtn:disabled { background: #FFB57A; cursor: not-allowed; transform: none; }
+    .cbtn {
+      flex: 1;
+      padding: 11px;
+      background: #fff;
+      color: #FF6B00;
+      font-family: 'Fredoka One', cursive;
+      font-size: 15px;
+      border: 2px solid #FF6B00;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .cbtn:hover { background: #FFF0E0; }
+
+    /* GAME */
+    .prog-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .pbar { flex: 1; height: 8px; background: #FFD0A0; border-radius: 4px; overflow: hidden; }
+    .pfill { height: 100%; background: #FF6B00; border-radius: 4px; transition: width 0.4s; }
+    .ptxt { font-size: 12px; font-weight: 800; color: #FF7A00; white-space: nowrap; }
+    .xbtn { background: none; border: none; font-size: 20px; cursor: pointer; color: #FF7A00; padding: 0 4px; }
+
+    .qbox {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      border: 2px solid #FFD0A0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .wimg { font-size: 80px; line-height: 1; }
+    .wbadge {
+      font-size: 11px;
+      background: #FFF0E0;
+      color: #FF6B00;
+      border-radius: 8px;
+      padding: 2px 10px;
+      font-weight: 800;
+      border: 1px solid #FFD0A0;
+    }
+    .whint { font-size: 12px; font-weight: 800; color: #FF7A00; letter-spacing: 0.5px; text-transform: uppercase; }
+
+    /* SLOTS */
+    .slots-row {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      min-height: 56px;
+    }
+    .slot {
+      width: 42px;
+      height: 50px;
+      background: #fff;
+      border: 2.5px dashed #FFB57A;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka One', cursive;
+      font-size: 21px;
+      color: #D84900;
+      transition: all 0.15s;
+      cursor: pointer;
+      user-select: none;
+    }
+    .slot.occ { border-style: solid; border-color: #FF6B00; background: #FFF0E0; }
+    .slot.ok  { border-color: #2E7D32; background: #E8F5E9; color: #2E7D32; }
+    .slot.err { border-color: #C62828; background: #FFEBEE; color: #C62828; animation: shk 0.3s; }
+    .slot.dov { border-color: #FF6B00; background: #FFF0E0; transform: scale(1.08); }
+    @keyframes shk {
+      0%,100% { transform: translateX(0); }
+      25%     { transform: translateX(-4px); }
+      75%     { transform: translateX(4px); }
+    }
+
+    /* LETRAS */
+    .pool {
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      min-height: 58px;
+    }
+    .tile {
+      width: 42px;
+      height: 50px;
+      background: #FF6B00;
+      color: #fff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka One', cursive;
+      font-size: 23px;
+      cursor: grab;
+      user-select: none;
+      box-shadow: 0 3px 0 #C84E00;
+      transition: transform 0.1s, opacity 0.2s;
+      touch-action: none;
+    }
+    .tile:hover  { transform: translateY(-2px); }
+    .tile.dragging { opacity: 0.3; }
+    .tile.used     { opacity: 0; pointer-events: none; }
+
+    /* BOTÕES DO JOGO */
+    .gbtns { display: flex; gap: 10px; }
+    .vbtn {
+      flex: 2;
+      padding: 12px;
+      background: #FF6B00;
+      color: #fff;
+      font-family: 'Fredoka One', cursive;
+      font-size: 17px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .vbtn:hover { background: #E05A00; }
+
+    /* FEEDBACK */
+    .fb {
+      text-align: center;
+      font-family: 'Fredoka One', cursive;
+      font-size: 19px;
+      margin-top: 10px;
+      min-height: 26px;
+    }
+    .fb.ok  { color: #2E7D32; }
+    .fb.err { color: #C62828; }
+
+    /* RESULTADO */
+    .res { text-align: center; padding: 32px 20px; }
+    .rtrophy { font-size: 72px; margin-bottom: 12px; }
+    .rtitle  { font-family: 'Fredoka One', cursive; font-size: 28px; color: #D84900; margin-bottom: 6px; }
+    .rscore  { font-size: 16px; color: #FF7A00; font-weight: 800; margin-bottom: 24px; }
+    .rbtns   { display: flex; flex-direction: column; gap: 10px; }
+
+    /* RESPONSIVO */
+    @media (max-width: 420px) {
+      .slot, .tile { width: 36px; height: 44px; font-size: 18px; }
+      .wimg { font-size: 64px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="gw">
+  <div class="hdr">
+    <div class="logo">🍰 Doceria <span>Pedagógica</span></div>
+    <div class="pts" id="pts">⭐ 0 pts</div>
+  </div>
+
+  <!-- TELA INICIAL -->
+  <div class="screen active" id="home">
+    <div class="home-title">Letras Móveis 🔤</div>
+    <div class="home-sub">Escolha a sílaba complexa para praticar:</div>
+    <div class="cats" id="cat-grid"></div>
+    <button class="sbtn" id="sbtn" disabled onclick="startGame()">Escolha uma categoria ☝️</button>
+  </div>
+
+  <!-- TELA DE JOGO -->
+  <div class="screen" id="game">
+    <div class="prog-row">
+      <div class="pbar"><div class="pfill" id="pfill"></div></div>
+      <div class="ptxt" id="ptxt">1 / 6</div>
+      <button class="xbtn" onclick="goHome()" title="Voltar ao início">✕</button>
+    </div>
+    <div class="qbox">
+      <div class="wimg"  id="wimg">🌿</div>
+      <div class="wbadge" id="wbadge">NH</div>
+      <div class="whint"  id="whint">Monte a palavra com as letras:</div>
+    </div>
+    <div class="slots-row" id="slots"></div>
+    <div class="pool"      id="pool"></div>
+    <div class="gbtns">
+      <button class="cbtn" onclick="clearSlots()">🔄 Limpar</button>
+      <button class="vbtn" onclick="checkAnswer()">✅ Verificar</button>
+    </div>
+    <div class="fb" id="fb"></div>
+  </div>
+
+  <!-- TELA DE RESULTADO -->
+  <div class="screen" id="result">
+    <div class="res">
+      <div class="rtrophy" id="rtrophy">🏆</div>
+      <div class="rtitle"  id="rtitle">Parabéns!</div>
+      <div class="rscore"  id="rscore"></div>
+      <div class="rbtns">
+        <button class="sbtn" onclick="playAgain()">🔄 Jogar de novo</button>
+        <button class="cbtn" style="border-radius:12px;padding:12px;font-family:'Fredoka One',cursive;font-size:15px;" onclick="goHome()">🏠 Mudar categoria</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ──────────────────────────────────────────────
+     BANCO DE PALAVRAS
+     Para migrar para fotos reais: substitua o campo
+     img do emoji pela URL da foto.
+     Ex: img: 'https://seu-site.com/fotos/manha.jpg'
+  ────────────────────────────────────────────── */
+  const CATS = {
+    nh: {
+      label: 'Dígrafo NH', emoji: '🌸', tag: 'NH',
+      words: [
+        { w: 'MANHA',   img: '🌅' },
+        { w: 'LINHA',   img: '🧵' },
+        { w: 'BANHO',   img: '🛁' },
+        { w: 'PINHA',   img: '🌲' },
+        { w: 'VINHO',   img: '🍷' },
+        { w: 'SONHO',   img: '💭' },
+        { w: 'RAINHA',  img: '👑' },
+        { w: 'NINHO',   img: '🪺' },
+        { w: 'GALINHA', img: '🐔' },
+        { w: 'FARINHA', img: '🌾' },
+      ]
+    },
+    lh: {
+      label: 'Dígrafo LH', emoji: '🍃', tag: 'LH',
+      words: [
+        { w: 'FOLHA',   img: '🍃' },
+        { w: 'OLHO',    img: '👁️' },
+        { w: 'ILHA',    img: '🏝️' },
+        { w: 'PALHA',   img: '🌾' },
+        { w: 'BOLHA',   img: '🫧' },
+        { w: 'GALHO',   img: '🌿' },
+        { w: 'VELHO',   img: '👴' },
+        { w: 'MULHER',  img: '👩' },
+        { w: 'COELHO',  img: '🐰' },
+        { w: 'ESPELHO', img: '🪞' },
+      ]
+    },
+    ch: {
+      label: 'Dígrafo CH', emoji: '🌧️', tag: 'CH',
+      words: [
+        { w: 'CHUVA',   img: '🌧️' },
+        { w: 'CHAVE',   img: '🗝️' },
+        { w: 'FICHA',   img: '📋' },
+        { w: 'BICHO',   img: '🐛' },
+        { w: 'BUCHA',   img: '🧽' },
+        { w: 'CHEIRO',  img: '👃' },
+        { w: 'MACHADO', img: '🪓' },
+        { w: 'ROCHA',   img: '🪨' },
+        { w: 'LEITE',   img: '🥛' },
+        { w: 'CHOCO',   img: '🍫' },
+      ]
+    },
+    rrss: {
+      label: 'RR e SS', emoji: '🚗', tag: 'RR/SS',
+      words: [
+        { w: 'CARRO',  img: '🚗' },
+        { w: 'MASSA',  img: '🍝' },
+        { w: 'OSSO',   img: '🦴' },
+        { w: 'ARROZ',  img: '🍚' },
+        { w: 'PASSO',  img: '👣' },
+        { w: 'TERRA',  img: '🌍' },
+        { w: 'FERRO',  img: '⚙️' },
+        { w: 'PESSOA', img: '🧑' },
+        { w: 'ASSADO', img: '🥩' },
+        { w: 'GROSSO', img: '📏' },
+      ]
+    },
+    cons: {
+      label: 'Encontros Consonantais', emoji: '🍓', tag: 'Cons.',
+      words: [
+        { w: 'PRATO',  img: '🍽️' },
+        { w: 'FRUTA',  img: '🍓' },
+        { w: 'PLANTA', img: '🌱' },
+        { w: 'BLUSA',  img: '👕' },
+        { w: 'GRILO',  img: '🦗' },
+        { w: 'FLAUTA', img: '🎵' },
+        { w: 'TRONCO', img: '🪵' },
+        { w: 'BRACO',  img: '💪' },
+        { w: 'CLASSE', img: '🏫' },
+        { w: 'FRANGO', img: '🍗' },
+      ]
+    }
+  };
+
+  const TOTAL = 6;
+  let selCat = null, curWords = [], curIdx = 0, score = 0;
+  let slotLetters = [], dragTile = null;
+
+  /* ── TELA INICIAL ── */
+  function buildHome() {
+    const g = document.getElementById('cat-grid');
+    g.innerHTML = '';
+    Object.keys(CATS).forEach(k => {
+      const c = CATS[k];
+      const d = document.createElement('div');
+      d.className = 'cat';
+      d.innerHTML = `
+        <div class="cat-em">${c.emoji}</div>
+        <div class="cat-lbl">${c.label}</div>
+        <div class="cat-tag">${c.tag}</div>`;
+      d.onclick = () => selCategory(k, d);
+      g.appendChild(d);
+    });
+  }
+
+  function selCategory(k, el) {
+    selCat = k;
+    document.querySelectorAll('.cat').forEach(b => b.classList.remove('sel'));
+    el.classList.add('sel');
+    const sb = document.getElementById('sbtn');
+    sb.disabled = false;
+    sb.textContent = `▶ Jogar: ${CATS[k].tag} — ${CATS[k].label}!`;
+  }
+
+  /* ── UTILITÁRIOS ── */
+  function shuffle(a) {
+    const r = [...a];
+    for (let i = r.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [r[i], r[j]] = [r[j], r[i]];
+    }
+    return r;
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  /* ── JOGO ── */
+  function startGame() {
+    if (!selCat) return;
+    curWords = shuffle(CATS[selCat].words).slice(0, TOTAL);
+    curIdx = 0;
+    score = 0;
+    updPts();
+    showScreen('game');
+    loadQ();
+  }
+
+  function loadQ() {
+    const q = curWords[curIdx];
+    slotLetters = new Array(q.w.length).fill('');
+    document.getElementById('wimg').textContent   = q.img;
+    document.getElementById('wbadge').textContent = CATS[selCat].tag;
+    document.getElementById('whint').textContent  = 'Monte a palavra com as letras:';
+    document.getElementById('fb').textContent     = '';
+    document.getElementById('fb').className       = 'fb';
+    updProg();
+    buildSlots(q.w.length);
+    buildPool(q.w);
+  }
+
+  function buildSlots(len) {
+    const row = document.getElementById('slots');
+    row.innerHTML = '';
+    for (let i = 0; i < len; i++) {
+      const s = document.createElement('div');
+      s.className = 'slot';
+      s.dataset.i = i;
+      s.addEventListener('dragover',  e => { e.preventDefault(); s.classList.add('dov'); });
+      s.addEventListener('dragleave', () => s.classList.remove('dov'));
+      s.addEventListener('drop',      e => { e.preventDefault(); s.classList.remove('dov'); dropSlot(i, s); });
+      s.addEventListener('click',     () => returnLetter(i));
+      row.appendChild(s);
+    }
+  }
+
+  function buildPool(word) {
+    const shuffled = shuffle(word.split('').map((l, i) => ({ l, i })));
+    const pool = document.getElementById('pool');
+    pool.innerHTML = '';
+    shuffled.forEach((obj, idx) => {
+      const t = document.createElement('div');
+      t.className    = 'tile';
+      t.textContent  = obj.l;
+      t.dataset.letter = obj.l;
+      t.dataset.oi   = obj.i;
+      t.dataset.pi   = idx;
+      t.draggable    = true;
+      t.addEventListener('dragstart', () => { dragTile = t; setTimeout(() => t.classList.add('dragging'), 0); });
+      t.addEventListener('dragend',   () => { t.classList.remove('dragging'); dragTile = null; });
+      t.addEventListener('click',     () => autoPlace(t));
+      pool.appendChild(t);
+    });
+  }
+
+  function dropSlot(i, sel) {
+    if (!dragTile || dragTile.classList.contains('used')) return;
+    if (slotLetters[i] !== '') return;
+    slotLetters[i] = dragTile.dataset.letter;
+    sel.textContent = dragTile.dataset.letter;
+    sel.classList.add('occ');
+    dragTile.classList.add('used');
+  }
+
+  function autoPlace(tile) {
+    if (tile.classList.contains('used')) return;
+    const slots = document.getElementById('slots').children;
+    for (let i = 0; i < slots.length; i++) {
+      if (slotLetters[i] === '') {
+        slotLetters[i] = tile.dataset.letter;
+        slots[i].textContent = tile.dataset.letter;
+        slots[i].classList.add('occ');
+        tile.classList.add('used');
+        return;
+      }
+    }
+  }
+
+  function returnLetter(i) {
+    if (slotLetters[i] === '') return;
+    const letter = slotLetters[i];
+    slotLetters[i] = '';
+    const s = document.getElementById('slots').children[i];
+    s.textContent = '';
+    s.className = 'slot';
+    const tiles = document.getElementById('pool').children;
+    for (const t of tiles) {
+      if (t.classList.contains('used') && t.dataset.letter === letter) {
+        t.classList.remove('used');
+        break;
+      }
+    }
+  }
+
+  function clearSlots() {
+    const q = curWords[curIdx];
+    slotLetters = new Array(q.w.length).fill('');
+    const slots = document.getElementById('slots').children;
+    for (const s of slots) { s.textContent = ''; s.className = 'slot'; }
+    const tiles = document.getElementById('pool').children;
+    for (const t of tiles) t.classList.remove('used');
+    document.getElementById('fb').textContent = '';
+  }
+
+  function checkAnswer() {
+    const q = curWords[curIdx];
+    if (slotLetters.some(l => l === '')) {
+      showFb('Coloque todas as letras! ✏️', false);
+      return;
+    }
+    const correct = slotLetters.join('') === q.w;
+    const slots = document.getElementById('slots').children;
+    for (let i = 0; i < q.w.length; i++) {
+      slots[i].classList.remove('occ');
+      slots[i].classList.add(slotLetters[i] === q.w[i] ? 'ok' : 'err');
+    }
+    if (correct) {
+      score += 10;
+      updPts();
+      showFb('Muito bem! 🎉', true);
+      setTimeout(nextQ, 1300);
+    } else {
+      showFb('Quase lá! Tente de novo 💪', false);
+      setTimeout(clearSlots, 1300);
+    }
+  }
+
+  function nextQ() {
+    curIdx++;
+    if (curIdx >= TOTAL) showResult();
+    else loadQ();
+  }
+
+  function updProg() {
+    document.getElementById('pfill').style.width = (curIdx / TOTAL * 100) + '%';
+    document.getElementById('ptxt').textContent  = `${curIdx + 1} / ${TOTAL}`;
+  }
+
+  function updPts() {
+    document.getElementById('pts').textContent = `⭐ ${score} pts`;
+  }
+
+  function showFb(msg, ok) {
+    const e = document.getElementById('fb');
+    e.textContent = msg;
+    e.className   = 'fb ' + (ok ? 'ok' : 'err');
+  }
+
+  function showResult() {
+    const c      = Math.round(score / 10);
+    const trophy = c === TOTAL ? '🏆' : c >= 4 ? '🥈' : '🥉';
+    const title  = c === TOTAL ? 'Incrível! Perfeito!' : c >= 4 ? 'Muito bem!' : 'Continue praticando!';
+    document.getElementById('rtrophy').textContent = trophy;
+    document.getElementById('rtitle').textContent  = title;
+    document.getElementById('rscore').textContent  = `Você acertou ${c} de ${TOTAL} • ${score} pontos`;
+    showScreen('result');
+  }
+
+  function playAgain() { startGame(); }
+  function goHome()    { showScreen('home'); }
+
+  /* ── INIT ── */
+  buildHome();
+</script>
+</body>
+</html>
