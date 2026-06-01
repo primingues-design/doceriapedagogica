@@ -232,6 +232,7 @@
     padding: 24px 16px;
     display: flex; flex-direction: column;
     position: sticky; top: 0; height: 100vh;
+    overflow-y: auto;
   }
 
   .dash-logo {
@@ -323,13 +324,27 @@
   .dash-user-email { font-size: 11px; color: rgba(250,247,242,0.35); }
 
   .btn-logout {
-    font-size: 11px; color: rgba(250,247,242,0.3);
+    font-size: 12px; color: rgba(217,95,59,0.7);
     background: none; border: none; cursor: pointer;
     font-family: 'Outfit', sans-serif; text-align: left;
-    padding: 4px 12px; transition: color 0.2s;
+    padding: 8px 12px; transition: color 0.2s;
+    display: flex; align-items: center; gap: 8px;
   }
 
   .btn-logout:hover { color: var(--coral); }
+
+  .sidebar-contact {
+    font-size: 11px; color: rgba(250,247,242,0.3);
+    padding: 4px 12px 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .sidebar-contact a {
+    color: rgba(200,150,62,0.5); text-decoration: none;
+    font-size: 11px; transition: color 0.2s;
+  }
+
+  .sidebar-contact a:hover { color: var(--gold-light); }
 
   /* MAIN CONTENT */
   .dash-content { background: var(--warm); overflow-y: auto; }
@@ -974,15 +989,9 @@
         <button class="dash-nav-item" onclick="window.open('maonaMassa.html')">
           <span class="dash-nav-icon">🔨</span> Mão na Massa
         </button>
-        <button class="dash-nav-item">
-          <span class="dash-nav-icon">📄</span> Meus materiais
-        </button>
         <div class="dash-nav-sep"></div>
         <button class="dash-nav-item" onclick="showScreen('screen-plans')">
           <span class="dash-nav-icon">⭐</span> Planos e créditos
-        </button>
-        <button class="dash-nav-item">
-          <span class="dash-nav-icon">⚙️</span> Configurações
         </button>
       </nav>
 
@@ -1002,7 +1011,8 @@
           <div class="dash-user-email" id="dash-user-email">email@escola.com</div>
         </div>
       </div>
-      <button class="btn-logout" onclick="doLogout()">Sair da conta</button>
+      <button class="btn-logout" onclick="doLogout()">↩ Sair da conta</button>
+      <div class="sidebar-contact">✉ <a href="mailto:doceriapedagogica@gmail.com">doceriapedagogica@gmail.com</a></div>
     </div>
 
     <!-- CONTENT -->
@@ -1172,10 +1182,16 @@
           <span class="dash-nav-icon">🏠</span> Início
         </button>
         <button class="dash-nav-item" onclick="window.open('apostila.html')">
-          <span class="dash-nav-icon">📚</span> Gerar Apostila
+          <span class="dash-nav-icon">📚</span> Atividade
         </button>
-        <button class="dash-nav-item" onclick="window.open('gerador.html')">
-          <span class="dash-nav-icon">✏️</span> Gerar Atividade
+        <button class="dash-nav-item" onclick="window.open('lousa.html')">
+          <span class="dash-nav-icon">🖊️</span> Aula na Lousa
+        </button>
+        <button class="dash-nav-item" onclick="window.open('auladadia.html')">
+          <span class="dash-nav-icon">📰</span> Aula do Dia
+        </button>
+        <button class="dash-nav-item" onclick="window.open('maonaMassa.html')">
+          <span class="dash-nav-icon">🔨</span> Mão na Massa
         </button>
         <div class="dash-nav-sep"></div>
         <button class="dash-nav-item active">
@@ -1194,7 +1210,8 @@
           <div class="dash-user-email" id="dash-user-email2">email@escola.com</div>
         </div>
       </div>
-      <button class="btn-logout" onclick="doLogout()">Sair</button>
+      <button class="btn-logout" onclick="doLogout()">↩ Sair da conta</button>
+      <div class="sidebar-contact">✉ <a href="mailto:doceriapedagogica@gmail.com">doceriapedagogica@gmail.com</a></div>
     </div>
 
     <div class="dash-content">
