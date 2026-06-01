@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pênaltis do Conhecimento 🏆</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:#0a3d0a;height:100vh;width:100vw;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+/* ── TELAS ── */
+.tela{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;z-index:100;text-align:center}
+.hidden{display:none!important}
+
+/* ── INICIO ── */
+#tela-inicio{background:linear-gradient(160deg,#1a6b1a,#0a2e0a)}
+#tela-inicio h1{font-family:'Fredoka One',cursive;font-size:clamp(30px,8vw,54px);color:#ffd700;text-shadow:0 4px 12px rgba(0,0,0,.5);margin-bottom:8px}
+.sub{font-size:16px;color:#c8e6c9;margin-bottom:22px;max-width:360px}
+.bandeiras{font-size:24px;margin:10px 0;letter-spacing:3px}
+.trofeu-ani{font-size:80px;animation:flutua 2s ease-in-out infinite alternate}
+@keyframes flutua{from{transform:translateY(0)}to{transform:translateY(-14px)}}
+
+/* ── BOTÕES ── */
+.btn{font-family:'Fredoka One',cursive;font-size:20px;background:linear-gradient(135deg,#ffd700,#ff8f00);color:#1a1a2e;border:none;border-radius:50px;padding:14px 44px;cursor:pointer;box-shadow:0 6px 20px rgba(255,143,0,.5);transition:all .2s;letter-spacing:1px}
+.btn:hover{transform:scale(1.07)}
+.btn-red{background:linear-gradient(135deg,#ef5350,#b71c1c);color:#fff;box-shadow:0 6px 20px rgba(183,28,28,.4)}
+
+/* ── CAMPO WRAPPER ── */
+#jogo-wrap{
+  width:100%;max-width:700px;
+  height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  gap:4px;padding:6px 8px;
+  position:relative;z-index:1;
+  overflow:hidden;
+}
+
+/* ── PLACAR ── */
+#placar-box{flex-shrink:0;background:rgba(0,0,0,.8);border:2px solid #ffd700;border-radius:12px;padding:4px 14px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.t-flag{font-size:22px}.t-nome{font-family:'Fredoka One',cursive;color:#fff;font-size:11px;letter-spacing:1px}
+#placar-num{font-family:'Fredoka One',cursive;font-size:28px;color:#ffd700;min-width:70px;text-align:center}
+#fase-txt{flex-shrink:0;font-family:'Fredoka One',cursive;color:#aeffae;font-size:11px;letter-spacing:2px;text-transform:uppercase}
+
+/* ── BOLINHAS ── */
+#bolas{flex-shrink:0;display:flex;gap:7px}
+.bola{width:22px;height:22px;border-radius:50%;background:#555;border:2px solid #999;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.bola.gol{background:#4caf50;border-color:#81c784}
+.bola.err{background:#e53935;border-color:#ef9a9a}
+.bola.ativa{background:#ffd700;border-color:#fff;animation:pulsaBola .8s infinite alternate}
+@keyframes pulsaBola{from{transform:scale(1)}to{transform:scale(1.25)}}
+
+/* ── SVG CAMPO ── */
+#campo-svg{
+  flex:1 1 0;
+  width:100%;
+  min-height:0;
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 6px 24px rgba(0,0,0,.6);
+  display:block;
+}
+
+/* ── PERGUNTA CARD ── */
+#perg-card{
+  flex-shrink:0;
+  width:100%;max-width:700px;
+  background:rgba(255,255,255,.97);
+  border-radius:14px;padding:10px 14px 10px;
+  box-shadow:0 6px 24px rgba(0,0,0,.4);
+  position:relative;
+}
+#timer-wrap{height:8px;background:#e0e0e0;border-radius:8px;overflow:hidden;margin-bottom:8px}
+#timer-bar{height:100%;background:linear-gradient(90deg,#4caf50,#ffd700,#ff5722);border-radius:8px;transition:width 1s linear}
+#timer-num{position:absolute;top:8px;right:14px;font-family:'Fredoka One',cursive;font-size:18px;color:#333}
+#emoji-q{font-size:22px;display:block;text-align:center;margin-bottom:2px}
+#texto-q{font-size:15px;font-weight:800;color:#1a1a2e;text-align:center;line-height:1.3;margin-bottom:8px}
+#opcoes{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.op{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:2px solid #81c784;border-radius:10px;padding:9px 8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#1b5e20;cursor:pointer;transition:all .15s;text-align:center;line-height:1.3}
+.op:hover{transform:scale(1.03)}
+.op.certa{background:linear-gradient(135deg,#4caf50,#388e3c)!important;color:#fff!important;border-color:#2e7d32!important}
+.op.errada{background:linear-gradient(135deg,#ef5350,#c62828)!important;color:#fff!important;border-color:#b71c1c!important}
+.op:disabled{cursor:default}
+
+/* ── INTERVALO / GAMEOVER ── */
+#tela-intervalo,#tela-gameover{background:rgba(0,0,0,.88);backdrop-filter:blur(6px)}
+.res-emoji{font-size:68px;margin-bottom:10px}
+.res-titulo{font-family:'Fredoka One',cursive;font-size:36px;color:#ffd700;margin-bottom:8px}
+.res-msg{font-size:16px;color:#e0e0e0;margin-bottom:22px;max-width:340px;line-height:1.5}
+#res-titulo-go{color:#ff6b6b}
+
+/* ── CAMPEÃO ── */
+#tela-campeao{background:linear-gradient(160deg,#1a237e,#0d47a1,#1565c0)}
+#camp-titulo{font-family:'Fredoka One',cursive;font-size:clamp(22px,6vw,40px);color:#ffd700;margin-bottom:4px}
+#camp-nome{font-family:'Fredoka One',cursive;font-size:clamp(30px,8vw,58px);color:#fff;text-shadow:0 4px 20px rgba(0,0,0,.5);margin-bottom:6px}
+#camp-pais{font-size:18px;color:#bbdefb;margin-bottom:8px}
+#camp-frase{font-size:15px;color:#e3f2fd;max-width:360px;margin-bottom:20px;font-style:italic;line-height:1.5}
+#caricatura-wrap{margin-bottom:12px}
+#caricatura-wrap svg{filter:drop-shadow(0 8px 24px rgba(0,0,0,.5))}
+
+/* ── CONFETE ── */
+#confete{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:200}
+.cp{position:absolute;top:-20px;width:10px;height:10px;border-radius:2px;animation:caiConf linear forwards}
+@keyframes caiConf{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
+
+/* Estrelas campeão */
+#estrelas{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:99}
+.est{position:absolute;font-size:20px;animation:caiEst linear forwards;opacity:0}
+@keyframes caiEst{0%{opacity:1;transform:translateY(-40px) rotate(0)}100%{opacity:0;transform:translateY(110vh) rotate(720deg)}}
+
+@media(max-width:480px){
+  #texto-q{font-size:14px}
+  .op{font-size:12px;padding:9px 7px}
+  #placar-num{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ INICIO ══ -->
+<div id="tela-inicio" class="tela">
+  <div class="trofeu-ani">🏆</div>
+  <h1>Pênaltis do<br>Conhecimento</h1>
+  <p class="sub">Responda certo e marca o gol!<br>Chegue ao final e vire um craque mundial! ⚽</p>
+  <div class="bandeiras">🇧🇷🇦🇷🇫🇷🇩🇪🇯🇵🇲🇽🇵🇹</div>
+  <button class="btn" onclick="iniciarJogo()">⚽ JOGAR AGORA!</button>
+</div>
+
+<!-- ══ JOGO ══ -->
+<div id="jogo-wrap">
+  <div id="fase-txt">OITAVAS DE FINAL</div>
+  <div id="placar-box">
+    <div><div class="t-flag">🇧🇷</div><div class="t-nome">BRASIL</div></div>
+    <div id="placar-num">0 × 0</div>
+    <div><div class="t-flag" id="flag-adv">🇦🇷</div><div class="t-nome" id="nome-adv">ARG</div></div>
+  </div>
+  <div id="bolas"></div>
+
+  <!-- SVG CAMPO -->
+  <svg id="campo-svg" viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1565C0"/>
+        <stop offset="100%" stop-color="#64B5F6"/>
+      </linearGradient>
+      <pattern id="net" width="8" height="8" patternUnits="userSpaceOnUse">
+        <line x1="0" y1="0" x2="8" y2="8" stroke="rgba(200,200,200,0.35)" stroke-width="0.7"/>
+        <line x1="8" y1="0" x2="0" y2="8" stroke="rgba(200,200,200,0.35)" stroke-width="0.7"/>
+      </pattern>
+      <radialGradient id="ballG" cx="35%" cy="30%">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="100%" stop-color="#cccccc"/>
+      </radialGradient>
+    </defs>
+
+    <!-- Céu/stadium -->
+    <rect width="400" height="95" fill="url(#skyG)"/>
+    <!-- Torcida pixelada sugerida -->
+    <rect y="60" width="400" height="35" fill="rgba(0,0,0,0.2)"/>
+    <rect y="65" width="400" height="5" fill="rgba(255,255,100,0.08)"/>
+    <!-- Flashes torcida -->
+    <circle cx="40" cy="72" r="4" fill="rgba(255,255,200,0.5)"/>
+    <circle cx="100" cy="68" r="3" fill="rgba(255,200,200,0.4)"/>
+    <circle cx="200" cy="70" r="4" fill="rgba(200,255,200,0.5)"/>
+    <circle cx="310" cy="67" r="3" fill="rgba(200,200,255,0.45)"/>
+    <circle cx="370" cy="72" r="4" fill="rgba(255,255,200,0.5)"/>
+    <!-- Holofotes -->
+    <ellipse cx="30" cy="15" rx="18" ry="6" fill="rgba(255,255,220,0.2)"/>
+    <ellipse cx="370" cy="15" rx="18" ry="6" fill="rgba(255,255,220,0.2)"/>
+
+    <!-- Gramado perspectiva (trapézio) -->
+    <polygon points="0,240 400,240 380,95 20,95" fill="#2d8648"/>
+    <!-- Faixas do gramado -->
+    <polygon points="0,240 65,240 61,95 4,95" fill="#2a7d42" opacity="0.5"/>
+    <polygon points="130,240 195,240 191,95 126,95" fill="#2a7d42" opacity="0.5"/>
+    <polygon points="260,240 325,240 321,95" fill="#2a7d42" opacity="0.5"/>
+
+    <!-- Linhas do campo perspectiva -->
+    <polygon points="72,240 328,240 290,138 110,138" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.8"/>
+    <polygon points="128,240 272,240 248,158 152,158" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+    <line x1="200" y1="240" x2="200" y2="95" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="5,4"/>
+    <!-- Ponto do pênalti -->
+    <ellipse cx="200" cy="195" rx="4" ry="2.5" fill="white" opacity="0.8"/>
+
+    <!-- ── GOL ── -->
+    <!-- Rede -->
+    <rect x="146" y="25" width="108" height="50" fill="url(#net)"/>
+    <!-- Fundo rede sombreado -->
+    <rect x="146" y="25" width="108" height="50" fill="rgba(0,0,0,0.12)"/>
+    <!-- Travessão e postes -->
+    <line x1="143" y1="25" x2="257" y2="25" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <line x1="143" y1="25" x2="143" y2="77" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <line x1="257" y1="25" x2="257" y2="77" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <!-- Linha do gol no chão -->
+    <line x1="143" y1="76" x2="257" y2="76" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+
+    <!-- Goleiro -->
+    <g id="svg-gk" transform="translate(200,55)">
+      <!-- Corpo goleiro -->
+      <ellipse cx="0" cy="18" rx="12" ry="5" fill="rgba(0,0,0,0.15)"/><!-- sombra -->
+      <!-- Pernas -->
+      <line x1="-5" y1="6" x2="-7" y2="18" stroke="#f5a623" stroke-width="5" stroke-linecap="round"/>
+      <line x1="5" y1="6" x2="7" y2="18" stroke="#f5a623" stroke-width="5" stroke-linecap="round"/>
+      <!-- Uniforme verde goleiro -->
+      <path d="M-10,-10 Q0,-14 10,-10 L11,6 L-11,6 Z" fill="#4caf50"/>
+      <!-- Luvas -->
+      <circle cx="-12" cy="-4" r="5" fill="#f5a623"/>
+      <circle cx="12" cy="-4" r="5" fill="#f5a623"/>
+      <!-- Braços -->
+      <line x1="-10" y1="-7" x2="-12" y2="-4" stroke="#c68642" stroke-width="4" stroke-linecap="round"/>
+      <line x1="10" y1="-7" x2="12" y2="-4" stroke="#c68642" stroke-width="4" stroke-linecap="round"/>
+      <!-- Cabeça -->
+      <circle cx="0" cy="-20" r="12" fill="#c68642"/>
+      <!-- Boné goleiro -->
+      <path d="M-12,-24 Q0,-32 12,-24 L10,-20 Q0,-26 -10,-20 Z" fill="#4caf50"/>
+      <line x1="-12" y1="-24" x2="-16" y2="-22" stroke="#4caf50" stroke-width="2"/>
+      <!-- Olhos -->
+      <circle cx="-4" cy="-20" r="2" fill="#333"/>
+      <circle cx="4" cy="-20" r="2" fill="#333"/>
+      <!-- Sorriso -->
+      <path d="M-4,-14 Q0,-11 4,-14" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+    </g>
+
+    <!-- JOGADOR CHUTADOR (visão de costas) -->
+    <g id="svg-jogador" transform="translate(200,165)">
+      <!-- Sombra -->
+      <ellipse cx="0" cy="48" rx="18" ry="5" fill="rgba(0,0,0,0.25)"/>
+      <!-- Chuteiras -->
+      <ellipse id="chut-e" cx="-11" cy="46" rx="10" ry="4" fill="#111"/>
+      <g id="perna-d-grupo" style="transform-origin:8px 24px">
+        <line id="perna-d" x1="8" y1="24" x2="11" y2="46" stroke="#c4844a" stroke-width="9" stroke-linecap="round"/>
+        <ellipse id="chut-d" cx="12" cy="47" rx="10" ry="4" fill="#111"/>
+      </g>
+      <!-- Perna esquerda -->
+      <line x1="-8" y1="24" x2="-11" y2="46" stroke="#c4844a" stroke-width="9" stroke-linecap="round"/>
+      <!-- Shorts -->
+      <path d="M-13,3 L-14,25 L14,25 L13,3 Z" fill="#002776"/>
+      <!-- Camisa Brasil (costas) -->
+      <path d="M-14,-30 Q0,-36 14,-30 L16,3 L-16,3 Z" fill="#FFD700"/>
+      <!-- Número nas costas -->
+      <text x="0" y="-10" text-anchor="middle" font-size="10" font-weight="bold" fill="#009c3b" font-family="Fredoka One,cursive">10</text>
+      <!-- Braços -->
+      <line x1="-14" y1="-25" x2="-22" y2="-4" stroke="#c4844a" stroke-width="7" stroke-linecap="round"/>
+      <line x1="14" y1="-25" x2="22" y2="-4" stroke="#c4844a" stroke-width="7" stroke-linecap="round"/>
+      <!-- Pescoço -->
+      <rect x="-4" y="-48" width="8" height="10" rx="4" fill="#c4844a"/>
+      <!-- Cabeça (vista de costas) -->
+      <circle cx="0" cy="-58" r="14" fill="#c4844a"/>
+      <!-- Cabelo -->
+      <path d="M-12,-68 Q0,-78 12,-68 L10,-60 Q0,-65 -10,-60 Z" fill="#1a1a1a"/>
+    </g>
+
+    <!-- BOLA -->
+    <g id="svg-bola" transform="translate(200,188)">
+      <circle r="11" fill="url(#ballG)" stroke="#ddd" stroke-width="0.5"/>
+      <!-- Padrão hexagonal simplificado -->
+      <path d="M0,-7 L6,-2 L4,5 L-4,5 L-6,-2 Z" fill="#222" opacity="0.7"/>
+      <circle cx="-6" cy="-4" r="2" fill="#222" opacity="0.4"/>
+      <circle cx="6" cy="-4" r="2" fill="#222" opacity="0.4"/>
+    </g>
+
+    <!-- FEEDBACK TEXTO -->
+    <text id="svg-feedback" x="200" y="135" text-anchor="middle" font-size="34"
+      font-family="Fredoka One,cursive" font-weight="bold" fill="#FFD700"
+      opacity="0" stroke="rgba(0,0,0,0.4)" stroke-width="2" paint-order="stroke"/>
+  </svg>
+
+  <!-- PERGUNTA -->
+  <div id="perg-card">
+    <div id="timer-wrap"><div id="timer-bar"></div></div>
+    <span id="timer-num">25</span>
+    <span id="emoji-q">⚽</span>
+    <div id="texto-q">Preparando...</div>
+    <div id="opcoes"></div>
+  </div>
+</div>
+
+<!-- ══ INTERVALO ══ -->
+<div id="tela-intervalo" class="tela hidden">
+  <div class="res-emoji">🎉</div>
+  <div class="res-titulo" id="res-titulo-ok">BRASIL AVANÇOU!</div>
+  <div class="res-msg" id="res-msg-ok"></div>
+  <button class="btn" onclick="proximaFase()">PRÓXIMA FASE ➡️</button>
+</div>
+
+<!-- ══ GAME OVER ══ -->
+<div id="tela-gameover" class="tela hidden">
+  <div class="res-emoji" id="go-emoji">😢</div>
+  <div class="res-titulo res-titulo-go" id="res-titulo-go">ELIMINADO!</div>
+  <div class="res-msg" id="res-msg-go"></div>
+  <button class="btn btn-red" onclick="reiniciarJogo()">TENTAR DE NOVO 🔄</button>
+</div>
+
+<!-- ══ CAMPEÃO ══ -->
+<div id="tela-campeao" class="tela hidden">
+  <div id="estrelas"></div>
+  <div id="camp-titulo">VOCÊ VIROU O</div>
+  <div id="caricatura-wrap"></div>
+  <div id="camp-nome">NEYMAR JR</div>
+  <div id="camp-pais">🇧🇷 Brasil</div>
+  <div id="camp-frase">"Ginga, aprende e marca o gol!"</div>
+  <button class="btn" onclick="reiniciarJogo()">JOGAR DE NOVO 🔄</button>
+</div>
+
+<!-- Confete -->
+<div id="confete"></div>
+
+<script>
+// ══════════════════════════════════════════════════
+// BANCO DE PERGUNTAS
+// ══════════════════════════════════════════════════
+const PERGUNTAS = [
+  {e:"🇧🇷",q:"O Brasil já ganhou quantas Copas do Mundo?",ops:["3","4","5","2"],c:1},
+  {e:"⭐",q:"Em que ano o Brasil ganhou sua primeira Copa do Mundo?",ops:["1950","1958","1962","1970"],c:1},
+  {e:"🇧🇷",q:"Qual a cor da camisa do Brasil na Copa?",ops:["Azul","Verde","Amarela","Vermelha"],c:2},
+  {e:"👑",q:"Qual jogador brasileiro foi chamado de 'O Rei do Futebol'?",ops:["Ronaldo","Zico","Pelé","Romário"],c:2},
+  {e:"🏟️",q:"Em que cidade fica o Estádio do Maracanã?",ops:["São Paulo","Brasília","Recife","Rio de Janeiro"],c:3},
+  {e:"🇦🇷",q:"Qual é o país de Lionel Messi?",ops:["Espanha","Brasil","Argentina","Uruguai"],c:2},
+  {e:"🇫🇷",q:"Qual país ganhou a Copa de 2018 na Rússia?",ops:["Brasil","Alemanha","França","Argentina"],c:2},
+  {e:"🇩🇪",q:"De que cor é a camisa da Alemanha?",ops:["Vermelha","Branca","Amarela","Azul"],c:1},
+  {e:"🇯🇵",q:"O Japão fica em qual continente?",ops:["Europa","América","África","Ásia"],c:3},
+  {e:"🇵🇹",q:"Cristiano Ronaldo joga pelo país:",ops:["Espanha","Portugal","Brasil","Itália"],c:1},
+  {e:"🗼",q:"Qual país tem a Torre Eiffel e já sediou a Copa de 1998?",ops:["Itália","Alemanha","França","Espanha"],c:2},
+  {e:"🏆",q:"O troféu da Copa do Mundo é feito de qual material?",ops:["Prata","Diamante","Ouro","Bronze"],c:2},
+  {e:"📅",q:"De quantos em quantos anos acontece a Copa do Mundo?",ops:["2 anos","3 anos","4 anos","5 anos"],c:2},
+  {e:"⚽",q:"O primeiro campeão da Copa do Mundo foi:",ops:["Brasil","Argentina","Uruguai","Itália"],c:2},
+  {e:"🟡",q:"Quantos jogadores de cada time estão no campo ao mesmo tempo?",ops:["9","10","11","12"],c:2},
+  {e:"⏱️",q:"Quanto tempo dura um jogo de futebol normal?",ops:["60 min","90 min","120 min","45 min"],c:1},
+  {e:"🟥",q:"O que acontece quando um jogador recebe cartão vermelho?",ops:["Ganha um gol","É expulso","Fica 5 min parado","Paga multa"],c:1},
+  {e:"🇶🇦",q:"Qual país pequeno sediou a Copa do Mundo de 2022?",ops:["Dubai","Qatar","Egito","Marrocos"],c:1},
+  {e:"🇦🇺",q:"Qual animal é símbolo da Austrália?",ops:["Canguru","Panda","Elefante","Tigre"],c:0},
+  {e:"🍜",q:"O macarrão espaguete é típico de qual país?",ops:["França","Portugal","Itália","Espanha"],c:2},
+  {e:"🍣",q:"O sushi é uma comida típica de qual país?",ops:["China","Coreia","Japão","Tailândia"],c:2},
+  {e:"🌮",q:"O taco é uma comida típica de qual país da Copa?",ops:["Brasil","Espanha","Peru","México"],c:3},
+  {e:"🥐",q:"O croissant é uma delícia típica de qual país?",ops:["Alemanha","França","Bélgica","Holanda"],c:1},
+  {e:"🎺",q:"Qual instrumento ficou famoso na Copa de 2010 na África?",ops:["Tambor","Corneta","Vuvuzela","Gaita"],c:2},
+  {e:"🗺️",q:"Qual é o maior país do mundo em território?",ops:["China","Brasil","Rússia","Canadá"],c:2},
+  {e:"⚡",q:"Kylian Mbappé é de qual país?",ops:["Bélgica","Portugal","Brasil","França"],c:3},
+  {e:"🌟",q:"Vinicius Júnior joga em qual time espanhol famoso?",ops:["Barcelona","Atlético","Valencia","Real Madrid"],c:3},
+  {e:"🥇",q:"Quem foi o artilheiro da Copa de 2022 no Qatar?",ops:["Messi","Neymar","Mbappé","Ronaldo"],c:2},
+  {e:"🇧🇷",q:"Qual jogador brasileiro é apelidado de 'Fenômeno'?",ops:["Pelé","Ronaldinho","Ronaldo","Kaká"],c:2},
+  {e:"🌍",q:"Em qual continente fica o Brasil?",ops:["Europa","África","América do Sul","Oceania"],c:2},
+  {e:"🦁",q:"Em qual continente fica a África do Sul?",ops:["Europa","Ásia","América","África"],c:3},
+  {e:"🇳🇱",q:"A Holanda é famosa por suas flores. Quais são?",ops:["Rosas","Tulipas","Margaridas","Orquídeas"],c:1},
+  {e:"🌊",q:"Qual país é famoso pelo surf e pela Grande Barreira de Coral?",ops:["Austrália","Nova Zelândia","África do Sul","Japão"],c:0},
+  {e:"🎭",q:"Em qual país foi criado o carnaval mais famoso do mundo?",ops:["Espanha","Portugal","Brasil","Itália"],c:2},
+  {e:"🦁",q:"Qual continente tem mais países na Copa do Mundo?",ops:["América","Europa","África","Ásia"],c:1},
+  {e:"📺",q:"Em que ano a Copa foi transmitida pela TV pela primeira vez?",ops:["1950","1954","1966","1970"],c:1},
+  {e:"👕",q:"Por que o goleiro usa camisa diferente?",ops:["Para ficar mais bonito","Para ser identificado","Porque a FIFA manda","Porque é mais cara"],c:1},
+  {e:"🇺🇸",q:"Qual é a capital dos Estados Unidos?",ops:["Nova York","Los Angeles","Washington D.C.","Miami"],c:2},
+  {e:"🏔️",q:"A montanha mais alta do mundo (Everest) fica em qual país?",ops:["China","Nepal","Índia","Japão"],c:1},
+  {e:"⭐",q:"Qual jogador ganhou mais Copas do Mundo na história?",ops:["Ronaldo","Pelé","Messi","Zidane"],c:1},
+  {e:"🇧🇷",q:"Qual animal selvagem é símbolo do Brasil?",ops:["Leão","Onça-pintada","Tigre","Urso"],c:1},
+  {e:"🥅",q:"Como se chama a área onde é marcado pênalti?",ops:["Área técnica","Área de pênalti","Zona de gol","Área livre"],c:1},
+  {e:"🇲🇽",q:"A bandeira do México tem uma águia comendo uma...",ops:["Peixe","Cobra","Rato","Flor"],c:1},
+  {e:"🏆",q:"Em que país foi a Copa de 2014?",ops:["Argentina","Chile","Brasil","Colômbia"],c:2},
+  {e:"🌐",q:"Qual língua se fala no Brasil?",ops:["Espanhol","Inglês","Português","Francês"],c:2},
+];
+
+// ══════════════════════════════════════════════════
+// CARICATURAS SVG
+// ══════════════════════════════════════════════════
+const JOGADORES = [
+  {
+    nome:"NEYMAR JR", pais:"🇧🇷 Brasil",
+    frase:'"Ginga, aprende e faz o gol do conhecimento!"',
+    svg: `<svg viewBox="0 0 160 200" width="150" height="188" xmlns="http://www.w3.org/2000/svg">
+      <!-- Corpo / camisa Brasil -->
+      <path d="M30,110 Q40,100 80,98 Q120,100 130,110 L135,190 L25,190 Z" fill="#FFD700"/>
+      <path d="M30,110 Q40,100 80,98 Q120,100 130,110 L128,130 Q80,125 32,130 Z" fill="#009c3b" opacity="0.4"/>
+      <!-- Número 10 -->
+      <text x="80" y="160" text-anchor="middle" font-size="28" font-weight="bold" fill="#009c3b" font-family="Fredoka One,cursive">10</text>
+      <!-- Pescoço -->
+      <rect x="70" y="90" width="20" height="14" rx="8" fill="#b87333"/>
+      <!-- Cabeça -->
+      <ellipse cx="80" cy="65" rx="38" ry="40" fill="#c4844a"/>
+      <!-- Cabelo - Neymar: loiro/estilizado -->
+      <path d="M42,45 Q50,15 80,18 Q110,15 118,45 L115,35 Q110,8 80,10 Q50,8 45,35 Z" fill="#d4a017"/>
+      <path d="M42,45 Q40,30 45,25 Q48,40 50,48" fill="#d4a017"/>
+      <path d="M118,45 Q120,30 115,25 Q112,40 110,48" fill="#d4a017"/>
+      <!-- Topknot neymar -->
+      <ellipse cx="80" cy="22" rx="15" ry="8" fill="#d4a017"/>
+      <!-- Orelhas -->
+      <ellipse cx="42" cy="65" rx="7" ry="9" fill="#b87333"/>
+      <ellipse cx="118" cy="65" rx="7" ry="9" fill="#b87333"/>
+      <!-- Brinco -->
+      <circle cx="43" cy="72" r="3" fill="#ffd700" stroke="#cc9900" stroke-width="1"/>
+      <circle cx="117" cy="72" r="3" fill="#ffd700" stroke="#cc9900" stroke-width="1"/>
+      <!-- Sobrancelhas -->
+      <path d="M55,50 Q63,45 70,50" fill="none" stroke="#5a3010" stroke-width="3" stroke-linecap="round"/>
+      <path d="M90,50 Q97,45 105,50" fill="none" stroke="#5a3010" stroke-width="3" stroke-linecap="round"/>
+      <!-- Olhos -->
+      <ellipse cx="63" cy="60" rx="9" ry="9" fill="white"/>
+      <ellipse cx="97" cy="60" rx="9" ry="9" fill="white"/>
+      <ellipse cx="65" cy="61" rx="6" ry="6" fill="#4a2800"/>
+      <ellipse cx="99" cy="61" rx="6" ry="6" fill="#4a2800"/>
+      <circle cx="67" cy="59" r="2" fill="white"/>
+      <circle cx="101" cy="59" r="2" fill="white"/>
+      <!-- Nariz -->
+      <path d="M76,72 Q80,78 84,72" fill="none" stroke="#8a5020" stroke-width="2" stroke-linecap="round"/>
+      <!-- Sorriso grande -->
+      <path d="M52,82 Q80,100 108,82" fill="#fff" stroke="#b87333" stroke-width="1.5"/>
+      <path d="M52,82 Q80,100 108,82" fill="none" stroke="#5a3010" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Dentes -->
+      <path d="M60,85 Q80,96 100,85 L100,90 Q80,101 60,90 Z" fill="white"/>
+      <!-- Linha dentes -->
+      <line x1="80" y1="85" x2="80" y2="96" stroke="#ddd" stroke-width="1"/>
+      <!-- Tatuagem no pescoço (apenas sugestão) -->
+      <path d="M72,92 Q76,88 80,92 Q84,88 88,92" fill="none" stroke="#8a5020" stroke-width="1" opacity="0.5"/>
+    </svg>`
+  },
+  {
+    nome:"LIONEL MESSI", pais:"🇦🇷 Argentina",
+    frase:'"Com dedicação, todo campeão começa pequeno."',
+    svg: `<svg viewBox="0 0 160 200" width="150" height="188" xmlns="http://www.w3.org/2000/svg">
+      <!-- Camisa Argentina listrada -->
+      <path d="M28,110 Q40,100 80,98 Q120,100 132,110 L136,190 L24,190 Z" fill="white"/>
+      <!-- Listras azuis -->
+      <path d="M38,102 L36,190 L48,190 L50,101 Z" fill="#003082" opacity="0.9"/>
+      <path d="M62,99 L60,190 L72,190 L74,98 Z" fill="#003082" opacity="0.9"/>
+      <path d="M86,98 L84,190 L96,190 L98,98 Z" fill="#003082" opacity="0.9"/>
+      <path d="M110,99 L108,190 L120,190 L122,100 Z" fill="#003082" opacity="0.9"/>
+      <!-- Número 10 -->
+      <text x="80" y="162" text-anchor="middle" font-size="26" font-weight="bold" fill="#003082" font-family="Fredoka One,cursive">10</text>
+      <!-- Pescoço -->
+      <rect x="70" y="90" width="20" height="14" rx="8" fill="#d4956a"/>
+      <!-- Cabeça menor (Messi é baixo) -->
+      <ellipse cx="80" cy="62" rx="36" ry="38" fill="#d4956a"/>
+      <!-- Cabelo castanho bagunçado -->
+      <path d="M44,45 Q52,12 80,14 Q108,12 116,45 L112,32 Q105,6 80,8 Q55,6 48,32 Z" fill="#4a2e00"/>
+      <path d="M44,45 Q42,28 48,22 L52,44" fill="#4a2e00"/>
+      <path d="M116,45 Q118,28 112,22 L108,44" fill="#4a2e00"/>
+      <!-- Cabelo mais desordenado -->
+      <path d="M44,40 Q46,28 52,32 Q54,22 60,28 Q62,16 70,22 Q72,14 80,16" fill="none" stroke="#3a2000" stroke-width="3"/>
+      <!-- Orelhas -->
+      <ellipse cx="44" cy="64" rx="7" ry="8" fill="#c4844a"/>
+      <ellipse cx="116" cy="64" rx="7" ry="8" fill="#c4844a"/>
+      <!-- Barba - Messi tem barba -->
+      <path d="M48,88 Q80,102 112,88 Q112,96 80,100 Q48,96 48,88 Z" fill="#4a2e00" opacity="0.5"/>
+      <!-- Sobrancelhas -->
+      <path d="M52,50 Q60,46 68,50" fill="none" stroke="#3a2000" stroke-width="3" stroke-linecap="round"/>
+      <path d="M92,50 Q100,46 108,50" fill="none" stroke="#3a2000" stroke-width="3" stroke-linecap="round"/>
+      <!-- Olhos -->
+      <ellipse cx="61" cy="60" rx="9" ry="8" fill="white"/>
+      <ellipse cx="99" cy="60" rx="9" ry="8" fill="white"/>
+      <ellipse cx="63" cy="61" rx="6" ry="6" fill="#3a2000"/>
+      <ellipse cx="101" cy="61" rx="6" ry="6" fill="#3a2000"/>
+      <circle cx="65" cy="59" r="2" fill="white"/>
+      <circle cx="103" cy="59" r="2" fill="white"/>
+      <!-- Nariz -->
+      <path d="M74,70 Q80,76 86,70" fill="none" stroke="#8a5020" stroke-width="2" stroke-linecap="round"/>
+      <!-- Sorriso calmo -->
+      <path d="M58,85 Q80,95 102,85" fill="none" stroke="#5a3010" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M60,86 Q80,96 100,86 L100,90 Q80,100 60,90 Z" fill="white"/>
+    </svg>`
+  },
+  {
+    nome:"VINI JR", pais:"🇧🇷 Brasil",
+    frase:'"Dance, aprenda e nunca pare de sonhar!"',
+    svg: `<svg viewBox="0 0 160 200" width="150" height="188" xmlns="http://www.w3.org/2000/svg">
+      <!-- Camisa Brasil -->
+      <path d="M28,110 Q40,100 80,98 Q120,100 132,110 L136,190 L24,190 Z" fill="#FFD700"/>
+      <path d="M28,110 Q40,100 80,98 Q120,100 132,110 L130,132 Q80,127 30,132 Z" fill="#009c3b" opacity="0.35"/>
+      <text x="80" y="162" text-anchor="middle" font-size="26" font-weight="bold" fill="#009c3b" font-family="Fredoka One,cursive">7</text>
+      <!-- Pescoço -->
+      <rect x="70" y="90" width="20" height="14" rx="8" fill="#6B3A2A"/>
+      <!-- Cabeça -->
+      <ellipse cx="80" cy="64" rx="37" ry="40" fill="#6B3A2A"/>
+      <!-- Cabelo curto/tranças Vini -->
+      <path d="M43,48 Q50,15 80,16 Q110,15 117,48 L114,36 Q106,6 80,8 Q54,6 46,36 Z" fill="#1a0a00"/>
+      <!-- Detalhes cabelo tranças -->
+      <line x1="58" y1="20" x2="56" y2="42" stroke="#0a0500" stroke-width="4" stroke-linecap="round"/>
+      <line x1="70" y1="16" x2="68" y2="40" stroke="#0a0500" stroke-width="4" stroke-linecap="round"/>
+      <line x1="80" y1="15" x2="80" y2="40" stroke="#0a0500" stroke-width="4" stroke-linecap="round"/>
+      <line x1="90" y1="16" x2="92" y2="40" stroke="#0a0500" stroke-width="4" stroke-linecap="round"/>
+      <line x1="102" y1="20" x2="104" y2="42" stroke="#0a0500" stroke-width="4" stroke-linecap="round"/>
+      <!-- Orelhas -->
+      <ellipse cx="43" cy="66" rx="7" ry="8" fill="#5a2e1a"/>
+      <ellipse cx="117" cy="66" rx="7" ry="8" fill="#5a2e1a"/>
+      <!-- Sobrancelhas -->
+      <path d="M51,52 Q60,47 69,52" fill="none" stroke="#1a0a00" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M91,52 Q100,47 109,52" fill="none" stroke="#1a0a00" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- Olhos grandes expressivos -->
+      <ellipse cx="61" cy="64" rx="11" ry="11" fill="white"/>
+      <ellipse cx="99" cy="64" rx="11" ry="11" fill="white"/>
+      <ellipse cx="63" cy="65" rx="7" ry="7" fill="#1a0a00"/>
+      <ellipse cx="101" cy="65" rx="7" ry="7" fill="#1a0a00"/>
+      <circle cx="66" cy="62" r="3" fill="white"/>
+      <circle cx="104" cy="62" r="3" fill="white"/>
+      <!-- Nariz -->
+      <path d="M75,76 Q80,82 85,76" fill="none" stroke="#4a1a0a" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- SORRISO ENORME - marca do Vini -->
+      <path d="M46,88 Q80,112 114,88" fill="#fff" stroke="#4a1a0a" stroke-width="1.5"/>
+      <path d="M46,88 Q80,112 114,88" fill="none" stroke="#1a0a00" stroke-width="3" stroke-linecap="round"/>
+      <!-- Dentes brilhantes -->
+      <path d="M52,91 Q80,108 108,91 L108,97 Q80,114 52,97 Z" fill="white"/>
+      <line x1="80" y1="91" x2="80" y2="107" stroke="#eee" stroke-width="1.5"/>
+      <line x1="64" y1="92" x2="63" y2="105" stroke="#eee" stroke-width="1"/>
+      <line x1="96" y1="92" x2="97" y2="105" stroke="#eee" stroke-width="1"/>
+    </svg>`
+  },
+  {
+    nome:"MBAPPÉ", pais:"🇫🇷 França",
+    frase:'"A velocidade do aprendizado não tem limite!"',
+    svg: `<svg viewBox="0 0 160 200" width="150" height="188" xmlns="http://www.w3.org/2000/svg">
+      <!-- Camisa França azul -->
+      <path d="M28,110 Q40,100 80,98 Q120,100 132,110 L136,190 L24,190 Z" fill="#002395"/>
+      <text x="80" y="162" text-anchor="middle" font-size="26" font-weight="bold" fill="#ED2939" font-family="Fredoka One,cursive">10</text>
+      <!-- Pescoço -->
+      <rect x="70" y="90" width="20" height="14" rx="8" fill="#5C3317"/>
+      <!-- Cabeça -->
+      <ellipse cx="80" cy="63" rx="36" ry="39" fill="#5C3317"/>
+      <!-- Cabelo raspadinho Mbappé -->
+      <path d="M44,50 Q50,18 80,16 Q110,18 116,50 L113,38 Q106,8 80,10 Q54,8 47,38 Z" fill="#0a0500"/>
+      <!-- Cabelo mais low-cut -->
+      <path d="M44,50 Q44,38 50,34 L52,50" fill="#0a0500"/>
+      <path d="M116,50 Q116,38 110,34 L108,50" fill="#0a0500"/>
+      <!-- Orelhas -->
+      <ellipse cx="44" cy="65" rx="7" ry="8" fill="#4a2808"/>
+      <ellipse cx="116" cy="65" rx="7" ry="8" fill="#4a2808"/>
+      <!-- Sobrancelhas retas/determinadas -->
+      <line x1="50" y1="50" x2="70" y2="50" stroke="#0a0500" stroke-width="4" stroke-linecap="round"/>
+      <line x1="90" y1="50" x2="110" y2="50" stroke="#0a0500" stroke-width="4" stroke-linecap="round"/>
+      <!-- Olhos intensos -->
+      <ellipse cx="62" cy="62" rx="10" ry="9" fill="white"/>
+      <ellipse cx="98" cy="62" rx="10" ry="9" fill="white"/>
+      <ellipse cx="64" cy="63" rx="7" ry="7" fill="#0a0500"/>
+      <ellipse cx="100" cy="63" rx="7" ry="7" fill="#0a0500"/>
+      <circle cx="67" cy="60" r="2.5" fill="white"/>
+      <circle cx="103" cy="60" r="2.5" fill="white"/>
+      <!-- Nariz alto, definido -->
+      <path d="M74,72 Q80,78 86,72" fill="none" stroke="#3a1a08" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="80" y1="68" x2="80" y2="78" stroke="#3a1a08" stroke-width="2"/>
+      <!-- Sorriso confiante -->
+      <path d="M60,86 Q80,96 100,86" fill="none" stroke="#2a0a00" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M62,87 Q80,96 98,87 L97,92 Q80,100 63,92 Z" fill="white"/>
+    </svg>`
+  },
+  {
+    nome:"RONALDINHO", pais:"🇧🇷 Brasil",
+    frase:'"O sorriso é o melhor truque no campo e na vida!"',
+    svg: `<svg viewBox="0 0 160 200" width="150" height="188" xmlns="http://www.w3.org/2000/svg">
+      <!-- Camisa Brasil -->
+      <path d="M28,110 Q40,100 80,98 Q120,100 132,110 L136,190 L24,190 Z" fill="#FFD700"/>
+      <text x="80" y="162" text-anchor="middle" font-size="26" font-weight="bold" fill="#009c3b" font-family="Fredoka One,cursive">10</text>
+      <!-- Pescoço -->
+      <rect x="70" y="90" width="20" height="14" rx="8" fill="#7B4C2A"/>
+      <!-- Cabeça mais redonda/cheia -->
+      <ellipse cx="80" cy="66" rx="40" ry="42" fill="#7B4C2A"/>
+      <!-- Dreads longos Ronaldinho -->
+      <path d="M40,55 Q30,80 28,110 L36,110 Q38,82 44,58" fill="#1a0800"/>
+      <path d="M120,55 Q130,80 132,110 L124,110 Q122,82 116,58" fill="#1a0800"/>
+      <path d="M45,50 Q40,75 38,105" fill="none" stroke="#1a0800" stroke-width="7" stroke-linecap="round"/>
+      <path d="M52,46 Q48,72 46,104" fill="none" stroke="#1a0800" stroke-width="6" stroke-linecap="round"/>
+      <path d="M115,50 Q120,75 122,105" fill="none" stroke="#1a0800" stroke-width="7" stroke-linecap="round"/>
+      <path d="M108,46 Q112,72 114,104" fill="none" stroke="#1a0800" stroke-width="6" stroke-linecap="round"/>
+      <!-- Cabelo topo -->
+      <path d="M40,50 Q50,12 80,12 Q110,12 120,50 L116,36 Q106,4 80,6 Q54,4 44,36 Z" fill="#1a0800"/>
+      <!-- Orelhas -->
+      <ellipse cx="40" cy="68" rx="8" ry="9" fill="#6a3c1a"/>
+      <ellipse cx="120" cy="68" rx="8" ry="9" fill="#6a3c1a"/>
+      <!-- Sobrancelhas arqueadas - expressivo -->
+      <path d="M48,52 Q58,44 68,52" fill="none" stroke="#1a0800" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M92,52 Q102,44 112,52" fill="none" stroke="#1a0800" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- Olhos alegres -->
+      <ellipse cx="60" cy="63" rx="10" ry="9" fill="white"/>
+      <ellipse cx="100" cy="63" rx="10" ry="9" fill="white"/>
+      <ellipse cx="62" cy="64" rx="7" ry="7" fill="#2a1000"/>
+      <ellipse cx="102" cy="64" rx="7" ry="7" fill="#2a1000"/>
+      <circle cx="65" cy="61" r="2.5" fill="white"/>
+      <circle cx="105" cy="61" r="2.5" fill="white"/>
+      <!-- Linhas de alegria nos olhos -->
+      <path d="M50,57 Q58,50 68,56" fill="none" stroke="#1a0800" stroke-width="1.5" opacity="0.5"/>
+      <path d="M92,56 Q102,50 112,57" fill="none" stroke="#1a0800" stroke-width="1.5" opacity="0.5"/>
+      <!-- Nariz largo, expressivo -->
+      <path d="M72,76 Q80,84 88,76" fill="#5a2a0a" stroke="#5a2a0a" stroke-width="1"/>
+      <!-- SORRISO ENORME COM DIASTEMA - marca do Ronaldinho! -->
+      <path d="M44,88 Q80,114 116,88" fill="#fff" stroke="#4a1a00" stroke-width="1.5"/>
+      <path d="M44,88 Q80,114 116,88" fill="none" stroke="#1a0800" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- Dentes com espaço no meio (diastema) -->
+      <path d="M50,92 Q80,111 110,92 L110,100 Q80,119 50,100 Z" fill="white"/>
+      <!-- O ESPAÇO entre os dentes (diastema - traço mais marcante!) -->
+      <line x1="80" y1="91" x2="80" y2="109" stroke="#7B4C2A" stroke-width="3"/>
+      <line x1="65" y1="93" x2="64" y2="107" stroke="#eee" stroke-width="1.5"/>
+      <line x1="95" y1="93" x2="96" y2="107" stroke="#eee" stroke-width="1.5"/>
+      <!-- Bochechas cheinhas -->
+      <ellipse cx="46" cy="85" rx="10" ry="7" fill="#8a5a2a" opacity="0.3"/>
+      <ellipse cx="114" cy="85" rx="10" ry="7" fill="#8a5a2a" opacity="0.3"/>
+    </svg>`
+  },
+  {
+    nome:"RONALDO R9", pais:"🇧🇷 Brasil",
+    frase:'"Fenômeno dentro e fora de campo — assim como você!"',
+    svg: `<svg viewBox="0 0 160 200" width="150" height="188" xmlns="http://www.w3.org/2000/svg">
+      <!-- Camisa Brasil -->
+      <path d="M28,110 Q40,100 80,98 Q120,100 132,110 L136,190 L24,190 Z" fill="#FFD700"/>
+      <text x="80" y="162" text-anchor="middle" font-size="26" font-weight="bold" fill="#009c3b" font-family="Fredoka One,cursive">9</text>
+      <!-- Pescoço -->
+      <rect x="70" y="90" width="20" height="14" rx="8" fill="#b87333"/>
+      <!-- Cabeça -->
+      <ellipse cx="80" cy="64" rx="37" ry="40" fill="#b87333"/>
+      <!-- Cabelo FAMOSO do R9: risca/raspado na lateral -->
+      <!-- Base do cabelo -->
+      <path d="M43,50 Q52,14 80,14 Q108,14 117,50 L113,36 Q104,6 80,8 Q56,6 47,36 Z" fill="#1a0a00"/>
+      <!-- A risca icônica - linha raspada lateral esquerda -->
+      <path d="M43,50 L48,30 L56,28 L52,48 Z" fill="#b87333"/>
+      <!-- Franja triangular na frente (o corte icônico de 2002) -->
+      <path d="M52,28 Q66,10 80,14 Q66,22 56,28 Z" fill="#1a0a00"/>
+      <!-- Parte raspada lateral direita -->
+      <path d="M117,50 L112,30 L104,28 L108,48 Z" fill="#b87333"/>
+      <!-- Orelhas -->
+      <ellipse cx="43" cy="66" rx="7" ry="9" fill="#a06828"/>
+      <ellipse cx="117" cy="66" rx="7" ry="9" fill="#a06828"/>
+      <!-- Sobrancelhas grossas -->
+      <path d="M50,50 Q60,44 70,50" fill="none" stroke="#1a0a00" stroke-width="4" stroke-linecap="round"/>
+      <path d="M90,50 Q100,44 110,50" fill="none" stroke="#1a0a00" stroke-width="4" stroke-linecap="round"/>
+      <!-- Olhos -->
+      <ellipse cx="61" cy="62" rx="10" ry="9" fill="white"/>
+      <ellipse cx="99" cy="62" rx="10" ry="9" fill="white"/>
+      <ellipse cx="63" cy="63" rx="7" ry="7" fill="#1a0a00"/>
+      <ellipse cx="101" cy="63" rx="7" ry="7" fill="#1a0a00"/>
+      <circle cx="66" cy="60" r="2.5" fill="white"/>
+      <circle cx="104" cy="60" r="2.5" fill="white"/>
+      <!-- Nariz pronunciado -->
+      <path d="M74,74 Q80,81 86,74" fill="none" stroke="#7a3c0a" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="80" y1="68" x2="80" y2="80" stroke="#7a3c0a" stroke-width="2"/>
+      <!-- Sorriso determinado -->
+      <path d="M56,86 Q80,98 104,86" fill="none" stroke="#3a1a00" stroke-width="3" stroke-linecap="round"/>
+      <path d="M58,87 Q80,98 102,87 L101,93 Q80,104 59,93 Z" fill="white"/>
+      <line x1="80" y1="87" x2="80" y2="97" stroke="#eee" stroke-width="1.5"/>
+    </svg>`
+  }
+];
+
+// ══════════════════════════════════════════════════
+// FASES
+// ══════════════════════════════════════════════════
+const FASES = [
+  {nome:"OITAVAS DE FINAL", adv:"Argentina", flag:"🇦🇷"},
+  {nome:"QUARTAS DE FINAL",  adv:"França",   flag:"🇫🇷"},
+  {nome:"SEMIFINAL",         adv:"Alemanha", flag:"🇩🇪"},
+  {nome:"GRANDE FINAL",      adv:"Portugal", flag:"🇵🇹"},
+];
+
+// ══════════════════════════════════════════════════
+// ESTADO
+// ══════════════════════════════════════════════════
+let faseAtual=0, pergDaFase=[], idxPerg=0, golsBR=0, golsAdv=0;
+let timerInt=null, tempo=25, respondeu=false;
+const TEMPO=25;
+let pergUsadas=new Set();
+
+// ══════════════════════════════════════════════════
+// UTILITÁRIOS
+// ══════════════════════════════════════════════════
+function sortear(n){
+  let disp=PERGUNTAS.map((_,i)=>i).filter(i=>!pergUsadas.has(i));
+  if(disp.length<n){pergUsadas.clear();disp=PERGUNTAS.map((_,i)=>i);}
+  const res=[];
+  while(res.length<n){
+    const r=Math.floor(Math.random()*PERGUNTAS.length);
+    if(!pergUsadas.has(r)&&!res.includes(r)){res.push(r);pergUsadas.add(r);}
+  }
+  return res.map(i=>PERGUNTAS[i]);
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+// ══════════════════════════════════════════════════
+// SONS
+// ══════════════════════════════════════════════════
+function som(tipo){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    if(tipo==='gol'){
+      [523,659,784,1047].forEach((f,i)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.connect(g);g.connect(ctx.destination);
+        o.frequency.value=f;o.type='triangle';
+        g.gain.setValueAtTime(0.3,ctx.currentTime+i*.12);
+        g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*.12+.3);
+        o.start(ctx.currentTime+i*.12);o.stop(ctx.currentTime+i*.12+.35);
+      });
+    } else if(tipo==='erro'){
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.frequency.value=200;o.type='sawtooth';
+      g.gain.setValueAtTime(0.25,ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.5);
+      o.start();o.stop(ctx.currentTime+0.5);
+    } else if(tipo==='campeao'){
+      [523,659,784,1047,1319,1047,784,1319].forEach((f,i)=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.connect(g);g.connect(ctx.destination);
+        o.frequency.value=f;o.type='triangle';
+        g.gain.setValueAtTime(0.2,ctx.currentTime+i*.16);
+        g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*.16+.3);
+        o.start(ctx.currentTime+i*.16);o.stop(ctx.currentTime+i*.16+.35);
+      });
+    }
+  }catch(e){}
+}
+
+// ══════════════════════════════════════════════════
+// CONFETE
+// ══════════════════════════════════════════════════
+function confete(n){
+  const cores=['#ffd700','#ff6b6b','#4caf50','#2196f3','#ff9800','#e91e63','#fff'];
+  const c=document.getElementById('confete');
+  c.innerHTML='';
+  for(let i=0;i<n;i++){
+    const el=document.createElement('div');
+    el.className='cp';
+    el.style.cssText=`left:${Math.random()*100}vw;background:${cores[Math.floor(Math.random()*cores.length)]};
+      animation-duration:${1.5+Math.random()*2}s;animation-delay:${Math.random()*.8}s;
+      width:${8+Math.random()*10}px;height:${8+Math.random()*10}px;
+      border-radius:${Math.random()>.5?'50%':'2px'}`;
+    c.appendChild(el);
+  }
+  setTimeout(()=>c.innerHTML='',4000);
+}
+
+// ══════════════════════════════════════════════════
+// ANIMAÇÃO SVG CAMPO
+// ══════════════════════════════════════════════════
+function resetarCampo(){
+  const gk=document.getElementById('svg-gk');
+  const bola=document.getElementById('svg-bola');
+  gk.style.transition='none';
+  gk.setAttribute('transform','translate(200,55)');
+  bola.style.transition='none';
+  bola.setAttribute('transform','translate(200,188)');
+  // reset perna
+  const perna=document.getElementById('perna-d-grupo');
+  if(perna){perna.style.transition='none';perna.style.transform='rotate(0deg)';}
+  setTimeout(()=>{
+    gk.style.transition='transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275)';
+    bola.style.transition='transform 0.5s ease-out';
+  },50);
+}
+
+function animarChute(gol){
+  const gk=document.getElementById('svg-gk');
+  const bola=document.getElementById('svg-bola');
+  const perna=document.getElementById('perna-d-grupo');
+
+  // Anima perna chutando
+  if(perna){
+    perna.style.transition='transform 0.12s ease-in';
+    perna.style.transform='rotate(-35deg)';
+    setTimeout(()=>{
+      perna.style.transition='transform 0.15s ease-out';
+      perna.style.transform='rotate(45deg)';
+      setTimeout(()=>{
+        perna.style.transition='transform 0.2s ease-in-out';
+        perna.style.transform='rotate(0deg)';
+      },200);
+    },140);
+  }
+
+  // Determina destinos
+  const alvos={
+    'esq': {gkTX:-60, gkTY:0, bolaTX:110, bolaTY:30},
+    'dir': {gkTX:60,  gkTY:0, bolaTX:290, bolaTY:30},
+    'cima':{gkTX:0,   gkTY:-35,bolaTX:200,bolaTY:20},
+  };
+  const dirs=['esq','dir','cima'];
+  const dirChute=dirs[Math.floor(Math.random()*3)];
+  const {gkTX,gkTY,bolaTX,bolaTY}=alvos[dirChute];
+
+  // Goleiro sempre vai para o lado do chute se ERROU, lado oposto se GOL
+  let gkFinalX, gkFinalY;
+  if(gol){
+    // Goleiro vai pro lado errado
+    const ladosErrados={esq:'dir',dir:'esq',cima:'esq'};
+    const ladoGK=ladosErrados[dirChute];
+    gkFinalX=alvos[ladoGK].gkTX;
+    gkFinalY=alvos[ladoGK].gkTY;
+  } else {
+    gkFinalX=gkTX; gkFinalY=gkTY;
+  }
+
+  setTimeout(()=>{
+    gk.setAttribute('transform',`translate(${200+gkFinalX},${55+gkFinalY})`);
+    bola.setAttribute('transform',`translate(${bolaTX},${bolaTY})`);
+    // Bola some no gol ou fica na frente do GK
+    if(gol){
+      setTimeout(()=>{bola.style.opacity='0';},500);
+    }
+  },200);
+}
+
+function mostrarFeedbackSVG(texto, gol){
+  const el=document.getElementById('svg-feedback');
+  el.textContent=texto;
+  el.setAttribute('fill', gol?'#FFD700':'#ff6b6b');
+  el.setAttribute('opacity','1');
+  // Animação manual via JS (SVG animate)
+  let op=1;
+  const fade=setInterval(()=>{
+    op-=0.06;
+    el.setAttribute('opacity',Math.max(0,op).toString());
+    if(op<=0){clearInterval(fade);el.setAttribute('opacity','0');}
+  },80);
+}
+
+// ══════════════════════════════════════════════════
+// JOGO
+// ══════════════════════════════════════════════════
+function iniciarJogo(){
+  pergUsadas.clear();
+  faseAtual=0;
+  document.getElementById('tela-inicio').classList.add('hidden');
+  document.getElementById('jogo-wrap').style.display='flex';
+  iniciarFase();
+}
+
+function iniciarFase(){
+  const fase=FASES[faseAtual];
+  golsBR=0;golsAdv=0;idxPerg=0;
+  pergDaFase=sortear(5);
+
+  document.getElementById('fase-txt').textContent=fase.nome;
+  document.getElementById('flag-adv').textContent=fase.flag;
+  document.getElementById('nome-adv').textContent=fase.adv.toUpperCase();
+  atualizarPlacar();
+  criarBolas();
+  resetarCampo();
+  mostrarPergunta();
+}
+
+function criarBolas(){
+  const c=document.getElementById('bolas');
+  c.innerHTML='';
+  for(let i=0;i<5;i++){
+    const d=document.createElement('div');
+    d.className='bola'+(i===0?' ativa':'');
+    d.id='b'+i;
+    c.appendChild(d);
+  }
+}
+
+function atualizarBola(idx,gol){
+  const b=document.getElementById('b'+idx);
+  if(!b)return;
+  b.classList.remove('ativa');
+  b.classList.add(gol?'gol':'err');
+  b.textContent=gol?'⚽':'❌';
+  const prox=document.getElementById('b'+(idx+1));
+  if(prox)prox.classList.add('ativa');
+}
+
+function atualizarPlacar(){
+  document.getElementById('placar-num').textContent=golsBR+' × '+golsAdv;
+}
+
+function mostrarPergunta(){
+  if(idxPerg>=5){avaliarFase();return;}
+  const dados=pergDaFase[idxPerg];
+  respondeu=false;
+  resetarCampo();
+  // Reativa opacidade da bola
+  document.getElementById('svg-bola').style.opacity='1';
+
+  const ops=dados.ops.map((t,i)=>({t,correta:i===dados.c}));
+  shuffle(ops);
+
+  document.getElementById('emoji-q').textContent=dados.e;
+  document.getElementById('texto-q').textContent=dados.q;
+
+  const el=document.getElementById('opcoes');
+  el.innerHTML='';
+  ops.forEach(op=>{
+    const btn=document.createElement('button');
+    btn.className='op';
+    btn.textContent=op.t;
+    btn.onclick=()=>responder(btn,op.correta,el);
+    el.appendChild(btn);
+  });
+
+  iniciarTimer();
+}
+
+function iniciarTimer(){
+  clearInterval(timerInt);
+  tempo=TEMPO;
+  atualizarTimerUI();
+  timerInt=setInterval(()=>{
+    tempo--;
+    atualizarTimerUI();
+    if(tempo<=0){clearInterval(timerInt);if(!respondeu)responder(null,false,document.getElementById('opcoes'),true);}
+  },1000);
+}
+
+function atualizarTimerUI(){
+  document.getElementById('timer-bar').style.width=((tempo/TEMPO)*100)+'%';
+  document.getElementById('timer-num').textContent=tempo;
+}
+
+function responder(btnClicado,correta,opsEl){
+  if(respondeu)return;
+  respondeu=true;
+  clearInterval(timerInt);
+
+  Array.from(opsEl.children).forEach(b=>{
+    b.disabled=true;
+    if(b===btnClicado)b.classList.add(correta?'certa':'errada');
+  });
+
+  if(correta){
+    golsBR++;
+    atualizarPlacar();
+    animarChute(true);
+    som('gol');
+    confete(30);
+    mostrarFeedbackSVG('⚽ GOL!',true);
+  } else {
+    golsAdv++;
+    atualizarPlacar();
+    animarChute(false);
+    som('erro');
+    mostrarFeedbackSVG('🧤 DEFENDEU!',false);
+  }
+
+  atualizarBola(idxPerg,correta);
+  idxPerg++;
+  setTimeout(mostrarPergunta,1700);
+}
+
+function avaliarFase(){
+  const passou=golsBR>=3;
+  if(passou){
+    if(faseAtual===FASES.length-1){
+      setTimeout(mostrarCampeao,500);
+    } else {
+      const prox=FASES[faseAtual+1];
+      document.getElementById('res-titulo-ok').textContent='BRASIL AVANÇOU! 🇧🇷';
+      document.getElementById('res-msg-ok').innerHTML=
+        `Você marcou <strong>${golsBR} gols</strong> de 5!<br><br>
+         Próxima fase: <strong>${prox.nome}</strong><br>
+         Adversário: ${prox.flag} ${prox.adv}`;
+      document.getElementById('tela-intervalo').classList.remove('hidden');
+      confete(45);som('gol');
+    }
+  } else {
+    document.getElementById('go-emoji').textContent=golsBR>=2?'😤':'😢';
+    document.getElementById('res-titulo-go').textContent=golsBR>=2?'QUASE LÁ!':'ELIMINADO!';
+    document.getElementById('res-msg-go').innerHTML=
+      `Você marcou apenas <strong>${golsBR} gols</strong>.<br>
+       Precisava de 3 para avançar!<br><br>
+       <em>Tente de novo, craque! 💪</em>`;
+    document.getElementById('tela-gameover').classList.remove('hidden');
+  }
+}
+
+function mostrarCampeao(){
+  som('campeao');confete(80);
+  // Estrelas
+  const ec=document.getElementById('estrelas');
+  const emjs=['⭐','🌟','✨','🎉','🏆','🎊'];
+  for(let i=0;i<40;i++){
+    const el=document.createElement('div');
+    el.className='est';
+    el.textContent=emjs[Math.floor(Math.random()*emjs.length)];
+    el.style.cssText=`left:${Math.random()*100}vw;animation-duration:${3+Math.random()*4}s;animation-delay:${Math.random()*3}s`;
+    ec.appendChild(el);
+  }
+  const j=JOGADORES[Math.floor(Math.random()*JOGADORES.length)];
+  document.getElementById('caricatura-wrap').innerHTML=j.svg;
+  document.getElementById('camp-nome').textContent=j.nome;
+  document.getElementById('camp-pais').textContent=j.pais;
+  document.getElementById('camp-frase').textContent=j.frase;
+  document.getElementById('tela-campeao').classList.remove('hidden');
+}
+
+function proximaFase(){
+  document.getElementById('tela-intervalo').classList.add('hidden');
+  faseAtual++;iniciarFase();
+}
+
+function reiniciarJogo(){
+  document.getElementById('tela-gameover').classList.add('hidden');
+  document.getElementById('tela-campeao').classList.add('hidden');
+  document.getElementById('estrelas').innerHTML='';
+  faseAtual=0;iniciarFase();
+}
+
+// Inicia mostrando jogo-wrap oculto
+document.getElementById('jogo-wrap').style.display='none';
+</script>
+</body>
+</html>
