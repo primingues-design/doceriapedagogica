@@ -152,9 +152,9 @@ export default function Home() {
           <div className="rounded-3xl bg-white p-8 border border-[#C8742A]/10 shadow-sm">
             <span className="text-sm font-semibold uppercase text-[#C8742A]">Grátis</span>
             <h3 className="text-3xl font-bold text-[#3D1F0D] mt-4 mb-3">Starter</h3>
-            <p className="text-[#8A7060] mb-6">Acesso a recursos básicos e modelos para começar a criar.</p>
+            <p className="text-[#8A7060] mb-6">Para conhecer a plataforma e experimentar as ferramentas.</p>
             <div className="space-y-3 text-sm text-[#6B3A1F]">
-              <p>✓ 5 créditos de geração por mês</p>
+              <p>✓ 5 gerações por mês</p>
               <p>✓ Todas as ferramentas disponíveis</p>
               <p>✓ Download em PDF</p>
             </div>
@@ -166,9 +166,9 @@ export default function Home() {
           <div className="rounded-3xl bg-[#C8742A] text-white p-8 shadow-xl border border-[#C8742A]/20">
             <span className="text-sm font-semibold uppercase">Mais popular</span>
             <h3 className="text-3xl font-bold mt-4 mb-3">Profissional</h3>
-            <p className="mb-6 opacity-90">Geração ilimitada e acesso completo a todas as ferramentas.</p>
+            <p className="mb-6 opacity-90">Para a professora ativa que cria materiais toda semana.</p>
             <div className="space-y-3 text-sm opacity-90">
-              <p>✓ Créditos ilimitados</p>
+              <p>✓ 40 gerações por mês</p>
               <p>✓ Todas as ferramentas de IA</p>
               <p>✓ Suporte prioritário</p>
             </div>
@@ -178,16 +178,16 @@ export default function Home() {
           </div>
 
           <div className="rounded-3xl bg-white p-8 border border-[#C8742A]/10 shadow-sm">
-            <span className="text-sm font-semibold uppercase text-[#C8742A]">Equipe</span>
+            <span className="text-sm font-semibold uppercase text-[#C8742A]">Escola</span>
             <h3 className="text-3xl font-bold text-[#3D1F0D] mt-4 mb-3">Institucional</h3>
-            <p className="text-[#8A7060] mb-6">Para escolas e redes que precisam de gerenciamento e relatórios.</p>
+            <p className="text-[#8A7060] mb-6">10 professoras com conta própria, cada uma com sua cota individual.</p>
             <div className="space-y-3 text-sm text-[#6B3A1F]">
-              <p>✓ Equipe ilimitada</p>
-              <p>✓ Ferramentas colaborativas</p>
-              <p>✓ Relatórios de uso</p>
+              <p>✓ 10 contas independentes</p>
+              <p>✓ 40 gerações por professora/mês</p>
+              <p>✓ Painel de gestão da escola</p>
             </div>
-            <Link href="/conta.html" className="mt-8 inline-flex w-full justify-center rounded-full bg-[#C8742A] px-6 py-3 text-sm font-semibold text-white hover:bg-[#6B3A1F] transition">
-              Solicitar demo
+            <Link href="mailto:doceriapedagogica@gmail.com" className="mt-8 inline-flex w-full justify-center rounded-full bg-[#C8742A] px-6 py-3 text-sm font-semibold text-white hover:bg-[#6B3A1F] transition">
+              Falar com a equipe
             </Link>
           </div>
         </div>
