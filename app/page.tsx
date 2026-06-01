@@ -200,7 +200,12 @@ export default function Home() {
             <div className="w-7 h-7 bg-[#C8742A] rounded-lg flex items-center justify-center text-white text-xs">🍰</div>
             Doceria Pedagógica
           </div>
-          <p className="text-sm text-[#8A7060]">© 2025 Doceria Pedagógica. Feito com carinho para professores brasileiros.</p>
+          <div className="flex flex-col sm:flex-row items-center gap-3 text-sm text-[#8A7060]">
+            <p>© 2025 Doceria Pedagógica. Feito com carinho para professores brasileiros.</p>
+            <a href="mailto:doceriapedagogica@gmail.com" className="text-[#C8742A] hover:underline whitespace-nowrap">
+              ✉ doceriapedagogica@gmail.com
+            </a>
+          </div>
           <Link href="/conta.html" className="text-sm text-[#C8742A] font-semibold hover:underline">Entrar na plataforma →</Link>
         </div>
       </footer>
