@@ -9,18 +9,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: "https://doceriapedagogica.com/login",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: "https://doceriapedagogica.com/cadastro",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
       url: "https://doceriapedagogica.com/politica-de-privacidade",
       lastModified: new Date(),
       changeFrequency: "yearly",
