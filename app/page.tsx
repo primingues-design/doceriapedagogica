@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useEffect } from 'react'
 
 const SUPABASE_KEY = 'sb-atkwvwhwbkerezdmipxw-auth-token'
@@ -37,36 +38,52 @@ export default function Home() {
       </nav>
 
       {/* HERO */}
-      <section className="pt-32 pb-20 px-8 max-w-5xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 bg-[#C8742A]/10 border border-[#C8742A]/20 text-[#C8742A] px-4 py-1.5 rounded-full text-xs font-bold mb-6">
-          ✨ IA especialmente para professores brasileiros
-        </div>
-        <h1 className="text-5xl font-bold text-[#3D1F0D] leading-tight mb-6">
-          Prepare aulas <span className="text-[#C8742A] italic">incríveis</span><br />em minutos, não em horas
-        </h1>
-        <p className="text-lg text-[#8A7060] max-w-2xl mx-auto mb-10">
-          A Doceria Pedagógica usa inteligência artificial para gerar planos de aula, atividades, jogos e avaliações — tudo pronto para usar ou imprimir.
-        </p>
-        <div className="flex gap-4 justify-center">
-          <Link href="/conta.html" className="bg-[#C8742A] text-white px-8 py-4 rounded-full font-semibold hover:bg-[#6B3A1F] transition text-lg">
-            🎯 Começar de graça
-          </Link>
-          <Link href="#ferramentas" className="border-2 border-[#3D1F0D]/20 text-[#3D1F0D] px-8 py-4 rounded-full font-medium hover:border-[#C8742A] hover:text-[#C8742A] transition text-lg">
-            Ver ferramentas →
-          </Link>
+      <section className="pt-32 pb-20 px-8 max-w-5xl mx-auto">
+        <div className="flex flex-col md:flex-row items-center gap-10">
+          {/* Texto */}
+          <div className="flex-1 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 bg-[#C8742A]/10 border border-[#C8742A]/20 text-[#C8742A] px-4 py-1.5 rounded-full text-xs font-bold mb-6">
+              ✨ IA especialmente para professores brasileiros
+            </div>
+            <h1 className="text-5xl font-bold text-[#3D1F0D] leading-tight mb-6">
+              Prepare aulas <span className="text-[#C8742A] italic">incríveis</span><br />em minutos, não em horas
+            </h1>
+            <p className="text-lg text-[#8A7060] max-w-xl mb-10">
+              A Doceria Pedagógica usa inteligência artificial para gerar planos de aula, atividades, jogos e avaliações — tudo pronto para usar ou imprimir.
+            </p>
+            <div className="flex gap-4 justify-center md:justify-start">
+              <Link href="/conta.html" className="bg-[#C8742A] text-white px-8 py-4 rounded-full font-semibold hover:bg-[#6B3A1F] transition text-lg">
+                🎯 Começar de graça
+              </Link>
+              <Link href="#ferramentas" className="border-2 border-[#3D1F0D]/20 text-[#3D1F0D] px-8 py-4 rounded-full font-medium hover:border-[#C8742A] hover:text-[#C8742A] transition text-lg">
+                Ver ferramentas →
+              </Link>
+            </div>
+          </div>
+
+          {/* Mascote */}
+          <div className="flex-shrink-0 rounded-3xl overflow-hidden shadow-xl border border-[#C8742A]/10 bg-white">
+            <Image
+              src="/mascote.png"
+              alt="Mascote da Doceria Pedagógica"
+              width={320}
+              height={320}
+              priority
+            />
+          </div>
         </div>
 
         {/* STATS */}
         <div className="flex flex-col sm:flex-row justify-center gap-12 mt-12">
-          <div>
+          <div className="text-center">
             <div className="text-3xl font-bold text-[#C8742A]">+12</div>
             <div className="text-sm text-[#8A7060]">ferramentas de IA</div>
           </div>
-          <div>
+          <div className="text-center">
             <div className="text-3xl font-bold text-[#C8742A]">15h</div>
             <div className="text-sm text-[#8A7060]">economizadas por semana</div>
           </div>
-          <div>
+          <div className="text-center">
             <div className="text-3xl font-bold text-[#C8742A]">100%</div>
             <div className="text-sm text-[#8A7060]">pronto para imprimir</div>
           </div>
@@ -154,7 +171,7 @@ export default function Home() {
             <h3 className="text-3xl font-bold text-[#3D1F0D] mt-4 mb-3">Starter</h3>
             <p className="text-[#8A7060] mb-6">Para conhecer a plataforma e experimentar as ferramentas.</p>
             <div className="space-y-3 text-sm text-[#6B3A1F]">
-              <p>✓ 5 gerações por mês</p>
+              <p>✓ 10 gerações no 1º mês, depois 5/mês</p>
               <p>✓ Todas as ferramentas disponíveis</p>
               <p>✓ Download em PDF</p>
             </div>

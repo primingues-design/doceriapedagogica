@@ -27,8 +27,8 @@ module.exports = async (req, res) => {
 
     // 3. Determine what to grant
     const GRANTS = {
-      plan_pro_mensal: { plan: 'Pro',    credits: 999, days: 31 },
-      plan_escola:     { plan: 'Escola', credits: 999, days: 31 },
+      plan_pro_mensal: { plan: 'Pro',    credits: 40,  days: 31 },
+      plan_escola:     { plan: 'Escola', credits: 400, days: 31 },
       pack_10:         { addCredits: 10  },
       pack_30:         { addCredits: 30  },
       pack_60:         { addCredits: 60  },

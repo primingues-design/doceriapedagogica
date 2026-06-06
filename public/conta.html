@@ -1232,8 +1232,8 @@
             <div class="plan-price">R$0</div>
             <div class="plan-period">para sempre</div>
             <div class="plan-credits-box">
-              <div class="plan-credits-num">5</div>
-              <div class="plan-credits-label">gerações por mês<br>renovam no 1º de cada mês</div>
+              <div class="plan-credits-num">10</div>
+              <div class="plan-credits-label">gerações no 1º mês<br>depois 5/mês • renovam no dia 1º</div>
             </div>
             <ul class="plan-features">
               <li class="plan-feature"><span class="plan-check">✓</span>Acesso a todos os geradores</li>
@@ -1265,7 +1265,7 @@
 
           <div class="plan-card" id="plan-card-escola">
             <div class="plan-name">Escola</div>
-            <div class="plan-price">R$179,00</div>
+            <div class="plan-price">R$179,90</div>
             <div class="plan-period">/mês • 10 contas independentes</div>
             <div class="plan-credits-box">
               <div class="plan-credits-num">400</div>
@@ -1663,7 +1663,7 @@
     const initials = name.charAt(0).toUpperCase();
     const credits = currentUser.credits ?? 5;
     const plan = currentUser.plan || 'Free';
-    const maxCredits = plan === 'Pro' ? 60 : plan === 'Escola' ? 400 : 5;
+    const maxCredits = plan === 'Pro' ? 40 : plan === 'Escola' ? 400 : 10;
     const barPct = Math.min(100, Math.round((credits / maxCredits) * 100));
 
     // greeting
@@ -1745,7 +1745,7 @@
 
     const pid = currentOrder.productId;
     const creditsMap = {
-      plan_pro_mensal: 999, plan_escola: 999,
+      plan_pro_mensal: 40, plan_escola: 400,
       pack_10: 10, pack_30: 30, pack_60: 60, pack_120: 120
     };
     const added = creditsMap[pid] || 10;
