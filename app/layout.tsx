@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   verification: {
     google: "FqfYkNg6Cv9BtVUeRa9YRylylOHduILeGaI2WWSTEQg",
   },
+  other: {
+    "p:domain_verify": "5c3d58fde501e6299a87f3454a4ea932",
+  },
 };
 
 export default function RootLayout({
