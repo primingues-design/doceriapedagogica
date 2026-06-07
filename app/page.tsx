@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { useEffect } from 'react'
 
 const SUPABASE_KEY = 'sb-atkwvwhwbkerezdmipxw-auth-token'
@@ -59,17 +58,6 @@ export default function Home() {
                 Ver ferramentas →
               </Link>
             </div>
-          </div>
-
-          {/* Mascote */}
-          <div className="flex-shrink-0 rounded-3xl overflow-hidden shadow-xl border border-[#C8742A]/10 bg-white">
-            <Image
-              src="/mascote.png"
-              alt="Mascote da Doceria Pedagógica"
-              width={320}
-              height={320}
-              priority
-            />
           </div>
         </div>
 
