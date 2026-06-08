@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { pdf } from '@react-pdf/renderer'
+import { downloadBlob } from '@/app/professor/utils/downloadBlob'
 import { gerarCruzadinha } from '@/app/professor/generators/cruzadinha'
 import { PdfCruzadinhaDoc } from '@/app/professor/components/pdf/PdfCruzadinhaDoc'
 import { getTemplateConfig } from '@/app/professor/templates'
@@ -131,14 +132,7 @@ export default function CruzadinhaPage() {
         />
       ).toBlob()
 
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `DoceriaPedagogica_Cruzadinha_${nomeArquivo}.pdf`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      URL.revokeObjectURL(url)
+      downloadBlob(blob, `DoceriaPedagogica_Cruzadinha_${nomeArquivo}.pdf`)
     } catch (e) {
       console.error(e)
     } finally {

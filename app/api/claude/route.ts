@@ -48,6 +48,8 @@ export async function POST(request: NextRequest) {
   const plan: string = profile.plan || 'Free';
   let credits: number = profile.credits ?? 10;
 
+  const PLAN_MONTHLY_CREDITS: Record<string, number> = { Pro: 40, Escola: 400 };
+
   if (plan === 'Free') {
     const refDate = profile.credits_reset_at || profile.created_at;
     if (refDate) {
@@ -58,6 +60,29 @@ export async function POST(request: NextRequest) {
           method: 'PATCH',
           headers: { Prefer: 'return=minimal' },
           body: JSON.stringify({ credits: 5, credits_reset_at: new Date().toISOString() }),
+        });
+      }
+    }
+  } else if (plan in PLAN_MONTHLY_CREDITS) {
+    const monthlyLimit = PLAN_MONTHLY_CREDITS[plan];
+    const refDate = profile.credits_reset_at;
+
+    if (!refDate) {
+      // Primeiro acesso pago sem data de reset — inicia o ciclo e corrige legado (ex: 999 créditos)
+      if (credits > monthlyLimit) credits = monthlyLimit;
+      await supaFetch(`/profiles?id=eq.${userId}`, {
+        method: 'PATCH',
+        headers: { Prefer: 'return=minimal' },
+        body: JSON.stringify({ credits, credits_reset_at: new Date().toISOString() }),
+      });
+    } else {
+      const daysSince = (Date.now() - new Date(refDate).getTime()) / 86_400_000;
+      if (daysSince >= 30) {
+        credits = monthlyLimit;
+        await supaFetch(`/profiles?id=eq.${userId}`, {
+          method: 'PATCH',
+          headers: { Prefer: 'return=minimal' },
+          body: JSON.stringify({ credits: monthlyLimit, credits_reset_at: new Date().toISOString() }),
         });
       }
     }

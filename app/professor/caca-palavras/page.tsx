@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { pdf } from '@react-pdf/renderer'
+import { downloadBlob } from '@/app/professor/utils/downloadBlob'
 import { gerarCacaPalavrasComGabarito } from '@/app/professor/generators/cacaPalavras'
 import { PdfCacaPalavrasDoc } from '@/app/professor/components/pdf/PdfCacaPalavrasDoc'
 import { getTemplateConfig } from '@/app/professor/templates'
@@ -148,14 +149,7 @@ export default function CacaPalavrasPage() {
         />
       ).toBlob()
 
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `DoceriaPedagogica_CacaPalavras_${nomeArquivo}.pdf`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      URL.revokeObjectURL(url)
+      downloadBlob(blob, `DoceriaPedagogica_CacaPalavras_${nomeArquivo}.pdf`)
     } catch (e) {
       console.error(e)
     } finally {

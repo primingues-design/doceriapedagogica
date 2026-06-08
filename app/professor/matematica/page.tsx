@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { pdf } from '@react-pdf/renderer'
+import { downloadBlob } from '@/app/professor/utils/downloadBlob'
 import { gerarProblemas, opLabel, type OpKey, type Dificuldade, type Problema } from './generators'
 import { PdfMatematicaDoc } from '@/app/professor/components/pdf/PdfMatematicaDoc'
 
@@ -54,14 +55,7 @@ export default function MatematicaPage() {
         />
       ).toBlob()
 
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `DoceriaPedagogica_Matematica_${label.replace(/\s/g,'_')}_${difLbl}.pdf`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      URL.revokeObjectURL(url)
+      downloadBlob(blob, `DoceriaPedagogica_Matematica_${label.replace(/\s/g,'_')}_${difLbl}.pdf`)
     } catch (e) {
       console.error(e)
     } finally {

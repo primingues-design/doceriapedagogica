@@ -4,6 +4,7 @@ import { pdf } from '@react-pdf/renderer';
 import type { DocumentoPDF } from '../types/pdf.types';
 import { PdfDocumento } from '../components/pdf/PdfDocument';
 import { getTemplateConfig } from '../templates';
+import { downloadBlob } from '../utils/downloadBlob';
 
 interface UseGerarPdfReturn {
   gerando: boolean;
@@ -29,14 +30,7 @@ export function useGerarPdf(): UseGerarPdfReturn {
         <PdfDocumento documento={documento} config={config} />
       ).toBlob();
 
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${nomeArquivo}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      downloadBlob(blob, `${nomeArquivo}.pdf`);
     } catch (e) {
       console.error('Erro ao gerar PDF:', e);
       setErro('Não foi possível gerar o PDF. Tente novamente.');

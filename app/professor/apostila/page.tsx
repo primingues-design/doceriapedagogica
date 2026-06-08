@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { pdf } from '@react-pdf/renderer'
+import { downloadBlob } from '@/app/professor/utils/downloadBlob'
 import { PdfApostilaDoc } from '@/app/professor/components/pdf/PdfApostilaDoc'
 import { getTemplateConfig } from '@/app/professor/templates'
 import type { NomeTemplate } from '@/app/professor/types/pdf.types'
@@ -198,14 +199,7 @@ REGRAS ABSOLUTAS:
         <PdfApostilaDoc dados={dados} config={config} data={dataStr} />
       ).toBlob()
 
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `DoceriaPedagogica_${nomeArquivo}.pdf`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      URL.revokeObjectURL(url)
+      downloadBlob(blob, `DoceriaPedagogica_${nomeArquivo}.pdf`)
     } catch (e) {
       console.error(e)
     } finally {
