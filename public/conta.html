@@ -1282,7 +1282,7 @@
           </div>
 
           <div class="plan-card featured" id="plan-card-pro">
-            <div class="plan-badge popular">🚀 Lançamento</div>
+            <div class="plan-badge popular" id="plan-badge-pro">🚀 Lançamento</div>
             <div class="plan-name">Pro</div>
             <div class="plan-price">R$19,90</div>
             <div class="plan-period">/mês • cancele quando quiser</div>
@@ -1813,6 +1813,57 @@
 
     const bar = document.getElementById('sb-bar');
     if (bar) bar.style.width = barPct + '%';
+
+    // ── PLAN CARDS (atualiza badge, botão e borda conforme plano real) ──
+    const isPro    = plan === 'Pro';
+    const isEscola = plan === 'Escola';
+    const isFree   = !isPro && !isEscola;
+
+    // Borda de destaque no card correto
+    const cardFree   = document.getElementById('plan-card-free');
+    const cardPro    = document.getElementById('plan-card-pro');
+    const cardEscola = document.getElementById('plan-card-escola');
+    if (cardFree)   cardFree.classList.toggle('current', isFree);
+    if (cardPro)    cardPro.classList.toggle('current', isPro);
+    if (cardEscola) cardEscola.classList.toggle('current', isEscola);
+
+    // Badges
+    const badgeFree = document.getElementById('plan-badge-free');
+    if (badgeFree) {
+      badgeFree.style.display = isFree ? '' : 'none';
+    }
+    const badgePro = document.getElementById('plan-badge-pro');
+    if (badgePro) {
+      if (isPro) {
+        badgePro.textContent = 'Seu plano atual';
+        badgePro.className = 'plan-badge current-badge';
+      } else {
+        badgePro.textContent = '🚀 Lançamento';
+        badgePro.className = 'plan-badge popular';
+      }
+    }
+
+    // Botões
+    const btnFree = document.getElementById('btn-free');
+    if (btnFree) {
+      btnFree.textContent = isFree ? 'Plano atual' : 'Fazer downgrade';
+      btnFree.className   = isFree ? 'btn-plan btn-plan-current' : 'btn-plan btn-plan-outline';
+      btnFree.disabled    = isFree;
+    }
+    const btnPro = document.getElementById('btn-pro');
+    if (btnPro) {
+      if (isPro) {
+        btnPro.textContent = '✓ Plano atual';
+        btnPro.className   = 'btn-plan btn-plan-current';
+        btnPro.disabled    = true;
+        btnPro.onclick     = null;
+      } else {
+        btnPro.textContent = '⚡ Assinar por R$19,90';
+        btnPro.className   = 'btn-plan btn-plan-gold';
+        btnPro.disabled    = false;
+        btnPro.onclick     = function(){ doCheckout('plan_pro_mensal', this); };
+      }
+    }
   }
 
   // ── HISTÓRICO DE ATIVIDADES ──
