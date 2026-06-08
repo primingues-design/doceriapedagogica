@@ -264,29 +264,27 @@ export default function Home() {
             <div className="text-[#C8742A] text-xs font-bold uppercase tracking-widest mb-3">Quem já usa</div>
             <h2 className="text-3xl font-bold text-[#3D1F0D]">Professoras que ganharam tempo — e alunos que aprenderam mais</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* ⚠️ Adicione mais cards aqui quando tiver novos depoimentos reais */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             {[
               {
-                texto: '"Gerei uma atividade de alfabetização sobre animais em menos de 1 minuto. Minha turma amou e eu não precisei editar nada!"',
-                nome: 'Professora Mariana',
-                cargo: 'Ed. Infantil · Escola Pública',
+                texto: '"Eu estava nesse exato momento fazendo as provas de geografia e já fiz por lá! Dá certo! Amanhã vou parear o celular com a TV da minha sala e fazer um Quiz com a turma!"',
+                nome: 'Professora Luciana',
+                cargo: '5º Ano · Escola Pública',
+                inicial: 'L',
               },
               {
-                texto: '"Uso a Aula do Dia toda semana. A IA já sugere um tema ligado ao que está acontecendo — é perfeito para contextualizar o conteúdo."',
-                nome: 'Professora Juliana',
-                cargo: '4º Ano · Fundamental I',
+                texto: '"Dá pra explorar demais! Sempre que termino um conteúdo gosto de dar um jogo online específico daquilo. No site consigo gerar do jeitinho que eu quiser — bem específico da matéria que acabei de dar. Espelho o celular no projetor e um aluno joga enquanto os outros assistem. Dá até pra alfabetização em inglês!"',
+                nome: 'Professora Cristiane',
+                cargo: 'Inglês · Escola Pública',
+                inicial: 'C',
               },
-              {
-                texto: '"O quiz interativo na TV salvou minha aula de revisão. Os alunos ficaram animadíssimos e eu criei em 2 minutos antes de entrar na sala."',
-                nome: 'Professora Fernanda',
-                cargo: '7º Ano · Ciências',
-              },
-            ].map(({ texto, nome, cargo }) => (
+            ].map(({ texto, nome, cargo, inicial }) => (
               <div key={nome} className="bg-white rounded-2xl p-6 border border-[#C8742A]/10 shadow-sm flex flex-col gap-4">
                 <p className="text-[#6B3A1F] text-sm leading-relaxed italic flex-1">{texto}</p>
                 <div className="flex items-center gap-3 pt-4 border-t border-[#C8742A]/10">
                   <div className="w-9 h-9 rounded-full bg-[#C8742A]/20 flex items-center justify-center text-[#C8742A] font-bold text-sm flex-shrink-0">
-                    {nome.split(' ')[1]?.[0] ?? '?'}
+                    {inicial}
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-[#3D1F0D]">{nome}</p>
