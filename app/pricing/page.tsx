@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 
+export const dynamic = 'force-static'
+
 export default function PricingPage() {
   const [anual, setAnual] = useState(false)
 
@@ -235,7 +237,7 @@ export default function PricingPage() {
             Doceria Pedagógica
           </Link>
           <div className="flex flex-col sm:flex-row items-center gap-3 text-sm text-[#8A7060] text-center">
-            <p>© 2025 Doceria Pedagógica. Feito com carinho para professores brasileiros.</p>
+            <p>© {new Date().getFullYear()} Doceria Pedagógica. Feito com carinho para professores brasileiros.</p>
             <a href="mailto:contato@doceriapedagogica.com" className="text-[#C8742A] hover:underline whitespace-nowrap">
               ✉ contato@doceriapedagogica.com
             </a>
