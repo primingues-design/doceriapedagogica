@@ -450,6 +450,7 @@ REGRAS: Use emojis reconhecidos no Brasil. Vocabulário adequado ao nível. Para
       try{parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());}
       catch(e){throw new Error('Formato inesperado. Tente novamente.');}
       renderDocument(parsed,tema,nivel);
+      if(typeof dpSalvar==='function') dpSalvar('alfabetizacao',tema,nivel,parsed.titulo||tema,'#docWrapper');
     }catch(err){
       console.error(err);
       errorBox.textContent='Erro ao gerar: '+(err.message||'Tente novamente.');
@@ -613,5 +614,6 @@ REGRAS: Use emojis reconhecidos no Brasil. Vocabulário adequado ao nível. Para
   function delay(ms){return new Promise(r=>setTimeout(r,ms));}
 </script>
 <script src="/js/dp-auth.js"></script>
+<script src="/js/dp-salvar.js"></script>
 </body>
 </html>

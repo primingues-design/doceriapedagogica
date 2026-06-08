@@ -15,7 +15,7 @@
   window.fetch = function (input, init) {
     const url = typeof input === 'string' ? input
       : input instanceof Request ? input.url : '';
-    if (url.includes('/api/claude')) {
+    if (url.includes('/api/claude') || url.includes('/api/salvar-atividade')) {
       const token = getToken();
       if (token) {
         init = init || {};

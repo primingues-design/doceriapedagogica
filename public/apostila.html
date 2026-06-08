@@ -422,6 +422,7 @@ REGRAS: Retorne SOMENTE JSON válido começando com { e terminando com }. Sem ma
       document.getElementById('progBar').style.width='100%';
       await delay(300);
       renderApostila(parsed,tema,nivel,disciplina);
+      if(typeof dpSalvar==='function') dpSalvar('apostila',tema,nivel,parsed.titulo||tema,'#docWrap');
     }catch(err){
       errBox.textContent='Erro: '+(err.message||'Tente novamente.');
       errBox.classList.add('show');
@@ -632,5 +633,6 @@ REGRAS FINAIS: Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) t
   }
 </script>
 <script src="/js/dp-auth.js"></script>
+<script src="/js/dp-salvar.js"></script>
 </body>
 </html>

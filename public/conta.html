@@ -487,6 +487,16 @@
 
   .history-dl:hover { background: var(--warm); }
 
+  .btn-reimprimir {
+    font-size: 12px; font-weight: 600; font-family: 'Outfit', sans-serif;
+    color: var(--gold); background: none;
+    border: 1.5px solid var(--gold); border-radius: 20px;
+    padding: 5px 14px; cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .btn-reimprimir:hover { background: var(--gold); color: #fff; }
+
   /* ── PLANS SCREEN ── */
   .plans-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 32px; }
 
@@ -989,6 +999,9 @@
         <button class="dash-nav-item" onclick="window.open('maonaMassa.html')">
           <span class="dash-nav-icon">🔨</span> Mão na Massa
         </button>
+        <button class="dash-nav-item" onclick="showScreen('screen-history')">
+          <span class="dash-nav-icon">📄</span> PDFs Baixados
+        </button>
         <div class="dash-nav-sep"></div>
         <button class="dash-nav-item" onclick="showScreen('screen-plans')">
           <span class="dash-nav-icon">⭐</span> Planos e créditos
@@ -1042,10 +1055,10 @@
             <div class="stat-value" id="stat-credits">5</div>
             <div class="stat-sub"><a style="color:var(--gold);cursor:pointer;font-size:12px;" onclick="showScreen('screen-plans')">+ Comprar créditos</a></div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card" onclick="showScreen('screen-history')" style="cursor:pointer;" title="Ver histórico">
             <div class="stat-label">PDFs baixados</div>
             <div class="stat-value" id="stat-pdfs">0</div>
-            <div class="stat-sub">prontos para impressão</div>
+            <div class="stat-sub"><a style="color:var(--gold);cursor:pointer;font-size:12px;">Ver histórico →</a></div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Seu plano</div>
@@ -1192,6 +1205,9 @@
         </button>
         <button class="dash-nav-item" onclick="window.open('maonaMassa.html')">
           <span class="dash-nav-icon">🔨</span> Mão na Massa
+        </button>
+        <button class="dash-nav-item" onclick="showScreen('screen-history')">
+          <span class="dash-nav-icon">📄</span> PDFs Baixados
         </button>
         <div class="dash-nav-sep"></div>
         <button class="dash-nav-item active">
@@ -1440,6 +1456,80 @@
   </div>
 </div>
 
+<!-- ══════════════════════════════════
+     SCREEN: HISTORY
+══════════════════════════════════ -->
+<div class="screen" id="screen-history">
+  <div class="dash-layout">
+    <div class="dash-sidebar">
+      <a class="dash-logo" href="/">
+        <div class="dash-logo-mark">✦</div>
+        <span class="dash-logo-name">Doceria</span>
+      </a>
+      <nav class="dash-nav">
+        <button class="dash-nav-item" onclick="showScreen('screen-dashboard')">
+          <span class="dash-nav-icon">🏠</span> Início
+        </button>
+        <button class="dash-nav-item" onclick="window.open('apostila.html')">
+          <span class="dash-nav-icon">📚</span> Atividade
+        </button>
+        <button class="dash-nav-item" onclick="window.open('lousa.html')">
+          <span class="dash-nav-icon">🖊️</span> Aula na Lousa
+        </button>
+        <button class="dash-nav-item" onclick="window.open('auladadia.html')">
+          <span class="dash-nav-icon">📰</span> Aula do Dia
+        </button>
+        <button class="dash-nav-item" onclick="window.open('maonaMassa.html')">
+          <span class="dash-nav-icon">🔨</span> Mão na Massa
+        </button>
+        <button class="dash-nav-item active">
+          <span class="dash-nav-icon">📄</span> PDFs Baixados
+        </button>
+        <div class="dash-nav-sep"></div>
+        <button class="dash-nav-item" onclick="showScreen('screen-plans')">
+          <span class="dash-nav-icon">⭐</span> Planos e créditos
+        </button>
+      </nav>
+      <div class="dash-plan-badge">
+        <div class="dash-plan-name" id="sb-plan-name3">Plano Free</div>
+        <div class="dash-plan-credits" id="sb-credits3">5</div>
+        <div class="dash-plan-sub">créditos disponíveis</div>
+      </div>
+      <div class="dash-user">
+        <div class="dash-avatar" id="dash-avatar3">M</div>
+        <div>
+          <div class="dash-user-name" id="dash-user-name3">Professora</div>
+          <div class="dash-user-email" id="dash-user-email3">email@escola.com</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">↩ Sair da conta</button>
+      <div class="sidebar-contact">✉ <a href="mailto:doceriapedagogica@gmail.com">doceriapedagogica@gmail.com</a></div>
+    </div>
+
+    <div class="dash-content">
+      <div class="dash-topbar">
+        <div>
+          <div class="dash-page-title">📄 PDFs Baixados</div>
+          <div class="dash-page-sub">Reimprima qualquer material gerado anteriormente</div>
+        </div>
+        <div class="dash-topbar-right">
+          <div class="credits-chip" onclick="showScreen('screen-plans')">
+            ✦ <span id="top-credits3">5</span> créditos
+          </div>
+        </div>
+      </div>
+      <div class="dash-body">
+        <div id="history-full-list">
+          <div style="padding:48px;text-align:center;color:var(--text-muted);">
+            <div style="font-size:40px;margin-bottom:14px;opacity:0.25;">📄</div>
+            <div style="font-size:15px;font-weight:500;">Carregando histórico...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   // ── SUPABASE ──
   const { createClient } = supabase;
@@ -1518,16 +1608,21 @@
     if (event === 'SIGNED_OUT') { currentUser = null; showScreen('screen-login'); }
   });
 
+  // ── HISTORY DATA MAP (evita inline HTML escaping nos buttons) ──
+  const _historyMap = {};
+
   // ── SCREEN NAVIGATION ──
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    if (id === 'screen-dashboard' || id === 'screen-plans') updateDashUI();
+    if (id === 'screen-dashboard' || id === 'screen-plans' || id === 'screen-history') updateDashUI();
+    if (id === 'screen-history') loadHistory('history-full-list', 50);
   }
 
   function showDashboard() {
     showScreen('screen-dashboard');
     updateDashUI();
+    loadHistory('history-list', 5);
   }
 
   // ── CARREGAR PERFIL DO BANCO ──
@@ -1675,9 +1770,12 @@
     ['dash-avatar','dash-avatar2'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=initials; });
     ['dash-user-name','dash-user-name2'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=name; });
     ['dash-user-email','dash-user-email2'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=currentUser.email; });
-    ['sb-plan-name','sb-plan-name2'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent='Plano ' + plan; });
-    ['sb-credits','sb-credits2'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=credits; });
-    ['top-credits'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=credits; });
+    ['sb-plan-name','sb-plan-name2','sb-plan-name3'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent='Plano ' + plan; });
+    ['sb-credits','sb-credits2','sb-credits3'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=credits; });
+    ['top-credits','top-credits3'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=credits; });
+    ['dash-avatar3'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=initials; });
+    ['dash-user-name3'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=name; });
+    ['dash-user-email3'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=currentUser.email; });
     ['stat-credits'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=credits; });
     ['stat-plan'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=plan; });
     ['stat-total'].forEach(id => { const e=document.getElementById(id); if(e) e.textContent=currentUser.totalMaterials||0; });
@@ -1685,6 +1783,83 @@
 
     const bar = document.getElementById('sb-bar');
     if (bar) bar.style.width = barPct + '%';
+  }
+
+  // ── HISTÓRICO DE ATIVIDADES ──
+
+  const TIPO_CONFIG = {
+    apostila:      { icon: '📚', label: 'Atividade/Apostila', cor: '#c8742a' },
+    plano:         { icon: '📋', label: 'Plano de Aula',      cor: '#3d9e6e' },
+    slides:        { icon: '🎞️', label: 'Slides',             cor: '#7c6af5' },
+    mapa:          { icon: '🗺️', label: 'Mapa/Esquema',       cor: '#e9742a' },
+    alfabetizacao: { icon: '🖍️', label: 'Alfabetização',      cor: '#3d9e6e' },
+  };
+
+  async function loadHistory(targetId, limit = 10) {
+    if (!currentUser) return;
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    try {
+      const { data, error } = await sb
+        .from('atividades_salvas')
+        .select('id, tipo, tema, nivel, titulo, conteudo_html, created_at')
+        .eq('user_id', currentUser.id)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+      if (error || !data?.length) {
+        target.innerHTML = `
+          <div style="padding:40px;text-align:center;color:var(--text-muted);background:var(--cream);border-radius:12px;border:1px solid var(--border);">
+            <div style="font-size:38px;margin-bottom:12px;opacity:0.25;">📄</div>
+            <div style="font-size:14px;font-weight:500;">Nenhum material salvo ainda.</div>
+            <div style="font-size:12px;margin-top:6px;">Gere uma atividade e o histórico aparecerá aqui!</div>
+          </div>`;
+        return;
+      }
+
+      const html = data.map(item => {
+        _historyMap[item.id] = item.conteudo_html || '';
+        const cfg = TIPO_CONFIG[item.tipo] || { icon: '📄', label: item.tipo, cor: '#c8742a' };
+        const date = new Date(item.created_at).toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
+        const hasPrint = !!item.conteudo_html;
+        return `
+          <div class="history-item">
+            <div class="history-icon" style="background:${cfg.cor}22;">
+              <span>${cfg.icon}</span>
+            </div>
+            <div class="history-meta">
+              <div class="history-name">${item.titulo || item.tema || 'Material sem título'}</div>
+              <div class="history-info">${cfg.label} • ${item.nivel || ''} • ${date}</div>
+            </div>
+            ${hasPrint
+              ? `<button class="btn-reimprimir" onclick="reimprimir('${item.id}')">🖨️ Reimprimir</button>`
+              : `<span class="history-dl" title="Conteúdo indisponível">—</span>`
+            }
+          </div>`;
+      }).join('');
+
+      target.innerHTML = `<div class="history-list">${html}</div>`;
+
+      // Atualiza stat-pdfs com o total (apenas para o targetId principal)
+      if (targetId === 'history-full-list') {
+        const el = document.getElementById('stat-pdfs');
+        if (el) el.textContent = data.length;
+        if (currentUser) currentUser.totalPdfs = data.length;
+      }
+    } catch (_) {
+      target.innerHTML = `<div style="padding:28px;text-align:center;color:var(--text-muted);">Erro ao carregar histórico.</div>`;
+    }
+  }
+
+  function reimprimir(id) {
+    const html = _historyMap[id];
+    if (!html) return;
+    const win = window.open('', '_blank');
+    if (!win) { alert('Permita pop-ups para reimprimir.'); return; }
+    win.document.write(html);
+    win.document.close();
+    win.print();
   }
 
   // ── PAYMENT — Mercado Pago Checkout ──

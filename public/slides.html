@@ -842,11 +842,18 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
       el.style.width = '100%';
       el.style.height = '100%';
     });
+    if (typeof dpSalvar === 'function') {
+      const tema = document.getElementById('tema').value.trim();
+      const nivel = document.getElementById('nivel').value;
+      const titulo = document.getElementById('playerTitle').textContent || tema;
+      dpSalvar('slides', tema, nivel, titulo, '#pdf-container');
+    }
     window.print();
   }
 
   function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 </script>
 <script src="/js/dp-auth.js"></script>
+<script src="/js/dp-salvar.js"></script>
 </body>
 </html>
