@@ -677,6 +677,14 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
       applyTheme(currentTheme);
       renderThumbs();
 
+      // Salva no histórico ao gerar (não só ao imprimir)
+      if (typeof dpSalvar === 'function' && slidesData.length) {
+        const pdfCont = document.getElementById('pdf-container');
+        pdfCont.innerHTML = slidesData.map(s => `<div class="pdf-slide">${buildSlideHTML(s, currentTheme)}</div>`).join('');
+        dpSalvar('slides', tema, nivel, parsed.titulo || tema, '#pdf-container');
+        pdfCont.innerHTML = '';
+      }
+
     } catch(err) {
       console.error(err);
       errorBox.textContent = 'Erro: ' + (err.message || 'Tente novamente.');

@@ -58,7 +58,21 @@ export async function POST(request: NextRequest) {
   }
 
   const data = await res.json();
-  return NextResponse.json({ id: data?.[0]?.id }, { status: 201 });
+  const savedId = data?.[0]?.id;
+
+  // Incrementa total_materials no perfil (fire-and-forget)
+  try {
+    const profRes = await supaFetch(`/profiles?id=eq.${userId}&select=total_materials`);
+    const profs = await profRes.json();
+    const current = profs?.[0]?.total_materials ?? 0;
+    await supaFetch(`/profiles?id=eq.${userId}`, {
+      method: 'PATCH',
+      headers: { Prefer: 'return=minimal' },
+      body: JSON.stringify({ total_materials: current + 1 }),
+    });
+  } catch (_) {}
+
+  return NextResponse.json({ id: savedId }, { status: 201 });
 }
 
 export async function OPTIONS() {

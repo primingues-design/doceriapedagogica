@@ -1911,7 +1911,11 @@
         .order('created_at', { ascending: false })
         .limit(limit);
 
-      if (error || !data?.length) {
+      if (error) {
+        console.warn('[dp] loadHistory error:', error);
+      }
+
+      if (!data?.length) {
         target.innerHTML = `
           <div style="padding:40px;text-align:center;color:var(--text-muted);background:var(--cream);border-radius:12px;border:1px solid var(--border);">
             <div style="font-size:38px;margin-bottom:12px;opacity:0.25;">📄</div>
@@ -1919,6 +1923,13 @@
             <div style="font-size:12px;margin-top:6px;">Gere uma atividade e o histórico aparecerá aqui!</div>
           </div>`;
         return;
+      }
+
+      // Atualiza contador real de materiais
+      const statEl = document.getElementById('stat-total');
+      if (statEl) {
+        statEl.textContent = data.length;
+        currentUser.totalMaterials = data.length;
       }
 
       const html = data.map(item => {

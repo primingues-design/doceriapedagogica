@@ -771,6 +771,7 @@ REGRAS FUNDAMENTAIS:
       }
 
       renderDocument(parsed, tema, nivel);
+      if (typeof dpSalvar === 'function') dpSalvar('apostila', tema, nivel, parsed.titulo || parsed.tema || tema, '#docWrapper');
 
     } catch (err) {
       console.error(err);
@@ -1065,5 +1066,6 @@ Gere entre 3 e 5 atividades variadas.`;
 </script>
 <script src="/js/dp-print.js"></script>
 <script src="/js/dp-auth.js"></script>
+<script src="/js/dp-salvar.js"></script>
 </body>
 </html>
