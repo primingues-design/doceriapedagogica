@@ -621,7 +621,7 @@ REGRAS FINAIS: Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) t
     return`<div class="cruzadinha-wrap"><div class="cruzadinha-grid" style="grid-template-columns:repeat(${size},26px);">${cells}</div><div class="cruzadinha-dicas">${dica(horiz,'→ Horizontal','#c8963e')}${dica(vert,'↓ Vertical','#2d6e6e')}</div></div>`;
   }
 
-  function printPDF(){ window.print(); }
+  function printPDF(){ dpPrint(); }
 
   function delay(ms){return new Promise(r=>setTimeout(r,ms));}
 
@@ -632,6 +632,7 @@ REGRAS FINAIS: Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) t
     return JSON.parse(clean);
   }
 </script>
+<script src="/js/dp-print.js"></script>
 <script src="/js/dp-auth.js"></script>
 <script src="/js/dp-salvar.js"></script>
 </body>

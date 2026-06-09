@@ -310,7 +310,7 @@ function generate(){
   document.getElementById('btnDL').style.display='inline-block';
 }
 
-function printPDF(){ window.print(); }
+function printPDF(){ dpPrint(); }
 
 function onLetraGrandeChange(){
   document.body.classList.toggle('letra-grande',document.getElementById('letraGrande').checked);
@@ -322,5 +322,6 @@ document.getElementById('inNivel').addEventListener('change',function(){
   document.body.classList.toggle('letra-grande',isAccessivel);
 });
 </script>
+<script src="/js/dp-print.js"></script>
 </body>
 </html>

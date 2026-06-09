@@ -848,11 +848,12 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
       const titulo = document.getElementById('playerTitle').textContent || tema;
       dpSalvar('slides', tema, nivel, titulo, '#pdf-container');
     }
-    window.print();
+    dpPrint();
   }
 
   function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 </script>
+<script src="/js/dp-print.js"></script>
 <script src="/js/dp-auth.js"></script>
 <script src="/js/dp-salvar.js"></script>
 </body>

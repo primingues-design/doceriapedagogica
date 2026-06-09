@@ -449,9 +449,10 @@ Retorne SOMENTE JSON (sem markdown):
     document.getElementById('docWrapper').scrollIntoView({behavior:'smooth',block:'start'});
   }
 
-  function printPDF(){ window.print(); }
+  function printPDF(){ dpPrint(); }
   function delay(ms){return new Promise(r=>setTimeout(r,ms));}
 </script>
+<script src="/js/dp-print.js"></script>
 <script src="/js/dp-auth.js"></script>
 <script src="/js/dp-salvar.js"></script>
 </body>
