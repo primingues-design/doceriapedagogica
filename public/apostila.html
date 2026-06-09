@@ -413,8 +413,16 @@ REGRAS: Retorne SOMENTE JSON válido começando com { e terminando com }. Sem ma
           messages:[{role:'user',content:prompt}]
         })
       });
+      if(res.status===402){
+        if(typeof dpHandleNoCredits==='function') dpHandleNoCredits(errBox);
+        document.getElementById('prevEmpty').style.display='flex';
+        return;
+      }
       if(!res.ok) throw new Error(`Erro ${res.status}`);
       const data=await res.json();
+      // Atualiza saldo visível (se disponível na página)
+      const cLeft=res.headers.get('X-Credits-Remaining');
+      if(cLeft!==null) document.querySelectorAll('[data-dp-credits]').forEach(el=>el.textContent=cLeft);
       const raw=data.content?.[0]?.text||'';
       let parsed;
       try{parsed=extractJSON(raw);}

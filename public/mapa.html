@@ -429,8 +429,15 @@ REGRAS IMPORTANTES:
         })
       });
       setStep(3);
+      if(response.status===402){
+        if(typeof dpHandleNoCredits==='function') dpHandleNoCredits(errorBox);
+        document.getElementById('previewEmpty').style.display='flex';
+        return;
+      }
       if(!response.ok) throw new Error(`Erro ${response.status}`);
       const data=await response.json();
+      const cLeft=response.headers.get('X-Credits-Remaining');
+      if(cLeft!==null) document.querySelectorAll('[data-dp-credits]').forEach(el=>el.textContent=cLeft);
       const raw=data.content?.[0]?.text||'';
       setStep(4);await delay(400);
       let parsed;

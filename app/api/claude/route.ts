@@ -122,7 +122,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(data, { status: response.status });
     }
 
-    return NextResponse.json(data, { status: 200 });
+    return NextResponse.json(data, {
+      status: 200,
+      headers: { 'X-Credits-Remaining': String(credits - 1) },
+    });
   } catch (e) {
     await supaFetch(`/profiles?id=eq.${userId}`, {
       method: 'PATCH',

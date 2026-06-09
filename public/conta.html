@@ -1638,12 +1638,34 @@
     document.getElementById(id).classList.add('active');
     if (id === 'screen-dashboard' || id === 'screen-plans' || id === 'screen-history') updateDashUI();
     if (id === 'screen-history') loadHistory('history-full-list', 50);
+    // Atualiza créditos ao navegar para dashboard ou planos
+    if (id === 'screen-dashboard' || id === 'screen-plans') refreshCredits();
   }
 
   function showDashboard() {
     showScreen('screen-dashboard');
     updateDashUI();
     loadHistory('history-list', 5);
+    refreshCredits(); // busca saldo atualizado do Supabase
+  }
+
+  // Busca créditos e plano atualizados do Supabase (chamada em background)
+  async function refreshCredits() {
+    if (!currentUser) return;
+    try {
+      const { data } = await sb
+        .from('profiles')
+        .select('credits, plan, total_materials, total_pdfs')
+        .eq('id', currentUser.id)
+        .maybeSingle();
+      if (data) {
+        currentUser.credits       = data.credits        ?? currentUser.credits;
+        currentUser.plan          = data.plan           || currentUser.plan;
+        currentUser.totalMaterials= data.total_materials ?? currentUser.totalMaterials;
+        currentUser.totalPdfs     = data.total_pdfs     ?? currentUser.totalPdfs;
+        updateDashUI();
+      }
+    } catch (_) {}
   }
 
   // ── CARREGAR PERFIL DO BANCO ──
