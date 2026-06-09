@@ -285,6 +285,14 @@
   .slide-visual-panel { width:clamp(72px,18%,190px); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5%; }
   .visual-emoji-box { width:100%; aspect-ratio:1; border-radius:14px; background:rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; font-size:clamp(28px,6.6cqw,88px); line-height:1; flex-shrink:0; }
 
+  /* IMAGENS REAIS (Pexels) — com fallback automático pro emoji */
+  .slide-image-panel { width:clamp(150px,34%,440px); align-self:stretch; display:flex; }
+  .slide-image { width:100%; height:100%; object-fit:cover; border-radius:16px; box-shadow:0 8px 28px rgba(0,0,0,0.16); display:block; }
+  .capa-image-wrap { width:clamp(180px,44%,560px); aspect-ratio:16/9; margin-bottom:4%; border-radius:18px; overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,0.22); }
+  .capa-image { width:100%; height:100%; object-fit:cover; display:block; }
+  .destaque-image-wrap { width:clamp(130px,24%,300px); aspect-ratio:1; margin:0 auto 4%; border-radius:24px; overflow:hidden; box-shadow:0 10px 34px rgba(0,0,0,0.2); }
+  .destaque-image { width:100%; height:100%; object-fit:cover; display:block; }
+
   /* DESTAQUE */
   .slide-destaque { align-items:center; justify-content:center; text-align:center; }
   .destaque-inner { max-width:88%; }
@@ -608,13 +616,13 @@ Retorne SOMENTE este JSON válido (sem markdown):
   "professor": "${professor || 'Doceria Pedagógica'}",
   "slides": [
     // SLIDE TIPO "capa":
-    { "tipo": "capa", "emoji": "emoji relevante ao tema", "titulo": "título impactante", "subtitulo": "subtítulo descritivo (1 linha)" },
+    { "tipo": "capa", "emoji": "emoji relevante ao tema", "titulo": "título impactante", "subtitulo": "subtítulo descritivo (1 linha)", "imagem_busca": "termo de busca de FOTO em INGLÊS para a capa" },
 
     // SLIDE TIPO "topicos":
-    { "tipo": "topicos", "emoji": "emoji do subtema", "titulo": "título do slide", "topicos": ["tópico 1 conciso", "tópico 2", "tópico 3", "tópico 4"], "visuais": ["emoji visual 1 relacionado ao tema", "emoji visual 2", "emoji visual 3"] },
+    { "tipo": "topicos", "emoji": "emoji do subtema", "titulo": "título do slide", "topicos": ["tópico 1 conciso", "tópico 2", "tópico 3"], "visuais": ["emoji visual 1 relacionado ao tema", "emoji visual 2", "emoji visual 3"], "imagem_busca": "termo de busca de FOTO em INGLÊS que ilustre este slide" },
 
     // SLIDE TIPO "destaque":
-    { "tipo": "destaque", "emoji": "emoji", "texto": "frase ou conceito-chave impactante (máx. 2 linhas)", "sub": "explicação curta opcional" },
+    { "tipo": "destaque", "emoji": "emoji", "texto": "frase ou conceito-chave impactante (máx. 2 linhas)", "sub": "explicação curta opcional", "imagem_busca": "termo de busca de FOTO em INGLÊS do conceito" },
 
     // SLIDE TIPO "dois_lados":
     { "tipo": "dois_lados", "emoji": "emoji", "titulo": "título do slide", "lado_a": { "titulo": "Título Lado A", "itens": ["item 1", "item 2", "item 3"] }, "lado_b": { "titulo": "Título Lado B", "itens": ["item 1", "item 2", "item 3"] } },
@@ -636,7 +644,8 @@ REGRAS (slides serão PROJETADOS no telão — texto grande, pouca palavra):
 - Prefira palavras-chave a frases longas — quem lê de longe precisa captar rápido.
 - Destaque e pergunta devem ser marcantes e memoráveis (1 a 2 linhas).
 - O slide de fechamento sempre resume os pontos principais
-- Em slides "topicos", sempre inclua 3 emoji no campo "visuais" que representem visualmente o conteúdo do slide (ex: para slide sobre fotossíntese: ["🌱","☀️","💧"])`;
+- Em slides "topicos", sempre inclua 3 emoji no campo "visuais" que representem visualmente o conteúdo do slide (ex: para slide sobre fotossíntese: ["🌱","☀️","💧"])
+- IMAGENS: nos slides "capa", "topicos" e "destaque", preencha "imagem_busca" com um termo de busca de FOTO em INGLÊS, concreto e fotografável (2 a 4 palavras). Ex: "solar system planets", "industrial revolution factory", "water cycle nature", "human heart anatomy". Evite termos abstratos (nada de "knowledge", "learning"); prefira o objeto/cena concreta do conteúdo.`;
 
     try {
       const response = await fetch('/api/claude', {
@@ -674,6 +683,9 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
       slidesData = parsed.slides || [];
       currentIndex = 0;
 
+      // busca imagens reais (Pexels) antes de renderizar — não bloqueia se falhar
+      await buscarImagens(slidesData);
+
       document.getElementById('playerTitle').textContent = parsed.titulo || tema;
       document.getElementById('playerMeta').textContent = `${parsed.nivel || nivel} • ${parsed.disciplina || ''} • ${slidesData.length} slides`;
 
@@ -703,6 +715,19 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
     }
   }
 
+  // ── BUSCA DE IMAGENS (Pexels) ──
+  async function buscarImagens(slides) {
+    const ORIENT = { capa: 'landscape', topicos: 'portrait', destaque: 'square' };
+    const alvos = (slides || []).filter(s => s && s.imagem_busca && ORIENT[s.tipo]);
+    await Promise.all(alvos.map(async s => {
+      try {
+        const o = ORIENT[s.tipo] || 'landscape';
+        const r = await fetch(`/api/pexels?query=${encodeURIComponent(s.imagem_busca)}&orientation=${o}`);
+        if (r.ok) { const d = await r.json(); if (d && d.url) s.imagemUrl = d.url; }
+      } catch (_) { /* falhou → mantém emoji como fallback */ }
+    }));
+  }
+
   // ── RENDER ──
   function buildSlideHTML(slide, theme) {
     const t = `theme-${theme}`;
@@ -710,7 +735,9 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
     switch (slide.tipo) {
       case 'capa': return `
         <div class="slide slide-capa ${t}">
-          <div class="capa-emoji">${slide.emoji||'📚'}</div>
+          ${slide.imagemUrl
+            ? `<div class="capa-image-wrap"><img class="capa-image" src="${slide.imagemUrl}" alt=""></div>`
+            : `<div class="capa-emoji">${slide.emoji||'📚'}</div>`}
           <div class="capa-titulo">${slide.titulo||''}</div>
           <div class="capa-sub">${slide.subtitulo||''}</div>
           <div class="capa-meta">
@@ -722,9 +749,11 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
 
       case 'topicos': {
         const visuais = slide.visuais || [];
-        const visualPanel = visuais.length > 0
-          ? `<div class="slide-visual-panel">${visuais.map(e => `<div class="visual-emoji-box">${e}</div>`).join('')}</div>`
-          : '';
+        const visualPanel = slide.imagemUrl
+          ? `<div class="slide-image-panel"><img class="slide-image" src="${slide.imagemUrl}" alt=""></div>`
+          : (visuais.length > 0
+            ? `<div class="slide-visual-panel">${visuais.map(e => `<div class="visual-emoji-box">${e}</div>`).join('')}</div>`
+            : '');
         return `
         <div class="slide slide-body ${t}">
           <div class="slide-header">
@@ -746,7 +775,9 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
       case 'destaque': return `
         <div class="slide slide-destaque ${t}">
           <div class="destaque-inner">
-            <div class="destaque-acento">${slide.emoji||'💡'}</div>
+            ${slide.imagemUrl
+              ? `<div class="destaque-image-wrap"><img class="destaque-image" src="${slide.imagemUrl}" alt=""></div>`
+              : `<div class="destaque-acento">${slide.emoji||'💡'}</div>`}
             <div class="destaque-texto">${slide.texto||''}</div>
             ${slide.sub ? `<div class="destaque-sub">${slide.sub}</div>` : ''}
           </div>
