@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "NEXT_ADAPTER_PATH='' next build",
+  "buildCommand": "NEXT_ADAPTER_PATH='' next build --webpack",
   "framework": "nextjs",
   "installCommand": "npm install"
 }
