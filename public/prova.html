@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Provas — DoceriaPedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:#0f0e0c; --cream:#faf7f2; --warm:#f5f0e8;
+    --gold:#c8963e; --gold-light:#e8b86d; --gold-pale:#fdf3e3;
+    --teal:#2d6e6e; --teal-light:#4a9b9b; --teal-pale:#e8f4f4;
+    --coral:#d95f3b; --coral-pale:#fdeee9;
+    --lavender:#6c63d4; --lavender-pale:#f0eeff;
+    --text:#1a1917; --text-mid:#4a4845; --text-muted:#8a8785;
+    --border:rgba(15,14,12,0.1); --border-mid:rgba(15,14,12,0.18);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+  .topbar{background:var(--ink);padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+  .topbar-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--cream);display:flex;align-items:center;gap:10px;text-decoration:none}
+  .topbar-logo-mark{width:28px;height:28px;background:var(--gold);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
+  .topbar-nav{display:flex;align-items:center;gap:16px}
+  .topbar-link{font-size:13px;color:rgba(250,247,242,0.5);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.2s;padding:6px 12px;border-radius:6px}
+  .topbar-link:hover{color:var(--cream);background:rgba(255,255,255,0.06)}
+  .topbar-link.active{color:var(--gold-light);background:rgba(200,150,62,0.1)}
+
+  .main{display:grid;grid-template-columns:400px 1fr;min-height:calc(100vh - 56px)}
+
+  .form-panel{background:var(--cream);border-right:1px solid var(--border);padding:28px 24px;overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px}
+  .form-section{margin-bottom:24px}
+  .form-section-title{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .form-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+  .field{margin-bottom:16px}
+  .field-label{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.07em;text-transform:uppercase;display:block;margin-bottom:6px}
+  .req{color:var(--coral)}
+  input[type="text"],input[type="number"],select,textarea{width:100%;background:white;border:1.5px solid var(--border-mid);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif;transition:border-color 0.2s,box-shadow 0.2s;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,150,62,0.1)}
+  textarea{resize:vertical;min-height:70px;line-height:1.6}
+  .field-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+  .pill-group{display:flex;flex-wrap:wrap;gap:6px}
+  .pill{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border-mid);background:white;color:var(--text-muted);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s;font-family:'Outfit',sans-serif;user-select:none}
+  .pill.active{border-color:var(--teal);background:var(--teal-pale);color:var(--teal);font-weight:600}
+  .pill:hover:not(.active){background:var(--warm)}
+
+  /* radio cards (origem do texto) */
+  .radio-card{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border:1.5px solid var(--border-mid);border-radius:9px;background:white;cursor:pointer;margin-bottom:8px;transition:all 0.15s}
+  .radio-card:hover{background:var(--warm)}
+  .radio-card.sel{border-color:var(--teal);background:var(--teal-pale)}
+  .radio-card input{margin-top:2px;accent-color:var(--teal);flex-shrink:0}
+  .radio-card .rc-title{font-size:13px;font-weight:600;color:var(--text)}
+  .radio-card .rc-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
+
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+  .toggle-row:last-child{border-bottom:none}
+  .toggle-label{font-size:13px;color:var(--text-mid)}
+  .toggle-sub{font-size:11px;color:var(--text-muted);margin-top:2px;max-width:240px}
+  .toggle{width:36px;height:20px;background:var(--border-mid);border-radius:10px;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;border:none}
+  .toggle.on{background:var(--teal)}
+  .toggle::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;background:white;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+  .toggle.on::after{transform:translateX(16px)}
+
+  .divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+  .generate-btn{width:100%;background:var(--gold);color:white;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s}
+  .generate-btn:hover:not(:disabled){background:#b5842e;transform:translateY(-1px)}
+  .generate-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+  .generate-btn .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:white;border-radius:50%;animation:rot 0.7s linear infinite;display:none}
+  .generate-btn.loading .spin{display:block}
+  .generate-btn.loading .gicon{display:none}
+  @keyframes rot{to{transform:rotate(360deg)}}
+
+  .progress-wrap{display:none;margin-top:16px}
+  .progress-wrap.show{display:block}
+  .prog-bar-outer{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:12px}
+  .prog-bar-inner{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:2px;width:0%;transition:width 0.5s ease}
+  .prog-steps{display:flex;flex-direction:column;gap:7px}
+  .prog-step{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--text-muted);transition:color 0.3s}
+  .prog-step.active{color:var(--teal)}
+  .prog-step.done{color:#2d6e6e}
+  .prog-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border-mid);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;transition:all 0.3s}
+  .prog-step.active .prog-dot{border-color:var(--teal);background:var(--teal-pale)}
+  .prog-step.done .prog-dot{border-color:var(--teal);background:var(--teal);color:white}
+
+  .error-box{display:none;background:var(--coral-pale);border:1px solid rgba(217,95,59,0.3);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--coral);margin-top:12px;line-height:1.5}
+  .error-box.show{display:block}
+
+  .preview-panel{padding:28px;overflow-y:auto}
+  .preview-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:500px;text-align:center;color:var(--text-muted)}
+  .preview-empty-icon{font-size:52px;margin-bottom:16px;opacity:0.35}
+  .preview-empty-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text-mid);margin-bottom:8px}
+  .preview-empty-sub{font-size:14px;line-height:1.6;max-width:320px}
+
+  .preview-header{display:none;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+  .preview-header.show{display:flex}
+  .ph-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700}
+  .ph-meta{font-size:12px;color:var(--text-muted);margin-top:3px}
+  .ph-actions{display:flex;gap:10px}
+  .btn-pdf{background:var(--ink);color:var(--cream);padding:10px 22px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:8px;transition:all 0.2s}
+  .btn-pdf:hover{background:#2a2926}
+  .btn-pdf:disabled{opacity:0.5;cursor:not-allowed}
+  .btn-regen{background:white;color:var(--text-mid);padding:10px 16px;border-radius:8px;border:1.5px solid var(--border-mid);font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
+  .btn-regen:hover{background:var(--warm)}
+  .pages-pill{background:var(--teal-pale);color:var(--teal);border:1px solid rgba(45,110,110,0.2);font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;display:none;align-items:center;gap:5px}
+  .pages-pill.show{display:flex}
+
+  .doc-wrap{display:none;max-width:800px;margin:0 auto}
+  .doc-wrap.show{display:block}
+
+  /* ═══════════ DOCUMENTO DA PROVA ═══════════ */
+  /* A IA gera HTML usando EXCLUSIVAMENTE estas classes. */
+  #prova-doc{background:white;font-family:'Outfit',sans-serif}
+  .prova-doc{background:white;border-radius:12px;box-shadow:0 6px 32px rgba(0,0,0,0.08);padding:44px 52px;color:#000}
+
+  .prova-cabecalho{border-top:5px solid var(--gold);border-bottom:1.5px solid #999;padding:18px 0 16px;margin-bottom:24px}
+  .prova-escola{font-size:12px;color:var(--text-mid);margin-bottom:8px}
+  .prova-titulo{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;line-height:1.25;color:var(--ink);margin-bottom:14px}
+  .prova-aluno{display:flex;flex-wrap:wrap;gap:10px 24px;font-size:13px;color:#000}
+  .prova-aluno span{white-space:nowrap}
+  .prova-nota{border:1.5px solid #555;border-radius:6px;padding:3px 14px;font-weight:600}
+
+  .prova-instrucoes{background:var(--gold-pale);border-left:4px solid var(--gold);border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:22px;font-size:12.5px;line-height:1.6;color:var(--text-mid)}
+
+  .prova-texto-base{border:1.5px solid var(--border-mid);border-radius:10px;padding:18px 22px;margin-bottom:26px;background:#fcfbf9}
+  .prova-texto-titulo{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+  .prova-texto-base p{font-size:14px;line-height:1.85;color:#000;margin-bottom:10px}
+  .prova-texto-fonte{font-size:11px;color:var(--text-muted);font-style:italic;margin-top:6px}
+
+  .prova-secao-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin:24px 0 14px;display:flex;align-items:center;gap:10px}
+  .prova-secao-label::after{content:'';flex:1;height:1px;background:var(--teal-pale)}
+
+  .prova-questao{margin-bottom:24px;padding:18px 20px;border:1.5px solid var(--border);border-radius:10px;background:#fff;break-inside:avoid;page-break-inside:avoid}
+  .prova-q-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .prova-q-num{width:28px;height:28px;border-radius:50%;background:var(--gold);color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .prova-q-tipo{font-size:10.5px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal)}
+  .prova-q-valor{margin-left:auto;font-size:11px;color:var(--text-muted)}
+  .prova-q-enunciado{font-size:14px;font-weight:500;line-height:1.7;color:#000;margin-bottom:10px}
+
+  /* linha texto-esquerda + imagem-direita */
+  .prova-q-row{display:flex;gap:18px;align-items:flex-start}
+  .prova-q-conteudo{flex:1;min-width:0}
+  .media-container{flex-shrink:0;width:96px;min-height:96px;border:1.5px dashed var(--border-mid);border-radius:10px;display:flex;align-items:center;justify-content:center;background:#fcfbf9;padding:6px;text-align:center}
+  .emoji-temp{font-size:56px;line-height:1}
+  /* quando o Twemoji converte o emoji em <img>, ele entra grande na media-container */
+  .media-container img.emoji{width:72px!important;height:72px!important;margin:0!important}
+
+  /* tipos de resposta */
+  .prova-linhas{display:flex;flex-direction:column;gap:0;margin-top:10px}
+  .prova-linha{border-bottom:1.5px dotted #555;min-height:34px;display:block}
+  .prova-opcoes{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .prova-opcao{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#000;line-height:1.5}
+  .prova-bolha{width:24px;height:24px;border-radius:50%;border:1.5px solid #555;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#333;flex-shrink:0;margin-top:1px;background:white}
+  .prova-vf-item{display:flex;align-items:center;gap:12px;font-size:14px;color:#000;padding:6px 0;border-bottom:1px dotted #ccc;line-height:1.5}
+  .prova-vf-bubble{display:flex;gap:4px;flex-shrink:0}
+  .prova-vf-box{width:24px;height:24px;border:1.5px solid #555;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#555}
+  /* relacione as colunas */
+  .prova-relacione{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:10px}
+  .prova-col-titulo{font-size:11px;font-weight:700;color:var(--teal);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em}
+  .prova-col-item{display:flex;align-items:flex-start;gap:8px;font-size:13.5px;color:#000;line-height:1.5;margin-bottom:8px}
+  .prova-col-key{font-weight:700;flex-shrink:0}
+  .prova-col-paren{border:1.5px solid #555;border-radius:4px;width:22px;height:22px;flex-shrink:0;display:inline-block}
+
+  /* GABARITO — sempre em nova página */
+  .page-break{page-break-before:always;break-before:page;height:0;margin:0;border:0}
+  .doc-wrap .page-break{display:block;height:1px;border-top:2px dashed var(--gold);margin:30px 0;opacity:0.5} /* só visual na tela */
+  .gabarito{border:2px solid var(--teal);border-radius:12px;padding:28px 32px;background:var(--teal-pale)}
+  .gabarito-titulo{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--teal);margin-bottom:16px}
+  .gabarito-lista{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px 24px}
+  .gabarito-item{font-size:13.5px;color:#000;line-height:1.5;padding:5px 0;border-bottom:1px dotted rgba(45,110,110,0.3)}
+  .gabarito-item strong{color:var(--teal)}
+
+  .prova-rodape{margin-top:24px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted)}
+  .prova-rodape-logo{font-family:'Playfair Display',serif;font-weight:700;color:var(--gold)}
+
+  /* Emoji inline (Twemoji) */
+  img.emoji{height:1.15em;width:1.15em;margin:0 .05em 0 .1em;vertical-align:-0.15em}
+
+  @media(max-width:860px){
+    .main{grid-template-columns:1fr}
+    .form-panel{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--border)}
+    .prova-q-row{flex-direction:column}
+    .media-container{width:100%}
+  }
+
+  /* ═══ IMPRESSÃO ═══ */
+  @media print {
+    @page { size: A4 portrait; margin: 12mm 14mm; }
+    body { background: white !important; }
+    .topbar, .form-panel, .preview-header, .preview-empty,
+    .btn-pdf, .btn-regen, .pages-pill { display: none !important; }
+    .main { display: block !important; }
+    .preview-panel { padding: 0 !important; overflow: visible !important; max-height: none !important; }
+    .doc-wrap { max-width: none !important; display: block !important; }
+    #prova-doc { display: block !important; }
+    .prova-doc { border-radius: 0 !important; box-shadow: none !important; padding: 0 !important; }
+    .prova-questao { break-inside: avoid; page-break-inside: avoid; }
+    .gabarito { break-inside: avoid; page-break-inside: avoid; }
+    /* separador de tela vira quebra real de página */
+    .doc-wrap .page-break { display: block !important; height: 0 !important; border: 0 !important; margin: 0 !important; page-break-before: always; break-before: page; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/conta.html">
+    <div class="topbar-logo-mark">✦</div>
+    DoceriaPedagógica
+  </a>
+  <div class="topbar-nav">
+    <a class="topbar-link active" href="prova.html">📝 Prova</a>
+    <a class="topbar-link" href="/conta.html">← Painel</a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="form-panel">
+
+    <!-- 1. CONFIGURAÇÕES BÁSICAS -->
+    <div class="form-section">
+      <div class="form-section-title">Configurações básicas</div>
+      <div class="field">
+        <label class="field-label">Idioma da prova</label>
+        <select id="idioma">
+          <option value="Português">Português</option>
+          <option value="Inglês">Inglês</option>
+          <option value="Espanhol">Espanhol</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Nível de ensino <span class="req">*</span></label>
+        <select id="nivel">
+          <option value="">Selecione...</option>
+          <option value="Educação Infantil (4-5 anos)">Educação Infantil</option>
+          <option value="Fundamental I — Anos Iniciais (1º ao 5º ano)">Fundamental I (1º–5º)</option>
+          <option value="Fundamental II — Anos Finais (6º ao 9º ano)">Fundamental II (6º–9º)</option>
+          <option value="EJA — Alfabetização de Adultos">EJA — Alfabetização</option>
+          <option value="EJA — Ensino Fundamental para adultos">EJA — Fundamental</option>
+          <option value="EJA — Ensino Médio para adultos">EJA — Médio</option>
+          <option value="Ensino Médio Regular">Ensino Médio</option>
+          <option value="Inglês — Nível Básico A1/A2">Inglês Básico A1/A2</option>
+          <option value="Inglês — Intermediário B1/B2">Inglês Interm. B1/B2</option>
+          <option value="Espanhol — Básico">Espanhol Básico</option>
+        </select>
+      </div>
+      <div class="field-2col">
+        <div class="field">
+          <label class="field-label">Disciplina</label>
+          <input type="text" id="disciplina" placeholder="Ex: Ciências" />
+        </div>
+        <div class="field">
+          <label class="field-label">Dificuldade</label>
+          <select id="dificuldade">
+            <option value="Fácil">Fácil</option>
+            <option value="Médio" selected>Médio</option>
+            <option value="Difícil">Difícil</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Tema / conteúdo <span class="req">*</span></label>
+        <input type="text" id="tema" placeholder="Ex: Ciclo da água" />
+      </div>
+    </div>
+
+    <!-- 2. TEXTO BASE -->
+    <div class="form-section">
+      <div class="form-section-title">Texto base (apoio)</div>
+      <label class="radio-card sel" id="rc-A">
+        <input type="radio" name="origemTexto" value="A" onchange="onOrigemChange()" checked>
+        <div><div class="rc-title">Eu vou colar um texto</div><div class="rc-sub">As questões usarão o seu texto como base</div></div>
+      </label>
+      <label class="radio-card" id="rc-B">
+        <input type="radio" name="origemTexto" value="B" onchange="onOrigemChange()">
+        <div><div class="rc-title">A IA cria um texto inédito</div><div class="rc-sub">Um texto original sobre o tema, feito na hora</div></div>
+      </label>
+      <label class="radio-card" id="rc-C">
+        <input type="radio" name="origemTexto" value="C" onchange="onOrigemChange()">
+        <div><div class="rc-title">Sem texto base</div><div class="rc-sub">Direto para as questões</div></div>
+      </label>
+      <div class="field" id="textoBaseWrap" style="margin-top:10px;">
+        <textarea id="textoBase" placeholder="Cole aqui o texto que servirá de base para as questões..."></textarea>
+      </div>
+    </div>
+
+    <!-- 3. SUPORTE VISUAL -->
+    <div class="form-section">
+      <div class="form-section-title">Suporte visual</div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">🖼️ Incluir imagens/ícones nas questões</div>
+          <div class="toggle-sub">Ótimo para alfabetização e línguas. A IA posiciona uma ilustração ao lado de cada questão.</div>
+        </div>
+        <button class="toggle" id="togVisual" onclick="toggleBtn(this)"></button>
+      </div>
+    </div>
+
+    <!-- 4. ESTRUTURA DAS QUESTÕES -->
+    <div class="form-section">
+      <div class="form-section-title">Estrutura das questões</div>
+      <div class="field">
+        <label class="field-label">Quantidade total <span class="req">*</span></label>
+        <input type="number" id="quantidade" min="1" max="40" value="10" />
+      </div>
+      <div class="field">
+        <label class="field-label">Tipos de questão</label>
+        <div class="pill-group" id="tiposPills">
+          <div class="pill active" data-val="Múltipla escolha">☑️ Múltipla escolha</div>
+          <div class="pill active" data-val="Dissertativa">✍️ Dissertativa</div>
+          <div class="pill" data-val="Verdadeiro ou Falso">✅ V ou F</div>
+          <div class="pill" data-val="Relacione as colunas">🔗 Relacione colunas</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. CABEÇALHO + INSTRUÇÕES -->
+    <div class="form-section">
+      <div class="form-section-title">Acabamento</div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">🧾 Cabeçalho do aluno</div>
+          <div class="toggle-sub">Nome, turma, data e campo de nota no topo</div>
+        </div>
+        <button class="toggle on" id="togCabecalho" onclick="toggleBtn(this)"></button>
+      </div>
+      <div class="field" style="margin-top:14px;">
+        <label class="field-label">Instruções do professor (opcional)</label>
+        <textarea id="instrucoes" placeholder="Ex: Prova individual, sem consulta. Use caneta azul ou preta."></textarea>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <button class="generate-btn" id="genBtn" onclick="generate()">
+      <span class="gicon">✦</span>
+      <div class="spin"></div>
+      Gerar Prova
+    </button>
+
+    <div class="error-box" id="errorBox"></div>
+    <div class="progress-wrap" id="progressWrap">
+      <div class="prog-bar-outer"><div class="prog-bar-inner" id="progBar"></div></div>
+      <div class="prog-steps">
+        <div class="prog-step" id="ps1"><div class="prog-dot">1</div><span>Analisando tema e nível...</span></div>
+        <div class="prog-step" id="ps2"><div class="prog-dot">2</div><span>Preparando o texto base...</span></div>
+        <div class="prog-step" id="ps3"><div class="prog-dot">3</div><span>Elaborando as questões...</span></div>
+        <div class="prog-step" id="ps4"><div class="prog-dot">4</div><span>Posicionando suporte visual...</span></div>
+        <div class="prog-step" id="ps5"><div class="prog-dot">5</div><span>Montando o gabarito...</span></div>
+        <div class="prog-step" id="ps6"><div class="prog-dot">6</div><span>Diagramando a prova...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="preview-panel">
+    <div class="preview-header" id="prevHeader">
+      <div>
+        <div class="ph-title" id="phTitle">Prova gerada</div>
+        <div class="ph-meta" id="phMeta"></div>
+      </div>
+      <div class="ph-actions">
+        <div class="pages-pill show" id="qtdPill">📝 <span id="qtdCount">0</span> questões</div>
+        <button class="btn-regen" onclick="generate()">↻ Gerar novamente</button>
+        <button class="btn-pdf" id="pdfBtn" onclick="printPDF()">🖨️ Imprimir / Salvar PDF</button>
+      </div>
+    </div>
+    <div class="preview-empty" id="prevEmpty">
+      <div class="preview-empty-icon">📝</div>
+      <div class="preview-empty-title">Sua prova aparece aqui</div>
+      <div class="preview-empty-sub">Configure ao lado e clique em <strong>Gerar Prova</strong> — questões, suporte visual e gabarito separado, prontos para imprimir.</div>
+    </div>
+    <div class="doc-wrap" id="docWrap">
+      <div id="prova-doc"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Twemoji: padroniza emojis em SVG de alta resolução para impressão -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/twemoji.min.js" crossorigin="anonymous"></script>
+
+<script>
+  // ── helpers de formulário ──
+  function toggleBtn(el){el.classList.toggle('on')}
+  function isOn(id){return document.getElementById(id).classList.contains('on')}
+  document.querySelectorAll('#tiposPills .pill').forEach(p=>p.addEventListener('click',()=>p.classList.toggle('active')));
+  function getTypes(){return[...document.querySelectorAll('#tiposPills .pill.active')].map(p=>p.dataset.val)}
+
+  function getOrigem(){return document.querySelector('input[name="origemTexto"]:checked').value}
+  function onOrigemChange(){
+    const v=getOrigem();
+    document.getElementById('textoBaseWrap').style.display = (v==='A') ? 'block' : 'none';
+    ['A','B','C'].forEach(k=>document.getElementById('rc-'+k).classList.toggle('sel', k===v));
+  }
+
+  // ── Twemoji: converte emojis nativos em <img> SVG (alta resolução p/ PDF) ──
+  function aplicarTwemoji(el){
+    if(!window.twemoji) return;
+    try{
+      window.twemoji.parse(el,{
+        folder:'svg',
+        ext:'.svg',
+        // base de assets atualizada (o CDN padrão do twemoji saiu do ar)
+        base:'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/'
+      });
+    }catch(_){}
+  }
+
+  // ── progresso ──
+  function setStep(n,total=6){
+    for(let i=1;i<=total;i++){
+      const el=document.getElementById('ps'+i);
+      if(!el) continue;
+      el.classList.remove('active','done');
+      const dot=el.querySelector('.prog-dot');
+      if(i<n){el.classList.add('done');dot.textContent='✓';}
+      else if(i===n){el.classList.add('active');dot.textContent=i;}
+      else dot.textContent=i;
+    }
+    document.getElementById('progBar').style.width=Math.round((n/total)*90)+'%';
+  }
+  const STEPS_DELAY=[0,700,1400,2100,2800,3500];
+
+  // ── geração ──
+  async function generate(){
+    const idioma=document.getElementById('idioma').value;
+    const nivel=document.getElementById('nivel').value;
+    const disciplina=document.getElementById('disciplina').value.trim();
+    const dificuldade=document.getElementById('dificuldade').value;
+    const tema=document.getElementById('tema').value.trim();
+    const origem=getOrigem();
+    const textoBase=document.getElementById('textoBase').value.trim();
+    const visual=isOn('togVisual');
+    const cabecalho=isOn('togCabecalho');
+    const quantidade=parseInt(document.getElementById('quantidade').value,10)||0;
+    const tipos=getTypes();
+    const instrucoes=document.getElementById('instrucoes').value.trim();
+
+    const errBox=document.getElementById('errorBox');
+    errBox.classList.remove('show');
+    if(!tema){errBox.textContent='Preencha o tema / conteúdo da prova.';errBox.classList.add('show');document.getElementById('tema').focus();return;}
+    if(!nivel){errBox.textContent='Selecione o nível de ensino.';errBox.classList.add('show');document.getElementById('nivel').focus();return;}
+    if(quantidade<1){errBox.textContent='Informe a quantidade de questões.';errBox.classList.add('show');document.getElementById('quantidade').focus();return;}
+    if(tipos.length===0){errBox.textContent='Selecione pelo menos um tipo de questão.';errBox.classList.add('show');return;}
+    if(origem==='A' && !textoBase){errBox.textContent='Cole o texto base ou escolha outra opção de texto.';errBox.classList.add('show');document.getElementById('textoBase').focus();return;}
+
+    const btn=document.getElementById('genBtn');
+    btn.disabled=true;btn.classList.add('loading');
+    document.getElementById('progressWrap').classList.add('show');
+    document.getElementById('prevEmpty').style.display='none';
+    document.getElementById('prevHeader').classList.remove('show');
+    document.getElementById('docWrap').classList.remove('show');
+    STEPS_DELAY.forEach((d,i)=>setTimeout(()=>setStep(i+1),d));
+
+    const prompt=buildPrompt({idioma,nivel,disciplina,dificuldade,tema,origem,textoBase,visual,cabecalho,quantidade,tipos,instrucoes});
+
+    try{
+      const res=await fetch('/api/claude',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-6',max_tokens:8000,
+          system:`Você é uma especialista em elaboração de provas e avaliações escolares brasileiras. Você devolve SOMENTE um fragmento HTML válido (sem markdown, sem crases, sem as tags <html>/<head>/<body>), usando EXCLUSIVAMENTE as classes CSS que o usuário especificar. Nunca inclua <style> nem CSS inline. Nunca use placeholders como "texto aqui".`,
+          messages:[{role:'user',content:prompt}]
+        })
+      });
+      if(res.status===402){
+        if(typeof dpHandleNoCredits==='function') dpHandleNoCredits(errBox);
+        document.getElementById('prevEmpty').style.display='flex';
+        return;
+      }
+      if(!res.ok) throw new Error(`Erro ${res.status}`);
+      const data=await res.json();
+      const cLeft=res.headers.get('X-Credits-Remaining');
+      if(cLeft!==null) document.querySelectorAll('[data-dp-credits]').forEach(el=>el.textContent=cLeft);
+
+      const raw=data.content?.[0]?.text||'';
+      const html=limparHTML(raw);
+      if(!html || html.indexOf('prova-')===-1) throw new Error('Formato inesperado. Tente gerar novamente.');
+
+      document.getElementById('progBar').style.width='100%';
+      await delay(250);
+      renderProva(html,{idioma,nivel,disciplina,tema,quantidade});
+
+    }catch(err){
+      errBox.textContent='Erro: '+(err.message||'Tente novamente.');
+      errBox.classList.add('show');
+      document.getElementById('prevEmpty').style.display='flex';
+    }finally{
+      btn.disabled=false;btn.classList.remove('loading');
+      document.getElementById('progressWrap').classList.remove('show');
+      document.getElementById('progBar').style.width='0%';
+      for(let i=1;i<=6;i++){const el=document.getElementById('ps'+i);if(el){el.classList.remove('active','done');el.querySelector('.prog-dot').textContent=i;}}
+    }
+  }
+
+  // ── render: injeta o HTML da IA, padroniza emojis e salva ──
+  function renderProva(html,meta){
+    const docEl=document.getElementById('prova-doc');
+    docEl.innerHTML=html;
+
+    // 1) padroniza os emojis temporários (e inline) em SVG antes de exibir/salvar
+    aplicarTwemoji(docEl);
+
+    // 2) métricas para o cabeçalho do preview
+    const qtd=docEl.querySelectorAll('.prova-questao').length || meta.quantidade;
+    const date=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+    document.getElementById('qtdCount').textContent=qtd;
+    document.getElementById('phTitle').textContent=`Prova — ${meta.tema}`;
+    document.getElementById('phMeta').textContent=`${meta.nivel} • ${meta.disciplina||meta.tema} • ${date}`;
+
+    document.getElementById('docWrap').classList.add('show');
+    document.getElementById('prevHeader').classList.add('show');
+    document.getElementById('qtdPill').classList.add('show');
+    document.getElementById('prevEmpty').style.display='none';
+    document.getElementById('docWrap').scrollIntoView({behavior:'smooth',block:'start'});
+
+    // 3) salva no histórico (já com os emojis convertidos)
+    if(typeof dpSalvar==='function') dpSalvar('prova',meta.tema,meta.nivel,`Prova — ${meta.tema}`,'#docWrap');
+  }
+
+  // ── monta o prompt enviado à IA ──
+  function buildPrompt(o){
+    const L=o.idioma;
+
+    // bloco do texto base
+    let textoBloco='';
+    if(o.origem==='A'){
+      textoBloco=`TEXTO BASE (use EXATAMENTE este texto como apoio das questões; coloque-o dentro de uma <div class="prova-texto-base">):\n<<<\n${o.textoBase}\n>>>`;
+    }else if(o.origem==='B'){
+      textoBloco=`TEXTO BASE: crie um texto INÉDITO e original sobre o tema, adequado ao nível, com 1 a 3 parágrafos. Coloque-o dentro de uma <div class="prova-texto-base"> (com <div class="prova-texto-titulo"> e parágrafos <p>). As questões devem se apoiar nesse texto.`;
+    }else{
+      textoBloco=`SEM TEXTO BASE: não gere texto de apoio. Vá direto para as questões.`;
+    }
+
+    // bloco do suporte visual (regra de arquitetura de imagens)
+    let visualBloco='';
+    if(o.visual){
+      visualBloco=`SUPORTE VISUAL: ATIVADO.
+- Para CADA questão, estruture o conteúdo assim:
+  <div class="prova-q-row">
+    <div class="prova-q-conteudo"> ...enunciado e resposta... </div>
+    <div class="media-container"><span class="emoji-temp">EMOJI</span></div>
+  </div>
+- Dentro de <span class="emoji-temp"> coloque UM único emoji nativo que represente o contexto/conteúdo da questão (ex.: 🌧️ para chuva, ➗ para divisão, 🦋 para metamorfose). Este é um placeholder visual temporário.
+- Use o emoji mais representativo possível; quando não houver um claro, use 📌.`;
+    }else{
+      visualBloco=`SUPORTE VISUAL: DESATIVADO. Não inclua <div class="media-container"> nem emojis ilustrativos. Coloque o conteúdo da questão diretamente dentro de <div class="prova-q-conteudo"> dentro de <div class="prova-q-row"> (sem a coluna de imagem).`;
+    }
+
+    // bloco do cabeçalho
+    const cabBloco = o.cabecalho
+      ? `CABEÇALHO: inclua no topo uma <div class="prova-cabecalho"> com: <div class="prova-escola">, um <div class="prova-titulo"> (título da prova), e uma <div class="prova-aluno"> com campos de Nome, Turma, Data e um <span class="prova-nota"> para a nota. TODOS os rótulos no idioma ${L}.`
+      : `CABEÇALHO: NÃO inclua a div.prova-cabecalho. Comece direto pelo título/instruções.`;
+
+    const instrBloco = o.instrucoes
+      ? `INSTRUÇÕES DO PROFESSOR (coloque dentro de <div class="prova-instrucoes">, traduzidas para ${L} se necessário): ${o.instrucoes}`
+      : `INSTRUÇÕES: opcional. Se incluir, use <div class="prova-instrucoes">.`;
+
+    return `Gere uma PROVA/AVALIAÇÃO escolar completa em HTML.
+
+IDIOMA DA PROVA: ${L}  → TODO o conteúdo (título, instruções, enunciados, alternativas, texto base, rótulos e gabarito) deve ser escrito em ${L}.
+NÍVEL: ${o.nivel}
+${o.disciplina?'DISCIPLINA: '+o.disciplina:''}
+TEMA / CONTEÚDO: ${o.tema}
+DIFICULDADE: ${o.dificuldade} (ajuste a complexidade das questões a este nível)
+QUANTIDADE DE QUESTÕES: exatamente ${o.quantidade}
+TIPOS DE QUESTÃO PERMITIDOS (distribua entre eles, use SOMENTE estes): ${o.tipos.join(', ')}
+
+${textoBloco}
+
+${visualBloco}
+
+${cabBloco}
+
+${instrBloco}
+
+═══ ESTRUTURA HTML OBRIGATÓRIA ═══
+Envolva TUDO em <div class="prova-doc">. Use SOMENTE estas classes (não invente outras, não use CSS):
+
+• Cada questão: <div class="prova-questao"> com um <div class="prova-q-head"> contendo <span class="prova-q-num">N</span> e <span class="prova-q-tipo">TIPO</span>. Depois o conteúdo conforme a regra de suporte visual acima.
+• Enunciado: <div class="prova-q-enunciado">.
+• MÚLTIPLA ESCOLHA: <div class="prova-opcoes"> com 4 itens <div class="prova-opcao"><span class="prova-bolha">A</span> texto</div> (A, B, C, D).
+• DISSERTATIVA: <div class="prova-linhas"> com 3 a 5 <div class="prova-linha"></div> (linhas para resposta).
+• VERDADEIRO OU FALSO: vários <div class="prova-vf-item"><div class="prova-vf-bubble"><div class="prova-vf-box">V</div><div class="prova-vf-box">F</div></div><span>afirmação</span></div>.
+• RELACIONE AS COLUNAS: <div class="prova-relacione"> com duas colunas. Coluna A (itens numerados com <span class="prova-col-key">1.</span>) e Coluna B (itens com <span class="prova-col-paren"></span> + <span class="prova-col-key">A)</span> texto), usando <div class="prova-col-item">. Cabeçalho de cada coluna em <div class="prova-col-titulo">.
+
+═══ GABARITO (OBRIGATÓRIO) ═══
+Ao final, SEMPRE adicione, NESTA ORDEM:
+1. <div class="page-break"></div>  ← força nova página para a folha de respostas
+2. <div class="gabarito"> com <div class="gabarito-titulo">Gabarito</div> (no idioma ${L}) e uma <ol class="gabarito-lista"> (ou <ul>) com um <li class="gabarito-item"> por questão, no formato "<strong>1.</strong> resposta". Para dissertativas, dê uma resposta-modelo curta (1 frase).
+
+REGRAS FINAIS:
+- Devolva SOMENTE o HTML do fragmento, começando em <div class="prova-doc"> e terminando em </div>. Sem crases, sem markdown, sem comentários, sem <style>.
+- Conteúdo real e correto (nada de "texto aqui"). Numere as questões de 1 a ${o.quantidade}.
+- Respeite EXATAMENTE a quantidade (${o.quantidade}) e os tipos permitidos.`;
+  }
+
+  // ── utilidades ──
+  function limparHTML(raw){
+    let s=(raw||'').replace(/```html/gi,'').replace(/```/g,'').trim();
+    const i=s.indexOf('<');
+    if(i>0) s=s.slice(i);
+    const j=s.lastIndexOf('>');
+    if(j!==-1) s=s.slice(0,j+1);
+    return s.trim();
+  }
+
+  function printPDF(){ dpPrint(); }
+  function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+
+  // estado inicial do formulário
+  onOrigemChange();
+</script>
+<script src="/js/dp-print.js"></script>
+<script src="/js/dp-auth.js"></script>
+<script src="/js/dp-salvar.js"></script>
+</body>
+</html>
