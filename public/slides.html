@@ -502,6 +502,7 @@
           </div>
           <button class="btn-action" onclick="toggleFullscreen()" title="Tela cheia (F)">⛶ Tela cheia</button>
           <button class="btn-action primary" onclick="generateBtn_regen()">↻ Regerar</button>
+          <button class="btn-action primary" id="pptxBtn" onclick="downloadPPTX()">⬇️ Baixar .pptx</button>
           <button class="btn-action primary" onclick="downloadPDF()">🖨️ Imprimir / Salvar PDF</button>
         </div>
       </div>
@@ -918,6 +919,129 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
     }
   });
 
+  // ── EXPORTAR PowerPoint (.pptx) EDITÁVEL ──
+  const PPTX_THEME = {
+    dourado:  { bg:'FAF7F2', title:'1A1917', accent:'C8963E', sub:'6A5030', text:'1A1410' },
+    oceano:   { bg:'F0F7FF', title:'0D2137', accent:'2D6E6E', sub:'2A5070', text:'0D2137' },
+    floresta: { bg:'F2F7F2', title:'0F1E10', accent:'3D9E6E', sub:'2A4A2A', text:'0F1E10' },
+    noturno:  { bg:'F5F4FF', title:'140A28', accent:'7C6AF5', sub:'3A2060', text:'140A28' },
+    coral:    { bg:'FFF8F6', title:'2A1008', accent:'D95F3B', sub:'6A2A10', text:'2A1008' },
+    gelo:     { bg:'FFFFFF', title:'1A3A5C', accent:'1A3A5C', sub:'2A5080', text:'1A3A5C' },
+  };
+
+  // Pexels permite CORS → converte a foto em data URI para embutir no .pptx
+  async function urlToDataURI(url) {
+    try {
+      const r = await fetch(url, { mode: 'cors' });
+      if (!r.ok) return null;
+      const blob = await r.blob();
+      return await new Promise(res => {
+        const fr = new FileReader();
+        fr.onloadend = () => res(fr.result);
+        fr.onerror = () => res(null);
+        fr.readAsDataURL(blob);
+      });
+    } catch (_) { return null; }
+  }
+
+  async function downloadPPTX() {
+    if (!slidesData.length) return;
+    if (typeof PptxGenJS === 'undefined') { alert('A biblioteca de PowerPoint ainda está carregando. Tente novamente em 2 segundos.'); return; }
+
+    const btn = document.getElementById('pptxBtn');
+    const btnTxt = btn ? btn.textContent : '';
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ Gerando .pptx...'; }
+
+    try {
+      const th = PPTX_THEME[currentTheme] || PPTX_THEME.dourado;
+      const TF = 'Georgia'; // serifa disponível na maioria dos computadores
+
+      // pré-carrega as imagens (em paralelo)
+      const imgMap = {};
+      await Promise.all(slidesData.map(async (s, i) => {
+        if (s.imagemUrl) { const d = await urlToDataURI(s.imagemUrl); if (d) imgMap[i] = d; }
+      }));
+
+      const pptx = new PptxGenJS();
+      pptx.defineLayout({ name: 'DP', width: 13.33, height: 7.5 });
+      pptx.layout = 'DP';
+      const W = 13.33, H = 7.5, M = 0.7;
+
+      slidesData.forEach((s, i) => {
+        const slide = pptx.addSlide();
+        slide.background = { color: th.bg };
+        const img = imgMap[i];
+
+        switch (s.tipo) {
+          case 'capa': {
+            if (img) {
+              slide.addImage({ data: img, x: 0, y: 0, w: 5.6, h: H, sizing: { type: 'cover', w: 5.6, h: H } });
+              const tx = 6.1, tw = W - 6.1 - M;
+              slide.addText(s.titulo || '', { x: tx, y: 2.0, w: tw, h: 2.4, fontFace: TF, fontSize: 34, bold: true, color: th.title, align: 'left', valign: 'middle' });
+              if (s.subtitulo) slide.addText(s.subtitulo, { x: tx, y: 4.4, w: tw, h: 1, fontSize: 16, color: th.sub, align: 'left' });
+            } else {
+              slide.addText(s.titulo || '', { x: M, y: 2.4, w: W - 2 * M, h: 2, fontFace: TF, fontSize: 42, bold: true, color: th.title, align: 'center', valign: 'middle' });
+              if (s.subtitulo) slide.addText(s.subtitulo, { x: M, y: 4.6, w: W - 2 * M, h: 1, fontSize: 18, color: th.sub, align: 'center' });
+            }
+            const meta = [s.professor || document.getElementById('professor').value || 'DoceriaPedagógica', s.disciplina || document.getElementById('disciplina').value || '', String(new Date().getFullYear())].filter(Boolean).join('   •   ');
+            slide.addText(meta, { x: img ? 6.1 : M, y: H - 1.0, w: img ? (W - 6.1 - M) : (W - 2 * M), h: 0.5, fontSize: 11, color: th.accent, bold: true, align: img ? 'left' : 'center' });
+            break;
+          }
+          case 'topicos': {
+            slide.addText(s.titulo || '', { x: M, y: 0.55, w: W - 2 * M, h: 1, fontFace: TF, fontSize: 28, bold: true, color: th.title });
+            slide.addShape('rect', { x: M, y: 1.5, w: 1.4, h: 0.07, fill: { color: th.accent } });
+            const hasImg = !!img;
+            const listW = hasImg ? 7.4 : (W - 2 * M);
+            const bullets = (s.topicos || []).map(t => ({ text: t, options: { bullet: { code: '2022', indent: 18 }, color: th.text, fontSize: 20, paraSpaceAfter: 12 } }));
+            slide.addText(bullets, { x: M, y: 1.9, w: listW, h: H - 2.6, valign: 'top' });
+            if (hasImg) slide.addImage({ data: img, x: M + listW + 0.3, y: 1.9, w: W - (M + listW + 0.3) - M, h: H - 2.6, sizing: { type: 'cover', w: W - (M + listW + 0.3) - M, h: H - 2.6 }, rounding: true });
+            break;
+          }
+          case 'destaque': {
+            if (img) slide.addImage({ data: img, x: (W - 2.4) / 2, y: 0.7, w: 2.4, h: 2.4, sizing: { type: 'cover', w: 2.4, h: 2.4 }, rounding: true });
+            slide.addText(s.texto || '', { x: M, y: img ? 3.4 : 2.2, w: W - 2 * M, h: 2.4, fontFace: TF, fontSize: 30, bold: true, color: th.title, align: 'center', valign: 'middle' });
+            if (s.sub) slide.addText(s.sub, { x: M, y: img ? 5.7 : 4.6, w: W - 2 * M, h: 1, fontSize: 16, color: th.sub, align: 'center' });
+            break;
+          }
+          case 'dois_lados': {
+            slide.addText(s.titulo || '', { x: M, y: 0.55, w: W - 2 * M, h: 1, fontFace: TF, fontSize: 26, bold: true, color: th.title });
+            const colW = (W - 2 * M - 0.6) / 2;
+            const mk = (lado, x) => {
+              slide.addText((lado && lado.titulo) || '', { x, y: 1.8, w: colW, h: 0.6, fontSize: 16, bold: true, color: th.accent });
+              const its = ((lado && lado.itens) || []).map(t => ({ text: t, options: { bullet: { code: '2022', indent: 16 }, color: th.text, fontSize: 16, paraSpaceAfter: 10 } }));
+              slide.addText(its, { x, y: 2.5, w: colW, h: H - 3.2, valign: 'top' });
+            };
+            mk(s.lado_a, M); mk(s.lado_b, M + colW + 0.6);
+            break;
+          }
+          case 'pergunta': {
+            slide.background = { color: th.accent };
+            slide.addText(s.pergunta || '', { x: 1.2, y: 1.9, w: W - 2.4, h: 2.8, fontFace: TF, fontSize: 30, bold: true, color: 'FFFFFF', align: 'center', valign: 'middle' });
+            if (s.dica) slide.addText('💡 ' + s.dica, { x: 1.2, y: 5.0, w: W - 2.4, h: 1, fontSize: 15, color: 'FFFFFF', align: 'center' });
+            break;
+          }
+          case 'fechamento': {
+            slide.addText(s.titulo || 'O que aprendemos', { x: M, y: 0.7, w: W - 2 * M, h: 1, fontFace: TF, fontSize: 30, bold: true, color: th.accent, align: 'center' });
+            const pts = (s.pontos || []).map(t => ({ text: t, options: { bullet: { code: '2726', indent: 18 }, color: th.text, fontSize: 20, paraSpaceAfter: 12 } }));
+            slide.addText(pts, { x: 2.0, y: 2.0, w: W - 4.0, h: H - 3.4, valign: 'top' });
+            if (s.chamada) slide.addText(s.chamada, { x: M, y: H - 1.0, w: W - 2 * M, h: 0.6, fontSize: 14, italic: true, color: th.sub, align: 'center' });
+            break;
+          }
+          default:
+            slide.addText(s.titulo || '', { x: M, y: 0.6, w: W - 2 * M, h: 1, fontFace: TF, fontSize: 26, bold: true, color: th.title });
+        }
+      });
+
+      const nome = (document.getElementById('tema').value.trim() || 'apresentacao').replace(/[^\w\s-]/g, '').trim().slice(0, 40) || 'apresentacao';
+      await pptx.writeFile({ fileName: nome + '.pptx' });
+    } catch (e) {
+      console.error(e);
+      alert('Não foi possível gerar o .pptx. Tente novamente.');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = btnTxt; }
+    }
+  }
+
   // ── PDF EXPORT ──
   function downloadPDF() {
     if (!slidesData.length) return;
@@ -942,6 +1066,7 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
 
   function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 <script src="/js/dp-print.js"></script>
 <script src="/js/dp-auth.js"></script>
 <script src="/js/dp-salvar.js"></script>
