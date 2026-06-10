@@ -99,7 +99,7 @@
   .theme-btn.active { box-shadow: 0 0 0 2px var(--gold), 0 1px 4px rgba(0,0,0,0.2); }
 
   /* SLIDE CONTAINER */
-  .slide-container { position: relative; width: 100%; background: #1a1410; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 48px rgba(0,0,0,0.22); aspect-ratio: 16/9; cursor: pointer; }
+  .slide-container { position: relative; width: 100%; background: #ece8e1; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 48px rgba(0,0,0,0.16); aspect-ratio: 16/9; cursor: pointer; }
   .slide-stage { position: absolute; inset: 0; transition: opacity 0.25s; }
 
   /* SLIDE NAVIGATION OVERLAY */
@@ -108,12 +108,12 @@
   .slide-container:hover .slide-nav-right { opacity: 1; }
   .slide-nav-left { left: 0; justify-content: flex-start; padding-left: 16px; }
   .slide-nav-right { right: 0; justify-content: flex-end; padding-right: 16px; }
-  .nav-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 18px; color: white; transition: background 0.15s; border: 1px solid rgba(255,255,255,0.2); }
-  .nav-btn:hover { background: rgba(255,255,255,0.28); }
+  .nav-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.34); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 18px; color: white; transition: background 0.15s; border: 1px solid rgba(0,0,0,0.08); }
+  .nav-btn:hover { background: rgba(0,0,0,0.52); }
 
   /* PROGRESS BAR */
-  .slide-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.15); z-index: 10; }
-  .slide-progress-fill { height: 100%; background: rgba(255,255,255,0.7); transition: width 0.25s; }
+  .slide-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(0,0,0,0.1); z-index: 10; }
+  .slide-progress-fill { height: 100%; background: rgba(0,0,0,0.42); transition: width 0.25s; }
 
   /* SLIDE COUNTER */
   .slide-counter-badge { position: absolute; bottom: 12px; right: 16px; background: rgba(0,0,0,0.35); color: rgba(255,255,255,0.8); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 10px; z-index: 10; backdrop-filter: blur(4px); }
@@ -406,6 +406,15 @@
     </div>
 
     <div class="field">
+      <label class="field-label">Quantidade de texto</label>
+      <div class="pill-group" id="densidadePills">
+        <div class="pill" data-val="menos">Menos texto</div>
+        <div class="pill active" data-val="equilibrado">Equilibrado</div>
+        <div class="pill" data-val="mais">Mais texto</div>
+      </div>
+    </div>
+
+    <div class="field">
       <label class="field-label">Nome da professora (para a capa)</label>
       <input type="text" id="professor" placeholder="Ex: Profª Maria Silva" />
     </div>
@@ -553,6 +562,17 @@
     return active ? active.dataset.val : 'expositivo';
   }
 
+  document.querySelectorAll('#densidadePills .pill').forEach(p => {
+    p.addEventListener('click', () => {
+      document.querySelectorAll('#densidadePills .pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+    });
+  });
+  function getDensidade() {
+    const active = document.querySelector('#densidadePills .pill.active');
+    return active ? active.dataset.val : 'equilibrado';
+  }
+
   function setStep(n) {
     for (let i = 1; i <= 4; i++) {
       const el = document.getElementById('step' + i);
@@ -573,6 +593,7 @@
     const professor = document.getElementById('professor').value.trim();
     const obs = document.getElementById('obs').value.trim();
     const estilo = getEstilo();
+    const densidade = getDensidade();
 
     const errorBox = document.getElementById('errorBox');
     errorBox.classList.remove('show');
@@ -596,6 +617,13 @@
 
     const sequencia = tiposSlides[estilo] || tiposSlides.expositivo;
 
+    const DENS = {
+      menos: 'DENSIDADE DE TEXTO: MENOS texto. No máximo 3 tópicos por slide; frases curtíssimas (até 6 palavras). Bem enxuto, foque em palavras-chave.',
+      equilibrado: 'DENSIDADE DE TEXTO: equilibrada. Até 4 tópicos por slide; frases até 8 palavras.',
+      mais: 'DENSIDADE DE TEXTO: MAIS texto. Até 5 tópicos por slide; frases podem ter até 12 palavras, com um pouco mais de detalhe — mas ainda legíveis de longe.'
+    };
+    const densidadeBloco = DENS[densidade] || DENS.equilibrado;
+
     const prompt = `Crie uma apresentação pedagógica de slides com os dados abaixo:
 
 TEMA: ${tema}
@@ -603,6 +631,7 @@ ${disciplina ? 'DISCIPLINA: ' + disciplina : ''}
 NÍVEL: ${nivel}
 NÚMERO DE SLIDES: ${qtd}
 ESTILO: ${estilo}
+${densidadeBloco}
 ${professor ? 'PROFESSORA: ' + professor : ''}
 ${obs ? 'OBSERVAÇÕES: ' + obs : ''}
 
@@ -637,15 +666,20 @@ Retorne SOMENTE este JSON válido (sem markdown):
 
 REGRAS (slides serão PROJETADOS no telão — texto grande, pouca palavra):
 - Linguagem adaptada ao nível: ${nivel}
-- Cada tópico deve ter no MÁXIMO 8 palavras. Frases curtas, diretas, sem encher linguiça.
-- Use no MÁXIMO 4 tópicos por slide "topicos" (ideal 3). NUNCA mais que 4.
+- Quantidade de tópicos e tamanho das frases: SIGA a DENSIDADE DE TEXTO indicada acima.
+- Frases curtas e diretas, legíveis de longe (mesmo na densidade "mais texto").
 - "dois_lados": no máximo 4 itens por lado, cada item bem curto (até 6 palavras).
 - "fechamento": no máximo 4 pontos, curtos.
 - Prefira palavras-chave a frases longas — quem lê de longe precisa captar rápido.
 - Destaque e pergunta devem ser marcantes e memoráveis (1 a 2 linhas).
 - O slide de fechamento sempre resume os pontos principais
 - Em slides "topicos", sempre inclua 3 emoji no campo "visuais" que representem visualmente o conteúdo do slide (ex: para slide sobre fotossíntese: ["🌱","☀️","💧"])
-- IMAGENS: nos slides "capa", "topicos" e "destaque", preencha "imagem_busca" com um termo de busca de FOTO em INGLÊS, concreto e fotografável (2 a 4 palavras). Ex: "solar system planets", "industrial revolution factory", "water cycle nature", "human heart anatomy". Evite termos abstratos (nada de "knowledge", "learning"); prefira o objeto/cena concreta do conteúdo.`;
+- IMAGENS ("imagem_busca", termo em INGLÊS, para banco de FOTOS Pexels) — regras importantes:
+  • Use uma CENA ou OBJETO concreto e genérico (2 a 4 palavras). Ex: "solar system planets", "rainforest canopy", "human heart anatomy".
+  • NUNCA use nome próprio de pessoa ou figura histórica (ex: "Princesa Isabel" retorna fotos genéricas e ERRADAS, tipo princesa de desenho). Descreva a CENA/CONTEXTO, não a pessoa.
+  • Para slide sobre uma PESSOA específica, um CONCEITO ABSTRATO, ou um TEMA SENSÍVEL (escravidão, guerra, tragédia, violência), deixe "imagem_busca" como string vazia "" — é melhor ficar sem foto do que com uma imagem inadequada ou que destoe.
+  • Em temas históricos, prefira cenas sóbrias e contextuais (ex: "old historical document", "colonial architecture brazil", "sugar cane plantation") em vez de pessoas.
+  • Evite termos abstratos (nada de "knowledge", "freedom", "learning").`;
 
     try {
       const response = await fetch('/api/claude', {
@@ -855,6 +889,9 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
 
   // Keyboard navigation
   document.addEventListener('keydown', e => {
+    // não captura teclas enquanto o professor digita num campo do formulário
+    const _tag = (e.target && e.target.tagName) || '';
+    if (_tag === 'INPUT' || _tag === 'TEXTAREA' || _tag === 'SELECT' || (e.target && e.target.isContentEditable)) return;
     if (!slidesData.length) return;
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
