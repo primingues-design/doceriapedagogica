@@ -259,12 +259,12 @@
   ══════════════════════════════════════ */
   /* .slide é o CONTAINER de referência: 1cqw = 1% da largura do slide.
      Assim as fontes escalam de verdade no projetor/PDF (antes o % travava no mínimo). */
-  .slide { width:100%; height:100%; display:flex; flex-direction:column; padding:5% 6%; position:relative; overflow:hidden; container-type:size; }
+  .slide { width:100%; height:100%; display:flex; flex-direction:column; padding:5% 6%; position:relative; overflow:hidden; container-type:inline-size; }
 
   /* CAPA */
   .slide-capa { align-items:center; justify-content:center; text-align:center; }
   .capa-emoji { line-height:1; margin-bottom:3%; }
-  .capa-titulo { font-size:clamp(30px,7.4cqw,96px); }
+  .capa-titulo { font-size:clamp(26px,6.4cqw,82px); }
   .capa-sub { font-size:clamp(16px,3.5cqw,42px); margin-bottom:5%; line-height:1.3; }
   .capa-meta { display:flex; align-items:center; justify-content:center; gap:4%; padding-top:3%; margin-top:3%; font-size:clamp(12px,2cqw,24px); font-weight:700; letter-spacing:0.05em; text-transform:uppercase; flex-wrap:wrap; }
 
@@ -273,12 +273,12 @@
   .slide-header { display:flex; align-items:flex-start; gap:3%; margin-bottom:4%; }
   .slide-header-emoji { font-size:clamp(30px,6.6cqw,78px); flex-shrink:0; line-height:1; }
   .slide-header-text { flex:1; }
-  .slide-titulo { font-size:clamp(24px,5.6cqw,66px); line-height:1.12; }
+  .slide-titulo { font-size:clamp(20px,4.4cqw,48px); line-height:1.12; }
   .slide-acento { height:0.6cqw; min-height:4px; width:9cqw; min-width:48px; border-radius:2px; margin-top:1.4cqw; }
-  .slide-content-row { display:grid; grid-template-columns:1fr auto; gap:4%; flex:1; min-height:0; }
-  .topicos-list { display:flex; flex-direction:column; gap:3.4%; flex:1; justify-content:center; }
-  .topico-item { display:flex; align-items:flex-start; gap:2.5%; font-size:clamp(18px,3.8cqw,48px); line-height:1.38; color:var(--text); font-weight:600; }
-  .topico-dot { font-size:clamp(16px,3.2cqw,40px); flex-shrink:0; margin-top:0.3cqw; }
+  .slide-content-row { display:grid; grid-template-columns:1fr auto; gap:5%; flex:1; min-height:0; width:100%; overflow:hidden; align-items:center; }
+  .topicos-list { display:flex; flex-direction:column; gap:2.8%; flex:1; justify-content:center; min-width:0; overflow:hidden; }
+  .topico-item { display:flex; align-items:flex-start; gap:2.5%; font-size:clamp(15px,2.9cqw,32px); line-height:1.3; color:var(--text); font-weight:600; }
+  .topico-dot { font-size:clamp(13px,2.4cqw,26px); flex-shrink:0; margin-top:0.3cqw; }
   .topico-text { flex:1; }
 
   /* PAINEL VISUAL (imagens emoji) */
@@ -286,7 +286,7 @@
   .visual-emoji-box { width:100%; aspect-ratio:1; border-radius:14px; background:rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; font-size:clamp(28px,6.6cqw,88px); line-height:1; flex-shrink:0; }
 
   /* IMAGENS REAIS (Pexels) — com fallback automático pro emoji */
-  .slide-image-panel { width:clamp(150px,34%,440px); align-self:stretch; display:flex; }
+  .slide-image-panel { width:clamp(140px,30%,360px); align-self:stretch; display:flex; }
   .slide-image { width:100%; height:100%; object-fit:cover; border-radius:16px; box-shadow:0 8px 28px rgba(0,0,0,0.16); display:block; }
   .capa-image-wrap { width:clamp(180px,44%,560px); aspect-ratio:16/9; margin-bottom:4%; border-radius:18px; overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,0.22); }
   .capa-image { width:100%; height:100%; object-fit:cover; display:block; }
@@ -297,15 +297,15 @@
   .slide-destaque { align-items:center; justify-content:center; text-align:center; }
   .destaque-inner { max-width:88%; }
   .destaque-acento { font-size:clamp(48px,10cqw,140px); margin-bottom:4%; line-height:1; }
-  .destaque-texto { font-size:clamp(26px,5.8cqw,74px); line-height:1.28; font-weight:800; }
+  .destaque-texto { font-size:clamp(24px,5cqw,60px); line-height:1.26; font-weight:800; }
   .destaque-sub { font-size:clamp(15px,3cqw,36px); margin-top:3%; opacity:0.78; }
 
   /* DOIS LADOS */
   .slide-dois { }
   .dois-grid { display:grid; grid-template-columns:1fr 1fr; gap:4%; flex:1; margin-top:2%; }
   .dois-lado { background:rgba(0,0,0,0.04); border-radius:10px; padding:4% 5%; }
-  .dois-lado-titulo { font-size:clamp(16px,3.3cqw,40px); font-weight:800; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3%; }
-  .dois-item { font-size:clamp(15px,3.1cqw,36px); color:var(--text); padding:2.5% 0; border-bottom:1px solid var(--border); line-height:1.38; font-weight:600; }
+  .dois-lado-titulo { font-size:clamp(14px,2.8cqw,30px); font-weight:800; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3%; }
+  .dois-item { font-size:clamp(13px,2.5cqw,28px); color:var(--text); padding:2.5% 0; border-bottom:1px solid var(--border); line-height:1.3; font-weight:600; }
   .dois-item:last-child { border-bottom:none; }
 
   /* PERGUNTA */
@@ -318,9 +318,9 @@
   /* FECHAMENTO */
   .slide-fechamento { align-items:center; justify-content:center; text-align:center; }
   .fechamento-emoji { font-size:clamp(44px,9.4cqw,124px); margin-bottom:3%; }
-  .fechamento-titulo { font-family:'Playfair Display',serif; font-size:clamp(28px,6cqw,74px); font-weight:900; margin-bottom:4%; }
+  .fechamento-titulo { font-family:'Playfair Display',serif; font-size:clamp(24px,5cqw,56px); font-weight:900; margin-bottom:4%; }
   .fechamento-pontos { text-align:left; max-width:86%; width:100%; display:flex; flex-direction:column; gap:2.8%; margin-bottom:4%; }
-  .fechamento-ponto { display:flex; align-items:flex-start; gap:2%; font-size:clamp(17px,3.5cqw,44px); font-weight:600; }
+  .fechamento-ponto { display:flex; align-items:flex-start; gap:2%; font-size:clamp(15px,2.9cqw,34px); font-weight:600; }
   .fechamento-ponto::before { content:'✦'; flex-shrink:0; }
   .fechamento-chamada { font-size:clamp(13px,2.4cqw,28px); border-top:1px solid rgba(0,0,0,0.1); padding-top:3%; margin-top:1%; }
 
@@ -783,16 +783,12 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
         </div>`;
 
       case 'topicos': {
-        const visuais = slide.visuais || [];
         const visualPanel = slide.imagemUrl
           ? `<div class="slide-image-panel"><img class="slide-image" src="${slide.imagemUrl}" alt=""></div>`
-          : (visuais.length > 0
-            ? `<div class="slide-visual-panel">${visuais.map(e => `<div class="visual-emoji-box">${e}</div>`).join('')}</div>`
-            : '');
+          : '';
         return `
         <div class="slide slide-body ${t}">
           <div class="slide-header">
-            <div class="slide-header-emoji">${slide.emoji||'📌'}</div>
             <div class="slide-header-text">
               <div class="slide-titulo">${slide.titulo||''}</div>
               <div class="slide-acento"></div>
@@ -821,7 +817,6 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
       case 'dois_lados': return `
         <div class="slide slide-body ${t}">
           <div class="slide-header">
-            <div class="slide-header-emoji">${slide.emoji||'⚖️'}</div>
             <div class="slide-header-text">
               <div class="slide-titulo">${slide.titulo||''}</div>
               <div class="slide-acento"></div>
@@ -913,9 +908,14 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
     const el = document.getElementById('slideContainer');
     if (document.fullscreenElement) {
       el.style.borderRadius = '0';
-      el.style.aspectRatio = '16/9';
+      el.style.aspectRatio = 'auto';
+      el.style.width = '100%';
+      el.style.height = '100%';
     } else {
       el.style.borderRadius = '14px';
+      el.style.aspectRatio = '';
+      el.style.width = '';
+      el.style.height = '';
     }
   });
 
