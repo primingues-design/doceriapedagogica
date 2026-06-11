@@ -210,6 +210,7 @@
     .grade-card { padding: 9px !important; gap: 7px !important; }
     .grade-card .img-frame { width: 38mm !important; height: 38mm !important; aspect-ratio: auto !important; margin: 0 auto !important; }
     .escrita-linha { height: 26px !important; }
+    .prova-q-row { display: flex !important; flex-direction: row !important; align-items: flex-start !important; }
     .prova-q-img { width: 32mm !important; }
     .prova-q-img .img-frame { width: 32mm !important; height: 32mm !important; aspect-ratio: auto !important; }
     .img-frame img { max-height: 70mm !important; }
@@ -706,6 +707,7 @@ ${o.instrucoes?`- INSTRUÇÕES EXTRAS: ${o.instrucoes}`:''}
 DIRETRIZES: Alfabetização: "Sondagem (Hipótese de Escrita)" = tradição psicogenética, palavras do MESMO campo semântico na ordem Polissílaba, Trissílaba, Dissílaba, Monossílaba + 1 frase (item final sem imagem); Infantil=lúdico, EJA=funcional. "Autoditado"=imagem+linha. Português/Inglês: produção/interpretação a partir de cena. Geografia=biomas/espaço; História="o que tem de errado" (anacronismo)/cena histórica. Artes=leitura de imagem. Mat/Fís/Quím=problema/fenômeno visual (números no ENUNCIADO, nunca na imagem).
 
 REGRAS api_image_prompt (em INGLÊS): realista/fotográfico ("Photorealistic, 8k, studio light"); autoditado/sondagem = objeto ISOLADO, centralizado, FUNDO BRANCO; cenas = iluminação, personagens (diversidade/faixa etária), cenário. NUNCA peça texto/números/legendas DENTRO da imagem. TETO: máx 6 imagens no total.
+MÚLTIPLA ESCOLHA: o "enunciado_item" contém SÓ a pergunta — NUNCA inclua as alternativas dentro dele; elas vão SÓ em "opcoes_selecao".
 
 RESPONDA SÓ COM ESTE JSON:
 {"metadados":{"titulo_atividade":"...","componente":"${o.componente}","tipo_layout":"'grade_autoditado'|'cena_unica_perguntas'|'multiplas_questoes'|'texto_e_imagem'","publico":"${o.publico}"},
@@ -739,7 +741,7 @@ ${o.instrucoes?`- INSTRUÇÕES EXTRAS: ${o.instrucoes}`:''}
 ${textoBloco}
 
 QUESTÕES: gere exatamente estas (${total} no total), distribuídas: ${tiposBloco}.
-- multipla_escolha: "opcoes" com 4 alternativas; "resposta" = letra correta (A/B/C/D).
+- multipla_escolha: o "enunciado" contém SOMENTE a pergunta/comando — NUNCA repita as alternativas (A, B, C, D) dentro do enunciado. As alternativas vão EXCLUSIVAMENTE no array "opcoes" (4 itens, texto puro, sem "A)"/"B)" na frente). "resposta" = letra correta (A/B/C/D).
 - vf: "afirmacoes" = lista de {texto, resposta:"V"|"F"} (3 a 5 afirmações).
 - dissertativa: "enunciado" claro; "linhas" (3-5); "resposta_modelo" curto p/ o gabarito.
 
