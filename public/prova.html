@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador de Atividades & Avaliações — DoceriaPedagógica</title>
+<title>Atividades & Avaliações — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -29,8 +29,8 @@
 
   .main{display:grid;grid-template-columns:400px 1fr;min-height:calc(100vh - 56px)}
 
-  .form-panel{background:var(--cream);border-right:1px solid var(--border);padding:28px 24px;overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px}
-  .form-section{margin-bottom:24px}
+  .form-panel{background:var(--cream);border-right:1px solid var(--border);padding:24px;overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px}
+  .form-section{margin-bottom:22px}
   .form-section-title{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
   .form-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
   .field{margin-bottom:16px}
@@ -38,11 +38,16 @@
   .req{color:var(--coral)}
   input[type="text"],input[type="number"],select,textarea{width:100%;background:white;border:1.5px solid var(--border-mid);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif;transition:border-color 0.2s,box-shadow 0.2s;outline:none}
   input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,150,62,0.1)}
-  textarea{resize:vertical;min-height:64px;line-height:1.6}
+  textarea{resize:vertical;min-height:62px;line-height:1.6}
   .field-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .field-hint{font-size:11px;color:var(--text-muted);margin-top:5px;line-height:1.4}
 
-  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+  /* segmented: modo */
+  .mode-seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--warm);border-radius:11px;padding:5px;margin-bottom:22px}
+  .mode-btn{padding:10px;border-radius:8px;border:none;background:transparent;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.15s}
+  .mode-btn.active{background:white;color:var(--teal);box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0}
   .toggle-label{font-size:13px;color:var(--text-mid)}
   .toggle-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
   .toggle{width:36px;height:20px;background:var(--border-mid);border-radius:10px;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;border:none}
@@ -50,7 +55,21 @@
   .toggle::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;background:white;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
   .toggle.on::after{transform:translateX(16px)}
 
-  .divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+  .radio-card{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1.5px solid var(--border-mid);border-radius:9px;background:white;cursor:pointer;margin-bottom:7px;transition:all 0.15s}
+  .radio-card:hover{background:var(--warm)}
+  .radio-card.sel{border-color:var(--teal);background:var(--teal-pale)}
+  .radio-card input{margin-top:2px;accent-color:var(--teal);flex-shrink:0}
+  .radio-card .rc-title{font-size:13px;font-weight:600;color:var(--text)}
+  .radio-card .rc-sub{font-size:11px;color:var(--text-muted);margin-top:1px}
+
+  /* tipos de questão (avaliação) */
+  .qtipo-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+  .qtipo-row:last-child{border-bottom:none}
+  .qtipo-check{display:flex;align-items:center;gap:9px;flex:1;cursor:pointer;font-size:13px;color:var(--text-mid)}
+  .qtipo-check input{width:16px;height:16px;accent-color:var(--teal);cursor:pointer}
+  .qtipo-qtd{width:62px;flex-shrink:0}
+
+  .divider{border:none;border-top:1px solid var(--border);margin:18px 0}
   .generate-btn{width:100%;background:var(--gold);color:white;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s}
   .generate-btn:hover:not(:disabled){background:#b5842e;transform:translateY(-1px)}
   .generate-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
@@ -84,18 +103,21 @@
   .preview-header.show{display:flex}
   .ph-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700}
   .ph-meta{font-size:12px;color:var(--text-muted);margin-top:3px}
-  .ph-actions{display:flex;gap:10px}
+  .ph-actions{display:flex;gap:10px;flex-wrap:wrap}
   .btn-pdf{background:var(--ink);color:var(--cream);padding:10px 22px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:8px;transition:all 0.2s}
   .btn-pdf:hover{background:#2a2926}
-  .btn-regen{background:white;color:var(--text-mid);padding:10px 16px;border-radius:8px;border:1.5px solid var(--border-mid);font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
-  .btn-regen:hover{background:var(--warm)}
+  .btn-soft{background:white;color:var(--text-mid);padding:10px 16px;border-radius:8px;border:1.5px solid var(--border-mid);font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
+  .btn-soft:hover{background:var(--warm)}
+  .btn-soft.active{background:var(--teal-pale);border-color:var(--teal);color:var(--teal);font-weight:600}
 
   .doc-wrap{display:none;max-width:800px;margin:0 auto}
   .doc-wrap.show{display:block}
 
-  /* ═══════════ DOCUMENTO DA ATIVIDADE ═══════════ */
+  /* ═══════════ DOCUMENTO ═══════════ */
   #prova-doc{background:white;font-family:'Outfit',sans-serif}
   .prova-doc{background:white;border-radius:12px;box-shadow:0 6px 32px rgba(0,0,0,0.08);padding:44px 52px;color:#000}
+  .prova-doc.editing{outline:2px dashed var(--gold);outline-offset:8px}
+  .prova-doc.editing:focus-within{outline-color:var(--teal)}
 
   .prova-cabecalho{border-top:5px solid var(--gold);border-bottom:1.5px solid #999;padding:18px 0 16px;margin-bottom:22px}
   .prova-escola{font-size:12px;color:var(--text-mid);margin-bottom:8px}
@@ -106,53 +128,57 @@
   .prova-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
   .prova-badge{background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:3px 11px;font-size:11px;color:var(--text-mid)}
 
-  .prova-enunciado-geral{background:var(--gold-pale);border-left:4px solid var(--gold);border-radius:0 8px 8px 0;padding:13px 16px;margin-bottom:24px;font-size:13.5px;line-height:1.6;color:var(--text-mid);font-weight:500}
+  .prova-enunciado-geral{background:var(--gold-pale);border-left:4px solid var(--gold);border-radius:0 8px 8px 0;padding:13px 16px;margin-bottom:22px;font-size:13.5px;line-height:1.6;color:var(--text-mid);font-weight:500}
+  .prova-texto-base{border:1.5px solid var(--border-mid);border-radius:10px;padding:16px 20px;margin-bottom:22px;background:#fcfbf9}
+  .prova-texto-titulo{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+  .prova-texto-base p{font-size:13.5px;line-height:1.8;color:#000;margin-bottom:9px}
 
-  /* imagem genérica + placeholder */
   .img-frame{border-radius:10px;overflow:hidden;background:#f4f2ee;display:flex;align-items:center;justify-content:center}
   .img-frame img{width:100%;height:100%;object-fit:cover;display:block}
   .img-placeholder{border:1.5px dashed var(--border-mid);color:var(--text-muted);flex-direction:column;gap:6px;text-align:center;padding:12px;background:#fcfbf9}
   .img-placeholder span{font-size:30px;opacity:0.5}
   .img-placeholder small{font-size:10px;line-height:1.3;max-width:90%}
 
-  /* LAYOUT: grade_autoditado */
-  .grade{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:8px}
-  .grade-card{border:1.5px solid var(--border);border-radius:12px;padding:16px;break-inside:avoid;page-break-inside:avoid;display:flex;flex-direction:column;gap:10px}
+  /* grade_autoditado */
+  .grade{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:8px}
+  .grade-card{border:1.5px solid var(--border);border-radius:12px;padding:14px;break-inside:avoid;page-break-inside:avoid;display:flex;flex-direction:column;gap:10px}
   .grade-card .img-frame{aspect-ratio:1;width:100%}
   .grade-num{width:26px;height:26px;border-radius:50%;background:var(--gold);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
   .grade-enun{font-size:13px;color:#000;font-weight:500;display:flex;align-items:center;gap:8px}
-  .escrita-linha{border-bottom:2px solid #555;height:38px;margin-top:4px}
+  .escrita-linha{border-bottom:2px solid #555;height:36px;margin-top:2px}
   .grade-card.full{grid-column:1 / -1}
 
-  /* LAYOUT: cena única + perguntas */
-  .cena-principal{width:100%;aspect-ratio:16/10;margin-bottom:22px}
-  .cena-principal.tall{aspect-ratio:4/3;max-width:560px;margin-left:auto;margin-right:auto}
+  .cena-principal{width:100%;max-width:520px;aspect-ratio:16/10;margin:0 auto 20px}
 
   /* questões (compartilhado) */
-  .prova-questao{margin-bottom:22px;padding:16px 18px;border:1.5px solid var(--border);border-radius:10px;background:#fff;break-inside:avoid;page-break-inside:avoid}
-  .prova-q-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+  .prova-questao{margin-bottom:20px;padding:16px 18px;border:1.5px solid var(--border);border-radius:10px;background:#fff;break-inside:avoid;page-break-inside:avoid}
+  .prova-q-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
   .prova-q-num{width:28px;height:28px;border-radius:50%;background:var(--gold);color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .prova-q-tipo{font-size:10.5px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--teal)}
   .prova-q-enunciado{font-size:14px;font-weight:500;line-height:1.6;color:#000}
   .prova-q-row{display:flex;gap:18px;align-items:flex-start}
   .prova-q-conteudo{flex:1;min-width:0}
-  .prova-q-img{flex-shrink:0;width:160px}
+  .prova-q-img{flex-shrink:0;width:150px}
   .prova-q-img .img-frame{aspect-ratio:1;width:100%}
   .prova-opcoes{display:flex;flex-direction:column;gap:8px;margin-top:10px}
   .prova-opcao{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#000;line-height:1.5}
   .prova-bolha{width:24px;height:24px;border-radius:50%;border:1.5px solid #555;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#333;flex-shrink:0;margin-top:1px;background:white}
   .prova-linhas{display:flex;flex-direction:column;gap:0;margin-top:10px}
-  .prova-linha{border-bottom:1.5px dotted #555;min-height:32px;display:block}
+  .prova-linha{border-bottom:1.5px dotted #555;min-height:30px;display:block}
+  .prova-vf-item{display:flex;align-items:center;gap:12px;font-size:14px;color:#000;padding:6px 0;border-bottom:1px dotted #ccc;line-height:1.5}
+  .prova-vf-item:last-child{border-bottom:none}
+  .prova-vf-bubble{display:flex;gap:4px;flex-shrink:0}
+  .prova-vf-box{width:24px;height:24px;border:1.5px solid #555;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#555}
 
-  /* gabarito */
   .page-break{page-break-before:always;break-before:page;height:0;margin:0;border:0}
-  .doc-wrap .page-break{display:block;height:1px;border-top:2px dashed var(--gold);margin:30px 0;opacity:0.5}
-  .gabarito{border:2px solid var(--teal);border-radius:12px;padding:24px 28px;background:var(--teal-pale)}
+  .doc-wrap .page-break{display:block;height:1px;border-top:2px dashed var(--gold);margin:28px 0;opacity:0.5}
+  .gabarito{border:2px solid var(--teal);border-radius:12px;padding:22px 26px;background:var(--teal-pale)}
   .gabarito-titulo{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:var(--teal);margin-bottom:14px}
   .gabarito-lista{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px 24px}
-  .gabarito-item{font-size:13.5px;color:#000;line-height:1.5;padding:5px 0;border-bottom:1px dotted rgba(45,110,110,0.3)}
+  .gabarito-item{font-size:13px;color:#000;line-height:1.45;padding:5px 0;border-bottom:1px dotted rgba(45,110,110,0.3)}
   .gabarito-item strong{color:var(--teal)}
 
-  .prova-rodape{margin-top:24px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted)}
+  .prova-rodape{margin-top:22px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted)}
   .prova-rodape-logo{font-family:'Playfair Display',serif;font-weight:700;color:var(--gold)}
 
   @media(max-width:860px){
@@ -163,16 +189,31 @@
     .prova-q-img{width:100%}
   }
 
+  /* ═══ IMPRESSÃO (imagens menores + layout adensado p/ economizar papel) ═══ */
   @media print {
-    @page { size: A4 portrait; margin: 12mm 14mm; }
+    @page { size: A4 portrait; margin: 11mm 13mm; }
     body { background: white !important; }
-    .topbar, .form-panel, .preview-header, .preview-empty, .btn-pdf, .btn-regen { display: none !important; }
+    .topbar, .form-panel, .preview-header, .preview-empty, .btn-pdf, .btn-soft { display: none !important; }
     .main { display: block !important; }
     .preview-panel { padding: 0 !important; overflow: visible !important; max-height: none !important; }
     .doc-wrap { max-width: none !important; display: block !important; }
     #prova-doc { display: block !important; }
-    .prova-doc { border-radius: 0 !important; box-shadow: none !important; padding: 0 !important; }
+    .prova-doc { border-radius: 0 !important; box-shadow: none !important; padding: 0 !important; outline: none !important; }
     .prova-questao, .grade-card, .gabarito { break-inside: avoid; page-break-inside: avoid; }
+    .prova-questao { margin-bottom: 11px !important; padding: 10px 12px !important; }
+    .prova-cabecalho { padding: 12px 0 12px !important; margin-bottom: 14px !important; }
+    .prova-enunciado-geral, .prova-texto-base { padding: 10px 14px !important; margin-bottom: 14px !important; }
+
+    /* IMAGENS: tamanho controlado para não ocupar a página toda */
+    .cena-principal { width: 105mm !important; height: 62mm !important; aspect-ratio: auto !important; max-width: 60% !important; margin: 0 auto 12px !important; }
+    .grade { grid-template-columns: repeat(3, 1fr) !important; gap: 9px !important; }
+    .grade-card { padding: 9px !important; gap: 7px !important; }
+    .grade-card .img-frame { width: 38mm !important; height: 38mm !important; aspect-ratio: auto !important; margin: 0 auto !important; }
+    .escrita-linha { height: 26px !important; }
+    .prova-q-img { width: 32mm !important; }
+    .prova-q-img .img-frame { width: 32mm !important; height: 32mm !important; aspect-ratio: auto !important; }
+    .img-frame img { max-height: 70mm !important; }
+
     .doc-wrap .page-break { display: block !important; height: 0 !important; border: 0 !important; margin: 0 !important; page-break-before: always; break-before: page; }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   }
@@ -194,87 +235,175 @@
 <div class="main">
   <div class="form-panel">
 
-    <div class="form-section">
-      <div class="form-section-title">Configuração</div>
-      <div class="field">
-        <label class="field-label">Público-alvo <span class="req">*</span></label>
-        <select id="publico">
-          <option value="">Selecione...</option>
-          <option>Educação Infantil</option>
-          <option>Ensino Fundamental I (1º ao 5º ano)</option>
-          <option>Ensino Fundamental II (6º ao 9º ano)</option>
-          <option>EJA I (Alfabetização de Adultos)</option>
-          <option>EJA — Ensino Fundamental</option>
-          <option>Ensino Médio</option>
-        </select>
-      </div>
-      <div class="field">
-        <label class="field-label">Componente curricular <span class="req">*</span></label>
-        <select id="componente" onchange="onComponenteChange()">
-          <option value="">Selecione...</option>
-          <option>Alfabetização</option>
-          <option>Língua Portuguesa</option>
-          <option>Inglês</option>
-          <option>Geografia</option>
-          <option>História</option>
-          <option>Artes</option>
-          <option>Matemática</option>
-          <option>Física</option>
-          <option>Química</option>
-          <option>Ciências</option>
-        </select>
-      </div>
-      <div class="field">
-        <label class="field-label">Tipo de atividade <span class="req">*</span></label>
-        <select id="tipoAtividade"><option value="">Selecione o componente primeiro</option></select>
-      </div>
-      <div class="field">
-        <label class="field-label">Tema <span class="req">*</span></label>
-        <input type="text" id="tema" placeholder="Ex: Animais da Fazenda, Biomas Brasileiros..." />
+    <!-- MODO -->
+    <div class="mode-seg">
+      <button class="mode-btn active" id="modeAtividade" onclick="setMode('atividade')">✏️ Atividade</button>
+      <button class="mode-btn" id="modeAvaliacao" onclick="setMode('avaliacao')">📋 Avaliação</button>
+    </div>
+
+    <!-- ══════════ MODO ATIVIDADE ══════════ -->
+    <div id="atividadeFields">
+      <div class="form-section">
+        <div class="form-section-title">Configuração</div>
+        <div class="field">
+          <label class="field-label">Público-alvo <span class="req">*</span></label>
+          <select id="a_publico">
+            <option value="">Selecione...</option>
+            <option>Educação Infantil</option>
+            <option>Ensino Fundamental I (1º ao 5º ano)</option>
+            <option>Ensino Fundamental II (6º ao 9º ano)</option>
+            <option>EJA I (Alfabetização de Adultos)</option>
+            <option>EJA — Ensino Fundamental</option>
+            <option>Ensino Médio</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Componente curricular <span class="req">*</span></label>
+          <select id="a_componente" onchange="onComponenteChange()">
+            <option value="">Selecione...</option>
+            <option>Alfabetização</option><option>Língua Portuguesa</option><option>Inglês</option>
+            <option>Geografia</option><option>História</option><option>Artes</option>
+            <option>Matemática</option><option>Física</option><option>Química</option><option>Ciências</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Tipo de atividade <span class="req">*</span></label>
+          <select id="a_tipo"><option value="">Selecione o componente primeiro</option></select>
+        </div>
+        <div class="field">
+          <label class="field-label">Tema <span class="req">*</span></label>
+          <input type="text" id="a_tema" placeholder="Ex: Animais da Fazenda, Biomas..." />
+        </div>
+        <div class="field">
+          <label class="field-label">Quantidade de itens</label>
+          <input type="number" id="a_quantidade" min="1" max="10" value="4" />
+          <div class="field-hint">Sondagem/autoditado: o ideal são 4–5 itens.</div>
+        </div>
       </div>
     </div>
 
-    <div class="form-section">
-      <div class="form-section-title">Itens & acabamento</div>
-      <div class="field">
-        <label class="field-label">Quantidade de itens</label>
-        <input type="number" id="quantidade" min="1" max="10" value="4" />
-        <div class="field-hint">Para sondagem/autoditado, o ideal são 4–5 itens.</div>
-      </div>
-      <div class="toggle-row">
-        <div>
-          <div class="toggle-label">🧾 Cabeçalho do aluno</div>
-          <div class="toggle-sub">Nome, turma, data e nota no topo</div>
+    <!-- ══════════ MODO AVALIAÇÃO ══════════ -->
+    <div id="avaliacaoFields" style="display:none;">
+      <div class="form-section">
+        <div class="form-section-title">Avaliação</div>
+        <div class="field">
+          <label class="field-label">Nome / título da avaliação <span class="req">*</span></label>
+          <input type="text" id="v_titulo" placeholder="Ex: Avaliação de Ciências — 1º Bimestre" />
         </div>
+        <div class="field">
+          <label class="field-label">Público-alvo <span class="req">*</span></label>
+          <select id="v_publico">
+            <option value="">Selecione...</option>
+            <option>Educação Infantil</option>
+            <option>Ensino Fundamental I (1º ao 5º ano)</option>
+            <option>Ensino Fundamental II (6º ao 9º ano)</option>
+            <option>EJA I (Alfabetização de Adultos)</option>
+            <option>EJA — Ensino Fundamental</option>
+            <option>Ensino Médio</option>
+          </select>
+        </div>
+        <div class="field-2col">
+          <div class="field">
+            <label class="field-label">Disciplina</label>
+            <input type="text" id="v_disciplina" placeholder="Ex: Ciências" />
+          </div>
+          <div class="field">
+            <label class="field-label">Tema <span class="req">*</span></label>
+            <input type="text" id="v_tema" placeholder="Ex: Ciclo da água" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Texto de apoio</div>
+        <label class="radio-card sel" id="vrc-A">
+          <input type="radio" name="vTexto" value="A" onchange="onTextoChange()" checked>
+          <div><div class="rc-title">Eu vou colar um texto</div><div class="rc-sub">As questões usam o seu texto</div></div>
+        </label>
+        <label class="radio-card" id="vrc-B">
+          <input type="radio" name="vTexto" value="B" onchange="onTextoChange()">
+          <div><div class="rc-title">A IA cria um texto inédito</div><div class="rc-sub">Sobre o tema, na hora</div></div>
+        </label>
+        <label class="radio-card" id="vrc-C">
+          <input type="radio" name="vTexto" value="C" onchange="onTextoChange()">
+          <div><div class="rc-title">Sem texto</div><div class="rc-sub">Direto para as questões</div></div>
+        </label>
+        <div class="field" id="vTextoWrap" style="margin-top:8px;">
+          <textarea id="v_textoBase" placeholder="Cole aqui o texto de apoio..."></textarea>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Imagens</div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">🖼️ Incluir imagens</div><div class="toggle-sub">Geradas por IA</div></div>
+          <button class="toggle" id="v_togImg" onclick="toggleBtn(this);onImgToggle()"></button>
+        </div>
+        <div id="vImgOpts" style="display:none;margin-top:8px;">
+          <div class="field-2col">
+            <div class="field">
+              <label class="field-label">Quantas (máx 6)</label>
+              <input type="number" id="v_numImg" min="1" max="6" value="3" />
+            </div>
+            <div class="field">
+              <label class="field-label">Função</label>
+              <select id="v_propImg">
+                <option value="ilustrativa">Ilustrativa</option>
+                <option value="compoe">Compõem as questões</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-hint">“Compõem” = a IA cria perguntas a partir da imagem (analise, relacione...).</div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Questões (escolha e diga quantas)</div>
+        <div class="qtipo-row">
+          <label class="qtipo-check"><input type="checkbox" id="v_mcOn" checked> Múltipla escolha</label>
+          <input type="number" class="qtipo-qtd" id="v_mcQtd" min="0" max="20" value="5">
+        </div>
+        <div class="qtipo-row">
+          <label class="qtipo-check"><input type="checkbox" id="v_disOn"> Dissertativa</label>
+          <input type="number" class="qtipo-qtd" id="v_disQtd" min="0" max="20" value="3">
+        </div>
+        <div class="qtipo-row">
+          <label class="qtipo-check"><input type="checkbox" id="v_vfOn"> Verdadeiro ou Falso</label>
+          <input type="number" class="qtipo-qtd" id="v_vfQtd" min="0" max="20" value="4">
+        </div>
+      </div>
+    </div>
+
+    <!-- comum aos dois modos -->
+    <div class="form-section">
+      <div class="form-section-title">Acabamento</div>
+      <div class="toggle-row">
+        <div><div class="toggle-label">🧾 Cabeçalho do aluno</div><div class="toggle-sub">Nome, turma, data e nota</div></div>
         <button class="toggle on" id="togCabecalho" onclick="toggleBtn(this)"></button>
       </div>
-      <div class="field" style="margin-top:14px;">
+      <div class="field" style="margin-top:12px;">
         <label class="field-label">Instruções extras (opcional)</label>
-        <textarea id="instrucoes" placeholder="Ex: foco em letras maiúsculas; usar contexto rural..."></textarea>
+        <textarea id="instrucoes" placeholder="Ex: prova individual, sem consulta..."></textarea>
       </div>
     </div>
 
     <hr class="divider">
 
     <button class="generate-btn" id="genBtn" onclick="generate()">
-      <span class="gicon">✦</span>
-      <div class="spin"></div>
-      Gerar Atividade
+      <span class="gicon">✦</span><div class="spin"></div>
+      <span id="genLabel">Gerar Atividade</span>
     </button>
 
     <div class="error-box" id="errorBox"></div>
-    <div class="info-box">
-      🖼️ As imagens são geradas por IA (até 6 por atividade). Funcionam melhor para
-      objetos e cenas; mapas/gráficos com números virão por outra via.
-    </div>
+    <div class="info-box">🖼️ Imagens por IA (até 6). Funcionam melhor para objetos e cenas; mapas/gráficos com números virão por outra via.</div>
     <div class="progress-wrap" id="progressWrap">
       <div class="prog-bar-outer"><div class="prog-bar-inner" id="progBar"></div></div>
       <div class="prog-steps">
-        <div class="prog-step" id="ps1"><div class="prog-dot">1</div><span>Analisando público e componente...</span></div>
-        <div class="prog-step" id="ps2"><div class="prog-dot">2</div><span>Estruturando a atividade...</span></div>
+        <div class="prog-step" id="ps1"><div class="prog-dot">1</div><span>Analisando o pedido...</span></div>
+        <div class="prog-step" id="ps2"><div class="prog-dot">2</div><span>Estruturando o conteúdo...</span></div>
         <div class="prog-step" id="ps3"><div class="prog-dot">3</div><span>Escrevendo enunciados...</span></div>
         <div class="prog-step" id="ps4"><div class="prog-dot">4</div><span>Gerando as imagens...</span></div>
-        <div class="prog-step" id="ps5"><div class="prog-dot">5</div><span>Diagramando o material...</span></div>
+        <div class="prog-step" id="ps5"><div class="prog-dot">5</div><span>Diagramando...</span></div>
       </div>
     </div>
   </div>
@@ -282,18 +411,19 @@
   <div class="preview-panel">
     <div class="preview-header" id="prevHeader">
       <div>
-        <div class="ph-title" id="phTitle">Atividade gerada</div>
+        <div class="ph-title" id="phTitle">Material gerado</div>
         <div class="ph-meta" id="phMeta"></div>
       </div>
       <div class="ph-actions">
-        <button class="btn-regen" onclick="generate()">↻ Gerar novamente</button>
+        <button class="btn-soft" id="editBtn" onclick="toggleEdit()">✏️ Editar</button>
+        <button class="btn-soft" onclick="generate()">↻ Gerar novamente</button>
         <button class="btn-pdf" id="pdfBtn" onclick="printPDF()">🖨️ Imprimir / Salvar PDF</button>
       </div>
     </div>
     <div class="preview-empty" id="prevEmpty">
       <div class="preview-empty-icon">📝</div>
-      <div class="preview-empty-title">Sua atividade aparece aqui</div>
-      <div class="preview-empty-sub">Escolha público, componente, tipo e tema — a IA cria os enunciados e as imagens, prontos para imprimir, com gabarito quando fizer sentido.</div>
+      <div class="preview-empty-title">Seu material aparece aqui</div>
+      <div class="preview-empty-sub">Escolha <strong>Atividade</strong> ou <strong>Avaliação</strong>, configure ao lado e gere. Você pode editar o texto antes de imprimir.</div>
     </div>
     <div class="doc-wrap" id="docWrap">
       <div id="prova-doc"></div>
@@ -316,46 +446,43 @@
     'Ciências': ['Análise de cena/fenômeno','Observação da natureza'],
   };
   function onComponenteChange(){
-    const comp = document.getElementById('componente').value;
-    const sel = document.getElementById('tipoAtividade');
-    const tipos = TIPOS[comp] || [];
-    sel.innerHTML = tipos.length
-      ? tipos.map(t=>`<option>${t}</option>`).join('')
-      : '<option value="">Selecione o componente primeiro</option>';
+    const comp=document.getElementById('a_componente').value;
+    const sel=document.getElementById('a_tipo');
+    const tipos=TIPOS[comp]||[];
+    sel.innerHTML=tipos.length?tipos.map(t=>`<option>${t}</option>`).join(''):'<option value="">Selecione o componente primeiro</option>';
+  }
+
+  let MODE='atividade';
+  function setMode(m){
+    MODE=m;
+    document.getElementById('atividadeFields').style.display = m==='atividade'?'block':'none';
+    document.getElementById('avaliacaoFields').style.display = m==='avaliacao'?'block':'none';
+    document.getElementById('modeAtividade').classList.toggle('active', m==='atividade');
+    document.getElementById('modeAvaliacao').classList.toggle('active', m==='avaliacao');
+    document.getElementById('genLabel').textContent = m==='avaliacao'?'Gerar Avaliação':'Gerar Atividade';
   }
 
   function toggleBtn(el){el.classList.toggle('on')}
   function isOn(id){return document.getElementById(id).classList.contains('on')}
+  function getTextoOrigem(){return document.querySelector('input[name="vTexto"]:checked').value}
+  function onTextoChange(){
+    const v=getTextoOrigem();
+    document.getElementById('vTextoWrap').style.display = v==='A'?'block':'none';
+    ['A','B','C'].forEach(k=>document.getElementById('vrc-'+k).classList.toggle('sel',k===v));
+  }
+  function onImgToggle(){ document.getElementById('vImgOpts').style.display = isOn('v_togImg')?'block':'none'; }
 
   function setStep(n,total=5){
-    for(let i=1;i<=total;i++){
-      const el=document.getElementById('ps'+i); if(!el)continue;
-      el.classList.remove('active','done');
-      const dot=el.querySelector('.prog-dot');
-      if(i<n){el.classList.add('done');dot.textContent='✓';}
-      else if(i===n){el.classList.add('active');dot.textContent=i;}
-      else dot.textContent=i;
-    }
+    for(let i=1;i<=total;i++){const el=document.getElementById('ps'+i);if(!el)continue;el.classList.remove('active','done');const dot=el.querySelector('.prog-dot');if(i<n){el.classList.add('done');dot.textContent='✓';}else if(i===n){el.classList.add('active');dot.textContent=i;}else dot.textContent=i;}
     document.getElementById('progBar').style.width=Math.round((n/total)*88)+'%';
   }
 
-  let _ultimo = null; // guarda dados p/ dpSalvar
-
   async function generate(){
-    const publico=document.getElementById('publico').value;
-    const componente=document.getElementById('componente').value;
-    const tipo=document.getElementById('tipoAtividade').value;
-    const tema=document.getElementById('tema').value.trim();
-    const quantidade=parseInt(document.getElementById('quantidade').value,10)||4;
-    const cabecalho=isOn('togCabecalho');
-    const instrucoes=document.getElementById('instrucoes').value.trim();
-
     const errBox=document.getElementById('errorBox');
     errBox.classList.remove('show');
-    if(!publico){errBox.textContent='Selecione o público-alvo.';errBox.classList.add('show');return;}
-    if(!componente){errBox.textContent='Selecione o componente curricular.';errBox.classList.add('show');return;}
-    if(!tipo){errBox.textContent='Selecione o tipo de atividade.';errBox.classList.add('show');return;}
-    if(!tema){errBox.textContent='Preencha o tema.';errBox.classList.add('show');document.getElementById('tema').focus();return;}
+    let cfg;
+    try{ cfg = (MODE==='avaliacao') ? validarAvaliacao() : validarAtividade(); }
+    catch(e){ errBox.textContent=e.message; errBox.classList.add('show'); return; }
 
     const btn=document.getElementById('genBtn');
     btn.disabled=true;btn.classList.add('loading');
@@ -363,40 +490,30 @@
     document.getElementById('prevEmpty').style.display='none';
     document.getElementById('prevHeader').classList.remove('show');
     document.getElementById('docWrap').classList.remove('show');
-    setStep(1);await delay(500);setStep(2);
+    desligarEdicao();
+    setStep(1);await delay(450);setStep(2);
 
-    const prompt=buildPrompt({publico,componente,tipo,tema,quantidade,instrucoes});
-
+    const prompt = (MODE==='avaliacao') ? buildPromptAvaliacao(cfg) : buildPromptAtividade(cfg);
     try{
       setStep(3);
-      const res=await fetch('/api/claude',{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          model:'claude-sonnet-4-6',max_tokens:4000,
-          system:`Você é o motor pedagógico da Doceria Pedagógica: Especialista Sênior em Design Educacional. Responda SOMENTE com JSON válido (sem markdown, sem crases, sem texto antes/depois), seguindo exatamente o formato pedido.`,
-          messages:[{role:'user',content:prompt}]
-        })
-      });
+      const res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:4500,
+          system:`Você é o motor pedagógico da Doceria Pedagógica: Especialista Sênior em Design Educacional. Responda SOMENTE com JSON válido (sem markdown, sem crases, sem texto fora dele).`,
+          messages:[{role:'user',content:prompt}]})});
       if(res.status===402){ if(typeof dpHandleNoCredits==='function') dpHandleNoCredits(errBox); document.getElementById('prevEmpty').style.display='flex'; return; }
       if(!res.ok) throw new Error(`Erro ${res.status}`);
       const data=await res.json();
       const cLeft=res.headers.get('X-Credits-Remaining');
       if(cLeft!==null) document.querySelectorAll('[data-dp-credits]').forEach(el=>el.textContent=cLeft);
-
       let parsed;
-      try{ parsed=extractJSON(data.content?.[0]?.text||''); }
-      catch(e){ throw new Error('Formato inesperado. Tente gerar novamente.'); }
+      try{ parsed=extractJSON(data.content?.[0]?.text||''); }catch(e){ throw new Error('Formato inesperado. Tente gerar novamente.'); }
 
-      // gera as imagens (até 6) — não bloqueia se a chave não estiver configurada
       setStep(4);
       await gerarImagens(parsed);
-
-      setStep(5);await delay(200);
-      renderAtividade(parsed,{publico,componente,tipo,tema});
-
+      setStep(5);await delay(150);
+      if(MODE==='avaliacao') renderAvaliacao(parsed,cfg); else renderAtividade(parsed,cfg);
     }catch(err){
-      errBox.textContent='Erro: '+(err.message||'Tente novamente.');
-      errBox.classList.add('show');
+      errBox.textContent='Erro: '+(err.message||'Tente novamente.');errBox.classList.add('show');
       document.getElementById('prevEmpty').style.display='flex';
     }finally{
       btn.disabled=false;btn.classList.remove('loading');
@@ -406,204 +523,242 @@
     }
   }
 
-  // ── coleta e gera imagens (teto de 6) ──
-  function isCena(prompt){ return false; }
+  // ── validações ──
+  function validarAtividade(){
+    const c={publico:val('a_publico'),componente:val('a_componente'),tipo:val('a_tipo'),tema:val('a_tema',true),quantidade:parseInt(val('a_quantidade'),10)||4,instrucoes:val('instrucoes',true)};
+    if(!c.publico) throw new Error('Selecione o público-alvo.');
+    if(!c.componente) throw new Error('Selecione o componente curricular.');
+    if(!c.tipo) throw new Error('Selecione o tipo de atividade.');
+    if(!c.tema) throw new Error('Preencha o tema.');
+    return c;
+  }
+  function validarAvaliacao(){
+    const tipos=[];
+    if(document.getElementById('v_mcOn').checked){const q=parseInt(val('v_mcQtd'),10)||0; if(q>0)tipos.push({tipo:'multipla_escolha',qtd:q});}
+    if(document.getElementById('v_disOn').checked){const q=parseInt(val('v_disQtd'),10)||0; if(q>0)tipos.push({tipo:'dissertativa',qtd:q});}
+    if(document.getElementById('v_vfOn').checked){const q=parseInt(val('v_vfQtd'),10)||0; if(q>0)tipos.push({tipo:'vf',qtd:q});}
+    const c={
+      titulo:val('v_titulo',true),publico:val('v_publico'),disciplina:val('v_disciplina',true),tema:val('v_tema',true),
+      textoOrigem:getTextoOrigem(),textoBase:val('v_textoBase',true),
+      incluiImg:isOn('v_togImg'),numImg:Math.min(parseInt(val('v_numImg'),10)||0,6),propImg:val('v_propImg'),
+      tipos,instrucoes:val('instrucoes',true)
+    };
+    if(!c.titulo) throw new Error('Dê um nome/título à avaliação.');
+    if(!c.publico) throw new Error('Selecione o público-alvo.');
+    if(!c.tema) throw new Error('Preencha o tema.');
+    if(tipos.length===0) throw new Error('Escolha ao menos um tipo de questão (com quantidade > 0).');
+    if(c.textoOrigem==='A' && !c.textoBase) throw new Error('Cole o texto de apoio ou mude a opção de texto.');
+    return c;
+  }
+  function val(id,trim){const el=document.getElementById(id);if(!el)return '';return trim?el.value.trim():el.value;}
+
+  // ── imagens (fal.ai, teto 6) ──
   async function gerarImagens(data){
     const cands=[];
     const principal=(data.conteudo_principal?.imagem_principal_prompt||'').trim();
     if(principal) cands.push({key:'principal',prompt:principal,size:'landscape_4_3'});
-    (data.itens_atividade||[]).forEach((it,idx)=>{
-      const p=(it.api_image_prompt||'').trim();
-      if(p) cands.push({key:'item',idx,prompt:p,size:'square_hd'});
-    });
-    const usar=cands.slice(0,6); // teto de custo
+    (data.itens_atividade||[]).forEach((it,idx)=>{const p=(it.api_image_prompt||'').trim();if(p)cands.push({key:'item',arr:'itens_atividade',idx,prompt:p,size:'square_hd'});});
+    (data.questoes||[]).forEach((q,idx)=>{const p=(q.api_image_prompt||'').trim();if(p)cands.push({key:'q',arr:'questoes',idx,prompt:p,size:'square_hd'});});
+    const usar=cands.slice(0,6);
     await Promise.all(usar.map(async c=>{
       try{
         const r=await fetch('/api/imagem',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:c.prompt,size:c.size})});
-        if(r.ok){ const d=await r.json(); if(d&&d.url){ if(c.key==='principal') data._principalUrl=d.url; else data.itens_atividade[c.idx]._url=d.url; } }
+        if(r.ok){const d=await r.json();if(d&&d.url){ if(c.key==='principal') data._principalUrl=d.url; else data[c.arr][c.idx]._url=d.url; }}
       }catch(_){}
     }));
   }
 
-  function imgFrame(url, prompt, extraClass){
+  function imgFrame(url,prompt,extraClass){
     if(url) return `<div class="img-frame ${extraClass||''}"><img src="${url}" alt=""></div>`;
     return `<div class="img-frame img-placeholder ${extraClass||''}"><span>🖼️</span><small>${esc((prompt||'imagem').slice(0,70))}</small></div>`;
   }
 
-  // ── render ──
+  // ════════ RENDER: ATIVIDADE (motor pedagógico) ════════
   function renderAtividade(d,meta){
-    const date=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
-    const md=d.metadados||{};
-    const titulo=md.titulo_atividade||meta.tema;
-    const layout=md.tipo_layout||'multiplas_questoes';
-    const itens=d.itens_atividade||[];
-    const enun=d.conteudo_principal?.enunciado_geral||'';
-
+    const date=fmtData();const md=d.metadados||{};
+    const titulo=md.titulo_atividade||meta.tema;const layout=md.tipo_layout||'multiplas_questoes';
+    const itens=d.itens_atividade||[];const enun=d.conteudo_principal?.enunciado_geral||'';
     let html=`<div class="prova-doc">`;
-
-    // cabeçalho
-    if(isOn('togCabecalho')){
-      html+=`
-      <div class="prova-cabecalho">
-        <div class="prova-escola">Escola: ______________________________________________</div>
-        <div class="prova-titulo">${esc(titulo)}</div>
-        <div class="prova-aluno">
-          <span>Nome: __________________________________</span>
-          <span>Turma: ________</span>
-          <span>Data: ___/___/___</span>
-          <span class="prova-nota">Nota: ______</span>
-        </div>
-        <div class="prova-badges">
-          <span class="prova-badge">📚 ${esc(meta.componente)}</span>
-          <span class="prova-badge">🎯 ${esc(meta.tipo)}</span>
-          <span class="prova-badge">👤 ${esc(md.publico||meta.publico)}</span>
-        </div>
-      </div>`;
-    } else {
-      html+=`<div class="prova-titulo" style="border-top:5px solid var(--gold);padding-top:14px;margin-bottom:18px;">${esc(titulo)}</div>`;
-    }
-
+    html+=cabecalhoHTML(titulo,[['📚',meta.componente],['🎯',meta.tipo],['👤',md.publico||meta.publico]]);
     if(enun) html+=`<div class="prova-enunciado-geral">${esc(enun)}</div>`;
-
-    // corpo por layout
     if(layout==='grade_autoditado'){
       html+=`<div class="grade">`;
       itens.forEach((it,i)=>{
-        const temImg = !!(it._url||it.api_image_prompt);
-        if(temImg){
-          html+=`<div class="grade-card">
-            ${imgFrame(it._url,it.api_image_prompt)}
-            <div class="grade-enun"><div class="grade-num">${it.id||i+1}</div><span>${esc(it.enunciado_item||'Escreva o nome:')}</span></div>
-            <div class="escrita-linha"></div>
-          </div>`;
-        } else {
-          html+=`<div class="grade-card full">
-            <div class="grade-enun"><div class="grade-num">${it.id||i+1}</div><span>${esc(it.enunciado_item||'')}</span></div>
-            <div class="escrita-linha"></div>
-          </div>`;
-        }
+        const temImg=!!(it._url||it.api_image_prompt);
+        html+= temImg
+          ? `<div class="grade-card">${imgFrame(it._url,it.api_image_prompt)}<div class="grade-enun"><div class="grade-num">${it.id||i+1}</div><span>${esc(it.enunciado_item||'Escreva o nome:')}</span></div><div class="escrita-linha"></div></div>`
+          : `<div class="grade-card full"><div class="grade-enun"><div class="grade-num">${it.id||i+1}</div><span>${esc(it.enunciado_item||'')}</span></div><div class="escrita-linha"></div></div>`;
       });
       html+=`</div>`;
-    }
-    else if(layout==='cena_unica_perguntas'){
-      html+=imgFrame(d._principalUrl, d.conteudo_principal?.imagem_principal_prompt, 'cena-principal');
-      itens.forEach((it,i)=>{ html+=questaoHTML(it,i); });
-    }
-    else if(layout==='texto_e_imagem'){
-      if(d._principalUrl||d.conteudo_principal?.imagem_principal_prompt)
-        html+=imgFrame(d._principalUrl, d.conteudo_principal?.imagem_principal_prompt, 'cena-principal tall');
-      itens.forEach((it,i)=>{ html+=questaoHTML(it,i); });
-    }
-    else { // multiplas_questoes
-      itens.forEach((it,i)=>{ html+=questaoHTML(it,i,true); });
-    }
-
-    // gabarito (quando há palavra-alvo)
+    } else if(layout==='cena_unica_perguntas'){
+      html+=imgFrame(d._principalUrl,d.conteudo_principal?.imagem_principal_prompt,'cena-principal');
+      itens.forEach((it,i)=>html+=questaoAtivHTML(it,i));
+    } else if(layout==='texto_e_imagem'){
+      if(d._principalUrl||d.conteudo_principal?.imagem_principal_prompt) html+=imgFrame(d._principalUrl,d.conteudo_principal?.imagem_principal_prompt,'cena-principal');
+      itens.forEach((it,i)=>html+=questaoAtivHTML(it,i));
+    } else { itens.forEach((it,i)=>html+=questaoAtivHTML(it,i,true)); }
     const comAlvo=itens.filter(it=>(it.palavra_alvo_alfabetizacao||'').trim());
     if(comAlvo.length){
-      html+=`<div class="page-break"></div>
-      <div class="gabarito">
-        <div class="gabarito-titulo">Gabarito — palavras</div>
-        <ol class="gabarito-lista">
-          ${itens.map((it,i)=> (it.palavra_alvo_alfabetizacao||'').trim()
-            ? `<li class="gabarito-item"><strong>${it.id||i+1}.</strong> ${esc(it.palavra_alvo_alfabetizacao)}${it.classificacao_silabica?` <em style="color:var(--text-muted)">(${esc(it.classificacao_silabica)})</em>`:''}</li>`
-            : '').join('')}
-        </ol>
-      </div>`;
+      html+=`<div class="page-break"></div><div class="gabarito"><div class="gabarito-titulo">Gabarito — palavras</div><ol class="gabarito-lista">${itens.map((it,i)=>(it.palavra_alvo_alfabetizacao||'').trim()?`<li class="gabarito-item"><strong>${it.id||i+1}.</strong> ${esc(it.palavra_alvo_alfabetizacao)}${it.classificacao_silabica?` <em style="color:var(--text-muted)">(${esc(it.classificacao_silabica)})</em>`:''}</li>`:'').join('')}</ol></div>`;
     }
+    html+=rodapeHTML(meta.componente,meta.tipo,date)+`</div>`;
+    mostrar(html,titulo,`${meta.publico} • ${meta.componente} • ${meta.tipo}`,'prova',meta.tema,meta.publico);
+  }
+  function questaoAtivHTML(it,i,comImagemLateral){
+    const num=it.id||i+1;
+    const opcoes=Array.isArray(it.opcoes_selecao)?it.opcoes_selecao.filter(o=>String(o).trim()):[];
+    let resp = opcoes.length
+      ? `<div class="prova-opcoes">${opcoes.map((op,oi)=>`<div class="prova-opcao"><div class="prova-bolha">${String.fromCharCode(65+oi)}</div><span>${esc(String(op).replace(/^[A-Da-d]\)\s*/,''))}</span></div>`).join('')}</div>`
+      : `<div class="prova-linhas">${Array(3).fill('<div class="prova-linha"></div>').join('')}</div>`;
+    const temImg=!!(it._url||(comImagemLateral&&it.api_image_prompt));
+    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${esc(it.enunciado_item||'')}</div>${resp}</div>`;
+    const imgCol=temImg?`<div class="prova-q-img">${imgFrame(it._url,it.api_image_prompt)}</div>`:'';
+    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div></div>`;
+  }
 
-    html+=`<div class="prova-rodape"><span class="prova-rodape-logo">DoceriaPedagógica</span><span>${esc(meta.componente)} • ${esc(meta.tipo)}</span><span>${date}</span></div>`;
-    html+=`</div>`;
+  // ════════ RENDER: AVALIAÇÃO ════════
+  const TIPO_LABEL={multipla_escolha:'Múltipla escolha',dissertativa:'Dissertativa',vf:'Verdadeiro ou Falso'};
+  function renderAvaliacao(d,cfg){
+    const date=fmtData();const titulo=d.titulo||cfg.titulo;const questoes=d.questoes||[];
+    let html=`<div class="prova-doc">`;
+    html+=cabecalhoHTML(titulo,[['📚',cfg.disciplina||cfg.tema],['👤',cfg.publico]]);
+    const tb=(d.texto_base||'').trim();
+    if(tb){const ps=tb.split('\n').filter(p=>p.trim());html+=`<div class="prova-texto-base"><div class="prova-texto-titulo">Texto</div>${ps.map(p=>`<p>${esc(p.trim())}</p>`).join('')}</div>`;}
+    questoes.forEach((q,i)=>html+=questaoAvalHTML(q,i));
+    // gabarito
+    html+=`<div class="page-break"></div><div class="gabarito"><div class="gabarito-titulo">Gabarito</div><ol class="gabarito-lista">${questoes.map((q,i)=>`<li class="gabarito-item"><strong>${i+1}.</strong> ${esc(respostaGabarito(q))}</li>`).join('')}</ol></div>`;
+    html+=rodapeHTML(cfg.disciplina||'Avaliação',cfg.tema,date)+`</div>`;
+    mostrar(html,titulo,`${cfg.publico} • ${cfg.disciplina||cfg.tema}`,'prova',cfg.tema,cfg.publico);
+  }
+  function questaoAvalHTML(q,i){
+    const num=i+1;const tipo=q.tipo||'dissertativa';
+    let resp='';
+    if(tipo==='multipla_escolha'){
+      const ops=(q.opcoes||[]).filter(o=>String(o).trim());
+      resp=`<div class="prova-opcoes">${ops.map((op,oi)=>`<div class="prova-opcao"><div class="prova-bolha">${String.fromCharCode(65+oi)}</div><span>${esc(String(op).replace(/^[A-Da-d]\)\s*/,''))}</span></div>`).join('')}</div>`;
+    } else if(tipo==='vf'){
+      const afs=(q.afirmacoes||[]).filter(a=>a&&String(a.texto||'').trim());
+      resp=`<div style="margin-top:10px;">${afs.map(a=>`<div class="prova-vf-item"><div class="prova-vf-bubble"><div class="prova-vf-box">V</div><div class="prova-vf-box">F</div></div><span>${esc(a.texto)}</span></div>`).join('')}</div>`;
+    } else {
+      const n=Math.max(parseInt(q.linhas,10)||4,2);
+      resp=`<div class="prova-linhas">${Array(n).fill('<div class="prova-linha"></div>').join('')}</div>`;
+    }
+    const temImg=!!(q._url||q.api_image_prompt);
+    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${esc(q.enunciado||'')}</div>${resp}</div>`;
+    const imgCol=temImg?`<div class="prova-q-img">${imgFrame(q._url,q.api_image_prompt)}</div>`:'';
+    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div><div class="prova-q-tipo">${TIPO_LABEL[tipo]||''}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div></div>`;
+  }
+  function respostaGabarito(q){
+    if(q.tipo==='multipla_escolha') return q.resposta||'—';
+    if(q.tipo==='vf'){const afs=(q.afirmacoes||[]);return afs.map((a,j)=>`${String.fromCharCode(97+j)}) ${a.resposta||'?'}`).join('   ');}
+    return q.resposta_modelo||'Resposta pessoal / aberta.';
+  }
 
-    const docEl=document.getElementById('prova-doc');
-    docEl.innerHTML=html;
+  // ── helpers de doc ──
+  function cabecalhoHTML(titulo,badges){
+    if(!isOn('togCabecalho')) return `<div class="prova-titulo" style="border-top:5px solid var(--gold);padding-top:14px;margin-bottom:18px;">${esc(titulo)}</div>`;
+    return `<div class="prova-cabecalho">
+      <div class="prova-escola">Escola: ______________________________________________</div>
+      <div class="prova-titulo">${esc(titulo)}</div>
+      <div class="prova-aluno"><span>Nome: __________________________________</span><span>Turma: ________</span><span>Data: ___/___/___</span><span class="prova-nota">Nota: ______</span></div>
+      <div class="prova-badges">${badges.filter(b=>b[1]).map(b=>`<span class="prova-badge">${b[0]} ${esc(b[1])}</span>`).join('')}</div>
+    </div>`;
+  }
+  function rodapeHTML(a,b,date){return `<div class="prova-rodape"><span class="prova-rodape-logo">DoceriaPedagógica</span><span>${esc(a)} • ${esc(b)}</span><span>${esc(date)}</span></div>`;}
 
+  function mostrar(html,titulo,meta,tipoSalvar,tema,nivel){
+    document.getElementById('prova-doc').innerHTML=html;
     document.getElementById('phTitle').textContent=titulo;
-    document.getElementById('phMeta').textContent=`${meta.publico} • ${meta.componente} • ${meta.tipo}`;
+    document.getElementById('phMeta').textContent=meta;
     document.getElementById('docWrap').classList.add('show');
     document.getElementById('prevHeader').classList.add('show');
     document.getElementById('prevEmpty').style.display='none';
     document.getElementById('docWrap').scrollIntoView({behavior:'smooth',block:'start'});
-
-    if(typeof dpSalvar==='function') dpSalvar('prova',meta.tema,meta.publico,titulo,'#docWrap');
+    if(typeof dpSalvar==='function') dpSalvar(tipoSalvar,tema,nivel,titulo,'#docWrap');
   }
 
-  function questaoHTML(it,i,comImagemLateral){
-    const num=it.id||i+1;
-    const opcoes=Array.isArray(it.opcoes_selecao)?it.opcoes_selecao.filter(o=>String(o).trim()):[];
-    let resp='';
-    if(opcoes.length){
-      resp=`<div class="prova-opcoes">${opcoes.map((op,oi)=>`<div class="prova-opcao"><div class="prova-bolha">${String.fromCharCode(65+oi)}</div><span>${esc(String(op).replace(/^[A-Da-d]\)\s*/,''))}</span></div>`).join('')}</div>`;
-    } else {
-      resp=`<div class="prova-linhas">${Array(3).fill('<div class="prova-linha"></div>').join('')}</div>`;
-    }
-    const temImg=!!(it._url||(comImagemLateral&&it.api_image_prompt));
-    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${esc(it.enunciado_item||'')}</div>${resp}</div>`;
-    const imgCol=temImg?`<div class="prova-q-img">${imgFrame(it._url,it.api_image_prompt)}</div>`:'';
-    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div><div style="flex:1"><div class="prova-q-row">${conteudo}${imgCol}</div></div></div></div>`;
+  // ── modo edição ──
+  function toggleEdit(){
+    const doc=document.getElementById('prova-doc');const btn=document.getElementById('editBtn');
+    const on=doc.getAttribute('contenteditable')==='true';
+    doc.setAttribute('contenteditable',on?'false':'true');
+    doc.querySelector('.prova-doc')?.classList.toggle('editing',!on);
+    btn.classList.toggle('active',!on);
+    btn.textContent=on?'✏️ Editar':'✓ Concluir edição';
+    if(!on) doc.focus();
+  }
+  function desligarEdicao(){
+    const doc=document.getElementById('prova-doc');doc.setAttribute('contenteditable','false');
+    const btn=document.getElementById('editBtn');btn.classList.remove('active');btn.textContent='✏️ Editar';
   }
 
-  // ── prompt (motor pedagógico) ──
-  function buildPrompt(o){
-    return `Você é o motor pedagógico da plataforma "Doceria Pedagógica", atuando como Especialista Sênior em Design Educacional (Alfabetização infantil/Fundamental I/EJA, Língua Portuguesa, Inglês, História, Geografia, Artes, Matemática, Física e Química).
-
-Gere uma atividade didática estruturada com base nestas variáveis:
+  // ── prompts ──
+  function buildPromptAtividade(o){
+    return `Você é o motor pedagógico da Doceria Pedagógica (Especialista Sênior em Design Educacional).
+Gere uma atividade com base em:
 - PUBLICO_ALVO: ${o.publico}
 - COMPONENTE_CURRICULAR: ${o.componente}
 - TEMA: ${o.tema}
 - TIPO_ATIVIDADE: ${o.tipo}
 - QUANTIDADE DE ITENS: ${o.quantidade}
-${o.instrucoes?`- INSTRUÇÕES EXTRAS DO PROFESSOR: ${o.instrucoes}`:''}
+${o.instrucoes?`- INSTRUÇÕES EXTRAS: ${o.instrucoes}`:''}
 
-DIRETRIZES POR COMPONENTE:
-1. ALFABETIZAÇÃO & LETRAMENTO: Em "Sondagem Diagnóstica (Hipótese de Escrita)", siga a tradição psicogenética: escolha palavras do MESMO campo semântico na ordem 1 Polissílaba, 1 Trissílaba, 1 Dissílaba, 1 Monossílaba, e uma frase que envolva uma das palavras (item final, sem imagem). Infantil = temas lúdicos (animais, brinquedos, material escolar); EJA = temas maduros/funcionais (profissões, cidadania, culinária, mercado). "Sílabas Complexas" = dígrafos (ch, lh, nh) ou encontros consonantais (br, cr, pr). "Autoditado" = imagem + linha para escrita. "Relacione" = imagem ↔ palavra.
-2. LÍNGUA PORTUGUESA & INGLÊS: produção textual e interpretação a partir de uma cena ("Analise/Descreva/Complete/Crie frases/Reescreva"). Inglês = vocabulário/descrição em língua inglesa.
-3. GEOGRAFIA & HISTÓRIA: Geografia = análise espacial, biomas (Cerrado, Caatinga, Mata Atlântica...), clima, vegetação, localização. História = análise temporal: "O que tem de errado na cena?" (anacronismo), "Estude a cena histórica", "Compare com a atualidade".
-4. ARTES: leitura de imagem e apreciação estética (obras, movimentos, releituras).
-5. MATEMÁTICA/FÍSICA/QUÍMICA: Matemática = problemas contextualizados com dinheiro/formas (valores e números vão no ENUNCIADO, nunca na imagem). Física/Química = fenômenos visuais do cotidiano (estados da água, ferrugem, efervescência, forças e movimento).
+DIRETRIZES: Alfabetização: "Sondagem (Hipótese de Escrita)" = tradição psicogenética, palavras do MESMO campo semântico na ordem Polissílaba, Trissílaba, Dissílaba, Monossílaba + 1 frase (item final sem imagem); Infantil=lúdico, EJA=funcional. "Autoditado"=imagem+linha. Português/Inglês: produção/interpretação a partir de cena. Geografia=biomas/espaço; História="o que tem de errado" (anacronismo)/cena histórica. Artes=leitura de imagem. Mat/Fís/Quím=problema/fenômeno visual (números no ENUNCIADO, nunca na imagem).
 
-REGRAS PARA api_image_prompt (descrição da imagem, em INGLÊS, p/ IA generativa):
-- Estilo realista/fotográfico de alta qualidade: "Photorealistic, 8k, studio light".
-- Autoditado/Sondagem: objeto ISOLADO, centralizado, FUNDO BRANCO e limpo.
-- Cenas: descreva iluminação, personagens (respeitando diversidade e faixa etária) e cenário necessários para responder à pergunta.
-- ⚠️ NUNCA peça texto, números, letras, legendas ou rótulos DENTRO da imagem (a IA gera texto ilegível). Descreva apenas o visual; valores/rótulos vão no enunciado.
-- ⚠️ TETO: no máximo 6 imagens no total (imagem_principal_prompt + api_image_prompt dos itens somados). Itens excedentes devem ter api_image_prompt vazio.
+REGRAS api_image_prompt (em INGLÊS): realista/fotográfico ("Photorealistic, 8k, studio light"); autoditado/sondagem = objeto ISOLADO, centralizado, FUNDO BRANCO; cenas = iluminação, personagens (diversidade/faixa etária), cenário. NUNCA peça texto/números/legendas DENTRO da imagem. TETO: máx 6 imagens no total.
 
-RESPONDA APENAS COM ESTE JSON (sem texto fora dele):
-{
-  "metadados": {
-    "titulo_atividade": "Título pedagógico e chamativo",
-    "componente": "${o.componente}",
-    "tipo_layout": "um de: 'grade_autoditado' (autoditado/sondagem/objetos isolados), 'cena_unica_perguntas' (uma cena + perguntas), 'multiplas_questoes' (cada item com sua imagem) ou 'texto_e_imagem'",
-    "publico": "${o.publico}"
-  },
-  "conteudo_principal": {
-    "enunciado_geral": "Instrução clara do que o aluno deve fazer.",
-    "imagem_principal_prompt": "Se houver UMA cena para todas as perguntas, o prompt em inglês aqui. Senão, string vazia."
-  },
-  "itens_atividade": [
-    {
-      "id": 1,
-      "enunciado_item": "Enunciado/orientação do item.",
-      "opcoes_selecao": [],
-      "palavra_alvo_alfabetizacao": "Se autoditado/sondagem, a palavra exata. Senão vazio.",
-      "classificacao_silabica": "Se aplicável: 'Polissílaba','Trissílaba','Dissílaba','Monossílaba','Sílaba Complexa'. Senão vazio.",
-      "api_image_prompt": "Prompt da imagem em inglês p/ este item, ou vazio."
-    }
-  ]
-}
-Gere exatamente ${o.quantidade} itens (na sondagem, os 4 itens de palavras + 1 item final da frase, se fizer sentido). Use "opcoes_selecao" só quando o tipo pedir múltipla escolha.`;
+RESPONDA SÓ COM ESTE JSON:
+{"metadados":{"titulo_atividade":"...","componente":"${o.componente}","tipo_layout":"'grade_autoditado'|'cena_unica_perguntas'|'multiplas_questoes'|'texto_e_imagem'","publico":"${o.publico}"},
+"conteudo_principal":{"enunciado_geral":"...","imagem_principal_prompt":"prompt em inglês da cena única, ou vazio"},
+"itens_atividade":[{"id":1,"enunciado_item":"...","opcoes_selecao":[],"palavra_alvo_alfabetizacao":"se sondagem/autoditado","classificacao_silabica":"se aplicável","api_image_prompt":"prompt em inglês ou vazio"}]}
+Gere exatamente ${o.quantidade} itens.`;
   }
 
-  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function printPDF(){ dpPrint(); }
+  function buildPromptAvaliacao(o){
+    const textoBloco = o.textoOrigem==='A'
+      ? `TEXTO DE APOIO (use EXATAMENTE este; devolva em "texto_base"):\n<<<\n${o.textoBase}\n>>>`
+      : o.textoOrigem==='B'
+        ? `TEXTO DE APOIO: crie um texto INÉDITO (1 a 3 parágrafos) sobre o tema e devolva em "texto_base". As questões se apoiam nele.`
+        : `SEM TEXTO DE APOIO: "texto_base" vazio.`;
+    const tiposBloco = o.tipos.map(t=>`${t.qtd}x ${TIPO_LABEL[t.tipo]} (tipo:"${t.tipo}")`).join(', ');
+    const total=o.tipos.reduce((s,t)=>s+t.qtd,0);
+    let imgBloco;
+    if(o.incluiImg && o.numImg>0){
+      imgBloco = o.propImg==='compoe'
+        ? `IMAGENS: gere ${o.numImg} imagens (máx 6) que COMPÕEM a avaliação. Em ${o.numImg} questões, preencha "api_image_prompt" e faça o ENUNCIADO depender da imagem, começando com algo como "Analise a imagem...", "A partir da imagem...", "Observe a imagem e..." ou "Relacione...". Use sua lógica para a pergunta fazer sentido com a imagem. Demais questões: api_image_prompt vazio.`
+        : `IMAGENS: gere ${o.numImg} imagens ILUSTRATIVAS (máx 6). Distribua "api_image_prompt" em ${o.numImg} questões, de forma decorativa — a resposta NÃO depende da imagem. Demais questões: api_image_prompt vazio.`;
+    } else { imgBloco = `IMAGENS: nenhuma. Todas as questões com "api_image_prompt" vazio.`; }
+
+    return `Você é o motor pedagógico da Doceria Pedagógica. Monte uma AVALIAÇÃO escolar.
+- TÍTULO: ${o.titulo}
+- PUBLICO_ALVO: ${o.publico}
+${o.disciplina?`- DISCIPLINA: ${o.disciplina}`:''}
+- TEMA: ${o.tema}
+${o.instrucoes?`- INSTRUÇÕES EXTRAS: ${o.instrucoes}`:''}
+
+${textoBloco}
+
+QUESTÕES: gere exatamente estas (${total} no total), distribuídas: ${tiposBloco}.
+- multipla_escolha: "opcoes" com 4 alternativas; "resposta" = letra correta (A/B/C/D).
+- vf: "afirmacoes" = lista de {texto, resposta:"V"|"F"} (3 a 5 afirmações).
+- dissertativa: "enunciado" claro; "linhas" (3-5); "resposta_modelo" curto p/ o gabarito.
+
+${imgBloco}
+REGRAS api_image_prompt (INGLÊS): realista/fotográfico; NUNCA texto/números/legendas dentro da imagem; valores/rótulos vão no enunciado. Adeque ao público ${o.publico}.
+
+RESPONDA SÓ COM ESTE JSON:
+{"titulo":"${o.titulo}","texto_base":"texto ou vazio",
+"questoes":[{"tipo":"multipla_escolha|dissertativa|vf","enunciado":"...","opcoes":[],"resposta":"","afirmacoes":[],"resposta_modelo":"","linhas":4,"api_image_prompt":""}]}`;
+  }
+
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function fmtData(){return new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});}
+  function printPDF(){ desligarEdicao(); dpPrint(); }
   function delay(ms){return new Promise(r=>setTimeout(r,ms));}
-  function extractJSON(raw){
-    let clean=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
-    const s=clean.indexOf('{'),e=clean.lastIndexOf('}');
-    if(s!==-1&&e>s) clean=clean.slice(s,e+1);
-    return JSON.parse(clean);
-  }
+  function extractJSON(raw){let c=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();const s=c.indexOf('{'),e=c.lastIndexOf('}');if(s!==-1&&e>s)c=c.slice(s,e+1);return JSON.parse(c);}
+
+  // estado inicial
+  onTextoChange();
 </script>
 <script src="/js/dp-print.js"></script>
 <script src="/js/dp-auth.js"></script>
