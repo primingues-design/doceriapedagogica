@@ -162,6 +162,8 @@
   .q-num{display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;font-weight:700;align-items:center;justify-content:center;margin-right:8px}
   .linhas{display:flex;flex-direction:column}
   .linha{border-bottom:1.5px dotted #555;min-height:30px}
+  .lacuna-versos{margin-top:6px}
+  .lacuna-verso{font-size:16px;line-height:2.6;color:#000;font-weight:500}
 
   .page-break{page-break-before:always;break-before:page;height:0;margin:0;border:0}
   .doc-wrap .page-break{display:block;height:1px;border-top:2px dashed var(--green);margin:26px 0;opacity:.5}
@@ -352,19 +354,31 @@ JSON: {"titulo":"...","contexto":"frase curta","itens":["item","item"],"linhas_b
     parlenda:{
       temaPH:'Ex: deixe vazio p/ uma parlenda conhecida, ou um tema',
       hint:'1 imagem + a parlenda + atividades de lacuna e de rima.',
-      opts:'',
-      cfg:c=>{},
+      opts:`<div class="field"><label class="field-label">Espaço para escrever</label><select id="o_espaco"><option value="pouco">Pouco (2 linhas)</option><option value="medio" selected>Médio (4 linhas)</option><option value="bastante">Bastante (6 linhas)</option></select></div>`,
+      cfg:c=>{c.espaco=({pouco:2,medio:4,bastante:6})[val('o_espaco')]||4;},
       buildPrompt:c=>`Atividade com PARLENDA (tradição oral brasileira) para alfabetização. PÚBLICO: ${c.publico}.
-${c.tema?'TEMA/PARLENDA sugerida: '+c.tema:'Escolha uma parlenda CONHECIDA (ex: "Hoje é domingo", "Um, dois, feijão com arroz", "A galinha do vizinho", "Rei, capitão", "Cadê o toucinho")'}.
-Apresente a parlenda em versos. Depois crie 3 a 4 atividades: ao menos 1 de LACUNA (um verso com uma palavra faltando para completar) e ao menos 1 de RIMA (identificar/escrever palavras que rimam).
+${c.tema?'TEMA/PARLENDA sugerida: '+c.tema:'Escolha uma parlenda CONHECIDA (ex: "Hoje é domingo", "Um, dois, feijão com arroz", "A galinha do vizinho", "Rei, capitão")'}.
+Apresente a parlenda COMPLETA em versos. Depois crie 3 a 4 atividades (ao menos 1 LACUNA e 1 RIMA).
+REGRAS IMPORTANTES:
+- LACUNA: o "enunciado" é SÓ a instrução curta (ex: "Complete os versos com as palavras que faltam:"). Os versos COM LACUNA vão no array "versos_lacuna" (use ____ no lugar da palavra que falta), UM verso por item. NUNCA escreva os versos dentro do enunciado.
+- RIMA e ABERTA: use só "enunciado" (a resposta vai no gabarito), sem versos_lacuna.
 ${c.instrucoes?'OBS: '+c.instrucoes:''}
-JSON: {"titulo":"...","versos":["verso 1","verso 2"],"api_image_prompt":"INGLÊS, cena lúdica e fofa que ilustre a parlenda, ilustração/foto, sem texto","atividades":[{"tipo":"lacuna|rima|aberta","enunciado":"...","resposta":"...","linhas":2}]}`,
+JSON: {"titulo":"...","versos":["verso 1","verso 2"],"api_image_prompt":"INGLÊS, cena lúdica e fofa que ilustre a parlenda, sem texto","atividades":[{"tipo":"lacuna|rima|aberta","enunciado":"instrução curta","versos_lacuna":["verso com ____"],"resposta":"..."}]}`,
       render:(d,c)=>{
         const versos=(d.versos||[]).filter(v=>String(v).trim());
         const ats=(d.atividades||[]);
         let h='';
         h+=`<div class="parl-box">${d._url?`<div class="img-frame parl-img"><img src="${d._url}" alt=""></div>`:imgFrame(null,d.api_image_prompt,'parl-img')}${versos.map(v=>`<div class="parl-verso">${esc(v)}</div>`).join('')}</div>`;
-        ats.forEach((a,i)=>{const n=Math.max(parseInt(a.linhas,10)||2,1);h+=`<div class="q"><div class="q-en"><span class="q-num">${i+1}</span>${esc(a.enunciado||'')}</div><div class="linhas">${Array(n).fill('<div class="linha"></div>').join('')}</div></div>`;});
+        ats.forEach((a,i)=>{
+          const vl=(a.versos_lacuna||[]).filter(v=>String(v).trim());
+          let corpo;
+          if(a.tipo==='lacuna'&&vl.length){
+            corpo=`<div class="lacuna-versos">${vl.map(v=>`<div class="lacuna-verso">${esc(v)}</div>`).join('')}</div>`;
+          }else{
+            corpo=`<div class="linhas">${Array(c.espaco||4).fill('<div class="linha"></div>').join('')}</div>`;
+          }
+          h+=`<div class="q"><div class="q-en"><span class="q-num">${i+1}</span>${esc(a.enunciado||'')}</div>${corpo}</div>`;
+        });
         h+=gabarito('Gabarito',ats.map((a,i)=>`<li class="gabarito-it"><strong>${i+1}.</strong> ${esc(a.resposta||'resposta aberta')}</li>`).join(''));
         return h;
       }
@@ -395,8 +409,8 @@ JSON: {"titulo":"...","tipo_conteudo":"${c.cont}","pool":["...","..."]}`,
     receita:{
       temaPH:'Ex: deixe vazio p/ uma receita simples, ou um prato',
       hint:'Foto do prato + ingredientes + preparo + perguntas de leitura.',
-      opts:'',
-      cfg:c=>{},
+      opts:`<div class="field"><label class="field-label">Espaço para escrever</label><select id="o_espaco"><option value="pouco">Pouco (2 linhas)</option><option value="medio" selected>Médio (4 linhas)</option><option value="bastante">Bastante (6 linhas)</option></select></div>`,
+      cfg:c=>{c.espaco=({pouco:2,medio:4,bastante:6})[val('o_espaco')]||4;},
       buildPrompt:c=>`Atividade de RECEITA (gênero textual) para alfabetização. PÚBLICO: ${c.publico}.
 ${c.tema?'RECEITA/PRATO: '+c.tema:'Escolha uma receita SIMPLES, segura e conhecida (ex: bolo de caneca, vitamina de banana, suco, sanduíche, brigadeiro)'}.
 Texto de leitura fácil: ingredientes com quantidades simples e modo de preparo em passos curtos numerados. Depois 3 a 4 perguntas de leitura (quantidades, ordem dos passos, ingredientes).
@@ -409,7 +423,7 @@ JSON: {"titulo":"...","rendimento":"ex: 4 porções","ingredientes":["2 ovos","1
         h+=`<div class="rec-sec"><div class="rec-sec-tt">🧺 Ingredientes</div>${(d.ingredientes||[]).map(x=>`<div class="rec-ing">${esc(x)}</div>`).join('')}</div>`;
         h+=`<div class="rec-sec"><div class="rec-sec-tt">👩‍🍳 Modo de preparo</div>${(d.modo_preparo||[]).map((x,i)=>`<div class="rec-step"><div class="rec-step-n">${i+1}</div><div>${esc(x)}</div></div>`).join('')}</div>`;
         const qs=(d.perguntas||[]);
-        if(qs.length){h+=`<div class="rec-sec"><div class="rec-sec-tt">✍️ Responda</div>${qs.map((q,i)=>{const n=Math.max(parseInt(q.linhas,10)||2,1);return `<div class="q"><div class="q-en"><span class="q-num">${i+1}</span>${esc(q.enunciado||'')}</div><div class="linhas">${Array(n).fill('<div class="linha"></div>').join('')}</div></div>`;}).join('')}</div>`;}
+        if(qs.length){h+=`<div class="rec-sec"><div class="rec-sec-tt">✍️ Responda</div>${qs.map((q,i)=>{const n=(c.espaco||4);return `<div class="q"><div class="q-en"><span class="q-num">${i+1}</span>${esc(q.enunciado||'')}</div><div class="linhas">${Array(n).fill('<div class="linha"></div>').join('')}</div></div>`;}).join('')}</div>`;}
         return h;
       }
     }
