@@ -149,11 +149,15 @@
   .rec-step-n{width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
   /* BINGO */
-  .bingo-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  .bingo-cartela{border:2px solid var(--ink);border-radius:12px;overflow:hidden;break-inside:avoid;page-break-inside:avoid}
-  .bingo-head{background:var(--green);color:#fff;font-family:'Playfair Display',serif;font-weight:900;font-size:20px;text-align:center;padding:7px;letter-spacing:.15em}
-  .bingo-grid{display:grid;gap:0}
-  .bingo-cell{border:1px solid #999;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;color:#000;text-transform:uppercase}
+  .bingo-wrap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+  .bingo-cartela{border:2px solid var(--ink);border-radius:12px;overflow:hidden;break-inside:avoid;page-break-inside:avoid;min-width:0}
+  .bingo-head{background:var(--green);color:#fff;font-family:'Playfair Display',serif;font-weight:900;font-size:19px;text-align:center;padding:7px;letter-spacing:.15em}
+  .bingo-grid{display:grid;gap:0;width:100%}
+  .bingo-cell{border:1px solid #999;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#000;text-transform:uppercase;min-width:0;overflow:hidden;text-align:center;line-height:1.05;padding:2px;word-break:break-word;hyphens:auto}
+  .bingo-cell-fig{flex-direction:column;gap:2px;padding:3px}
+  .bingo-fig-img{width:100%;flex:1 1 auto;min-height:0;border-radius:6px}
+  .bingo-fig-img.img-frame{aspect-ratio:auto}
+  .bingo-fig-word{font-size:10px;font-weight:700;line-height:1.05;text-transform:uppercase;text-align:center;width:100%}
   .bingo-nome{font-size:11px;color:var(--text-muted);padding:6px 10px;border-top:1px solid #ddd}
 
   /* perguntas (parlenda/receita) */
@@ -386,23 +390,44 @@ JSON: {"titulo":"...","versos":["verso 1","verso 2"],"api_image_prompt":"INGLÊS
     bingo:{
       temaPH:'Ex: Animais, sílabas com P, vogais...',
       hint:'A IA cria o conteúdo; o sistema monta cartelas variadas + lista de chamada.',
-      opts:`<div class="field-2col"><div class="field"><label class="field-label">Conteúdo</label><select id="o_cont"><option value="palavras">Palavras</option><option value="sílabas">Sílabas</option><option value="letras">Letras</option></select></div><div class="field"><label class="field-label">Cartela</label><select id="o_tam"><option value="3">3 × 3</option><option value="4">4 × 4</option></select></div></div><div class="field"><label class="field-label">Nº de cartelas (2 a 6)</label><input type="number" id="o_cart" min="2" max="6" value="4"></div>`,
+      opts:`<div class="field"><label class="field-label">Conteúdo</label><select id="o_cont"><option value="palavras">Palavras</option><option value="figuras">Figuras (imagem + palavra)</option><option value="sílabas">Sílabas</option><option value="letras">Letras</option></select></div><div class="field-2col"><div class="field"><label class="field-label">Cartela</label><select id="o_tam"><option value="3">3 × 3</option><option value="4">4 × 4</option></select></div><div class="field"><label class="field-label">Nº cartelas</label><input type="number" id="o_cart" min="2" max="6" value="4"></div></div>`,
       cfg:c=>{c.cont=document.getElementById('o_cont').value;c.tam=parseInt(document.getElementById('o_tam').value,10)||3;c.cart=clamp('o_cart',2,6,4);},
-      buildPrompt:c=>`BINGO de alfabetização. PÚBLICO: ${c.publico}. TEMA: ${c.tema}. CONTEÚDO: ${c.cont}.
-Gere um POOL de ${Math.max(c.tam*c.tam+8,16)} itens do tipo "${c.cont}" coerentes com o tema e o nível (sem repetir). Apenas o conteúdo em si (ex: para sílabas: "BA","BE","BI"; para palavras: substantivos do tema).
-${c.instrucoes?'OBS: '+c.instrucoes:''}
-JSON: {"titulo":"...","tipo_conteudo":"${c.cont}","pool":["...","..."]}`,
-      render:(d,c)=>{
-        const pool=(d.pool||[]).map(x=>String(x).trim()).filter(Boolean);
+      buildPrompt:c=>{
         const cells=c.tam*c.tam;
-        let h=`<div class="enun">Marque na sua cartela quando o professor sortear. Quem completar uma linha grita BINGO!</div><div class="bingo-wrap">`;
-        for(let k=0;k<c.cart;k++){
-          let s=embaralhar([...pool]).slice(0,cells);
-          while(s.length<cells) s=s.concat(s).slice(0,cells);
-          h+=`<div class="bingo-cartela"><div class="bingo-head">B I N G O</div><div class="bingo-grid" style="grid-template-columns:repeat(${c.tam},1fr)">${s.map(x=>`<div class="bingo-cell">${esc(x)}</div>`).join('')}</div><div class="bingo-nome">Nome: ____________________</div></div>`;
+        if(c.cont==='figuras'){
+          const pool=Math.max(cells+3,12);
+          return `BINGO DE FIGURAS (imagem + palavra) — alfabetização. PÚBLICO: ${c.publico}. TEMA: ${c.tema}.
+Gere um POOL de ${pool} palavras CONCRETAS e ILUSTRÁVEIS do tema (objetos/seres), sem repetir, adequadas ao público. Para cada uma: a palavra + um api_image_prompt em INGLÊS (objeto ISOLADO, centralizado, FUNDO BRANCO liso, fotográfico realista, sem texto).
+${c.instrucoes?'OBS: '+c.instrucoes:''}
+JSON: {"titulo":"...","tipo_conteudo":"figuras","pool":[{"palavra":"...","api_image_prompt":"..."}]}`;
         }
-        h+=`</div>`;
-        h+=`<div class="page-break"></div><div class="gabarito"><div class="gabarito-tt">Lista de chamada (professor)</div><div class="pool-tags">${pool.map(x=>`<span class="pool-tag">${esc(x)}</span>`).join('')}</div></div>`;
+        return `BINGO de alfabetização. PÚBLICO: ${c.publico}. TEMA: ${c.tema}. CONTEÚDO: ${c.cont}.
+Gere um POOL de ${Math.max(cells+6,16)} itens do tipo "${c.cont}" coerentes com o tema/nível (sem repetir). Itens CURTOS (palavras curtas; sílabas como "BA","BE"; letras). Apenas o conteúdo em si.
+${c.instrucoes?'OBS: '+c.instrucoes:''}
+JSON: {"titulo":"...","tipo_conteudo":"${c.cont}","pool":["...","..."]}`;
+      },
+      render:(d,c)=>{
+        const figuras=c.cont==='figuras';
+        const cells=c.tam*c.tam;
+        const gtc=`grid-template-columns:repeat(${c.tam},minmax(0,1fr))`;
+        let h=`<div class="enun">Marque na sua cartela quando o professor sortear. Quem completar uma linha grita BINGO!</div><div class="bingo-wrap">`;
+        if(figuras){
+          const pool=(d.pool||[]).filter(p=>p&&p.palavra);
+          for(let k=0;k<c.cart;k++){
+            let s=embaralhar(pool).slice(0,cells);
+            while(s.length<cells&&pool.length) s=s.concat(pool).slice(0,cells);
+            h+=`<div class="bingo-cartela"><div class="bingo-head">B I N G O</div><div class="bingo-grid" style="${gtc}">${s.map(it=>`<div class="bingo-cell bingo-cell-fig">${imgFrame(it._url,it.api_image_prompt,'bingo-fig-img')}<div class="bingo-fig-word">${esc(it.palavra)}</div></div>`).join('')}</div><div class="bingo-nome">Nome: ____________________</div></div>`;
+          }
+          h+=`</div><div class="page-break"></div><div class="gabarito"><div class="gabarito-tt">Lista de chamada (professor)</div><div class="pool-tags">${pool.map(it=>`<span class="pool-tag">${esc(it.palavra)}</span>`).join('')}</div></div>`;
+        }else{
+          const pool=(d.pool||[]).map(x=>String(x).trim()).filter(Boolean);
+          for(let k=0;k<c.cart;k++){
+            let s=embaralhar([...pool]).slice(0,cells);
+            while(s.length<cells&&pool.length) s=s.concat(pool).slice(0,cells);
+            h+=`<div class="bingo-cartela"><div class="bingo-head">B I N G O</div><div class="bingo-grid" style="${gtc}">${s.map(x=>`<div class="bingo-cell">${esc(x)}</div>`).join('')}</div><div class="bingo-nome">Nome: ____________________</div></div>`;
+          }
+          h+=`</div><div class="page-break"></div><div class="gabarito"><div class="gabarito-tt">Lista de chamada (professor)</div><div class="pool-tags">${pool.map(x=>`<span class="pool-tag">${esc(x)}</span>`).join('')}</div></div>`;
+        }
         return h;
       }
     },
@@ -477,7 +502,9 @@ JSON: {"titulo":"...","rendimento":"ex: 4 porções","ingredientes":["2 ovos","1
       let parsed;try{parsed=extractJSON(data.content?.[0]?.text||'');}catch(e){throw new Error('Formato inesperado. Tente novamente.');}
 
       setStep(3);
-      await gerarImagens(parsed,9);
+      let capImg=9;
+      if(c.tipo==='bingo'&&c.cont==='figuras') capImg=Math.max(c.tam*c.tam+3,12);
+      await gerarImagens(parsed,capImg);
       setStep(4);await delay(150);
       renderDoc(parsed,c);
     }catch(err){
