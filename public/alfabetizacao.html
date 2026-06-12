@@ -257,7 +257,7 @@
     <hr class="divider">
     <button class="generate-btn" id="genBtn" onclick="generate()"><span class="gicon">✦</span><div class="spin"></div>Gerar atividade</button>
     <div class="error-box" id="errorBox"></div>
-    <div class="info-box">🖼️ Imagens por IA (até 8 nesta folha). Realistas, ótimas para identificação — especialmente no EJA e Ed. Infantil.</div>
+    <div class="info-box">🖼️ Imagens por IA (até 9 nesta folha). Realistas, ótimas para identificação — especialmente no EJA e Ed. Infantil.</div>
     <div class="progress-wrap" id="progressWrap">
       <div class="prog-bar-outer"><div class="prog-bar-inner" id="progBar"></div></div>
       <div class="prog-steps">
@@ -293,8 +293,8 @@
     autoditado:{
       temaPH:'Ex: Animais, Frutas, Material escolar...',
       hint:'A IA escolhe palavras do tema, com imagem de cada uma.',
-      opts:`<div class="field"><label class="field-label">Quantas imagens (até 8)</label><input type="number" id="o_qtd" min="3" max="8" value="6"></div>`,
-      cfg:c=>{c.qtd=clamp('o_qtd',3,8,6);},
+      opts:`<div class="field"><label class="field-label">Quantas imagens (até 9 — 3 por linha)</label><input type="number" id="o_qtd" min="3" max="9" value="9"></div>`,
+      cfg:c=>{c.qtd=clamp('o_qtd',3,9,9);},
       buildPrompt:c=>`Atividade de AUTODITADO (alfabetização). PÚBLICO: ${c.publico}. TEMA: ${c.tema}.
 Escolha EXATAMENTE ${c.qtd} palavras do tema: concretas, ilustráveis (objetos/seres), adequadas ao público (Infantil=lúdico; EJA=funcional/adulto). Cada palavra com uma imagem.
 api_image_prompt (INGLÊS): UM único objeto, ISOLADO, centralizado, FUNDO BRANCO liso, fotográfico realista, sem texto na imagem.
@@ -463,7 +463,7 @@ JSON: {"titulo":"...","rendimento":"ex: 4 porções","ingredientes":["2 ovos","1
       let parsed;try{parsed=extractJSON(data.content?.[0]?.text||'');}catch(e){throw new Error('Formato inesperado. Tente novamente.');}
 
       setStep(3);
-      await gerarImagens(parsed,8);
+      await gerarImagens(parsed,9);
       setStep(4);await delay(150);
       renderDoc(parsed,c);
     }catch(err){
