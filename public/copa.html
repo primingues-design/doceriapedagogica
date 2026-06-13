@@ -549,9 +549,22 @@ function champsBlock(){
 function vfBlock(items){return (items||[]).map(it=>`<div class="cp-vf"><span class="cp-vf-boxes"><span class="cp-vf-box">V</span><span class="cp-vf-box">F</span></span><span>${it.frase}</span></div>`).join('');}
 function mcBlock(items){return (items||[]).map((q,i)=>`<div class="cp-mc"><div class="cp-q"><span class="qn">${i+1}.</span><span>${q.pergunta}</span></div>${(q.opcoes||[]).map((o,oi)=>`<div class="cp-mc-opt"><span class="cp-mc-bubble">${String.fromCharCode(65+oi)}</span><span>${o.replace(/^[A-Da-d]\)\s*/,'')}</span></div>`).join('')}</div>`).join('');}
 
-function sentImagesBlock(){
-  const icos=[svgBall(),svgTrophy(),svgJersey(),svgBoot(),svgWhistle(),svgFlagPole()];
-  return icos.map(svg=>`<div class="cp-sent-row"><div class="cp-sent-ico">${svg}</div><div class="cp-sent-lines"><div class="cp-ans-line"></div><div class="cp-ans-line"></div></div></div>`).join('');
+function sentImagesBlock(img){
+  const fb=[svgBall(),svgTrophy(),svgJersey(),svgBoot(),svgWhistle(),svgFlagPole()];
+  return fb.map((svg,i)=>{
+    const u=img&&img.sent&&img.sent[i];
+    const ico=u?`<img src="${u}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:7px">`:svg;
+    return `<div class="cp-sent-row"><div class="cp-sent-ico">${ico}</div><div class="cp-sent-lines"><div class="cp-ans-line"></div><div class="cp-ans-line"></div></div></div>`;
+  }).join('');
+}
+function cultIconsBlock(img){
+  const fb=[svgSushi(),svgEiffel(),svgPizza(),svgTaco()];
+  const cap=['Sushi · Japão','Torre Eiffel · França','Pizza · Itália','Taco · México'];
+  return `<div class="cp-culture-icons">${fb.map((svg,i)=>{
+    const u=img&&img.cult&&img.cult[i];
+    const el=u?`<img src="${u}" alt="" style="width:96px;height:96px;object-fit:cover;border-radius:10px;border:1px solid var(--border)">`:`<div style="width:74px;height:74px">${svg}</div>`;
+    return `<figure style="margin:0;text-align:center">${el}<figcaption style="font-size:10px;color:var(--text-muted);margin-top:4px">${cap[i]}</figcaption></figure>`;
+  }).join('')}</div>`;
 }
 
 /* ════════════ MONTAGEM DAS PÁGINAS ════════════ */
@@ -571,7 +584,7 @@ function buildPages(d,nivel,img){
       <div class="cp-cover-badges"><span class="cp-cover-badge">📚 ${nivel}</span><span class="cp-cover-badge">⚽ Copa do Mundo</span><span class="cp-cover-badge">📅 ${date}</span></div>
     </div>
     <div class="cp-namebar"><span>Nome: ____________________________________</span><span>Turma: ___________</span><span>Data: ___/___/______</span></div>
-    <div class="cp-body" style="padding-top:14px;padding-bottom:18px">${pic(img.hist, svgStadium(),'hero','A Copa do Mundo reúne torcedores do planeta inteiro!')}</div>
+    <div class="cp-body" style="padding-top:14px;padding-bottom:18px">${pic(img.scene||img.hist, svgStadium(),'hero','A Copa do Mundo reúne torcedores do planeta inteiro!')}</div>
   </div>`);
 
   // HISTÓRIA
@@ -664,7 +677,7 @@ function buildPages(d,nivel,img){
       <div class="cp-section-label">Culturas do mundo</div>
       <div class="cp-section-title">🌍 Cada país, uma cultura</div>
       ${pic(img.culture, svgKidsFlags(),'hero','Crianças de vários países torcendo juntas pela Copa!')}
-      <div class="cp-culture-icons">${svgSushi()}${svgEiffel()}${svgPizza()}${svgTaco()}</div>
+      ${cultIconsBlock(img)}
       ${d.culturas_intro?`<p class="cp-text">${d.culturas_intro}</p>`:''}
       <p class="cp-text"><b>Relacione</b> cada país a algo da sua cultura:</p>
       ${relacioneCultura(d.culturas)}
@@ -701,7 +714,7 @@ function buildPages(d,nivel,img){
       <div class="cp-section-label">Escrita · Observe e escreva</div>
       <div class="cp-section-title">🖼️ Escreva uma frase para cada imagem</div>
       <p class="cp-text">Observe cada imagem e escreva, ao lado, uma frase sobre ela:</p>
-      ${sentImagesBlock()}
+      ${sentImagesBlock(img)}
     </div>${foot('Escreva uma frase')}</div>`);
   }
 
@@ -722,6 +735,7 @@ function buildPages(d,nivel,img){
 }
 
 function render(d,nivel,isSample,img){
+  window.__copaSample=isSample;
   const pages=buildPages(d,nivel,img);
   document.getElementById('copa-doc').innerHTML=pages.join('');
   document.getElementById('pagesCount').textContent=pages.length;
@@ -729,7 +743,7 @@ function render(d,nivel,isSample,img){
   document.getElementById('phTitle').textContent=d.titulo||SAMPLE.titulo;
   document.getElementById('phBadge').textContent=isSample?'✓ Exemplo pronto — gere a sua com imagens reais':'✓ Sua apostila personalizada';
   document.getElementById('phBadge').style.display='inline-flex';
-  document.getElementById('phMeta').textContent=`${nivel} · ${pages.length} páginas`+(isSample?' · exemplo (imagens entram ao gerar)':'');
+  document.getElementById('phMeta').textContent=`${nivel} · ${pages.length} páginas`+(isSample?' · exemplo demonstrativo':'');
 }
 
 /* ════════════ IMAGENS (fal.ai + Pexels) ════════════ */
@@ -741,18 +755,25 @@ async function fetchPexels(query,orientation){
   try{const r=await fetch('/api/pexels?query='+encodeURIComponent(query)+'&orientation='+(orientation||'landscape'));if(r.ok){const d=await r.json();return d&&d.url?d.url:null;}}catch(_){}
   return null;
 }
+// Igual aos outros geradores: FOTOS REAIS (Pexels) sempre que possível; fal.ai
+// só para a cena de crianças diversas (Pexels não acha esse enquadramento).
+// Regra (como no prova.html): realista/fotográfico, NUNCA texto dentro da imagem.
+const SENT_Q=['soccer ball close up','golden trophy award','soccer jersey shirt','soccer cleats shoes','referee whistle','brazil flag waving'];
+const CULT_Q=['sushi japanese food','eiffel tower paris','pizza italian food','tacos mexican food'];
 async function fetchImages(){
-  const histP='joyful colorful childrens book illustration of diverse soccer players celebrating a goal on a green field, dynamic, friendly, NO text, NO letters, NO words';
-  const mathP='cheerful childrens illustration of happy kids wearing soccer jerseys playing with soccer balls, confetti, brazil green and yellow colors, NO text, NO letters';
-  const cultP='warm childrens book illustration of four diverse children hugging and smiling together, one black child, one east asian child, one indigenous amazonian child, one light skin child, each holding a different country flag, joyful, NO text, NO letters';
-  const [hist,math,culture,scene,scene2]=await Promise.all([
-    fetchFal(histP,'landscape_4_3'),
-    fetchFal(mathP,'landscape_16_9'),
-    fetchFal(cultP,'landscape_4_3'),
-    fetchPexels('soccer stadium crowd match','landscape').then(u=>u||fetchFal('realistic photo style illustration of a packed football stadium during a world cup match, crowd cheering, players on the field, vibrant, NO text','landscape_16_9')),
-    fetchPexels('soccer player celebration field','landscape').then(u=>u||fetchFal('realistic illustration of a soccer player running on the field during a match, stadium behind, NO text','landscape_16_9'))
+  const P=fetchPexels, F=fetchFal;
+  const cultP='realistic photograph of a happy diverse group of children from different countries standing together smiling, one black child, one east asian child, one indigenous child, one light-skin child, each holding a small different national flag, bright daylight, no text, no letters, no numbers';
+  const arr=await Promise.all([
+    P('soccer players celebrating goal','landscape').then(u=>u||F('realistic photo of diverse soccer players celebrating a goal in a stadium, vibrant, no text, no letters','landscape_4_3')),
+    P('children playing soccer kids','landscape').then(u=>u||F('realistic photo of happy children playing soccer on a field, sunny, no text','landscape_16_9')),
+    F(cultP,'landscape_4_3'),
+    P('football stadium crowd match','landscape').then(u=>u||F('realistic photo of a packed football stadium during a match, crowd cheering, no text','landscape_16_9')),
+    P('soccer player running ball match','landscape').then(u=>u||F('realistic photo of a soccer player running with the ball during a match, no text','landscape_16_9')),
+    ...SENT_Q.map(q=>P(q,'square')),
+    ...CULT_Q.map(q=>P(q,'square'))
   ]);
-  return {hist,math,culture,scene,scene2};
+  const [hist,math,culture,scene,scene2,...rest]=arr;
+  return {hist,math,culture,scene,scene2,sent:rest.slice(0,6),cult:rest.slice(6,10)};
 }
 
 /* ════════════ GERAR ════════════ */
@@ -845,8 +866,14 @@ function extractJSON(raw){let c=raw.replace(/```json\s*/gi,'').replace(/```\s*/g
 function printPDF(){ if(typeof dpPrint==='function') dpPrint(); else window.print(); }
 
 (function init(){
+  const nivel=document.getElementById('nivel').value;
   if(isLoggedIn()) document.getElementById('loginLink').textContent='Meu painel';
-  render(SAMPLE,document.getElementById('nivel').value,true,{});
+  render(SAMPLE,nivel,true,{});
+  // Logada (ex.: a professora): já busca as fotos reais e atualiza o exemplo,
+  // sem custar crédito (só /api/imagem e /api/pexels). Não sobrescreve se já gerou.
+  if(isLoggedIn()){
+    fetchImages().then(img=>{ if(window.__copaSample) render(SAMPLE,document.getElementById('nivel').value,true,img); }).catch(()=>{});
+  }
 })();
 </script>
 <script src="/js/dp-print.js"></script>
