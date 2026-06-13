@@ -540,6 +540,17 @@ const SAMPLE = {
   fechamento:'A Copa do Mundo une pessoas de todos os continentes em volta de uma bola. Mais do que torcer, é uma chance de aprender sobre o mundo, fazer contas, conhecer bandeiras e sonhar grande. Que vença o melhor — e que a brincadeira ensine a gente a respeitar todos os povos!'
 };
 
+/* ════════════ IMAGENS REAIS (estáticas) ════════════
+   Fotos pré-geradas (Pexels + fal.ai), servidas de /copa/*.jpg. Aparecem
+   logada ou não, no preview e no PDF — sem nenhum desenho de reserva. */
+const IMG={
+  hist:'/copa/hist.jpg', math:'/copa/math.jpg', scene:'/copa/scene.jpg', scene2:'/copa/scene2.jpg',
+  culture:'/copa/kids.jpg', trophy:'/copa/trophy.jpg',
+  sent:['/copa/ball.jpg','/copa/trophy.jpg','/copa/jersey.jpg','/copa/cleats.jpg','/copa/whistle.jpg','/copa/flag.jpg'],
+  cult:['/copa/sushi.jpg','/copa/eiffel.jpg','/copa/pizza.jpg','/copa/taco.jpg'],
+  bingo:[['BOLA','/copa/ball.jpg'],['GOL','/copa/goal.jpg'],['TROFÉU','/copa/trophy.jpg'],['CHUTEIRA','/copa/cleats.jpg'],['APITO','/copa/whistle.jpg'],['CAMISA','/copa/jersey.jpg'],['MEDALHA','/copa/medal.jpg'],['BANDEIRA','/copa/flag.jpg'],['CARTÃO','/copa/card.jpg']]
+};
+
 /* ════════════ HELPERS ════════════ */
 function toggleBtn(el){el.classList.toggle('on')}
 function isOn(id){return document.getElementById(id).classList.contains('on')}
@@ -723,9 +734,9 @@ function cruzadinhaBlock(){
 /* ════════════ BINGO 3×3 ════════════ */
 function bingoCard(cells){return `<div class="cp-bingo-card">${cells}</div>`;}
 function bingoSoccer(){
-  const items=[{w:'BOLA',s:svgBall()},{w:'GOL',s:svgGoal()},{w:'TROFÉU',s:svgTrophy()},{w:'CHUTEIRA',s:svgBoot()},{w:'APITO',s:svgWhistle()},{w:'CAMISA',s:svgJersey()},{w:'MEDALHA',s:svgMedal()},{w:'BANDEIRA',s:svgFlagPole()},{w:'CARTÃO',s:svgCard()}];
-  const cells=shuffle(items).map(it=>`<div class="cp-bingo-cell">${it.s}<span class="cp-bingo-word">${it.w}</span></div>`).join('');
-  const call=items.map(it=>`<span class="cp-bingo-chip">${it.w}</span>`).join('');
+  const items=IMG.bingo;
+  const cells=shuffle(items).map(it=>`<div class="cp-bingo-cell"><img src="${it[1]}" alt="" style="width:100%;height:52px;object-fit:cover;border-radius:6px"><span class="cp-bingo-word">${it[0]}</span></div>`).join('');
+  const call=items.map(it=>`<span class="cp-bingo-chip">${it[0]}</span>`).join('');
   return `<div class="cp-twocol">${bingoCard(cells)}<div style="flex:1;min-width:180px"><div class="cp-ws-bank-title">Lista de chamada (professor):</div><div class="cp-bingo-call">${call}</div></div></div>`;
 }
 function bingoPaises(){
@@ -775,7 +786,7 @@ function buildPages(d,nivel,img){
     pages.push(`<div class="cp-page"><div class="cp-body">
       <div class="cp-section-label">Campeões pela história</div>
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px">
-        <div style="width:84px;flex-shrink:0">${svgTrophy()}</div>
+        <div style="width:96px;flex-shrink:0"><img src="${IMG.trophy}" alt="" style="width:100%;border-radius:10px;border:1px solid var(--border)"></div>
         <div><div class="cp-section-title" style="margin-bottom:4px">🏆 Quem já levantou a taça</div>
         <p class="cp-text" style="margin:0">Desde 1930, estes países foram campeões do mundo. Os anos em <b style="color:#caa200">amarelo</b> são os títulos do Brasil:</p></div>
       </div>
@@ -947,50 +958,6 @@ function render(d,nivel,isSample,img){
   document.getElementById('phMeta').textContent=`${nivel} · ${pages.length} páginas`+(isSample?' · exemplo demonstrativo':'');
 }
 
-/* ════════════ IMAGENS (fal.ai + Pexels) ════════════ */
-async function fetchFal(prompt,size){
-  try{const r=await fetch('/api/imagem',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,size})});if(r.ok){const d=await r.json();return d&&d.url?d.url:null;}}catch(_){}
-  return null;
-}
-async function fetchPexels(query,orientation){
-  try{const r=await fetch('/api/pexels?query='+encodeURIComponent(query)+'&orientation='+(orientation||'landscape'));if(r.ok){const d=await r.json();return d&&d.url?d.url:null;}}catch(_){}
-  return null;
-}
-// Igual aos outros geradores: FOTOS REAIS (Pexels) sempre que possível; fal.ai
-// só para a cena de crianças diversas (Pexels não acha esse enquadramento).
-// Regra (como no prova.html): realista/fotográfico, NUNCA texto dentro da imagem.
-// objetos e elementos culturais: Pexels (foto real) e, se faltar, fal.ai fotográfico
-const SENT=[
-  {q:'soccer ball grass',f:'realistic photo of a single soccer ball on green grass, no text'},
-  {q:'golden trophy award',f:'realistic photo of a shiny golden trophy cup, no text'},
-  {q:'soccer jersey shirt',f:'realistic photo of a soccer jersey shirt, no text'},
-  {q:'soccer cleats shoes',f:'realistic photo of a pair of soccer cleats on grass, no text'},
-  {q:'referee whistle',f:'realistic photo of a sports referee whistle, no text'},
-  {q:'brazil flag waving',f:'realistic photo of the brazilian flag waving, no text'}
-];
-const CULT=[
-  {q:'sushi japanese food',f:'realistic photo of sushi pieces on a plate, no text'},
-  {q:'eiffel tower paris',f:'realistic photo of the eiffel tower in paris on a clear day, no text'},
-  {q:'pizza italian food',f:'realistic photo of a whole italian pizza, no text'},
-  {q:'tacos mexican food',f:'realistic photo of mexican tacos on a plate, no text'}
-];
-function realImg(o,size){return fetchPexels(o.q,size).then(u=>u||fetchFal(o.f,'square'));}
-async function fetchImages(){
-  const P=fetchPexels, F=fetchFal;
-  const cultP='realistic photograph of a happy diverse group of children from different countries standing together smiling, one black child, one east asian child, one indigenous child, one light-skin child, each holding a small different national flag, bright daylight, no text, no letters, no numbers';
-  const arr=await Promise.all([
-    P('soccer players celebrating goal','landscape').then(u=>u||F('realistic photo of diverse soccer players celebrating a goal in a stadium, vibrant, no text, no letters','landscape_4_3')),
-    P('children playing soccer kids','landscape').then(u=>u||F('realistic photo of happy children playing soccer on a field, sunny, no text','landscape_16_9')),
-    F(cultP,'landscape_4_3'),
-    P('football stadium crowd match','landscape').then(u=>u||F('realistic photo of a packed football stadium during a match, crowd cheering, no text','landscape_16_9')),
-    P('soccer player running ball match','landscape').then(u=>u||F('realistic photo of a soccer player running with the ball during a match, no text','landscape_16_9')),
-    ...SENT.map(o=>realImg(o,'square')),
-    ...CULT.map(o=>realImg(o,'square'))
-  ]);
-  const [hist,math,culture,scene,scene2,...rest]=arr;
-  return {hist,math,culture,scene,scene2,sent:rest.slice(0,6),cult:rest.slice(6,10)};
-}
-
 /* ════════════ GERAR ════════════ */
 function setStep(n,total=4){for(let i=1;i<=total;i++){const el=document.getElementById('ps'+i);if(!el)continue;el.classList.remove('active','done');const dot=el.querySelector('.prog-dot');if(i<n){el.classList.add('done');dot.textContent='✓';}else if(i===n){el.classList.add('active');dot.textContent=i;}else dot.textContent=i;}document.getElementById('progBar').style.width=Math.round((n/total)*90)+'%';}
 function delay(ms){return new Promise(r=>setTimeout(r,ms));}
@@ -1031,12 +998,10 @@ async function generate(){
     try{parsed=extractJSON(data.content?.[0]?.text||'');}catch(e){throw new Error('Formato inesperado. Tente novamente.');}
     const d2=Object.assign({},SAMPLE,parsed);
 
-    setStep(2);
-    const img=await fetchImages();   // ilustra a apostila
     setStep(4);
     document.getElementById('progBar').style.width='100%';
     await delay(250);
-    render(d2,nivel,false,img);
+    render(d2,nivel,false,IMG);
     document.getElementById('docWrap').scrollIntoView({behavior:'smooth',block:'start'});
     if(typeof dpSalvar==='function') dpSalvar('copa','Copa do Mundo',nivel,d2.titulo||'Apostila da Copa','#docWrap');
   }catch(err){
@@ -1083,12 +1048,7 @@ function printPDF(){ if(typeof dpPrint==='function') dpPrint(); else window.prin
 (function init(){
   const nivel=document.getElementById('nivel').value;
   if(isLoggedIn()) document.getElementById('loginLink').textContent='Meu painel';
-  render(SAMPLE,nivel,true,{});
-  // Logada (ex.: a professora): já busca as fotos reais e atualiza o exemplo,
-  // sem custar crédito (só /api/imagem e /api/pexels). Não sobrescreve se já gerou.
-  if(isLoggedIn()){
-    fetchImages().then(img=>{ if(window.__copaSample) render(SAMPLE,document.getElementById('nivel').value,true,img); }).catch(()=>{});
-  }
+  render(SAMPLE,nivel,true,IMG);   // imagens reais estáticas — iguais no público e no PDF
 })();
 </script>
 <script src="/js/dp-print.js"></script>
