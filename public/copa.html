@@ -256,30 +256,34 @@
     .cp-imgrow .pic{width:100%}
   }
 
+  /* ═══ IMPRESSÃO — modelo da alfabetização: conteúdo FLUI, sem quebra forçada
+     por seção; só os blocos atômicos não racham. Isso evita folhas pela metade. ═══ */
   @media print {
-    @page { size: A4 portrait; margin: 10mm 12mm; }
-    html, body { background: white !important; }
-    .topbar, .form-panel, .preview-header { display: none !important; }
-    .main { display: block !important; }
-    .preview-panel { padding: 0 !important; overflow: visible !important; max-height: none !important; }
-    .doc-wrap { max-width: none !important; }
-    /* cada disciplina começa numa folha nova; o conteúdo FLUI dentro dela
-       (sem empurrar a seção inteira e desperdiçar a folha) */
+    @page { size: A4 portrait; margin: 11mm 13mm; }
+    html, body { background:#fff !important; }
+    .topbar, .form-panel, .preview-header { display:none !important; }
+    .main { display:block !important; }
+    .preview-panel { padding:0 !important; overflow:visible !important; max-height:none !important; }
+    .doc-wrap { max-width:none !important; }
+    #copa-doc { display:block !important; }
     .cp-page {
-      border-radius: 0 !important; box-shadow: none !important; margin-bottom: 0 !important;
-      break-inside: auto !important; page-break-inside: auto !important;
-      break-before: page; page-break-before: always;
+      border-radius:0 !important; box-shadow:none !important; margin:0 !important;
+      overflow:visible !important;
+      break-inside:auto !important; page-break-inside:auto !important;
     }
-    #copa-doc > .cp-page:first-child { break-before: auto; page-break-before: avoid; }
-    .cp-body { padding: 14px 22px !important; }
-    /* NUNCA quebrar no meio destes blocos */
-    .cp-qblock, .cp-activity, .cp-rel-item, .cp-vf, .cp-mc, .cp-sent-row,
-    .cp-champ, .cp-map-wrap, .cp-write-box, .cp-draw-box, .cp-imgrow,
-    .cp-scoreboard, .cp-points-table, figure, img,
-    .cp-bingo-card, .cp-cw-wrap, .cp-ws-wrap {
-      break-inside: avoid !important; page-break-inside: avoid !important;
+    .cp-body { padding:6px 0 12px !important; }
+    .cp-cover { padding:22px 26px 16px !important; }
+    .cp-namebar { margin:14px 0 0 !important; }
+    /* blocos que NUNCA podem rachar no meio de uma folha */
+    .cp-qblock, .cp-activity, .cp-rel-item, .cp-relacione, .cp-vf, .cp-mc,
+    .cp-sent-row, .cp-champ, .cp-map-wrap, .cp-write-box, .cp-draw-box,
+    .cp-imgrow, .cp-scoreboard, .cp-points-table, figure, img,
+    .cp-bingo-card, .cp-cw-wrap, .cp-ws-wrap, .cp-footer, .cp-cover {
+      break-inside:avoid !important; page-break-inside:avoid !important;
     }
-    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    /* título não fica órfão no fim da folha */
+    .cp-section-label, .cp-section-title { break-after:avoid !important; page-break-after:avoid !important; }
+    * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
   }
 </style>
 </head>
