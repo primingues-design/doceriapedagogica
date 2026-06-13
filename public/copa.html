@@ -105,8 +105,9 @@
   .doc-wrap{max-width:820px;margin:0 auto}
   #copa-doc{background:transparent}
 
-  .cp-page{background:white;border-radius:12px;box-shadow:0 6px 32px rgba(0,0,0,0.08);margin-bottom:16px;overflow:hidden;break-inside:avoid;page-break-inside:avoid}
+  .cp-page{background:white;border-radius:12px;box-shadow:0 6px 32px rgba(0,0,0,0.08);margin-bottom:16px;overflow:hidden}
   .cp-body{padding:30px 40px}
+  .cp-qblock{break-inside:avoid;page-break-inside:avoid;margin-bottom:8px}
 
   .cp-stripe{height:8px;display:flex}
   .cp-stripe span{flex:1}
@@ -216,6 +217,35 @@
   .cp-footer{background:var(--warm);border-top:1px solid var(--border);padding:12px 40px;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--text-muted)}
   .cp-footer-logo{font-family:'Playfair Display',serif;font-weight:700;color:var(--cp-green)}
 
+  /* Caça-palavras */
+  .cp-ws-wrap{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;margin-top:10px}
+  .cp-ws-grid{display:inline-grid;gap:2px;background:#fff;padding:4px;border:1.5px solid var(--border-mid);border-radius:8px}
+  .cp-ws-cell{display:flex;align-items:center;justify-content:center;font-weight:700;color:#000;border:1px solid rgba(0,0,0,0.07);border-radius:2px}
+  .cp-ws-bank{flex:1;min-width:170px}
+  .cp-ws-bank-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cp-green);margin-bottom:8px}
+  .cp-ws-bank-list{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px}
+  .cp-ws-word{font-size:13px;font-weight:600;padding:4px 0;border-bottom:1px solid var(--border)}
+  /* Cruzadinha */
+  .cp-cw-wrap{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;margin-top:10px}
+  .cp-cw-grid{display:grid;gap:2px}
+  .cp-cw-cell{background:#fff;border:1.5px solid #444;border-radius:3px;position:relative}
+  .cp-cw-cell.blank{background:transparent;border:none}
+  .cp-cw-num{position:absolute;top:0;left:1px;font-size:8px;font-weight:700;color:var(--cp-green);line-height:1}
+  .cp-cw-clues{flex:1;min-width:190px}
+  .cp-cw-clue-title{font-size:11px;font-weight:700;color:var(--cp-blue);margin:8px 0 5px;text-transform:uppercase;letter-spacing:.05em}
+  .cp-cw-clue{font-size:12.5px;color:#000;margin-bottom:5px;line-height:1.4;display:flex;gap:6px}
+  .cp-cw-clue b{color:var(--cp-green);flex-shrink:0}
+  /* Bingo */
+  .cp-twocol{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}
+  .cp-bingo-card{display:inline-grid;grid-template-columns:repeat(3,1fr);gap:6px;border:2px solid var(--cp-green);border-radius:12px;padding:8px;background:var(--cp-green-pale);width:300px}
+  .cp-bingo-cell{background:#fff;border:1px solid var(--border-mid);border-radius:8px;padding:6px 3px;text-align:center;min-height:88px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+  .cp-bingo-cell svg{width:48px;height:38px}
+  .cp-bingo-flag{width:56px;height:38px;border:1px solid rgba(0,0,0,.15);border-radius:3px;overflow:hidden}
+  .cp-bingo-flag svg{width:100%;height:100%}
+  .cp-bingo-word{font-size:11px;font-weight:700;color:#000}
+  .cp-bingo-call{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .cp-bingo-chip{border:1.5px solid var(--cp-blue);color:var(--cp-blue);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600}
+
   body.letra-grande .cp-text,body.letra-grande .cp-activity-q,body.letra-grande .cp-rel-name,body.letra-grande .cp-q{font-size:16px}
   body.letra-grande .cp-section-title{font-size:25px}
 
@@ -228,14 +258,27 @@
 
   @media print {
     @page { size: A4 portrait; margin: 10mm 12mm; }
-    body { background: white !important; }
+    html, body { background: white !important; }
     .topbar, .form-panel, .preview-header { display: none !important; }
     .main { display: block !important; }
     .preview-panel { padding: 0 !important; overflow: visible !important; max-height: none !important; }
     .doc-wrap { max-width: none !important; }
-    .cp-page { border-radius: 0 !important; box-shadow: none !important; margin-bottom: 0 !important; }
-    .cp-body { padding: 14px 24px !important; }
-    .cp-activity, .cp-rel-item, .cp-map-wrap, .cp-champ, .cp-sent-row, img { break-inside: avoid; page-break-inside: avoid; }
+    /* cada disciplina começa numa folha nova; o conteúdo FLUI dentro dela
+       (sem empurrar a seção inteira e desperdiçar a folha) */
+    .cp-page {
+      border-radius: 0 !important; box-shadow: none !important; margin-bottom: 0 !important;
+      break-inside: auto !important; page-break-inside: auto !important;
+      break-before: page; page-break-before: always;
+    }
+    #copa-doc > .cp-page:first-child { break-before: auto; page-break-before: avoid; }
+    .cp-body { padding: 14px 22px !important; }
+    /* NUNCA quebrar no meio destes blocos */
+    .cp-qblock, .cp-activity, .cp-rel-item, .cp-vf, .cp-mc, .cp-sent-row,
+    .cp-champ, .cp-map-wrap, .cp-write-box, .cp-draw-box, .cp-imgrow,
+    .cp-scoreboard, .cp-points-table, figure, img,
+    .cp-bingo-card, .cp-cw-wrap, .cp-ws-wrap {
+      break-inside: avoid !important; page-break-inside: avoid !important;
+    }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   }
 </style>
@@ -297,6 +340,9 @@
       <div class="toggle-row"><div><div class="toggle-label">👀 Analise a cena</div><div class="toggle-sub">Imagem do jogo + perguntas</div></div><button class="toggle on" id="togScene" onclick="toggleBtn(this)"></button></div>
       <div class="toggle-row"><div><div class="toggle-label">✍️ Produção de texto</div><div class="toggle-sub">Descrever a emoção do jogo</div></div><button class="toggle on" id="togWrite" onclick="toggleBtn(this)"></button></div>
       <div class="toggle-row"><div><div class="toggle-label">🖼️ Frases a partir de imagens</div><div class="toggle-sub">6 imagens + linhas</div></div><button class="toggle on" id="togSent" onclick="toggleBtn(this)"></button></div>
+      <div class="toggle-row"><div><div class="toggle-label">🎲 Bingo da Copa</div><div class="toggle-sub">Futebol (palavra+imagem) e países (palavra+bandeira)</div></div><button class="toggle on" id="togBingo" onclick="toggleBtn(this)"></button></div>
+      <div class="toggle-row"><div><div class="toggle-label">🧩 Cruzadinha dos países</div><div class="toggle-sub">Dicas simples</div></div><button class="toggle on" id="togCruz" onclick="toggleBtn(this)"></button></div>
+      <div class="toggle-row"><div><div class="toggle-label">🔤 Caça-palavras dos craques</div><div class="toggle-sub">Com banco de palavras</div></div><button class="toggle on" id="togCaca" onclick="toggleBtn(this)"></button></div>
       <div class="toggle-row"><div><div class="toggle-label">🎨 Crie seu mascote + fechamento</div><div class="toggle-sub">Espaço grande p/ desenhar</div></div><button class="toggle on" id="togEnd" onclick="toggleBtn(this)"></button></div>
     </div>
 
@@ -368,7 +414,8 @@ const FLAGS = {
   'Alemanha': '<svg viewBox="0 0 90 60"><rect width="90" height="20" fill="#000"/><rect y="20" width="90" height="20" fill="#dd0000"/><rect y="40" width="90" height="20" fill="#ffce00"/></svg>',
   'Japão':    '<svg viewBox="0 0 90 60"><rect width="90" height="60" fill="#fff"/><circle cx="45" cy="30" r="16" fill="#bc002d"/></svg>',
   'Portugal': '<svg viewBox="0 0 90 60"><rect width="36" height="60" fill="#006600"/><rect x="36" width="54" height="60" fill="#ff0000"/><circle cx="36" cy="30" r="9" fill="#ffcc29" stroke="#fff" stroke-width="1"/></svg>',
-  'Espanha':  '<svg viewBox="0 0 90 60"><rect width="90" height="60" fill="#c60b1e"/><rect y="15" width="90" height="30" fill="#ffc400"/></svg>'
+  'Espanha':  '<svg viewBox="0 0 90 60"><rect width="90" height="60" fill="#c60b1e"/><rect y="15" width="90" height="30" fill="#ffc400"/></svg>',
+  'Inglaterra':'<svg viewBox="0 0 90 60"><rect width="90" height="60" fill="#fff"/><rect x="37" width="16" height="60" fill="#ce1124"/><rect y="22" width="90" height="16" fill="#ce1124"/></svg>'
 };
 
 // Seleção brasileira — base 2026 (a professora pode trocar nomes antes de imprimir, no modo edição do PDF/print)
@@ -403,6 +450,8 @@ function svgSushi(){return `<svg viewBox="0 0 90 90"><ellipse cx="45" cy="78" rx
 function svgEiffel(){return `<svg viewBox="0 0 70 100"><path d="M35 6 L42 40 L52 90 H44 L40 64 H30 L26 90 H18 L28 40 Z" fill="none" stroke="#5a6b7a" stroke-width="3"/><path d="M28 48 H42 M24 66 H46" stroke="#5a6b7a" stroke-width="3"/><circle cx="35" cy="10" r="3" fill="#5a6b7a"/></svg>`;}
 function svgTaco(){return `<svg viewBox="0 0 90 80"><path d="M14 64 Q45 8 76 64 Z" fill="#f6c453" stroke="#caa200" stroke-width="2"/><path d="M22 60 Q45 24 68 60 Z" fill="#7bb661"/><circle cx="38" cy="52" r="4" fill="#e2453b"/><circle cx="52" cy="48" r="4" fill="#e2453b"/><circle cx="45" cy="56" r="3" fill="#fff"/></svg>`;}
 function svgPizza(){return `<svg viewBox="0 0 90 90"><path d="M45 8 L80 74 Q45 86 10 74 Z" fill="#f6c453" stroke="#caa200" stroke-width="2"/><path d="M45 18 L72 70 Q45 80 18 70 Z" fill="#e2453b" opacity=".85"/><circle cx="40" cy="50" r="5" fill="#fff"/><circle cx="55" cy="58" r="5" fill="#fff"/><circle cx="46" cy="66" r="4" fill="#2e7d32"/></svg>`;}
+function svgGoal(){return `<svg viewBox="0 0 90 70"><rect x="12" y="14" width="66" height="40" fill="none" stroke="#444" stroke-width="3"/><path d="M22 14V54 M32 14V54 M42 14V54 M52 14V54 M62 14V54 M72 14V54 M12 24H78 M12 34H78 M12 44H78" stroke="#cfcfcf" stroke-width="1"/><circle cx="60" cy="50" r="8" fill="#fff" stroke="#222" stroke-width="1.5"/></svg>`;}
+function svgCard(){return `<svg viewBox="0 0 80 80"><rect x="18" y="16" width="26" height="40" rx="4" fill="#ffcc29" stroke="#caa200" stroke-width="1.5" transform="rotate(-9 31 36)"/><rect x="36" y="22" width="26" height="40" rx="4" fill="#e2453b" stroke="#b0271d" stroke-width="1.5" transform="rotate(9 49 42)"/></svg>`;}
 
 // Ilustração de crianças diversas com bandeiras (fallback p/ cultura, sem login)
 function svgKidsFlags(){return `<svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg">
@@ -500,13 +549,14 @@ function onLetraGrandeChange(){document.body.classList.toggle('letra-grande',doc
 document.getElementById('nivel').addEventListener('change',function(){const acc=/infantil|1º|2º/i.test(this.value);document.getElementById('letraGrande').checked=acc;document.body.classList.toggle('letra-grande',acc);});
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function lines(n){return `<div class="cp-ans-lines">${Array(n).fill('<div class="cp-ans-line"></div>').join('')}</div>`;}
+function q(num,text,n){return `<div class="cp-qblock"><div class="cp-q"><span class="qn">${num}</span><span>${text}</span></div>${lines(n)}</div>`;}
 
 const SUPA_KEY='sb-atkwvwhwbkerezdmipxw-auth-token';
 function isLoggedIn(){try{const s=JSON.parse(localStorage.getItem(SUPA_KEY));return s&&(s.expires_at||0)>Date.now()/1000&&!!s.access_token;}catch{return false;}}
 
 /* imagem: usa url se houver; senão cai num SVG ilustrado (fallback bonito) */
 function pic(url,fallbackSVG,cls,cap){
-  const inner = url ? `<img class="cp-img ${cls}" src="${url}" alt="" loading="lazy">`
+  const inner = url ? `<img class="cp-img ${cls}" src="${url}" alt="">`
                     : `<div class="cp-img ${cls}" style="height:auto;padding:0;border:none;overflow:hidden">${fallbackSVG}</div>`;
   return `<figure style="margin:0">${inner}${cap?`<figcaption class="cp-figcap">${cap}</figcaption>`:''}</figure>`;
 }
@@ -562,9 +612,127 @@ function cultIconsBlock(img){
   const cap=['Sushi · Japão','Torre Eiffel · França','Pizza · Itália','Taco · México'];
   return `<div class="cp-culture-icons">${fb.map((svg,i)=>{
     const u=img&&img.cult&&img.cult[i];
-    const el=u?`<img src="${u}" alt="" style="width:96px;height:96px;object-fit:cover;border-radius:10px;border:1px solid var(--border)">`:`<div style="width:74px;height:74px">${svg}</div>`;
+    const el=u?`<img src="${u}" alt="" style="width:74px;height:74px;object-fit:cover;border-radius:10px;border:1px solid var(--border)">`:`<div style="width:64px;height:64px">${svg}</div>`;
     return `<figure style="margin:0;text-align:center">${el}<figcaption style="font-size:10px;color:var(--text-muted);margin-top:4px">${cap[i]}</figcaption></figure>`;
   }).join('')}</div>`;
+}
+
+/* ════════════ CAÇA-PALAVRAS (reusa lógica do gerador do site) ════════════ */
+function norm(s){return (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().replace(/[^A-Z]/g,'');}
+function placeWords(words,size,diff){
+  const dirs={easy:[[0,1],[1,0]],medium:[[0,1],[1,0],[1,1],[1,-1]],hard:[[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]]}[diff]||[[0,1],[1,0]];
+  const ALPHA='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const grid=Array.from({length:size},()=>Array(size).fill(null));
+  for(const word of words){
+    for(let t=0;t<400;t++){
+      const [dr,dc]=dirs[Math.floor(Math.random()*dirs.length)];
+      const minR=dr<0?word.length-1:0,maxR=dr>0?size-word.length:dr<0?size-1:size-1;
+      const minC=dc<0?word.length-1:0,maxC=dc>0?size-word.length:dc<0?size-1:size-1;
+      if(maxR<minR||maxC<minC)continue;
+      const r=minR+Math.floor(Math.random()*(maxR-minR+1)),c=minC+Math.floor(Math.random()*(maxC-minC+1));
+      let ok=true;
+      for(let i=0;i<word.length;i++){const nr=r+dr*i,nc=c+dc*i;if(nr<0||nr>=size||nc<0||nc>=size||(grid[nr][nc]!==null&&grid[nr][nc]!==word[i])){ok=false;break;}}
+      if(ok){for(let i=0;i<word.length;i++)grid[r+dr*i][c+dc*i]=word[i];break;}
+    }
+  }
+  for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(grid[r][c]===null)grid[r][c]=ALPHA[Math.floor(Math.random()*26)];
+  return{grid};
+}
+function wsGridHtml(grid,size){
+  const cell=size<=10?28:size<=12?24:20, font=size<=10?14:size<=12?13:11;
+  let h='';
+  for(let r=0;r<size;r++)for(let c=0;c<size;c++)h+=`<div class="cp-ws-cell" style="width:${cell}px;height:${cell}px;font-size:${font}px">${grid[r][c]}</div>`;
+  return `<div class="cp-ws-grid" style="grid-template-columns:repeat(${size},${cell}px)">${h}</div>`;
+}
+function cacaPalavrasBlock(){
+  const bank=['NEYMAR','RAPHINHA','CASEMIRO','ALISSON','MARQUINHOS','VINICIUS','RODRYGO','ENDRICK','BRUNO'];
+  const size=12;
+  const {grid}=placeWords(bank.map(norm),size,'medium');
+  const bankHtml=bank.map(w=>`<div class="cp-ws-word">${w}</div>`).join('');
+  return `<div class="cp-ws-wrap"><div>${wsGridHtml(grid,size)}</div><div class="cp-ws-bank"><div class="cp-ws-bank-title">Banco de palavras — ache os craques:</div><div class="cp-ws-bank-list">${bankHtml}</div></div></div>`;
+}
+
+/* ════════════ CRUZADINHA (reusa lógica do gerador do site) ════════════ */
+function buildCrossword(words){
+  const sorted=[...words].sort((a,b)=>b.texto.length-a.texto.length).slice(0,14);
+  const SIZE=21;
+  const grid=Array.from({length:SIZE},()=>Array(SIZE).fill(null));
+  const placements=[]; let num=1;
+  const first=sorted[0]; if(!first) return{gridData:[[null]],placements:[],minR:0,minC:0,cols:1};
+  const sc=Math.floor((SIZE-first.texto.length)/2),sr=Math.floor(SIZE/2);
+  for(let i=0;i<first.texto.length;i++) grid[sr][sc+i]=first.texto[i];
+  placements.push({word:first.texto,dica:first.dica,r:sr,c:sc,dir:'H',num:num++});
+  for(let wi=1;wi<sorted.length;wi++){
+    const{texto:word,dica}=sorted[wi];
+    let best=null,bestScore=-1;
+    for(const pl of placements) for(let pi=0;pi<pl.word.length;pi++) for(let wii=0;wii<word.length;wii++){
+      if(pl.word[pi]!==word[wii]) continue;
+      const newDir=pl.dir==='H'?'V':'H'; let r,c;
+      if(newDir==='V'){r=pl.r-wii;c=pl.c+pi;}else{r=pl.r+pi;c=pl.c-wii;}
+      if(r<1||c<1||r+(newDir==='V'?word.length:1)>=SIZE-1||c+(newDir==='H'?word.length:1)>=SIZE-1) continue;
+      let fits=true,cross=0;
+      for(let li=0;li<word.length;li++){
+        const lr=newDir==='V'?r+li:r,lc=newDir==='H'?c+li:c,ex=grid[lr][lc];
+        if(ex!==null&&ex!==word[li]){fits=false;break;}
+        if(ex===word[li]) cross++;
+        if(ex===null){
+          if(newDir==='H'){if(li>0&&(grid[lr-1]?.[lc]!==null||grid[lr+1]?.[lc]!==null)){fits=false;break;}}
+          else{if(li>0&&(grid[lr]?.[lc-1]!==null||grid[lr]?.[lc+1]!==null)){fits=false;break;}}
+        }
+      }
+      if(fits){
+        if(newDir==='H'&&(grid[r][c-1]!==null||grid[r][c+word.length]!==null)) fits=false;
+        else if(newDir==='V'&&(grid[r-1]?.[c]!=null||grid[r+word.length]?.[c]!=null)) fits=false;
+      }
+      if(fits&&cross>bestScore){bestScore=cross;best={word,dica,r,c,dir:newDir,num};}
+    }
+    if(best){const{word:w,r,c,dir}=best;for(let li=0;li<w.length;li++) grid[dir==='V'?r+li:r][dir==='H'?c+li:c]=w[li];placements.push(best); num++;}
+  }
+  let mnR=SIZE,mxR=0,mnC=SIZE,mxC=0;
+  for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++) if(grid[r][c]){mnR=Math.min(mnR,r);mxR=Math.max(mxR,r);mnC=Math.min(mnC,c);mxC=Math.max(mxC,c);}
+  mnR=Math.max(0,mnR-1);mxR=Math.min(SIZE-1,mxR+1);mnC=Math.max(0,mnC-1);mxC=Math.min(SIZE-1,mxC+1);
+  const cols=mxC-mnC+1; const trimmed=[];
+  for(let r=mnR;r<=mxR;r++){const row=[];for(let c=mnC;c<=mxC;c++) row.push(grid[r][c]);trimmed.push(row);}
+  return{gridData:trimmed,placements,minR:mnR,minC:mnC,cols};
+}
+function cruzadinhaBlock(){
+  const words=[
+    {texto:'BRASIL',dica:'Maior campeão do mundo, o nosso país'},
+    {texto:'ARGENTINA',dica:'Vizinho que ganhou a Copa de 2022'},
+    {texto:'FRANCA',dica:'País da Torre Eiffel'},
+    {texto:'JAPAO',dica:'País do sushi, fica na Ásia'},
+    {texto:'ITALIA',dica:'País da pizza e do macarrão'},
+    {texto:'ESPANHA',dica:'País da Europa vizinho de Portugal'},
+    {texto:'PORTUGAL',dica:'País da Europa que fala português'},
+    {texto:'MEXICO',dica:'País do taco, uma das sedes de 2026'}
+  ].map(w=>({texto:norm(w.texto),dica:w.dica}));
+  const cw=buildCrossword(words);
+  const numMap={}; cw.placements.forEach(pl=>{numMap[`${pl.r-cw.minR},${pl.c-cw.minC}`]=pl.num;});
+  let cells='';
+  for(let r=0;r<cw.gridData.length;r++)for(let c=0;c<cw.gridData[r].length;c++){
+    const val=cw.gridData[r][c],n=numMap[`${r},${c}`];
+    cells+= val===null?`<div class="cp-cw-cell blank"></div>`:`<div class="cp-cw-cell">${n?`<span class="cp-cw-num">${n}</span>`:''}</div>`;
+  }
+  const grid=`<div class="cp-cw-grid" style="grid-template-columns:repeat(${cw.cols},24px);grid-template-rows:repeat(${cw.gridData.length},24px)">${cells}</div>`;
+  const horiz=cw.placements.filter(p=>p.dir==='H').sort((a,b)=>a.num-b.num);
+  const vert=cw.placements.filter(p=>p.dir==='V').sort((a,b)=>a.num-b.num);
+  const cl=(list,label)=>list.length?`<div class="cp-cw-clue-title">${label}</div>${list.map(p=>`<div class="cp-cw-clue"><b>${p.num}.</b><span>${p.dica}</span></div>`).join('')}`:'';
+  return `<div class="cp-cw-wrap"><div>${grid}</div><div class="cp-cw-clues">${cl(horiz,'Horizontais →')}${cl(vert,'Verticais ↓')}</div></div>`;
+}
+
+/* ════════════ BINGO 3×3 ════════════ */
+function bingoCard(cells){return `<div class="cp-bingo-card">${cells}</div>`;}
+function bingoSoccer(){
+  const items=[{w:'BOLA',s:svgBall()},{w:'GOL',s:svgGoal()},{w:'TROFÉU',s:svgTrophy()},{w:'CHUTEIRA',s:svgBoot()},{w:'APITO',s:svgWhistle()},{w:'CAMISA',s:svgJersey()},{w:'MEDALHA',s:svgMedal()},{w:'BANDEIRA',s:svgFlagPole()},{w:'CARTÃO',s:svgCard()}];
+  const cells=shuffle(items).map(it=>`<div class="cp-bingo-cell">${it.s}<span class="cp-bingo-word">${it.w}</span></div>`).join('');
+  const call=items.map(it=>`<span class="cp-bingo-chip">${it.w}</span>`).join('');
+  return `<div class="cp-twocol">${bingoCard(cells)}<div style="flex:1;min-width:180px"><div class="cp-ws-bank-title">Lista de chamada (professor):</div><div class="cp-bingo-call">${call}</div></div></div>`;
+}
+function bingoPaises(){
+  const names=Object.keys(FLAGS).slice(0,9);
+  const cells=shuffle(names).map(n=>`<div class="cp-bingo-cell"><div class="cp-bingo-flag">${FLAGS[n]}</div><span class="cp-bingo-word">${n}</span></div>`).join('');
+  const call=names.map(n=>`<span class="cp-bingo-chip">${n}</span>`).join('');
+  return `<div class="cp-twocol">${bingoCard(cells)}<div style="flex:1;min-width:180px"><div class="cp-ws-bank-title">Lista de chamada (professor):</div><div class="cp-bingo-call">${call}</div></div></div>`;
 }
 
 /* ════════════ MONTAGEM DAS PÁGINAS ════════════ */
@@ -612,8 +780,8 @@ function buildPages(d,nivel,img){
         <p class="cp-text" style="margin:0">Desde 1930, estes países foram campeões do mundo. Os anos em <b style="color:#caa200">amarelo</b> são os títulos do Brasil:</p></div>
       </div>
       ${champsBlock()}
-      <div class="cp-q"><span class="qn">1.</span><span>Qual país é o maior campeão do mundo?</span></div>${lines(1)}
-      <div class="cp-q"><span class="qn">2.</span><span>Quantos títulos o Brasil tem a mais que a Argentina?</span></div>${lines(1)}
+      ${q('1.','Qual país é o maior campeão do mundo?',1)}
+      ${q('2.','Quantos títulos o Brasil tem a mais que a Argentina?',1)}
     </div>${foot('Campeões da Copa')}</div>`);
   }
 
@@ -624,9 +792,9 @@ function buildPages(d,nivel,img){
       <div class="cp-section-title">🗺️ O mundo da Copa: os continentes</div>
       <p class="cp-text">Observe o mapa e <b>pinte cada continente</b> de uma cor diferente. Depois, responda:</p>
       <div class="cp-map-wrap">${mapaSVG()}</div>
-      <div class="cp-q"><span class="qn">1.</span><span>Em qual continente você mora?</span></div>${lines(1)}
-      <div class="cp-q"><span class="qn">2.</span><span>A Copa de 2026 acontece na América do Norte. Escreva o nome de um país que está sediando (Estados Unidos, México ou Canadá):</span></div>${lines(1)}
-      <div class="cp-q"><span class="qn">3.</span><span>Escreva o nome de um continente que você gostaria de conhecer e o porquê:</span></div>${lines(2)}
+      ${q('1.','Em qual continente você mora?',1)}
+      ${q('2.','A Copa de 2026 acontece na América do Norte. Escreva o nome de um país que está sediando (Estados Unidos, México ou Canadá):',1)}
+      ${q('3.','Escreva o nome de um continente que você gostaria de conhecer e o porquê:',2)}
     </div>${foot('Os continentes')}</div>`);
   }
 
@@ -676,10 +844,10 @@ function buildPages(d,nivel,img){
     pages.push(`<div class="cp-page"><div class="cp-body">
       <div class="cp-section-label">Culturas do mundo</div>
       <div class="cp-section-title">🌍 Cada país, uma cultura</div>
-      ${pic(img.culture, svgKidsFlags(),'hero','Crianças de vários países torcendo juntas pela Copa!')}
+      ${pic(img.culture, svgKidsFlags(),'band','Crianças de vários países torcendo juntas pela Copa!')}
       ${cultIconsBlock(img)}
-      ${d.culturas_intro?`<p class="cp-text">${d.culturas_intro}</p>`:''}
-      <p class="cp-text"><b>Relacione</b> cada país a algo da sua cultura:</p>
+      ${d.culturas_intro?`<p class="cp-text" style="margin-bottom:8px">${d.culturas_intro}</p>`:''}
+      <p class="cp-text" style="margin-bottom:6px"><b>Relacione</b> cada país a algo da sua cultura:</p>
       ${relacioneCultura(d.culturas)}
     </div>${foot('Outras culturas')}</div>`);
   }
@@ -691,9 +859,9 @@ function buildPages(d,nivel,img){
       <div class="cp-section-title">👀 Observe o jogo</div>
       ${pic(img.scene, svgStadium(),'scene','Uma partida da Copa do Mundo com o estádio lotado.')}
       <p class="cp-text" style="margin-top:12px">Olhe a cena com atenção: os jogadores, o campo, a torcida e tudo o que está acontecendo. Depois responda:</p>
-      <div class="cp-q"><span class="qn">1.</span><span>Quem está na cena?</span></div>${lines(1)}
-      <div class="cp-q"><span class="qn">2.</span><span>O que está acontecendo no jogo?</span></div>${lines(2)}
-      <div class="cp-q"><span class="qn">3.</span><span>Como as pessoas da torcida parecem estar se sentindo?</span></div>${lines(2)}
+      ${q('1.','Quem está na cena?',1)}
+      ${q('2.','O que está acontecendo no jogo?',2)}
+      ${q('3.','Como as pessoas da torcida parecem estar se sentindo?',2)}
     </div>${foot('Analise a cena')}</div>`);
   }
 
@@ -718,6 +886,39 @@ function buildPages(d,nivel,img){
     </div>${foot('Escreva uma frase')}</div>`);
   }
 
+  // BINGO
+  if(isOn('togBingo')){
+    pages.push(`<div class="cp-page"><div class="cp-body">
+      <div class="cp-section-label">Jogo · Bingo</div>
+      <div class="cp-section-title">🎲 Bingo da Copa</div>
+      <p class="cp-text">O professor sorteia as palavras da lista de chamada. Quem completar uma linha (ou a cartela toda) grita <b>BINGO!</b></p>
+      <p class="cp-text" style="font-weight:700;margin-bottom:6px;color:#0b7a3a">⚽ Bingo do Futebol</p>
+      ${bingoSoccer()}
+      <p class="cp-text" style="font-weight:700;margin:16px 0 6px;color:#0b7a3a">🚩 Bingo dos Países</p>
+      ${bingoPaises()}
+    </div>${foot('Bingo da Copa')}</div>`);
+  }
+
+  // CRUZADINHA
+  if(isOn('togCruz')){
+    pages.push(`<div class="cp-page"><div class="cp-body">
+      <div class="cp-section-label">Desafio · Cruzadinha</div>
+      <div class="cp-section-title">🧩 Cruzadinha dos países da Copa</div>
+      <p class="cp-text">Leia as dicas e complete a cruzadinha com os nomes dos países:</p>
+      ${cruzadinhaBlock()}
+    </div>${foot('Cruzadinha dos países')}</div>`);
+  }
+
+  // CAÇA-PALAVRAS
+  if(isOn('togCaca')){
+    pages.push(`<div class="cp-page"><div class="cp-body">
+      <div class="cp-section-label">Desafio · Caça-palavras</div>
+      <div class="cp-section-title">🔤 Caça-palavras dos craques</div>
+      <p class="cp-text">Encontre no quadro os nomes dos craques da seleção brasileira. Use o banco de palavras como ajuda:</p>
+      ${cacaPalavrasBlock()}
+    </div>${foot('Caça-palavras dos craques')}</div>`);
+  }
+
   // MASCOTE + FECHAMENTO
   if(isOn('togEnd')){
     pages.push(`<div class="cp-page"><div class="cp-body">
@@ -725,8 +926,8 @@ function buildPages(d,nivel,img){
       <div class="cp-section-title">🎨 Crie o seu mascote da Copa</div>
       <p class="cp-text">${d.mascote_atividade||SAMPLE.mascote_atividade}</p>
       <div class="cp-draw-box">desenhe seu mascote aqui ✏️</div>
-      <div class="cp-q"><span class="qn">•</span><span>Nome do meu mascote:</span></div>${lines(1)}
-      <div class="cp-q"><span class="qn">•</span><span>Eu escolhi ele porque:</span></div>${lines(2)}
+      ${q('•','Nome do meu mascote:',1)}
+      ${q('•','Eu escolhi ele porque:',2)}
       ${d.fechamento?`<div class="cp-card yellow" style="margin-top:16px"><div class="cp-card-label">🏁 Para terminar</div><div class="cp-card-text">${d.fechamento}</div></div>`:''}
     </div>${foot('Crie seu mascote')}</div>`);
   }
@@ -758,8 +959,22 @@ async function fetchPexels(query,orientation){
 // Igual aos outros geradores: FOTOS REAIS (Pexels) sempre que possível; fal.ai
 // só para a cena de crianças diversas (Pexels não acha esse enquadramento).
 // Regra (como no prova.html): realista/fotográfico, NUNCA texto dentro da imagem.
-const SENT_Q=['soccer ball close up','golden trophy award','soccer jersey shirt','soccer cleats shoes','referee whistle','brazil flag waving'];
-const CULT_Q=['sushi japanese food','eiffel tower paris','pizza italian food','tacos mexican food'];
+// objetos e elementos culturais: Pexels (foto real) e, se faltar, fal.ai fotográfico
+const SENT=[
+  {q:'soccer ball grass',f:'realistic photo of a single soccer ball on green grass, no text'},
+  {q:'golden trophy award',f:'realistic photo of a shiny golden trophy cup, no text'},
+  {q:'soccer jersey shirt',f:'realistic photo of a soccer jersey shirt, no text'},
+  {q:'soccer cleats shoes',f:'realistic photo of a pair of soccer cleats on grass, no text'},
+  {q:'referee whistle',f:'realistic photo of a sports referee whistle, no text'},
+  {q:'brazil flag waving',f:'realistic photo of the brazilian flag waving, no text'}
+];
+const CULT=[
+  {q:'sushi japanese food',f:'realistic photo of sushi pieces on a plate, no text'},
+  {q:'eiffel tower paris',f:'realistic photo of the eiffel tower in paris on a clear day, no text'},
+  {q:'pizza italian food',f:'realistic photo of a whole italian pizza, no text'},
+  {q:'tacos mexican food',f:'realistic photo of mexican tacos on a plate, no text'}
+];
+function realImg(o,size){return fetchPexels(o.q,size).then(u=>u||fetchFal(o.f,'square'));}
 async function fetchImages(){
   const P=fetchPexels, F=fetchFal;
   const cultP='realistic photograph of a happy diverse group of children from different countries standing together smiling, one black child, one east asian child, one indigenous child, one light-skin child, each holding a small different national flag, bright daylight, no text, no letters, no numbers';
@@ -769,8 +984,8 @@ async function fetchImages(){
     F(cultP,'landscape_4_3'),
     P('football stadium crowd match','landscape').then(u=>u||F('realistic photo of a packed football stadium during a match, crowd cheering, no text','landscape_16_9')),
     P('soccer player running ball match','landscape').then(u=>u||F('realistic photo of a soccer player running with the ball during a match, no text','landscape_16_9')),
-    ...SENT_Q.map(q=>P(q,'square')),
-    ...CULT_Q.map(q=>P(q,'square'))
+    ...SENT.map(o=>realImg(o,'square')),
+    ...CULT.map(o=>realImg(o,'square'))
   ]);
   const [hist,math,culture,scene,scene2,...rest]=arr;
   return {hist,math,culture,scene,scene2,sent:rest.slice(0,6),cult:rest.slice(6,10)};
