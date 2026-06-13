@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Especial Copa do Mundo — Doceria Pedagógica</title>
+<meta name="description" content="Mini-apostila pronta sobre a Copa do Mundo: história, campeões, mapa-múndi, bandeiras, situações-problema de matemática com placares e figurinhas. Adapta o ano e o nível. Doceria Pedagógica.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:#0f0e0c; --cream:#faf7f2; --warm:#f5f0e8;
+    --gold:#c8963e; --gold-light:#e8b86d; --gold-pale:#fdf3e3;
+    --teal:#2d6e6e; --teal-light:#4a9b9b; --teal-pale:#e8f4f4;
+    --coral:#d95f3b; --coral-pale:#fdeee9;
+    --lavender:#6c63d4; --lavender-pale:#f0eeff;
+    --text:#1a1917; --text-mid:#4a4845; --text-muted:#8a8785;
+    --border:rgba(15,14,12,0.1); --border-mid:rgba(15,14,12,0.18);
+    /* Cores tema Copa (verde-amarelo-azul) — usadas só como ACENTO */
+    --cp-green:#009739; --cp-yellow:#ffcc29; --cp-blue:#002776; --cp-green-pale:#e6f5ec;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+  .topbar{background:var(--ink);padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+  .topbar-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--cream);display:flex;align-items:center;gap:10px;text-decoration:none}
+  .topbar-logo-mark{width:28px;height:28px;background:var(--cp-green);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .topbar-nav{display:flex;align-items:center;gap:10px}
+  .topbar-link{font-size:13px;color:rgba(250,247,242,0.5);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color 0.2s;padding:6px 12px;border-radius:6px}
+  .topbar-link:hover{color:var(--cream);background:rgba(255,255,255,0.06)}
+  .topbar-cta{background:var(--cp-green);color:#fff;padding:8px 16px;border-radius:20px;font-weight:600;font-size:13px}
+  .topbar-cta:hover{background:#007a2e;color:#fff}
+
+  .main{display:grid;grid-template-columns:400px 1fr;min-height:calc(100vh - 56px)}
+
+  .form-panel{background:var(--cream);border-right:1px solid var(--border);padding:28px 24px;overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px}
+  .form-banner{background:linear-gradient(135deg,var(--cp-green),#0b7a3a);border-radius:12px;padding:16px 18px;margin-bottom:22px;color:#fff}
+  .form-banner-tag{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cp-yellow);margin-bottom:5px}
+  .form-banner-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;line-height:1.2}
+  .form-banner-sub{font-size:12px;color:rgba(255,255,255,0.8);margin-top:5px;line-height:1.4}
+
+  .form-section{margin-bottom:24px}
+  .form-section-title{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .form-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+  .field{margin-bottom:16px}
+  .field-label{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.07em;text-transform:uppercase;display:block;margin-bottom:6px}
+  .req{color:var(--coral)}
+  input[type="text"],select,textarea{width:100%;background:white;border:1.5px solid var(--border-mid);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--text);font-family:'Outfit',sans-serif;transition:border-color 0.2s,box-shadow 0.2s;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--cp-green);box-shadow:0 0 0 3px rgba(0,151,57,0.12)}
+  textarea{resize:vertical;min-height:60px;line-height:1.6}
+
+  .pill-group{display:flex;flex-wrap:wrap;gap:6px}
+  .pill{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border-mid);background:white;color:var(--text-muted);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s;font-family:'Outfit',sans-serif;user-select:none}
+  .pill.active{border-color:var(--cp-green);background:var(--cp-green-pale);color:#0b7a3a;font-weight:600}
+  .pill:hover:not(.active){background:var(--warm)}
+
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+  .toggle-row:last-child{border-bottom:none}
+  .toggle-label{font-size:13px;color:var(--text-mid)}
+  .toggle-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
+  .toggle{width:36px;height:20px;background:var(--border-mid);border-radius:10px;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;border:none}
+  .toggle.on{background:var(--cp-green)}
+  .toggle::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;background:white;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+  .toggle.on::after{transform:translateX(16px)}
+
+  .lg-wrap{margin-bottom:16px;padding:10px 14px;background:white;border:1.5px solid var(--border-mid);border-radius:9px}
+  .lg-row{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;font-weight:600;color:var(--text)}
+  .lg-row input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--cp-green)}
+  .lg-hint{font-size:11px;color:var(--text-muted);margin-top:3px;margin-left:24px}
+
+  .divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+  .generate-btn{width:100%;background:var(--cp-green);color:white;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s}
+  .generate-btn:hover:not(:disabled){background:#0b7a3a;transform:translateY(-1px)}
+  .generate-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+  .generate-btn .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:white;border-radius:50%;animation:rot 0.7s linear infinite;display:none}
+  .generate-btn.loading .spin{display:block}
+  .generate-btn.loading .gicon{display:none}
+  .cost-hint{text-align:center;font-size:11px;color:var(--text-muted);margin-top:8px}
+  @keyframes rot{to{transform:rotate(360deg)}}
+
+  .progress-wrap{display:none;margin-top:16px}
+  .progress-wrap.show{display:block}
+  .prog-bar-outer{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:12px}
+  .prog-bar-inner{height:100%;background:linear-gradient(90deg,var(--cp-green),var(--cp-yellow));border-radius:2px;width:0%;transition:width 0.5s ease}
+  .prog-steps{display:flex;flex-direction:column;gap:7px}
+  .prog-step{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--text-muted);transition:color 0.3s}
+  .prog-step.active{color:var(--cp-green)}
+  .prog-step.done{color:#0b7a3a}
+  .prog-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border-mid);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;transition:all 0.3s}
+  .prog-step.active .prog-dot{border-color:var(--cp-green);background:var(--cp-green-pale)}
+  .prog-step.done .prog-dot{border-color:var(--cp-green);background:var(--cp-green);color:white}
+
+  .error-box{display:none;background:var(--coral-pale);border:1px solid rgba(217,95,59,0.3);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--coral);margin-top:12px;line-height:1.5}
+  .error-box.show{display:block}
+
+  .preview-panel{padding:28px;overflow-y:auto}
+  .preview-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+  .ph-left{display:flex;flex-direction:column}
+  .ph-badge{display:inline-flex;align-items:center;gap:6px;background:var(--cp-green-pale);color:#0b7a3a;border:1px solid rgba(0,151,57,0.2);font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;width:fit-content;margin-bottom:6px}
+  .ph-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700}
+  .ph-meta{font-size:12px;color:var(--text-muted);margin-top:3px}
+  .ph-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .btn-pdf{background:var(--ink);color:var(--cream);padding:10px 22px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:8px;transition:all 0.2s}
+  .btn-pdf:hover{background:#2a2926}
+  .btn-regen{background:white;color:var(--text-mid);padding:10px 16px;border-radius:8px;border:1.5px solid var(--border-mid);font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
+  .btn-regen:hover{background:var(--warm)}
+  .pages-pill{background:var(--cp-green-pale);color:#0b7a3a;border:1px solid rgba(0,151,57,0.2);font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;display:flex;align-items:center;gap:5px}
+
+  .doc-wrap{max-width:820px;margin:0 auto}
+  #copa-doc{background:transparent;font-family:'Outfit',sans-serif}
+
+  .cp-page{background:white;border-radius:12px;box-shadow:0 6px 32px rgba(0,0,0,0.08);margin-bottom:16px;overflow:hidden;break-inside:avoid;page-break-inside:avoid}
+  .cp-body{padding:34px 42px}
+
+  /* faixa decorativa verde-amarelo-azul */
+  .cp-stripe{height:8px;display:flex}
+  .cp-stripe span{flex:1}
+  .cp-stripe span:nth-child(1){background:var(--cp-green)}
+  .cp-stripe span:nth-child(2){background:var(--cp-yellow)}
+  .cp-stripe span:nth-child(3){background:var(--cp-blue)}
+
+  .cp-section-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cp-green);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+  .cp-section-label::after{content:'';flex:1;height:1px;background:var(--cp-green-pale)}
+  .cp-section-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:12px;color:var(--ink)}
+  .cp-text{font-size:14px;line-height:1.85;color:#000;margin-bottom:12px}
+
+  .cp-cover{padding:30px 42px 22px;background:linear-gradient(135deg,#013a17,#0b7a3a);color:#fff;position:relative;overflow:hidden}
+  .cp-cover::after{content:'⚽';position:absolute;right:-10px;bottom:-18px;font-size:120px;opacity:0.12}
+  .cp-cover-tag{font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--cp-yellow);margin-bottom:8px}
+  .cp-cover-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:900;line-height:1.15;margin-bottom:8px}
+  .cp-cover-sub{font-size:14px;color:rgba(255,255,255,0.82);max-width:540px;line-height:1.5}
+  .cp-cover-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .cp-cover-badge{background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.25);border-radius:6px;padding:4px 12px;font-size:11px;font-weight:500}
+  .cp-namebar{border:1.5px solid #ccc;border-radius:8px;margin:20px 42px 0;padding:10px 16px;display:flex;flex-wrap:wrap;gap:24px;font-size:13px;color:#000}
+
+  .cp-card{background:var(--cp-green-pale);border-left:4px solid var(--cp-green);border-radius:0 8px 8px 0;padding:14px 18px;margin:16px 0}
+  .cp-card-label{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#0b7a3a;margin-bottom:5px}
+  .cp-card-text{font-size:13px;line-height:1.6;color:var(--text-mid)}
+
+  /* Linha do tempo dos campeões */
+  .cp-champs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+  .cp-champ{border:1.5px solid var(--border-mid);border-radius:9px;padding:7px 10px;text-align:center;min-width:74px;background:#fff}
+  .cp-champ.bra{border-color:var(--cp-yellow);background:#fffbe9}
+  .cp-champ-year{font-size:11px;font-weight:700;color:var(--text-muted)}
+  .cp-champ-country{font-size:12px;font-weight:600;color:var(--text);margin-top:2px}
+  .cp-titles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:6px}
+  .cp-title-row{display:flex;align-items:center;justify-content:space-between;background:var(--warm);border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:13px}
+  .cp-title-row b{color:var(--cp-green)}
+
+  /* Mapa-múndi */
+  .cp-map-wrap{border:1.5px solid var(--border);border-radius:12px;overflow:hidden;background:#eef6fb}
+  .cp-map-wrap svg{display:block;width:100%;height:auto}
+  .cp-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+  .cp-legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-mid)}
+  .cp-legend-dot{width:13px;height:13px;border-radius:3px;border:1px solid rgba(0,0,0,0.15)}
+
+  /* Relacione (colunas) */
+  .cp-relacione{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:8px}
+  .cp-rel-col{display:flex;flex-direction:column;gap:10px}
+  .cp-rel-item{display:flex;align-items:center;gap:10px;border:1.5px solid var(--border-mid);border-radius:10px;padding:8px 10px;background:#fff;min-height:54px}
+  .cp-rel-item .num{width:22px;height:22px;border-radius:50%;background:var(--cp-green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cp-rel-item .let{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--cp-blue);color:var(--cp-blue);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cp-rel-flag{width:54px;height:36px;border:1px solid rgba(0,0,0,0.15);border-radius:4px;overflow:hidden;flex-shrink:0}
+  .cp-rel-flag svg{display:block;width:100%;height:100%}
+  .cp-rel-name{font-size:14px;font-weight:600;color:#000}
+  .cp-rel-dot{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--text-muted);margin-left:auto;flex-shrink:0}
+
+  /* Molduras de jogador (colar foto) */
+  .cp-players{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px}
+  .cp-player{border:1.5px solid var(--border-mid);border-radius:10px;overflow:hidden;background:#fff}
+  .cp-player-frame{height:96px;background:repeating-linear-gradient(45deg,#f4f4f4,#f4f4f4 8px,#fafafa 8px,#fafafa 16px);border-bottom:1.5px dashed var(--border-mid);display:flex;align-items:center;justify-content:center;color:#bdbdbd;font-size:11px;text-align:center;padding:6px}
+  .cp-player-info{padding:8px 10px}
+  .cp-player-hint{font-size:10px;color:var(--text-muted)}
+  .cp-player-line{border-bottom:1.5px dotted #555;height:22px;margin-top:4px}
+  .cp-names-bank{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .cp-name-chip{border:1.5px solid var(--cp-blue);color:var(--cp-blue);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:600}
+
+  /* Atividades de matemática */
+  .cp-activity{margin-bottom:20px;padding:16px 18px;border-radius:10px;border:1.5px solid var(--border);background:#fff;break-inside:avoid;page-break-inside:avoid}
+  .cp-activity-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .cp-activity-num{width:26px;height:26px;border-radius:50%;background:var(--cp-blue);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cp-activity-q{font-size:14px;font-weight:500;line-height:1.6;color:#000}
+  .cp-ans-lines{display:flex;flex-direction:column;margin-top:10px}
+  .cp-ans-line{border-bottom:1.5px dotted #555;min-height:30px}
+  .cp-scoreboard{display:flex;align-items:center;justify-content:center;gap:14px;background:var(--ink);color:#fff;border-radius:10px;padding:12px 18px;margin:8px 0 16px;font-family:'Playfair Display',serif}
+  .cp-sb-team{font-size:13px;font-weight:700}
+  .cp-sb-score{font-size:26px;font-weight:900;background:rgba(255,255,255,0.1);border-radius:8px;padding:2px 14px}
+  .cp-points-table{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:13px}
+  .cp-points-table th,.cp-points-table td{border:1px solid var(--border-mid);padding:7px 10px;text-align:center}
+  .cp-points-table th{background:var(--cp-green-pale);color:#0b7a3a;font-weight:700}
+
+  .cp-footer{background:var(--warm);border-top:1px solid var(--border);padding:12px 42px;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--text-muted)}
+  .cp-footer-logo{font-family:'Playfair Display',serif;font-weight:700;color:var(--cp-green)}
+
+  /* Letra grande */
+  body.letra-grande .cp-text,body.letra-grande .cp-activity-q,body.letra-grande .cp-rel-name{font-size:16px}
+  body.letra-grande .cp-section-title{font-size:25px}
+
+  @media screen and (max-width:860px){
+    .main{grid-template-columns:1fr}
+    .form-panel{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--border)}
+    .cp-players{grid-template-columns:repeat(2,1fr)}
+    .cp-relacione{gap:18px}
+  }
+
+  /* ═══ IMPRESSÃO ═══ */
+  @media print {
+    @page { size: A4 portrait; margin: 11mm 13mm; }
+    body { background: white !important; }
+    .topbar, .form-panel, .preview-header { display: none !important; }
+    .main { display: block !important; }
+    .preview-panel { padding: 0 !important; overflow: visible !important; max-height: none !important; }
+    .doc-wrap { max-width: none !important; }
+    .cp-page { border-radius: 0 !important; box-shadow: none !important; margin-bottom: 0 !important; }
+    .cp-body { padding: 16px 26px !important; }
+    .cp-activity, .cp-player, .cp-rel-item, .cp-map-wrap, .cp-champ { break-inside: avoid; page-break-inside: avoid; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/">
+    <div class="topbar-logo-mark">⚽</div>
+    DoceriaPedagógica
+  </a>
+  <div class="topbar-nav">
+    <a class="topbar-link" href="/conta.html">← Painel</a>
+    <a class="topbar-link topbar-cta" href="/conta.html" id="loginLink">Entrar / Criar conta</a>
+  </div>
+</div>
+
+<div class="main">
+  <!-- ───── FORM ───── -->
+  <div class="form-panel">
+    <div class="form-banner">
+      <div class="form-banner-tag">⚽ Especial Sazonal</div>
+      <div class="form-banner-title">Mini-apostila da Copa do Mundo</div>
+      <div class="form-banner-sub">Veja o exemplo pronto ao lado. Ajuste o ano e gere a sua versão — a IA adapta o nível de dificuldade.</div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">Para qual turma</div>
+      <div class="field">
+        <label class="field-label">Ano / série <span class="req">*</span></label>
+        <select id="nivel">
+          <option value="Educação Infantil (4-5 anos)">Educação Infantil (4-5 anos)</option>
+          <option value="1º ano do Fundamental">1º ano</option>
+          <option value="2º ano do Fundamental">2º ano</option>
+          <option value="3º ano do Fundamental" selected>3º ano</option>
+          <option value="4º ano do Fundamental">4º ano</option>
+          <option value="5º ano do Fundamental">5º ano</option>
+          <option value="6º ano do Fundamental">6º ano</option>
+          <option value="7º ano do Fundamental">7º ano</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Nível de dificuldade</label>
+        <div class="pill-group" id="difPills">
+          <div class="pill" data-val="fácil">Mais fácil</div>
+          <div class="pill active" data-val="adequado ao ano">Adequado ao ano</div>
+          <div class="pill" data-val="desafiador">Desafiador</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">O que incluir na apostila</div>
+      <div class="toggle-row">
+        <div><div class="toggle-label">📖 História da Copa</div><div class="toggle-sub">Texto + curiosidade "Você sabia?"</div></div>
+        <button class="toggle on" id="togHist" onclick="toggleBtn(this)"></button>
+      </div>
+      <div class="toggle-row">
+        <div><div class="toggle-label">🏆 Campeões pela história</div><div class="toggle-sub">Linha do tempo + quadro de títulos</div></div>
+        <button class="toggle on" id="togChamps" onclick="toggleBtn(this)"></button>
+      </div>
+      <div class="toggle-row">
+        <div><div class="toggle-label">🗺️ Mapa-múndi dos continentes</div><div class="toggle-sub">Mapa para colorir + atividade</div></div>
+        <button class="toggle on" id="togMap" onclick="toggleBtn(this)"></button>
+      </div>
+      <div class="toggle-row">
+        <div><div class="toggle-label">🚩 Relacione bandeira e país</div><div class="toggle-sub">Bandeiras desenhadas, colunas embaralhadas</div></div>
+        <button class="toggle on" id="togFlags" onclick="toggleBtn(this)"></button>
+      </div>
+      <div class="toggle-row">
+        <div><div class="toggle-label">⭐ Relacione o craque ao nome</div><div class="toggle-sub">Molduras p/ colar foto + nomes</div></div>
+        <button class="toggle on" id="togPlayers" onclick="toggleBtn(this)"></button>
+      </div>
+      <div class="toggle-row">
+        <div><div class="toggle-label">➗ Matemática da Copa</div><div class="toggle-sub">Placares, pontuação e figurinhas</div></div>
+        <button class="toggle on" id="togMath" onclick="toggleBtn(this)"></button>
+      </div>
+      <div class="toggle-row">
+        <div><div class="toggle-label">🌍 Outras culturas</div><div class="toggle-sub">Relacione país e cultura</div></div>
+        <button class="toggle on" id="togCult" onclick="toggleBtn(this)"></button>
+      </div>
+      <div class="toggle-row">
+        <div><div class="toggle-label">🎨 Mascote & fechamento</div><div class="toggle-sub">Criar mascote + reflexão final</div></div>
+        <button class="toggle on" id="togEnd" onclick="toggleBtn(this)"></button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Observações (opcional)</label>
+      <input type="text" id="obs" placeholder="Ex: foco na seleção brasileira, sem decimais..." />
+    </div>
+
+    <div class="lg-wrap">
+      <label class="lg-row">
+        <input type="checkbox" id="letraGrande" onchange="onLetraGrandeChange()">
+        <span>🔡 Letra Grande</span>
+      </label>
+      <div class="lg-hint">Recomendado para Educação Infantil e 1º/2º ano</div>
+    </div>
+
+    <hr class="divider">
+
+    <button class="generate-btn" id="genBtn" onclick="generate()">
+      <span class="gicon">⚽</span>
+      <div class="spin"></div>
+      Gerar minha apostila
+    </button>
+    <div class="cost-hint">Custa <strong>2 créditos</strong> · apostila completa em PDF</div>
+
+    <div class="error-box" id="errorBox"></div>
+    <div class="progress-wrap" id="progressWrap">
+      <div class="prog-bar-outer"><div class="prog-bar-inner" id="progBar"></div></div>
+      <div class="prog-steps">
+        <div class="prog-step" id="ps1"><div class="prog-dot">1</div><span>Contando a história da Copa...</span></div>
+        <div class="prog-step" id="ps2"><div class="prog-dot">2</div><span>Criando situações-problema...</span></div>
+        <div class="prog-step" id="ps3"><div class="prog-dot">3</div><span>Montando o mapa e as bandeiras...</span></div>
+        <div class="prog-step" id="ps4"><div class="prog-dot">4</div><span>Diagramando a apostila...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── PREVIEW ───── -->
+  <div class="preview-panel">
+    <div class="preview-header" id="prevHeader">
+      <div class="ph-left">
+        <span class="ph-badge" id="phBadge">✓ Exemplo pronto — veja como fica</span>
+        <div class="ph-title" id="phTitle">Mini-apostila da Copa do Mundo</div>
+        <div class="ph-meta" id="phMeta">3º ano · exemplo demonstrativo</div>
+      </div>
+      <div class="ph-actions">
+        <div class="pages-pill" id="pagesPill">📄 <span id="pagesCount">0</span> páginas</div>
+        <button class="btn-regen" onclick="generate()">↻ Gerar minha versão</button>
+        <button class="btn-pdf" id="pdfBtn" onclick="printPDF()">🖨️ Imprimir / PDF</button>
+      </div>
+    </div>
+    <div class="doc-wrap" id="docWrap">
+      <div id="copa-doc"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════ DADOS FIXOS (confiáveis, sem IA) ════════════════ */
+
+// Campeões da Copa do Mundo (factual). 2026 é a edição atual (EUA/México/Canadá).
+const CAMPEOES = [
+  {ano:1930,pais:'Uruguai'},{ano:1934,pais:'Itália'},{ano:1938,pais:'Itália'},
+  {ano:1950,pais:'Uruguai'},{ano:1954,pais:'Alemanha'},{ano:1958,pais:'Brasil'},
+  {ano:1962,pais:'Brasil'},{ano:1966,pais:'Inglaterra'},{ano:1970,pais:'Brasil'},
+  {ano:1974,pais:'Alemanha'},{ano:1978,pais:'Argentina'},{ano:1982,pais:'Itália'},
+  {ano:1986,pais:'Argentina'},{ano:1990,pais:'Alemanha'},{ano:1994,pais:'Brasil'},
+  {ano:1998,pais:'França'},{ano:2002,pais:'Brasil'},{ano:2006,pais:'Itália'},
+  {ano:2010,pais:'Espanha'},{ano:2014,pais:'Alemanha'},{ano:2018,pais:'França'},
+  {ano:2022,pais:'Argentina'}
+];
+
+// Bandeiras desenhadas em SVG (geometria simples e confiável)
+const FLAGS = {
+  'Brasil':   '<svg viewBox="0 0 90 60"><rect width="90" height="60" fill="#009739"/><polygon points="45,7 83,30 45,53 7,30" fill="#ffcc29"/><circle cx="45" cy="30" r="13" fill="#002776"/></svg>',
+  'Argentina':'<svg viewBox="0 0 90 60"><rect width="90" height="60" fill="#74acdf"/><rect y="20" width="90" height="20" fill="#fff"/><circle cx="45" cy="30" r="6" fill="#f6b40e"/></svg>',
+  'França':   '<svg viewBox="0 0 90 60"><rect width="30" height="60" fill="#0055a4"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#ef4135"/></svg>',
+  'Itália':   '<svg viewBox="0 0 90 60"><rect width="30" height="60" fill="#009246"/><rect x="30" width="30" height="60" fill="#fff"/><rect x="60" width="30" height="60" fill="#ce2b37"/></svg>',
+  'Alemanha': '<svg viewBox="0 0 90 60"><rect width="90" height="20" fill="#000"/><rect y="20" width="90" height="20" fill="#dd0000"/><rect y="40" width="90" height="20" fill="#ffce00"/></svg>',
+  'Japão':    '<svg viewBox="0 0 90 60"><rect width="90" height="60" fill="#fff"/><circle cx="45" cy="30" r="16" fill="#bc002d"/></svg>',
+  'Portugal': '<svg viewBox="0 0 90 60"><rect width="36" height="60" fill="#006600"/><rect x="36" width="54" height="60" fill="#ff0000"/><circle cx="36" cy="30" r="9" fill="#ffcc29" stroke="#fff" stroke-width="1"/></svg>',
+  'Espanha':  '<svg viewBox="0 0 90 60"><rect width="90" height="60" fill="#c60b1e"/><rect y="15" width="90" height="30" fill="#ffc400"/></svg>'
+};
+
+// Craques históricos (atemporais e seguros — sem depender de convocação atual)
+const CRAQUES = [
+  {nome:'Pelé', hint:'Camisa 10 · Rei do Futebol · 3 Copas'},
+  {nome:'Garrincha', hint:'Ponta-direita · Alegria do Povo'},
+  {nome:'Ronaldo', hint:'Camisa 9 · Fenômeno · artilheiro 2002'},
+  {nome:'Ronaldinho Gaúcho', hint:'Camisa 10 · Bruxo · craque de 2002'},
+  {nome:'Marta', hint:'Camisa 10 · maior artilheira das Copas'},
+  {nome:'Neymar', hint:'Camisa 10 · craque da seleção atual'}
+];
+
+// Mapa-múndi simplificado (continentes reconhecíveis para colorir)
+function mapaSVG(){
+  const C={na:'#f3b6a6',sa:'#f6d488',eu:'#a8c8f0',af:'#bfe3a8',as:'#e7b6e0',oc:'#f0d0a0',an:'#dfe9ef'};
+  return `<svg viewBox="0 0 800 420" role="img" aria-label="Mapa-múndi dos continentes">
+    <rect width="800" height="420" fill="#eef6fb"/>
+    <!-- América do Norte -->
+    <path d="M70 60 Q140 40 210 70 Q250 90 235 140 Q220 180 175 185 Q150 175 150 150 Q120 160 95 140 Q70 110 70 60 Z" fill="${C.na}" stroke="#fff" stroke-width="3"/>
+    <text x="150" y="120" font-size="15" font-weight="700" fill="#7a4a3a" text-anchor="middle">América do Norte</text>
+    <!-- América do Sul -->
+    <path d="M205 205 Q250 195 262 235 Q268 290 235 345 Q210 380 195 340 Q180 290 188 245 Q190 215 205 205 Z" fill="${C.sa}" stroke="#fff" stroke-width="3"/>
+    <text x="228" y="285" font-size="14" font-weight="700" fill="#8a6a20" text-anchor="middle">América</text>
+    <text x="228" y="302" font-size="14" font-weight="700" fill="#8a6a20" text-anchor="middle">do Sul</text>
+    <!-- Europa -->
+    <path d="M380 70 Q440 55 470 85 Q480 110 455 130 Q420 140 395 125 Q372 105 380 70 Z" fill="${C.eu}" stroke="#fff" stroke-width="3"/>
+    <text x="425" y="105" font-size="14" font-weight="700" fill="#3a5a8a" text-anchor="middle">Europa</text>
+    <!-- África -->
+    <path d="M390 150 Q450 140 478 175 Q490 230 460 290 Q435 320 410 300 Q385 270 388 220 Q382 180 390 150 Z" fill="${C.af}" stroke="#fff" stroke-width="3"/>
+    <text x="432" y="235" font-size="15" font-weight="700" fill="#4a7a2a" text-anchor="middle">África</text>
+    <!-- Ásia -->
+    <path d="M485 70 Q620 50 715 95 Q740 130 695 165 Q620 185 540 165 Q495 150 490 120 Q482 95 485 70 Z" fill="${C.as}" stroke="#fff" stroke-width="3"/>
+    <text x="610" y="120" font-size="16" font-weight="700" fill="#8a3a82" text-anchor="middle">Ásia</text>
+    <!-- Oceania -->
+    <path d="M640 280 Q700 268 730 300 Q740 330 705 345 Q660 350 642 325 Q632 300 640 280 Z" fill="${C.oc}" stroke="#fff" stroke-width="3"/>
+    <text x="688" y="315" font-size="13" font-weight="700" fill="#8a6a20" text-anchor="middle">Oceania</text>
+    <!-- Antártida -->
+    <path d="M250 392 Q450 378 600 392 Q610 410 250 410 Z" fill="${C.an}" stroke="#fff" stroke-width="2"/>
+    <text x="425" y="406" font-size="12" font-weight="700" fill="#6a8a9a" text-anchor="middle">Antártida</text>
+  </svg>`;
+}
+
+/* ════════════════ DADOS DE EXEMPLO (showcase sem IA) ════════════════ */
+const SAMPLE = {
+  titulo:'Vamos conhecer a Copa do Mundo!',
+  subtitulo:'Uma viagem pelo maior torneio de futebol do planeta — história, países, contas e muita diversão.',
+  historia_titulo:'O que é a Copa do Mundo?',
+  historia_texto:'A Copa do Mundo é o maior campeonato de futebol entre seleções de países. Ela acontece de quatro em quatro anos e reúne torcedores do mundo inteiro na frente da TV, torcendo pelo seu time do coração.\nA primeira Copa aconteceu em 1930, no Uruguai. De lá pra cá, jogadores se tornaram heróis e países inteiros pararam para comemorar cada gol. No Brasil, a Copa é quase uma festa nacional: as ruas se enfeitam de verde e amarelo!\nDurante a Copa, conhecemos bandeiras, idiomas e costumes de muitos lugares diferentes. É futebol, mas também é geografia, história e amizade entre os povos.',
+  voce_sabia:'O Brasil é o único país que disputou TODAS as Copas do Mundo desde 1930 — e é o maior campeão, com 5 títulos!',
+  math:[
+    {enunciado:'No primeiro jogo, o Brasil fez 3 gols e o adversário fez 1 gol. Quantos gols foram marcados na partida no total?',linhas:2},
+    {enunciado:'Uma seleção venceu 2 jogos e empatou 1. Sabendo que vitória vale 3 pontos e empate vale 1 ponto, quantos pontos ela tem?',linhas:2},
+    {enunciado:'Pedro tem 18 figurinhas e Ana tem 25 figurinhas. Quantas figurinhas as duas têm juntas?',linhas:2},
+    {enunciado:'O álbum tem 50 figurinhas. João já colou 32. Quantas faltam para completar o álbum?',linhas:2}
+  ],
+  culturas_intro:'Cada país que joga a Copa tem comidas, idiomas e costumes diferentes. Conhecer outras culturas nos ensina a respeitar as diferenças!',
+  culturas:[
+    {pais:'Japão',item:'Sushi'},{pais:'Itália',item:'Pizza e macarrão'},
+    {pais:'México',item:'Taco'},{pais:'França',item:'Idioma francês'},
+    {pais:'Brasil',item:'Feijoada e samba'}
+  ],
+  mascote_atividade:'Toda Copa tem um mascote! Crie e desenhe o SEU mascote para a Copa: dê um nome a ele e escreva uma frase explicando por que você o escolheu.',
+  fechamento:'A Copa do Mundo une pessoas de todos os continentes em volta de uma bola. Mais do que torcer, é uma chance de aprender sobre o mundo, fazer contas, conhecer bandeiras e sonhar grande. Que vença o melhor — e que a brincadeira ensine a gente a respeitar todos os povos!'
+};
+
+/* ════════════════ HELPERS DE FORM ════════════════ */
+function toggleBtn(el){el.classList.toggle('on')}
+function isOn(id){return document.getElementById(id).classList.contains('on')}
+document.querySelectorAll('#difPills .pill').forEach(p=>p.addEventListener('click',()=>{
+  document.querySelectorAll('#difPills .pill').forEach(x=>x.classList.remove('active'));
+  p.classList.add('active');
+}));
+function getDif(){return document.querySelector('#difPills .pill.active')?.dataset.val||'adequado ao ano'}
+function onLetraGrandeChange(){document.body.classList.toggle('letra-grande',document.getElementById('letraGrande').checked)}
+document.getElementById('nivel').addEventListener('change',function(){
+  const acc=/infantil|1º|2º/i.test(this.value);
+  document.getElementById('letraGrande').checked=acc;
+  document.body.classList.toggle('letra-grande',acc);
+});
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ════════════════ LOGIN ════════════════ */
+const SUPA_KEY='sb-atkwvwhwbkerezdmipxw-auth-token';
+function isLoggedIn(){
+  try{
+    const s=JSON.parse(localStorage.getItem(SUPA_KEY));
+    return s && (s.expires_at||0) > Date.now()/1000 && !!s.access_token;
+  }catch{return false;}
+}
+
+/* ════════════════ RENDER ════════════════ */
+function relacioneFlags(){
+  const nomes=Object.keys(FLAGS);
+  const escolhidos=shuffle(nomes).slice(0,6);
+  const esq=escolhidos.map(n=>({nome:n,svg:FLAGS[n]}));            // ordem 1..6 (bandeiras)
+  const dir=shuffle(escolhidos);                                   // ordem embaralhada (nomes)
+  const left=esq.map((f,i)=>`<div class="cp-rel-item"><span class="num">${i+1}</span><div class="cp-rel-flag">${f.svg}</div><span class="cp-rel-dot"></span></div>`).join('');
+  const right=dir.map((n,i)=>`<div class="cp-rel-item"><span class="cp-rel-dot" style="margin-left:0;margin-right:auto;order:-1"></span><span class="cp-rel-name">${n}</span><span class="let">${String.fromCharCode(65+i)}</span></div>`).join('');
+  return `<div class="cp-relacione"><div class="cp-rel-col">${left}</div><div class="cp-rel-col">${right}</div></div>`;
+}
+
+function relacioneCultura(pares){
+  if(!pares||!pares.length) return '';
+  const left=pares.map((p,i)=>`<div class="cp-rel-item"><span class="num">${i+1}</span><span class="cp-rel-name">${p.pais}</span><span class="cp-rel-dot"></span></div>`).join('');
+  const dir=shuffle(pares);
+  const right=dir.map((p,i)=>`<div class="cp-rel-item"><span class="cp-rel-dot" style="margin-left:0;margin-right:auto;order:-1"></span><span class="cp-rel-name" style="font-weight:500">${p.item}</span><span class="let">${String.fromCharCode(65+i)}</span></div>`).join('');
+  return `<div class="cp-relacione"><div class="cp-rel-col">${left}</div><div class="cp-rel-col">${right}</div></div>`;
+}
+
+function playersBlock(){
+  const sel=shuffle(CRAQUES).slice(0,6);
+  const frames=sel.map(c=>`<div class="cp-player"><div class="cp-player-frame">📷<br>cole a foto</div><div class="cp-player-info"><div class="cp-player-hint">${c.hint}</div><div class="cp-player-line"></div></div></div>`).join('');
+  const bank=shuffle(sel).map(c=>`<span class="cp-name-chip">${c.nome}</span>`).join('');
+  return `${frames ? `<div class="cp-players">${frames}</div>`:''}
+    <p class="cp-text" style="margin-top:14px;font-size:13px;color:var(--text-mid)">✏️ A professora pode colar a foto de cada craque na moldura. Depois, o aluno escreve embaixo o nome certo, usando o banco de nomes abaixo como ajuda:</p>
+    <div class="cp-names-bank">${bank}</div>`;
+}
+
+function mathBlock(items){
+  const head=`<div class="cp-scoreboard"><span class="cp-sb-team">🇧🇷 BRA</span><span class="cp-sb-score">3</span><span style="opacity:.5">x</span><span class="cp-sb-score">1</span><span class="cp-sb-team">ADV</span></div>
+    <table class="cp-points-table"><tr><th>Resultado</th><th>Vitória</th><th>Empate</th><th>Derrota</th></tr><tr><td>Pontos</td><td><b>3</b></td><td><b>1</b></td><td><b>0</b></td></tr></table>`;
+  const acts=(items||[]).map((m,i)=>`<div class="cp-activity"><div class="cp-activity-head"><span class="cp-activity-num">${i+1}</span><span class="cp-activity-q">${(m.enunciado||'').replace(/\n/g,'<br>')}</span></div><div class="cp-ans-lines">${Array(Math.max(m.linhas||2,2)).fill('<div class="cp-ans-line"></div>').join('')}</div></div>`).join('');
+  return head+acts;
+}
+
+function champsBlock(){
+  const chips=CAMPEOES.map(c=>`<div class="cp-champ ${c.pais==='Brasil'?'bra':''}"><div class="cp-champ-year">${c.ano}</div><div class="cp-champ-country">${c.pais}</div></div>`).join('');
+  const cont={};CAMPEOES.forEach(c=>cont[c.pais]=(cont[c.pais]||0)+1);
+  const ranking=Object.entries(cont).sort((a,b)=>b[1]-a[1])
+    .map(([p,n])=>`<div class="cp-title-row"><span>${p}</span><b>${n} ${n>1?'títulos':'título'}</b></div>`).join('');
+  return `<div class="cp-champs">${chips}</div>
+    <div class="cp-card"><div class="cp-card-label">🏆 Quadro de títulos</div><div class="cp-titles">${ranking}</div></div>
+    <p class="cp-text" style="margin-top:14px"><b>Atividade:</b> Olhe o quadro acima e responda nas linhas: Qual país é o maior campeão? Quantos títulos o Brasil tem a mais que a Argentina?</p>
+    <div class="cp-ans-lines"><div class="cp-ans-line"></div><div class="cp-ans-line"></div></div>`;
+}
+
+function buildPages(d,nivel){
+  const date=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  const foot=(txt)=>`<div class="cp-footer"><span class="cp-footer-logo">DoceriaPedagógica ⚽</span><span>${txt}</span><span>${date}</span></div>`;
+  let pages=[];
+
+  // CAPA
+  pages.push(`<div class="cp-page">
+    <div class="cp-stripe"><span></span><span></span><span></span></div>
+    <div class="cp-cover">
+      <div class="cp-cover-tag">⚽ Especial Copa do Mundo</div>
+      <div class="cp-cover-title">${d.titulo||SAMPLE.titulo}</div>
+      <div class="cp-cover-sub">${d.subtitulo||''}</div>
+      <div class="cp-cover-badges">
+        <span class="cp-cover-badge">📚 ${nivel}</span>
+        <span class="cp-cover-badge">⚽ Copa do Mundo</span>
+        <span class="cp-cover-badge">📅 ${date}</span>
+      </div>
+    </div>
+    <div class="cp-namebar"><span>Nome: ____________________________________</span><span>Turma: ___________</span><span>Data: ___/___/______</span></div>
+    <div class="cp-body" style="padding-top:18px"><p class="cp-text" style="margin:0;color:var(--text-mid)">Professor(a): esta apostila pode ser feita em sala ou em casa. Bom jogo! ⚽</p></div>
+  </div>`);
+
+  // HISTÓRIA
+  if(isOn('togHist') && d.historia_texto){
+    const par=d.historia_texto.split('\n').filter(p=>p.trim());
+    pages.push(`<div class="cp-page"><div class="cp-body">
+      <div class="cp-section-label">História</div>
+      <div class="cp-section-title">${d.historia_titulo||'A história da Copa'}</div>
+      ${par.map(p=>`<p class="cp-text">${p.trim()}</p>`).join('')}
+      ${d.voce_sabia?`<div class="cp-card"><div class="cp-card-label">💡 Você sabia?</div><div class="cp-card-text">${d.voce_sabia}</div></div>`:''}
+    </div>${foot('A história da Copa')}</div>`);
+  }
+
+  // CAMPEÕES
+  if(isOn('togChamps')){
+    pages.push(`<div class="cp-page"><div class="cp-body">
+      <div class="cp-section-label">Campeões pela história</div>
+      <div class="cp-section-title">🏆 Quem já levantou a taça</div>
+      <p class="cp-text">Desde 1930, estes países foram campeões do mundo. Os anos em <b style="color:#caa200">amarelo</b> são os títulos do Brasil:</p>
+      ${champsBlock()}
+    </div>${foot('Campeões da Copa')}</div>`);
+  }
+
+  // MAPA
+  if(isOn('togMap')){
+    pages.push(`<div class="cp-page"><div class="cp-body">
+      <div class="cp-section-label">Geografia</div>
+      <div class="cp-section-title">🗺️ O mundo da Copa: os continentes</div>
+      <p class="cp-text">As seleções vêm de vários continentes. Observe o mapa e depois faça as atividades:</p>
+      <div class="cp-map-wrap">${mapaSVG()}</div>
+      <div class="cp-legend">
+        <span class="cp-legend-item"><span class="cp-legend-dot" style="background:#f3b6a6"></span>América do Norte</span>
+        <span class="cp-legend-item"><span class="cp-legend-dot" style="background:#f6d488"></span>América do Sul</span>
+        <span class="cp-legend-item"><span class="cp-legend-dot" style="background:#a8c8f0"></span>Europa</span>
+        <span class="cp-legend-item"><span class="cp-legend-dot" style="background:#bfe3a8"></span>África</span>
+        <span class="cp-legend-item"><span class="cp-legend-dot" style="background:#e7b6e0"></span>Ásia</span>
+        <span class="cp-legend-item"><span class="cp-legend-dot" style="background:#f0d0a0"></span>Oceania</span>
+      </div>
+      <p class="cp-text" style="margin-top:16px"><b>Atividade:</b> 1) Pinte o continente onde fica o Brasil. 2) Em que continente fica a maior parte dos países da Europa? 3) Escreva o nome de um continente que você gostaria de conhecer:</p>
+      <div class="cp-ans-lines"><div class="cp-ans-line"></div><div class="cp-ans-line"></div></div>
+    </div>${foot('Os continentes')}</div>`);
+  }
+
+  // BANDEIRAS
+  if(isOn('togFlags')){
+    pages.push(`<div class="cp-page"><div class="cp-body">
+      <div class="cp-section-label">Bandeiras</div>
+      <div class="cp-section-title">🚩 Relacione a bandeira ao país</div>
+      <p class="cp-text">Ligue cada bandeira (números) ao nome do país certo (letras):</p>
+      ${relacioneFlags()}
+    </div>${foot('Bandeiras dos países')}</div>`);
+  }
+
+  // CRAQUES
+  if(isOn('togPlayers')){
+    pages.push(`<div class="cp-page"><div class="cp-body">
+      <div class="cp-section-label">Craques</div>
+      <div class="cp-section-title">⭐ Relacione o craque ao nome</div>
+      <p class="cp-text">Conheça grandes craques do futebol brasileiro:</p>
+      ${playersBlock()}
+    </div>${foot('Craques do futebol')}</div>`);
+  }
+
+  // MATEMÁTICA
+  if(isOn('togMath') && (d.math||[]).length){
+    pages.push(`<div class="cp-page"><div class="cp-body">
+      <div class="cp-section-label">Matemática</div>
+      <div class="cp-section-title">➗ A matemática da Copa</div>
+      <p class="cp-text">Resolva os problemas usando placares, pontos e figurinhas:</p>
+      ${mathBlock(d.math)}
+    </div>${foot('Matemática da Copa')}</div>`);
+  }
+
+  // CULTURAS
+  if(isOn('togCult') && (d.culturas||[]).length){
+    pages.push(`<div class="cp-page"><div class="cp-body">
+      <div class="cp-section-label">Culturas do mundo</div>
+      <div class="cp-section-title">🌍 Cada país, uma cultura</div>
+      ${d.culturas_intro?`<p class="cp-text">${d.culturas_intro}</p>`:''}
+      <p class="cp-text"><b>Relacione</b> cada país a algo da sua cultura:</p>
+      ${relacioneCultura(d.culturas)}
+    </div>${foot('Outras culturas')}</div>`);
+  }
+
+  // MASCOTE + FECHAMENTO
+  if(isOn('togEnd')){
+    pages.push(`<div class="cp-page"><div class="cp-body">
+      <div class="cp-section-label">Mão na massa</div>
+      <div class="cp-section-title">🎨 Crie o seu mascote</div>
+      <p class="cp-text">${d.mascote_atividade||SAMPLE.mascote_atividade}</p>
+      <div style="border:1.5px solid var(--border-mid);border-radius:12px;height:230px;margin:12px 0;display:flex;align-items:flex-end;justify-content:center;color:#bbb;font-size:12px;padding:8px">desenhe aqui ✏️</div>
+      <div class="cp-ans-lines"><div class="cp-ans-line"></div><div class="cp-ans-line"></div></div>
+      ${d.fechamento?`<div class="cp-card" style="margin-top:18px"><div class="cp-card-label">🏁 Para terminar</div><div class="cp-card-text">${d.fechamento}</div></div>`:''}
+    </div>${foot('Crie seu mascote')}</div>`);
+  }
+
+  return pages;
+}
+
+function render(d,nivel,isSample){
+  const pages=buildPages(d,nivel);
+  document.getElementById('copa-doc').innerHTML=pages.join('');
+  document.getElementById('pagesCount').textContent=pages.length;
+  document.getElementById('pagesPill').style.display='flex';
+  document.getElementById('phTitle').textContent=d.titulo||SAMPLE.titulo;
+  document.getElementById('phBadge').textContent=isSample?'✓ Exemplo pronto — veja como fica':'✓ Sua apostila personalizada';
+  document.getElementById('phBadge').style.display='inline-flex';
+  document.getElementById('phMeta').textContent=`${nivel} · ${pages.length} páginas`+(isSample?' · exemplo demonstrativo':'');
+}
+
+/* ════════════════ GERAÇÃO (IA) ════════════════ */
+function setStep(n,total=4){
+  for(let i=1;i<=total;i++){const el=document.getElementById('ps'+i);if(!el)continue;el.classList.remove('active','done');const dot=el.querySelector('.prog-dot');if(i<n){el.classList.add('done');dot.textContent='✓';}else if(i===n){el.classList.add('active');dot.textContent=i;}else dot.textContent=i;}
+  document.getElementById('progBar').style.width=Math.round((n/total)*90)+'%';
+}
+const STEPS_DELAY=[0,900,1700,2500];
+function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+
+async function generate(){
+  const errBox=document.getElementById('errorBox');
+  errBox.classList.remove('show');
+
+  if(!isLoggedIn()){
+    errBox.innerHTML='🔒 Entre na sua conta (ou crie uma grátis) para gerar a sua versão. Levando você ao painel...';
+    errBox.classList.add('show');
+    setTimeout(()=>{window.location.href='/conta.html';},1600);
+    return;
+  }
+
+  const nivel=document.getElementById('nivel').value;
+  const dif=getDif();
+  const obs=document.getElementById('obs').value.trim();
+  const btn=document.getElementById('genBtn');
+  btn.disabled=true;btn.classList.add('loading');
+  document.getElementById('progressWrap').classList.add('show');
+  STEPS_DELAY.forEach((d,i)=>setTimeout(()=>setStep(i+1),d));
+
+  const prompt=buildPrompt(nivel,dif,obs);
+  try{
+    const res=await fetch('/api/claude',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',max_tokens:5000,creditCost:2,
+        system:'Você é uma especialista em educação brasileira (anos iniciais). Gere conteúdo pedagógico sobre a Copa do Mundo. REGRAS: Retorne SOMENTE JSON válido começando com { e terminando com }. Sem markdown. Sem texto fora do JSON. Use linguagem adequada à série. Conteúdo factual deve ser verdadeiro; em caso de dúvida, prefira o atemporal.',
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    if(res.status===402){
+      if(typeof dpHandleNoCredits==='function') dpHandleNoCredits(errBox);
+      else {errBox.innerHTML='⚠️ Seus créditos acabaram. <a href="/conta.html">Ver planos →</a>';errBox.classList.add('show');}
+      return;
+    }
+    if(res.status===401){
+      errBox.innerHTML='🔒 Sua sessão expirou. <a href="/conta.html">Entre novamente →</a>';errBox.classList.add('show');return;
+    }
+    if(!res.ok) throw new Error('Erro '+res.status);
+    const data=await res.json();
+    const cLeft=res.headers.get('X-Credits-Remaining');
+    if(cLeft!==null) document.querySelectorAll('[data-dp-credits]').forEach(el=>el.textContent=cLeft);
+    const raw=data.content?.[0]?.text||'';
+    let parsed;
+    try{parsed=extractJSON(raw);}catch(e){throw new Error('Formato inesperado. Tente novamente.');}
+    // mescla com SAMPLE para garantir que campos ausentes não quebrem o layout
+    const d2=Object.assign({},SAMPLE,parsed);
+    document.getElementById('progBar').style.width='100%';
+    await delay(300);
+    render(d2,nivel,false);
+    document.getElementById('docWrap').scrollIntoView({behavior:'smooth',block:'start'});
+    if(typeof dpSalvar==='function') dpSalvar('copa','Copa do Mundo',nivel,d2.titulo||'Apostila da Copa','#docWrap');
+  }catch(err){
+    errBox.textContent='Erro: '+(err.message||'Tente novamente.');
+    errBox.classList.add('show');
+  }finally{
+    btn.disabled=false;btn.classList.remove('loading');
+    document.getElementById('progressWrap').classList.remove('show');
+    document.getElementById('progBar').style.width='0%';
+    for(let i=1;i<=4;i++){const el=document.getElementById('ps'+i);if(el){el.classList.remove('active','done');el.querySelector('.prog-dot').textContent=i;}}
+  }
+}
+
+function buildPrompt(nivel,dif,obs){
+  return `Crie o conteúdo de uma mini-apostila sobre a COPA DO MUNDO para a turma: ${nivel}.
+NÍVEL DE DIFICULDADE: ${dif}. Ajuste a complexidade do texto e principalmente das CONTAS de matemática a esse nível e a essa série (séries menores: números pequenos, soma e subtração simples, contagem; séries maiores: multiplicação, divisão, várias etapas, talvez porcentagem).
+${obs?'OBSERVAÇÕES DO PROFESSOR (siga à risca): '+obs:''}
+
+Gere de 4 a 6 situações-problema de matemática usando o CONTEXTO da Copa: placares de jogos, pontuação (vitória=3, empate=1, derrota=0), número de gols, e ÁLBUM DE FIGURINHAS (figurinhas que faltam, repetidas, total). As figurinhas encantam as crianças — capriche nelas.
+
+Retorne SOMENTE este JSON:
+{
+  "titulo":"título alegre e curto da apostila",
+  "subtitulo":"uma linha convidativa",
+  "historia_titulo":"título da seção de história",
+  "historia_texto":"3 parágrafos REAIS sobre o que é a Copa do Mundo, adequados a ${nivel} (separe os parágrafos com \\n)",
+  "voce_sabia":"uma curiosidade verdadeira e marcante sobre a Copa",
+  "math":[{"enunciado":"problema contextualizado na Copa","linhas":2}],
+  "culturas_intro":"1 frase sobre conhecer outras culturas",
+  "culturas":[{"pais":"País","item":"comida, idioma ou costume desse país"}],
+  "mascote_atividade":"comando criativo para a criança desenhar/criar o próprio mascote",
+  "fechamento":"1 parágrafo de encerramento reflexivo e carinhoso"
+}
+REGRAS: 'culturas' deve ter 5 pares de países diferentes. NUNCA escreva placeholders como "texto aqui". Conteúdo factual verdadeiro.`;
+}
+
+function extractJSON(raw){
+  let c=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+  const s=c.indexOf('{'),e=c.lastIndexOf('}');
+  if(s!==-1&&e>s) c=c.slice(s,e+1);
+  return JSON.parse(c);
+}
+
+function printPDF(){ if(typeof dpPrint==='function') dpPrint(); else window.print(); }
+
+/* ════════════════ INIT ════════════════ */
+(function init(){
+  if(isLoggedIn()){
+    document.getElementById('loginLink').textContent='Meu painel';
+  }
+  render(SAMPLE,document.getElementById('nivel').value,true); // mostra exemplo pronto
+})();
+</script>
+<script src="/js/dp-print.js"></script>
+<script src="/js/dp-auth.js"></script>
+<script src="/js/dp-salvar.js"></script>
+</body>
+</html>

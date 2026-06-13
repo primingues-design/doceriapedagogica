@@ -141,6 +141,39 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── ESPECIAL SAZONAL ──
+          🔁 SLOT REUTILIZÁVEL: troque tema/links aqui a cada temporada
+             (Copa → Festa Junina → Folclore → Natal...). Hoje: Copa do Mundo.
+      */}
+      <section className="px-4 sm:px-8 pb-4">
+        <div className="max-w-5xl mx-auto">
+          <a
+            href="/copa.html"
+            className="block rounded-3xl overflow-hidden shadow-xl relative group"
+            style={{ background: 'linear-gradient(135deg,#013a17,#0b7a3a)' }}
+          >
+            <div className="absolute right-4 -bottom-6 text-[120px] opacity-15 select-none leading-none">⚽</div>
+            <div className="relative p-7 sm:p-9 flex flex-col sm:flex-row sm:items-center gap-5">
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#ffcc29] mb-2">
+                  ⚽ Especial Sazonal · Novo
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight mb-2">
+                  Mini-apostila da Copa do Mundo
+                </h2>
+                <p className="text-white/80 text-sm sm:text-base max-w-xl">
+                  História, campeões, mapa-múndi, bandeiras e situações-problema com placares e figurinhas.
+                  Veja o <strong className="text-white">exemplo pronto</strong> — ajuste o ano e gere a sua versão.
+                </p>
+              </div>
+              <span className="bg-white text-[#0b7a3a] px-6 py-3 rounded-full font-semibold text-sm whitespace-nowrap self-start sm:self-auto group-hover:bg-[#ffcc29] transition">
+                Ver e gerar →
+              </span>
+            </div>
+          </a>
+        </div>
+      </section>
+
       {/* ── FERRAMENTAS ── */}
       <section id="ferramentas" className="py-20 px-4 sm:px-8 bg-[#FDF6ED]">
         <div className="max-w-5xl mx-auto">

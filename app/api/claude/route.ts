@@ -44,6 +44,12 @@ export async function POST(request: NextRequest) {
   const email = (decoded?.email || '').toLowerCase();
   const isCreator = CREATOR_EMAILS.includes(email);
 
+  const body = await request.json();
+  // Custo em créditos por geração (padrão 1). Páginas mais pesadas (ex.: apostila
+  // sazonal da Copa) mandam creditCost:2. Trava server-side entre 1 e 3 para o
+  // cliente não conseguir burlar pedindo custo 0 ou negativo.
+  const creditCost = Math.min(Math.max(parseInt(body?.creditCost, 10) || 1, 1), 3);
+
   let credits = 0;
 
   if (!isCreator) {
@@ -99,18 +105,19 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    if (credits <= 0) {
+    if (credits < creditCost) {
       return NextResponse.json({ error: 'Sem créditos disponíveis', upgrade: true }, { status: 402 });
     }
 
     await supaFetch(`/profiles?id=eq.${userId}`, {
       method: 'PATCH',
       headers: { Prefer: 'return=minimal' },
-      body: JSON.stringify({ credits: credits - 1 }),
+      body: JSON.stringify({ credits: credits - creditCost }),
     });
   }
 
-  const body = await request.json();
+  // Remove o campo de controle interno antes de repassar à API da Anthropic.
+  const { creditCost: _omitCost, ...anthropicBody } = body;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -120,7 +127,7 @@ export async function POST(request: NextRequest) {
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(anthropicBody),
     });
 
     const data = await response.json();
@@ -138,7 +145,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(data, {
       status: 200,
-      headers: { 'X-Credits-Remaining': isCreator ? 'ilimitado' : String(credits - 1) },
+      headers: { 'X-Credits-Remaining': isCreator ? 'ilimitado' : String(credits - creditCost) },
     });
   } catch (e) {
     if (!isCreator) {

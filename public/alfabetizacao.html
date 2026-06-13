@@ -528,7 +528,27 @@ JSON: {"titulo":"...","rendimento":"ex: 4 porções","ingredientes":["2 ovos","1
   async function gerarImagens(data,cap){
     const acc=[];coletarImgs(data,acc);
     const usar=acc.slice(0,cap||8);
-    await Promise.all(usar.map(async e=>{try{const r=await fetch('/api/imagem',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:e.prompt,size:'square_hd'})});if(r.ok){const d=await r.json();if(d&&d.url)e.obj._url=d.url;}}catch(_){}}));
+    // fila com concorrência limitada (evita estourar o limite do fal.ai) + retry
+    const CONC=4;
+    let i=0;
+    async function worker(){
+      while(i<usar.length){
+        const e=usar[i++];
+        const url=await tentarImagem(e.prompt,'square_hd',2);
+        if(url) e.obj._url=url;
+      }
+    }
+    await Promise.all(Array(Math.min(CONC,usar.length||1)).fill(0).map(()=>worker()));
+  }
+  async function tentarImagem(prompt,size,tentativas){
+    for(let t=0;t<(tentativas||2);t++){
+      try{
+        const r=await fetch('/api/imagem',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,size})});
+        if(r.ok){const d=await r.json();if(d&&d.url)return d.url;}
+      }catch(_){}
+      await delay(400);
+    }
+    return null;
   }
   function imgFrame(url,prompt,extra){
     if(url) return `<div class="img-frame ${extra||''}"><img src="${url}" alt=""></div>`;
