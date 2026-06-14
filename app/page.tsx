@@ -159,7 +159,7 @@ export default function Home() {
                   ⚽ Especial Sazonal · Novo
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight mb-2">
-                  Mini-apostila da Copa do Mundo
+                  Atividades sobre a Copa do Mundo
                 </h2>
                 <p className="text-white/80 text-sm sm:text-base max-w-xl">
                   História, campeões, mapa-múndi, bandeiras e situações-problema com placares e figurinhas.
