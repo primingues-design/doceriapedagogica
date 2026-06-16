@@ -922,13 +922,21 @@ dados: {"numeros":[456,78,1203]}
 [tabuada-multiplos]
 dados: {"numero":7,"total_linhas":10,"lacunas":[2,5,8]}
 
+[sistema-monetario]
+dados: {"modo":"reconhecer-valor|calcular-troco|compor-valor-alvo","composicao":[{"tipo":"cedula","valor":10},{"tipo":"moeda","valor":0.50}],"valor_compra":13.50,"valor_pago":20.00}
+Valores válidos de cédulas: 2, 5, 10, 20, 50, 100. Moedas: 0.05, 0.10, 0.25, 0.50, 1.00.
+"reconhecer-valor": preencha "composicao" com as notas/moedas a exibir; aluno escreve o total.
+"calcular-troco": preencha "valor_pago" e "valor_compra"; aluno calcula o troco.
+"compor-valor-alvo": preencha "valor_compra" com o valor-alvo; aluno circula as notas/moedas certas.
+
 REGRAS DE ESCOLHA POR ANO:
 - EI: só contagem, sequência de padrões, noções de quantidade
 - 1º–2º ano: conta-armada simples (1-2 dígitos), qvl, sequencia-numerica, reta-numerica
-- 3º–4º ano: conta-armada com reagrupamento, qvl até milhar, tabela, grafico-barras, relogio, fracoes-visuais
-- 5º ano: fracoes-visuais, operações com decimais, grafico-barras, tabela de dupla entrada
+- 3º–4º ano: conta-armada com reagrupamento, qvl até milhar, tabela, grafico-barras, relogio, fracoes-visuais, sistema-monetario
+- 5º ano: fracoes-visuais, operações com decimais, grafico-barras, tabela de dupla entrada, sistema-monetario
 - 6º–9º ano: reta-numerica (negativos), grafico-barras, tabela, fracoes, problemas complexos
-- EJA: problemas com dinheiro, tabela de consumo, grafico-barras com dados reais
+- EJA: problemas com dinheiro (sistema-monetario), tabela de consumo, grafico-barras com dados reais
+- TEMA DINHEIRO/TROCO/SISTEMA MONETÁRIO: SEMPRE use sistema-monetario. Não use tabela para listar cédulas.
 
 RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
 {"titulo":"título da atividade","bncc":["EF01MA09"],"blocos":[{"template":"id-do-template","dados":{...}}]}`;
