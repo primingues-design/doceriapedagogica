@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
   if (!userId) return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
 
   const email = (decoded?.email || '').toLowerCase();
-  const isCreator = CREATOR_EMAILS.includes(email);
+  let isCreator = CREATOR_EMAILS.includes(email);
 
   const body = await request.json();
   // Custo em créditos por geração (padrão 1). Páginas mais pesadas (ex.: apostila
@@ -56,12 +56,15 @@ export async function POST(request: NextRequest) {
     if (!SUPA_KEY()) return NextResponse.json({ error: 'Servidor não configurado' }, { status: 500 });
 
     const profileRes = await supaFetch(
-      `/profiles?id=eq.${userId}&select=plan,credits,credits_reset_at,created_at`
+      `/profiles?id=eq.${userId}&select=plan,credits,credits_reset_at,created_at,is_creator`
     );
     const profiles = await profileRes.json();
     const profile = profiles?.[0];
     if (!profile) return NextResponse.json({ error: 'Perfil não encontrado' }, { status: 404 });
 
+    if (profile.is_creator) {
+      isCreator = true;
+    } else {
     const plan: string = profile.plan || 'Free';
     credits = profile.credits ?? 10;
 
@@ -114,6 +117,7 @@ export async function POST(request: NextRequest) {
       headers: { Prefer: 'return=minimal' },
       body: JSON.stringify({ credits: credits - creditCost }),
     });
+    } // end else (not is_creator)
   }
 
   // Remove o campo de controle interno antes de repassar à API da Anthropic.
