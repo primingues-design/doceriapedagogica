@@ -5,7 +5,7 @@ const SUPA_KEY = () => process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
 // Contas-criadoras: geração ilimitada (não checa nem desconta crédito).
 // Padrão com os e-mails da fundadora; pode somar outros via env CREATOR_EMAILS (separados por vírgula).
-const CREATOR_EMAILS = (process.env.CREATOR_EMAILS || 'professorapriscila2006@gmail.com,primingues@gmail.com')
+const CREATOR_EMAILS = (process.env.CREATOR_EMAILS || 'professorapriscila2006@gmail.com,primingues@gmail.com,crissmuniz@gmail.com')
   .toLowerCase().split(',').map((s) => s.trim()).filter(Boolean);
 
 function decodeJwt(token: string): { sub?: string; email?: string } | null {
