@@ -62,6 +62,22 @@
   .radio-card .rc-title{font-size:13px;font-weight:600;color:var(--text)}
   .radio-card .rc-sub{font-size:11px;color:var(--text-muted);margin-top:1px}
 
+  /* setup inteligente (matemática) — conversa em chips */
+  .mat-ia-intro{display:flex;gap:9px;align-items:flex-start;background:var(--teal-pale);border-radius:10px;padding:10px 12px;margin-bottom:14px}
+  .mat-ia-avatar{flex:none;width:26px;height:26px;border-radius:50%;background:var(--teal);color:white;display:flex;align-items:center;justify-content:center;font-size:13px}
+  .mat-ia-msg{font-size:12.5px;color:var(--text-mid);line-height:1.5}
+  .mat-chips{display:flex;flex-wrap:wrap;gap:7px}
+  .mat-chip{padding:8px 13px;border:1.5px solid var(--border-mid);border-radius:999px;background:white;font-size:12.5px;color:var(--text-mid);cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
+  .mat-chip:hover{background:var(--warm)}
+  .mat-chip.sel{border-color:var(--teal);background:var(--teal-pale);color:var(--teal);font-weight:600}
+
+  /* card "próximo passo" (aparece no preview, não imprime) */
+  .mat-proximo{margin-top:20px;display:flex;gap:12px;align-items:flex-start;background:var(--gold-pale);border:1.5px solid var(--gold-light);border-radius:12px;padding:14px 16px}
+  .mat-proximo-titulo{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gold);margin-bottom:5px}
+  .mat-proximo-texto{font-size:13.5px;line-height:1.6;color:var(--text);margin-bottom:11px}
+  .mat-proximo-btn{background:var(--teal);color:white;border:none;padding:8px 15px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif}
+  .mat-proximo-btn:hover{background:#245a5a}
+
   /* tipos de questão (avaliação) */
   .qtipo-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
   .qtipo-row:last-child{border-bottom:none}
@@ -266,7 +282,7 @@
   @media print {
     @page { size: A4 portrait; margin: 11mm 13mm; }
     body { background: white !important; }
-    .topbar, .form-panel, .preview-header, .preview-empty, .btn-pdf, .btn-soft { display: none !important; }
+    .topbar, .form-panel, .preview-header, .preview-empty, .btn-pdf, .btn-soft, .mat-proximo { display: none !important; }
     .main { display: block !important; }
     .preview-panel { padding: 0 !important; overflow: visible !important; max-height: none !important; }
     .doc-wrap { max-width: none !important; display: block !important; }
@@ -387,6 +403,28 @@
             <label class="field-label">Conteúdo / Tema <span class="req">*</span></label>
             <input type="text" id="mat_tema" placeholder="Ex: adição com reagrupamento, frações, horas..." />
             <div class="field-hint">A IA escolhe os melhores tipos de atividade para esse conteúdo e ano.</div>
+          </div>
+
+          <div id="mat-setup" style="display:none;">
+            <div class="mat-ia-intro">
+              <div class="mat-ia-avatar">✦</div>
+              <div class="mat-ia-msg">Boa! Antes de montar, me diz só mais isto — é rapidinho, é só tocar:</div>
+            </div>
+            <div class="field">
+              <label class="field-label">Como você quer a folha?</label>
+              <div class="mat-chips" data-group="formato">
+                <button type="button" class="mat-chip sel" data-value="explicacao">Explicação + exercícios</button>
+                <button type="button" class="mat-chip" data-value="exercicios">Só exercícios</button>
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label">Qual o objetivo?</label>
+              <div class="mat-chips" data-group="objetivo">
+                <button type="button" class="mat-chip" data-value="introduzir">Introduzir</button>
+                <button type="button" class="mat-chip sel" data-value="praticar">Praticar</button>
+                <button type="button" class="mat-chip" data-value="aprofundar">Aprofundar</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -655,7 +693,8 @@
     const ano=val('mat_ano'),tema=val('mat_tema',true),instrucoes=val('instrucoes',true);
     if(!ano) throw new Error('Selecione o ano/nível.');
     if(!tema) throw new Error('Preencha o tema ou conteúdo.');
-    return {isMath:true,ano,tema,instrucoes};
+    const formato=chipVal('formato','explicacao'),objetivo=chipVal('objetivo','praticar');
+    return {isMath:true,ano,tema,instrucoes,formato,objetivo};
   }
   function validarAvaliacao(){
     const tipos=[];
@@ -893,6 +932,8 @@ Monte uma atividade pedagógica de Matemática para:
 - ANO/NÍVEL: ${cfg.ano}
 - TEMA/CONTEÚDO: ${cfg.tema}
 ${cfg.instrucoes?`- INSTRUÇÕES EXTRAS: ${cfg.instrucoes}`:''}
+- FORMATO: ${cfg.formato==='exercicios'?'somente exercícios — NÃO inclua bloco "explicacao".':'comece com 1 bloco "explicacao" (mini-aula clara) e depois os exercícios.'}
+- OBJETIVO PEDAGÓGICO: ${cfg.objetivo==='introduzir'?'INTRODUZIR o conceito — bastante apoio/andaimes, exemplos guiados, comece pelo concreto/pictórico, dificuldade inicial.':cfg.objetivo==='aprofundar'?'APROFUNDAR/DESAFIAR — situações-problema mais complexas, múltiplas etapas, menos andaimes, exigir justificativa do raciocínio.':'PRATICAR e consolidar — dificuldade média, variedade de itens, progressão do mais simples ao mais difícil.'}
 
 MISSÃO: escolha 2 a 5 blocos da biblioteca abaixo que melhor atendem ao conteúdo e ao ano.
 Pense como professora: combine problema contextualizado + estrutura visual adequada.
@@ -957,8 +998,10 @@ REGRAS DE ESCOLHA POR ANO:
 - EJA: problemas com dinheiro (sistema-monetario), tabela de consumo, grafico-barras com dados reais
 - TEMA DINHEIRO/TROCO/SISTEMA MONETÁRIO: SEMPRE use sistema-monetario. Não use tabela para listar cédulas.
 
+CONTINUIDADE: ao final, proponha "proximo_passo" — pense como uma especialista planejando a progressão do aluno: qual é a evolução pedagógica NATURAL depois deste conteúdo e ano. Texto curto, acolhedor, em 2ª pessoa (fale com o professor).
+
 RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
-{"titulo":"título da atividade","bncc":["EF01MA09"],"blocos":[{"template":"id-do-template","dados":{...}}]}`;
+{"titulo":"título da atividade","bncc":["EF01MA09"],"blocos":[{"template":"id-do-template","dados":{...}}],"proximo_passo":{"sugestao":"texto curto e amigável sugerindo a próxima atividade e por quê","tema":"tema sugerido para a próxima atividade"}}`;
   }
 
   // ── dispatcher ──
@@ -972,6 +1015,11 @@ RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
       const fn=matR[b.template];
       html+=`<div class="mat-bloco">${fn?fn(b.dados||{}):matStub(b)}</div>`;
     });
+    const pp=d.proximo_passo;
+    if(pp&&(pp.sugestao||pp.tema)){
+      const ptema=esc(pp.tema||'');
+      html+=`<div class="mat-proximo"><div style="flex:1"><div class="mat-proximo-titulo">✦ Próximo passo</div><div class="mat-proximo-texto">${esc(pp.sugestao||'')}</div>${ptema?`<button type="button" class="mat-proximo-btn" data-tema="${ptema}" onclick="matProxima(this)">Gerar a próxima →</button>`:''}</div></div>`;
+    }
     html+=rodapeHTML('Matemática',cfg.tema,fmtData())+`</div>`;
     mostrar(html,titulo,`${cfg.ano} · ${cfg.tema}`,'prova',cfg.tema,cfg.ano);
   }
@@ -1257,6 +1305,27 @@ RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
 
   function matStub(b){
     return `<div class="mat-stub"><div class="mat-stub-id">${esc(b.template||'?')} — renderer em breve</div><pre style="font-size:11px;color:#888;white-space:pre-wrap">${esc(JSON.stringify(b.dados||{},null,2).slice(0,300))}</pre></div>`;
+  }
+
+  // ── setup inteligente (matemática): chips + revelar ao digitar o tema ──
+  function chipVal(group,def){const el=document.querySelector(`.mat-chips[data-group="${group}"] .mat-chip.sel`);return el?el.dataset.value:def;}
+  document.querySelectorAll('.mat-chips').forEach(group=>{
+    group.addEventListener('click',e=>{
+      const chip=e.target.closest('.mat-chip'); if(!chip)return;
+      group.querySelectorAll('.mat-chip').forEach(c=>c.classList.remove('sel'));
+      chip.classList.add('sel');
+    });
+  });
+  (function(){
+    const tema=document.getElementById('mat_tema'),setup=document.getElementById('mat-setup');
+    if(tema&&setup){const upd=()=>{setup.style.display=tema.value.trim()?'block':'none';};tema.addEventListener('input',upd);upd();}
+  })();
+  // botão "Gerar a próxima" do card de continuidade
+  function matProxima(btn){
+    const t=(btn.getAttribute('data-tema')||'').trim(); if(!t)return;
+    const inp=document.getElementById('mat_tema'); if(inp){inp.value=t;inp.dispatchEvent(new Event('input'));}
+    window.scrollTo({top:0,behavior:'smooth'});
+    generate();
   }
 
   // estado inicial
