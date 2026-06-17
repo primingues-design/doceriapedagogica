@@ -363,18 +363,35 @@
             <option>Matemática</option><option>Física</option><option>Química</option><option>Ciências</option>
           </select>
         </div>
-        <div class="field">
-          <label class="field-label">Tipo de atividade <span class="req">*</span></label>
-          <select id="a_tipo"><option value="">Selecione o componente primeiro</option></select>
+        <!-- "tipo de atividade" agora é conhecimento interno da IA (não escolha do professor) -->
+        <div class="field" id="a_tipo_wrap" style="display:none">
+          <select id="a_tipo"><option value="">—</option></select>
         </div>
         <div class="field">
           <label class="field-label">Tema <span class="req">*</span></label>
           <input type="text" id="a_tema" placeholder="Ex: Animais da Fazenda, Biomas..." />
+          <div class="field-hint">A IA é especialista: ela escolhe a melhor abordagem e como usar as imagens com sentido pedagógico.</div>
         </div>
+
+        <div id="ativ-setup" style="display:none;">
+          <div class="mat-ia-intro">
+            <div class="mat-ia-avatar">✦</div>
+            <div class="mat-ia-msg">Perfeito! Me diz só o objetivo e eu monto pensando na progressão do aluno:</div>
+          </div>
+          <div class="field">
+            <label class="field-label">Qual o objetivo?</label>
+            <div class="mat-chips" data-group="a_objetivo">
+              <button type="button" class="mat-chip" data-value="introduzir">Introduzir</button>
+              <button type="button" class="mat-chip sel" data-value="praticar">Praticar</button>
+              <button type="button" class="mat-chip" data-value="aprofundar">Aprofundar</button>
+            </div>
+          </div>
+        </div>
+
         <div class="field" id="a_quantidade_wrap">
-          <label class="field-label">Quantidade de itens</label>
-          <input type="number" id="a_quantidade" min="1" max="10" value="4" />
-          <div class="field-hint">Sondagem/autoditado: o ideal são 4–5 itens.</div>
+          <label class="field-label">Quantidade de itens <span style="color:var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></label>
+          <input type="number" id="a_quantidade" min="1" max="10" placeholder="Automático" />
+          <div class="field-hint">Deixe em branco e a IA decide a quantidade conforme o tema. A folha flui pelo conteúdo, sem páginas fixas.</div>
         </div>
       </div>
 
@@ -602,9 +619,18 @@
     sel.innerHTML=tipos.length?tipos.map(t=>`<option>${t}</option>`).join(''):'<option value="">Selecione o componente primeiro</option>';
     // Campos especiais de Matemática
     document.getElementById('mat-fields').style.display=isMath?'block':'none';
-    // Campos gerais que somem no modo Math
-    const tipoWrap=sel.closest('.field');if(tipoWrap)tipoWrap.style.display=isMath?'none':'block';
+    // "tipo de atividade" nunca aparece — é só informação interna p/ a IA
+    const tipoWrap=document.getElementById('a_tipo_wrap');if(tipoWrap)tipoWrap.style.display='none';
     const qtdWrap=document.getElementById('a_quantidade_wrap');if(qtdWrap)qtdWrap.style.display=isMath?'none':'block';
+    // Setup conversacional das outras disciplinas (aparece com componente + tema)
+    atualizarAtivSetup();
+  }
+  function atualizarAtivSetup(){
+    const comp=document.getElementById('a_componente').value;
+    const isMath=(comp==='Matemática');
+    const tema=document.getElementById('a_tema');
+    const setup=document.getElementById('ativ-setup');
+    if(setup) setup.style.display=(!isMath&&comp&&tema&&tema.value.trim())?'block':'none';
   }
 
   let MODE='atividade';
@@ -682,10 +708,14 @@
   function isMathMode(){return MODE==='atividade'&&document.getElementById('a_componente').value==='Matemática';}
   function validarAtividade(){
     if(isMathMode()) return validarMatematica();
-    const c={publico:val('a_publico'),componente:val('a_componente'),tipo:val('a_tipo'),tema:val('a_tema',true),quantidade:parseInt(val('a_quantidade'),10)||4,instrucoes:val('instrucoes',true)};
+    const componente=val('a_componente');
+    const c={publico:val('a_publico'),componente,tema:val('a_tema',true),
+      quantidade:parseInt(val('a_quantidade'),10)||0,
+      objetivo:chipVal('a_objetivo','praticar'),
+      tiposExemplos:(TIPOS[componente]||[]).join('; '),
+      instrucoes:val('instrucoes',true)};
     if(!c.publico) throw new Error('Selecione o público-alvo.');
     if(!c.componente) throw new Error('Selecione o componente curricular.');
-    if(!c.tipo) throw new Error('Selecione o tipo de atividade.');
     if(!c.tema) throw new Error('Preencha o tema.');
     return c;
   }
@@ -742,8 +772,9 @@
     const date=fmtData();const md=d.metadados||{};
     const titulo=md.titulo_atividade||meta.tema;const layout=md.tipo_layout||'multiplas_questoes';
     const itens=d.itens_atividade||[];const enun=d.conteudo_principal?.enunciado_geral||'';
+    const bncc=(md.bncc||[]).join(' · ');
     let html=`<div class="prova-doc">`;
-    html+=cabecalhoHTML(titulo,[['📚',meta.componente],['🎯',meta.tipo],['👤',md.publico||meta.publico]]);
+    html+=cabecalhoHTML(titulo,[['📚',meta.componente],['👤',md.publico||meta.publico],bncc?['🔖',bncc]:null].filter(Boolean));
     if(enun) html+=`<div class="prova-enunciado-geral">${esc(enun)}</div>`;
     if(layout==='grade_autoditado'){
       html+=`<div class="grade">`;
@@ -765,8 +796,13 @@
     if(comAlvo.length){
       html+=`<div class="page-break"></div><div class="gabarito"><div class="gabarito-titulo">Gabarito — palavras</div><ol class="gabarito-lista">${itens.map((it,i)=>(it.palavra_alvo_alfabetizacao||'').trim()?`<li class="gabarito-item"><strong>${it.id||i+1}.</strong> ${esc(it.palavra_alvo_alfabetizacao)}${it.classificacao_silabica?` <em style="color:var(--text-muted)">(${esc(it.classificacao_silabica)})</em>`:''}</li>`:'').join('')}</ol></div>`;
     }
-    html+=rodapeHTML(meta.componente,meta.tipo,date)+`</div>`;
-    mostrar(html,titulo,`${meta.publico} • ${meta.componente} • ${meta.tipo}`,'prova',meta.tema,meta.publico);
+    const pp=d.proximo_passo;
+    if(pp&&(pp.sugestao||pp.tema)){
+      const ptema=esc(pp.tema||'');
+      html+=`<div class="mat-proximo"><div style="flex:1"><div class="mat-proximo-titulo">✦ Próximo passo</div><div class="mat-proximo-texto">${esc(pp.sugestao||'')}</div>${ptema?`<button type="button" class="mat-proximo-btn" data-tema="${ptema}" onclick="ativProxima(this)">Gerar a próxima →</button>`:''}</div></div>`;
+    }
+    html+=rodapeHTML(meta.componente,meta.tema,date)+`</div>`;
+    mostrar(html,titulo,`${meta.publico} • ${meta.componente}`,'prova',meta.tema,meta.publico);
   }
   function questaoAtivHTML(it,i,comImagemLateral){
     const num=it.id||i+1;
@@ -858,25 +894,36 @@
 
   // ── prompts ──
   function buildPromptAtividade(o){
+    const obj=o.objetivo==='introduzir'?'INTRODUZIR o conceito — observação guiada, muito apoio, comece pelo concreto, dificuldade inicial.'
+      :o.objetivo==='aprofundar'?'APROFUNDAR/DESAFIAR — análise, comparação, criação; múltiplas etapas; exigir justificativa do raciocínio.'
+      :'PRATICAR e consolidar — variedade de itens, progressão do mais simples ao mais difícil.';
     return `Você é o motor pedagógico da Doceria Pedagógica (Especialista Sênior em Design Educacional).
-Gere uma atividade com base em:
+Gere uma ATIVIDADE DE EXCELÊNCIA com base em:
 - PUBLICO_ALVO: ${o.publico}
 - COMPONENTE_CURRICULAR: ${o.componente}
 - TEMA: ${o.tema}
-- TIPO_ATIVIDADE: ${o.tipo}
-- QUANTIDADE DE ITENS: ${o.quantidade}
+- OBJETIVO PEDAGÓGICO: ${obj}
+${o.quantidade?`- QUANTIDADE DE ITENS (guia aproximado): ${o.quantidade}`:`- QUANTIDADE: VOCÊ decide quantos itens fazem sentido para o tema e o objetivo (deixe fluir, não force um número).`}
 ${o.instrucoes?`- INSTRUÇÕES EXTRAS: ${o.instrucoes}`:''}
 
-DIRETRIZES: Alfabetização: "Sondagem (Hipótese de Escrita)" = tradição psicogenética, palavras do MESMO campo semântico na ordem Polissílaba, Trissílaba, Dissílaba, Monossílaba + 1 frase (item final sem imagem); Infantil=lúdico, EJA=funcional. "Autoditado"=imagem+linha. Português/Inglês: produção/interpretação a partir de cena. Geografia=biomas/espaço; História="o que tem de errado" (anacronismo)/cena histórica. Artes=leitura de imagem. Mat/Fís/Quím=problema/fenômeno visual (números no ENUNCIADO, nunca na imagem).
+COMO VOCÊ PENSA (cérebro pedagógico da Doceria — siga rigorosamente):
+1. TODA IMAGEM TEM PESO PEDAGÓGICO. Cada imagem precisa de função clara: observar e descrever, comparar, interpretar, classificar, encontrar o erro/anacronismo, contar/medir, ou inspirar produção textual. NUNCA gere imagem decorativa, genérica ou sem relação DIRETA com a pergunta. Se a imagem não enriquece o aprendizado, NÃO peça imagem (deixe api_image_prompt vazio). A imagem deixa a atividade mais bonita, prende a atenção do aluno e facilita o entendimento — só quando tem propósito.
+2. VOCÊ ESCOLHE a melhor abordagem conforme componente, tema e ano — o professor NÃO escolhe isso. Abordagens de referência para ${o.componente} (inspiração, escolha a mais adequada, pode combinar): ${o.tiposExemplos||'use a melhor estratégia visual para o tema'}.
+3. A PERGUNTA NASCE DA IMAGEM e a imagem serve ao objetivo de aprendizagem do ano. Coerência total tema↔imagem↔pergunta.
+4. O LAYOUT FLUI conforme o conteúdo (escolha tipo_layout): cena grande para observação rica; grade de miniaturas para associação/sondagem; texto+imagem quando há leitura; questões diretas quando a imagem é por item. Nada de tamanho fixo de páginas — flua pelo tema, pelo tamanho da imagem e pelas perguntas.
+5. PROGRESSÃO conforme o objetivo acima, pensando no desenvolvimento do aluno (do concreto ao abstrato).
+6. ALINHE SEMPRE à BNCC e devolva o(s) código(s) da(s) habilidade(s) em metadados.bncc.
+7. Diretrizes específicas: Alfabetização "Sondagem" = tradição psicogenética, palavras do MESMO campo semântico na ordem Polissílaba→Trissílaba→Dissílaba→Monossílaba + 1 frase (item final sem imagem); "Autoditado" = imagem + linha. História = anacronismo/cena histórica. Geografia = biomas/espaço. Artes = leitura de imagem. Mat/Fís/Quím = números no ENUNCIADO, nunca na imagem.
 
-REGRAS api_image_prompt (em INGLÊS): realista/fotográfico ("Photorealistic, 8k, studio light"); autoditado/sondagem = objeto ISOLADO, centralizado, FUNDO BRANCO; cenas = iluminação, personagens (diversidade/faixa etária), cenário. NUNCA peça texto/números/legendas DENTRO da imagem. TETO: máx 6 imagens no total.
+REGRAS api_image_prompt (em INGLÊS): realista/fotográfico ("Photorealistic, 8k, studio light"); objeto isolado = centralizado, FUNDO BRANCO; cenas = iluminação, personagens (diversidade/faixa etária), cenário. NUNCA peça texto/números/legendas DENTRO da imagem. TETO: máx 6 imagens no total.
 MÚLTIPLA ESCOLHA: o "enunciado_item" contém SÓ a pergunta — NUNCA inclua as alternativas dentro dele; elas vão SÓ em "opcoes_selecao".
+CONTINUIDADE: ao final, proponha "proximo_passo" pensando na progressão natural do aluno depois deste tema/ano. Texto curto, acolhedor, em 2ª pessoa (fale com o professor).
 
 RESPONDA SÓ COM ESTE JSON:
-{"metadados":{"titulo_atividade":"...","componente":"${o.componente}","tipo_layout":"'grade_autoditado'|'cena_unica_perguntas'|'multiplas_questoes'|'texto_e_imagem'","publico":"${o.publico}"},
+{"metadados":{"titulo_atividade":"...","componente":"${o.componente}","tipo_layout":"'grade_autoditado'|'cena_unica_perguntas'|'multiplas_questoes'|'texto_e_imagem'","publico":"${o.publico}","bncc":["EFxxXXxx"]},
 "conteudo_principal":{"enunciado_geral":"...","imagem_principal_prompt":"prompt em inglês da cena única, ou vazio"},
-"itens_atividade":[{"id":1,"enunciado_item":"...","opcoes_selecao":[],"palavra_alvo_alfabetizacao":"se sondagem/autoditado","classificacao_silabica":"se aplicável","api_image_prompt":"prompt em inglês ou vazio"}]}
-Gere exatamente ${o.quantidade} itens.`;
+"itens_atividade":[{"id":1,"enunciado_item":"...","opcoes_selecao":[],"palavra_alvo_alfabetizacao":"se sondagem/autoditado","classificacao_silabica":"se aplicável","api_image_prompt":"prompt em inglês ou vazio"}],
+"proximo_passo":{"sugestao":"texto curto e amigável sugerindo a próxima atividade e por quê","tema":"tema sugerido para a próxima atividade"}}`;
   }
 
   function buildPromptAvaliacao(o){
@@ -1319,11 +1366,19 @@ RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
   (function(){
     const tema=document.getElementById('mat_tema'),setup=document.getElementById('mat-setup');
     if(tema&&setup){const upd=()=>{setup.style.display=tema.value.trim()?'block':'none';};tema.addEventListener('input',upd);upd();}
+    const atema=document.getElementById('a_tema');
+    if(atema){atema.addEventListener('input',atualizarAtivSetup);}
   })();
-  // botão "Gerar a próxima" do card de continuidade
+  // botões "Gerar a próxima" dos cards de continuidade
   function matProxima(btn){
     const t=(btn.getAttribute('data-tema')||'').trim(); if(!t)return;
     const inp=document.getElementById('mat_tema'); if(inp){inp.value=t;inp.dispatchEvent(new Event('input'));}
+    window.scrollTo({top:0,behavior:'smooth'});
+    generate();
+  }
+  function ativProxima(btn){
+    const t=(btn.getAttribute('data-tema')||'').trim(); if(!t)return;
+    const inp=document.getElementById('a_tema'); if(inp){inp.value=t;inp.dispatchEvent(new Event('input'));}
     window.scrollTo({top:0,behavior:'smooth'});
     generate();
   }
