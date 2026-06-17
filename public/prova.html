@@ -923,11 +923,10 @@ dados: {"numeros":[456,78,1203]}
 dados: {"numero":7,"total_linhas":10,"lacunas":[2,5,8]}
 
 [sistema-monetario]
-dados: {"modo":"reconhecer-valor|calcular-troco|compor-valor-alvo","composicao":[{"tipo":"cedula","valor":10},{"tipo":"moeda","valor":0.50}],"valor_compra":13.50,"valor_pago":20.00}
 Valores válidos de cédulas: 2, 5, 10, 20, 50, 100. Moedas: 0.05, 0.10, 0.25, 0.50, 1.00.
-"reconhecer-valor": preencha "composicao" com as notas/moedas a exibir; aluno escreve o total.
-"calcular-troco": preencha "valor_pago" e "valor_compra"; aluno calcula o troco.
-"compor-valor-alvo": preencha "valor_compra" com o valor-alvo; aluno circula as notas/moedas certas.
+"reconhecer-valor": dados={"modo":"reconhecer-valor","composicao":[{"tipo":"cedula","valor":10},{"tipo":"moeda","valor":0.50}]} — exibe notas/moedas, aluno escreve o total.
+"calcular-troco": dados={"modo":"calcular-troco","itens":[{"produto":"Suco","valor_compra":2.50,"composicao":[{"tipo":"cedula","valor":5}]},{"produto":"Borracha","valor_compra":1.20,"composicao":[{"tipo":"moeda","valor":1.00},{"tipo":"moeda","valor":0.50}]}]} — gera tabela 3 colunas (O QUE EU COMPREI | QUANTO EU TENHO | QUAL O TROCO?). Use 3 a 5 itens com produtos do cotidiano escolar. "composicao" = notas/moedas que o aluno TEM (sempre escolha valores que tornem o troco possível).
+"compor-valor-alvo": dados={"modo":"compor-valor-alvo","valor_compra":37.75} — aluno circula as notas/moedas certas.
 
 REGRAS DE ESCOLHA POR ANO:
 - EI: só contagem, sequência de padrões, noções de quantidade
@@ -1200,20 +1199,21 @@ RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
         s+=`<text x="10" y="${ay}" font-size="13" fill="#333" font-weight="500">Total: R$</text><line x1="80" y1="${ay}" x2="${Math.min(W-10,260)}" y2="${ay}" stroke="#555" stroke-width="1.5"/>`;
         h+='<div class="mat-problema-enunciado">Quanto vale o dinheiro abaixo? Escreva o total.</div>'+s+'</svg>';
       } else if(modo==='calcular-troco'){
-        const pago=Number(d.valor_pago||0),compra=Number(d.valor_compra||0);
-        const notas=[100,50,20,10,5,2],notaP=notas.find(n=>n<=pago)||10;
-        let s=`<svg viewBox="0 0 380 140" xmlns="http://www.w3.org/2000/svg" style="max-width:420px;width:100%">`;
-        s+=ced(notaP,10,12);
-        if(pago!==notaP) s+=`<text x="52" y="72" text-anchor="middle" font-size="11" fill="#555">(${fmtR(pago)})</text>`;
-        s+=`<text x="112" y="44" font-size="22" fill="#bbb">→</text>`;
-        s+=`<rect x="148" y="12" width="108" height="50" rx="5" fill="#f8f8f8" stroke="#bbb" stroke-width="1.5"/>`;
-        s+=`<text x="202" y="31" text-anchor="middle" font-size="10" fill="#888">Preço da compra</text>`;
-        s+=`<text x="202" y="51" text-anchor="middle" font-size="15" font-weight="700" fill="#222">${fmtR(compra)}</text>`;
-        s+=`<text x="10" y="108" font-size="13" fill="#333" font-weight="500">Troco = R$</text>`;
-        s+=`<line x1="92" y1="108" x2="280" y2="108" stroke="#555" stroke-width="1.5"/>`;
-        s+=`<text x="10" y="130" font-size="11" fill="#aaa" font-style="italic">Cálculo:</text>`;
-        s+=`<line x1="68" y1="130" x2="280" y2="130" stroke="#ddd" stroke-width="1"/>`;
-        h+=`<div class="mat-problema-enunciado">Ana pagou ${fmtR(pago)} em uma compra de ${fmtR(compra)}. Qual é o troco?</div>`+s+'</svg>';
+        // suporte a itens[] (novo) ou fallback para valor_pago/valor_compra (legado)
+        const itens=d.itens&&d.itens.length?d.itens:[{produto:d.produto||'Compra',valor_compra:Number(d.valor_compra||0),composicao:d.composicao||(d.valor_pago?[{tipo:'cedula',valor:[100,50,20,10,5,2].find(n=>n<=Number(d.valor_pago))||10}]:[])}];
+        let tbl=`<table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px">`;
+        tbl+=`<thead><tr><th style="border:2px solid #555;padding:7px 10px;background:#2d6e6e;color:white;width:33%;font-size:12px">O QUE EU COMPREI</th><th style="border:2px solid #555;padding:7px 10px;background:#2d6e6e;color:white;width:40%;font-size:12px">QUANTO EU TENHO</th><th style="border:2px solid #555;padding:7px 10px;background:#2d6e6e;color:white;width:27%;font-size:12px">QUAL O TROCO?</th></tr></thead><tbody>`;
+        itens.forEach(item=>{
+          const comp=item.composicao||[];
+          const nc=Math.min(comp.length,4)||1,nr=Math.ceil(comp.length/nc);
+          const sw=nc*94+10,sh=nr*64+10;
+          let s=`<svg viewBox="0 0 ${sw} ${sh}" xmlns="http://www.w3.org/2000/svg" style="max-width:100%">`;
+          comp.forEach((ci,i)=>{const col=i%nc,row=Math.floor(i/nc),x=5+col*94,y=5+row*64;s+=ci.tipo==='cedula'?ced(ci.valor,x,y):moe(ci.valor,x+24,y+26);});
+          s+=`</svg>`;
+          tbl+=`<tr><td style="border:2px solid #555;padding:10px;vertical-align:middle;text-align:center"><div style="font-weight:600;font-size:13px;margin-bottom:4px">${esc(item.produto||'Produto')}</div><div style="font-size:20px;font-weight:700;color:#2d6e6e">${fmtR(item.valor_compra)}</div></td><td style="border:2px solid #555;padding:8px;text-align:center;vertical-align:middle">${s}</td><td style="border:2px solid #555;padding:10px;vertical-align:middle"><div style="font-size:11px;color:#888;margin-bottom:6px">Troco:</div><div style="border-bottom:1.5px solid #333;margin-bottom:10px;height:26px"></div><div style="font-size:11px;color:#aaa">Cálculo:</div><div style="border-bottom:1px solid #ccc;height:22px"></div></td></tr>`;
+        });
+        tbl+=`</tbody></table>`;
+        h+=tbl;
       } else {
         const alvo=Number(d.valor_compra||d.valor_alvo||0);
         let s=`<svg viewBox="0 0 500 150" xmlns="http://www.w3.org/2000/svg" style="max-width:560px;width:100%">`;
