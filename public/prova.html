@@ -895,6 +895,17 @@
   }
 
   // ── prompts ──
+  // Cérebro pedagógico compartilhado — injetado em TODOS os prompts (Atividade, Avaliação, Matemática).
+  const CEREBRO_PEDAGOGICO = `CÉREBRO PEDAGÓGICO DA DOCERIA (pense nisto ANTES de montar — é o que separa uma atividade comum de uma de excelência):
+1. PROGRESSÃO: situe o conteúdo na sequência didática — o que o aluno já precisa saber (pré-requisito) e para onde isto leva. A atividade e o "próximo passo" devem refletir esse encadeamento, nunca soltos.
+2. CPA (Concreto → Pictórico → Abstrato): ajuste o nível de representação ao ano e ao objetivo. Anos iniciais / "introduzir" = concreto e pictórico (contexto real, imagens, materiais manipuláveis); anos finais / "aprofundar" = abstrato (símbolos, generalização).
+3. DEMANDA COGNITIVA CRESCENTE (Bloom): os itens devem SUBIR — comece em lembrar/compreender e avance para aplicar/analisar/criar. NUNCA uma folha inteira no mesmo nível raso. "Aprofundar" deve chegar a analisar/avaliar/criar.
+4. ERROS COMUNS: identifique a concepção equivocada típica deste conteúdo e inclua AO MENOS UM item que a confronte diretamente (ex.: decimais "0,45 > 0,5"; "multiplicar sempre aumenta"; em leitura, confundir fato e opinião). Isto é o que um professor experiente reconhece como qualidade.
+5. CONTEXTO SIGNIFICATIVO E INCLUSÃO: situações reais e adequadas à idade/realidade do aluno; represente diversidade; EJA = contexto funcional adulto (trabalho, casa, dinheiro, direitos).
+6. EDUCAÇÃO INFANTIL = LUDICIDADE EM PRIMEIRO LUGAR: na Educação Infantil, priorize o brincar, o faz-de-conta, jogos, música, rimas, exploração sensorial e desafios curtos e alegres. NADA de tarefa escolarizada ou abstrata — nessa fase o aprendizado acontece pela brincadeira, pela curiosidade e pela imagem encantadora.
+7. BNCC: alinhe à habilidade correta para o tema e o ano, e informe o(s) código(s).
+`;
+
   function buildPromptAtividade(o){
     const obj=o.objetivo==='introduzir'?'INTRODUZIR o conceito — observação guiada, muito apoio, comece pelo concreto, dificuldade inicial.'
       :o.objetivo==='aprofundar'?'APROFUNDAR/DESAFIAR — análise, comparação, criação; múltiplas etapas; exigir justificativa do raciocínio.'
@@ -908,7 +919,8 @@ Gere uma ATIVIDADE DE EXCELÊNCIA com base em:
 ${o.quantidade?`- QUANTIDADE DE ITENS (guia aproximado): ${o.quantidade}`:`- QUANTIDADE: VOCÊ decide quantos itens fazem sentido para o tema e o objetivo (deixe fluir, não force um número).`}
 ${o.instrucoes?`- INSTRUÇÕES EXTRAS: ${o.instrucoes}`:''}
 
-COMO VOCÊ PENSA (cérebro pedagógico da Doceria — siga rigorosamente):
+${CEREBRO_PEDAGOGICO}
+COMO VOCÊ USA A IMAGEM (específico desta atividade — siga rigorosamente):
 1. TODA IMAGEM TEM PESO PEDAGÓGICO. Cada imagem precisa de função clara: observar e descrever, comparar, interpretar, classificar, encontrar o erro/anacronismo, contar/medir, ou inspirar produção textual. NUNCA gere imagem decorativa, genérica ou sem relação DIRETA com a pergunta. Se a imagem não enriquece o aprendizado, NÃO peça imagem (deixe api_image_prompt vazio). A imagem deixa a atividade mais bonita, prende a atenção do aluno e facilita o entendimento — só quando tem propósito.
 2. VOCÊ ESCOLHE a melhor abordagem conforme componente, tema e ano — o professor NÃO escolhe isso. Abordagens de referência para ${o.componente} (inspiração, escolha a mais adequada, pode combinar): ${o.tiposExemplos||'use a melhor estratégia visual para o tema'}.
 3. A PERGUNTA NASCE DA IMAGEM e a imagem serve ao objetivo de aprendizagem do ano. Coerência total tema↔imagem↔pergunta.
@@ -952,6 +964,7 @@ ${o.instrucoes?`- INSTRUÇÕES EXTRAS: ${o.instrucoes}`:''}
 
 ${textoBloco}
 
+${CEREBRO_PEDAGOGICO}
 QUESTÕES: gere exatamente estas (${total} no total), distribuídas: ${tiposBloco}.
 - multipla_escolha: o "enunciado" contém SOMENTE a pergunta/comando — NUNCA repita as alternativas (A, B, C, D) dentro do enunciado. As alternativas vão EXCLUSIVAMENTE no array "opcoes" (4 itens, texto puro, sem "A)"/"B)" na frente). "resposta" = letra correta (A/B/C/D).
 - vf: "afirmacoes" = lista de {texto, resposta:"V"|"F"} (3 a 5 afirmações).
@@ -984,6 +997,7 @@ ${cfg.instrucoes?`- INSTRUÇÕES EXTRAS: ${cfg.instrucoes}`:''}
 - FORMATO: ${cfg.formato==='exercicios'?'somente exercícios — NÃO inclua bloco "explicacao".':'comece com 1 bloco "explicacao" (mini-aula clara) e depois os exercícios.'}
 - OBJETIVO PEDAGÓGICO: ${cfg.objetivo==='introduzir'?'INTRODUZIR o conceito — bastante apoio/andaimes, exemplos guiados, comece pelo concreto/pictórico, dificuldade inicial.':cfg.objetivo==='aprofundar'?'APROFUNDAR/DESAFIAR — situações-problema mais complexas, múltiplas etapas, menos andaimes, exigir justificativa do raciocínio.':'PRATICAR e consolidar — dificuldade média, variedade de itens, progressão do mais simples ao mais difícil.'}
 
+${CEREBRO_PEDAGOGICO}
 MISSÃO: escolha 2 a 5 blocos da biblioteca abaixo que melhor atendem ao conteúdo e ao ano.
 Pense como professora: combine problema contextualizado + estrutura visual adequada.
 SEMPRE inclua ao menos 1 bloco "problema-contextualizado".
