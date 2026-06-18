@@ -290,6 +290,19 @@
   .mat-md-mais{font-size:22px;color:var(--gold);align-self:center;font-weight:700}
   .mat-md-cap{font-size:13px;color:#000}
   .mat-md-espaco{border:1.5px dashed #bbb;border-radius:8px;height:130px;background:#fafafa}
+  /* Calendário */
+  .mat-cal-titulo{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--teal);text-align:center;margin-bottom:10px}
+  .mat-cal-tbl{border-collapse:collapse;width:100%;max-width:460px;margin:0 auto;table-layout:fixed}
+  .mat-cal-tbl th{background:var(--teal);color:white;padding:7px 0;font-size:12px;font-weight:600;border:1px solid #fff}
+  .mat-cal-tbl td{border:1px solid var(--border-mid);text-align:center;padding:8px 0;font-size:14px;height:34px}
+  .mat-cal-tbl td.mat-cal-vazio{background:#f7f5f1;border-color:var(--border)}
+  .mat-cal-tbl td.mat-cal-dest{background:var(--gold-pale);font-weight:700;color:var(--gold);border:2px solid var(--gold-light)}
+  /* Figuras geométricas */
+  .mat-figs{display:flex;flex-wrap:wrap;gap:18px}
+  .mat-fig{display:flex;flex-direction:column;align-items:center;gap:6px;width:170px}
+  .mat-fig svg{display:block}
+  .mat-fig-cap{font-size:12px;color:#000;text-align:center;line-height:1.4}
+  .mat-fig-resp{border-bottom:1.5px solid #777;width:100%;height:22px}
   /* Stub */
   .mat-stub{border:1px solid var(--border-mid);border-radius:8px;padding:14px;background:#fcfbf9}
   .mat-stub-id{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
@@ -1070,6 +1083,14 @@ num_hastes: 2=D,U; 3=C,D,U; 4=M,C,D,U. "mostrar"=exibe as argolas (aluno escreve
 dados: {"numero":253,"modo":"mostrar-para-contar|aluno-representa|compor-de-partes"}
 Cubinho=1, barrinha=10, placa=100, cubo=1000. 1º–4º ano, números até 9999. "mostrar-para-contar"=exibe peças, aluno escreve o número; "aluno-representa"=exibe o número, aluno desenha; "compor-de-partes"=peças com "+", aluno soma.
 
+[calendario]
+dados: {"mes":6,"ano":2025,"destacar_dias":[15,22],"lacunas_dias":[5,12,19,26],"perguntas":["Quantas quintas-feiras há neste mês?","Em que dia da semana cai o dia 20?"]}
+EI–4º ano (tempo, dias da semana, datas). destacar_dias=destacados em dourado; lacunas_dias=ficam em branco p/ o aluno preencher; 1–3 perguntas.
+
+[figuras-geometricas]
+dados: {"figuras":[{"tipo":"retangulo","largura":6,"altura":4,"atividade":"calcular-perimetro"},{"tipo":"circulo","raio":5,"atividade":"identificar-raio-diametro"}]}
+tipos: quadrado, retangulo, triangulo-equilatero, triangulo-retangulo, triangulo-isosceles, pentagono, hexagono, circulo. atividades: nomear, calcular-perimetro, calcular-area, identificar-lados, contar-angulos, identificar-raio-diametro. Dimensões em cm (largura/altura/lado/base/raio). 1º–9º ano.
+
 [sistema-monetario]
 Valores válidos de cédulas: 2, 5, 10, 20, 50, 100. Moedas: 0.05, 0.10, 0.25, 0.50, 1.00.
 "reconhecer-valor": dados={"modo":"reconhecer-valor","composicao":[{"tipo":"cedula","valor":10},{"tipo":"moeda","valor":0.50}]} — exibe notas/moedas, aluno escreve o total.
@@ -1077,11 +1098,11 @@ Valores válidos de cédulas: 2, 5, 10, 20, 50, 100. Moedas: 0.05, 0.10, 0.25, 0
 "compor-valor-alvo": dados={"modo":"compor-valor-alvo","valor_compra":37.75} — aluno circula as notas/moedas certas.
 
 REGRAS DE ESCOLHA POR ANO:
-- EI: só contagem, sequência de padrões, noções de quantidade
-- 1º–2º ano: conta-armada simples (1-2 dígitos), qvl, sequencia-numerica, reta-numerica, material-dourado, abaco
-- 3º–4º ano: conta-armada com reagrupamento, qvl até milhar, material-dourado, abaco, tabela, grafico-barras, relogio, fracoes-visuais, sistema-monetario
-- 5º ano: fracoes-visuais, operações com decimais, grafico-barras, tabela de dupla entrada, sistema-monetario
-- 6º–9º ano: reta-numerica (negativos), grafico-barras, tabela, fracoes, problemas complexos
+- EI: só contagem, sequência de padrões, noções de quantidade, calendario (lúdico)
+- 1º–2º ano: conta-armada simples (1-2 dígitos), qvl, sequencia-numerica, reta-numerica, material-dourado, abaco, calendario, figuras-geometricas
+- 3º–4º ano: conta-armada com reagrupamento, qvl até milhar, material-dourado, abaco, calendario, figuras-geometricas, tabela, grafico-barras, relogio, fracoes-visuais, sistema-monetario
+- 5º ano: fracoes-visuais, operações com decimais, figuras-geometricas, grafico-barras, tabela de dupla entrada, sistema-monetario
+- 6º–9º ano: reta-numerica (negativos), figuras-geometricas, grafico-barras, tabela, fracoes, problemas complexos
 - EJA: problemas com dinheiro (sistema-monetario), tabela de consumo, grafico-barras com dados reais
 - TEMA DINHEIRO/TROCO/SISTEMA MONETÁRIO: SEMPRE use sistema-monetario. Não use tabela para listar cédulas.
 
@@ -1164,6 +1185,46 @@ RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
       else if(modo==='compor-de-partes'){ cap=`<div class="mat-md-cap">Some as partes. Que número o material dourado forma? <span class="mat-abaco-resp"></span></div>`; }
       else { cap=`<div class="mat-md-cap">Que número o material dourado representa? <span class="mat-abaco-resp"></span></div>`; }
       return `<div class="mat-md">${inner?`<div class="mat-md-row">${inner}</div>`:''}${cap}</div>`;
+    },
+    'calendario':function(d){
+      const mes=Math.min(Math.max(parseInt(d.mes)||1,1),12), ano=parseInt(d.ano)||new Date().getFullYear();
+      const dest=new Set(d.destacar_dias||[]), lac=new Set(d.lacunas_dias||[]);
+      const nomesMes=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+      const diasSem=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+      const ini=new Date(ano,mes-1,1).getDay(), total=new Date(ano,mes,0).getDate();
+      let cells=[];for(let i=0;i<ini;i++)cells.push('');for(let dia=1;dia<=total;dia++)cells.push(dia);while(cells.length%7!==0)cells.push('');
+      let h=`<div class="mat-cal"><div class="mat-cal-titulo">${nomesMes[mes-1]} de ${ano}</div><table class="mat-cal-tbl"><thead><tr>${diasSem.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>`;
+      for(let r=0;r<cells.length/7;r++){
+        h+='<tr>';
+        for(let c=0;c<7;c++){const dia=cells[r*7+c];
+          if(dia===''){h+='<td class="mat-cal-vazio"></td>';continue;}
+          h+=`<td class="${dest.has(dia)?'mat-cal-dest':''}">${lac.has(dia)?'':dia}</td>`;}
+        h+='</tr>';
+      }
+      h+='</tbody></table>';
+      const pergs=d.perguntas||[];
+      if(pergs.length) h+=`<div class="mat-tabela-perguntas">${pergs.map((p,i)=>`<div class="mat-tabela-perg">${i+1}. ${esc(p)}<div class="mat-tabela-perg-linha"></div></div>`).join('')}</div>`;
+      return h+'</div>';
+    },
+    'figuras-geometricas':function(d){
+      const figs=d.figuras||[], un='cm', fill='#e8f4f4', stroke='#2d6e6e', tx='font-size="12" fill="#2d6e6e" font-weight="600"';
+      function poly(cx,cy,r,n,rot){let p=[];for(let i=0;i<n;i++){const a=rot+i*2*Math.PI/n;p.push(`${(cx+r*Math.cos(a)).toFixed(1)},${(cy+r*Math.sin(a)).toFixed(1)}`);}return p.join(' ');}
+      function fig(f){
+        const t=f.tipo||'quadrado'; let g='';
+        if(t==='quadrado'){const L=f.lado||f.largura||4;g=`<rect x="35" y="18" width="90" height="90" fill="${fill}" stroke="${stroke}" stroke-width="2"/><text x="80" y="126" text-anchor="middle" ${tx}>${L} ${un}</text>`;}
+        else if(t==='retangulo'){const w=f.largura||6,hh=f.altura||4;g=`<rect x="25" y="28" width="110" height="70" fill="${fill}" stroke="${stroke}" stroke-width="2"/><text x="80" y="118" text-anchor="middle" ${tx}>${w} ${un}</text><text x="14" y="67" text-anchor="middle" ${tx} transform="rotate(-90 14 67)">${hh} ${un}</text>`;}
+        else if(t==='circulo'){const r=f.raio||5;g=`<circle cx="80" cy="62" r="48" fill="${fill}" stroke="${stroke}" stroke-width="2"/><line x1="80" y1="62" x2="128" y2="62" stroke="${stroke}" stroke-width="1.5" stroke-dasharray="3"/><circle cx="80" cy="62" r="2.5" fill="${stroke}"/><text x="104" y="56" text-anchor="middle" ${tx}>r=${r}</text>`;}
+        else if(t==='triangulo-retangulo'){const b=f.base||3,a=f.altura||4;g=`<polygon points="35,108 35,28 125,108" fill="${fill}" stroke="${stroke}" stroke-width="2"/><rect x="35" y="96" width="12" height="12" fill="none" stroke="${stroke}" stroke-width="1"/><text x="80" y="126" text-anchor="middle" ${tx}>${b} ${un}</text><text x="22" y="70" text-anchor="middle" ${tx} transform="rotate(-90 22 70)">${a} ${un}</text>`;}
+        else if(t==='triangulo-equilatero'){const L=f.lado||5;g=`<polygon points="80,20 128,108 32,108" fill="${fill}" stroke="${stroke}" stroke-width="2"/><text x="80" y="126" text-anchor="middle" ${tx}>${L} ${un}</text>`;}
+        else if(t==='triangulo-isosceles'){const b=f.base||6,a=f.altura||5;g=`<polygon points="80,22 130,108 30,108" fill="${fill}" stroke="${stroke}" stroke-width="2"/><line x1="80" y1="22" x2="80" y2="108" stroke="${stroke}" stroke-width="1" stroke-dasharray="3"/><text x="80" y="126" text-anchor="middle" ${tx}>${b} ${un}</text><text x="90" y="70" ${tx}>${a}</text>`;}
+        else if(t==='hexagono'){const L=f.lado||4;g=`<polygon points="${poly(80,62,48,6,Math.PI/6)}" fill="${fill}" stroke="${stroke}" stroke-width="2"/><text x="80" y="128" text-anchor="middle" ${tx}>${L} ${un}</text>`;}
+        else if(t==='pentagono'){const L=f.lado||4;g=`<polygon points="${poly(80,66,46,5,-Math.PI/2)}" fill="${fill}" stroke="${stroke}" stroke-width="2"/><text x="80" y="128" text-anchor="middle" ${tx}>${L} ${un}</text>`;}
+        else {g=`<rect x="35" y="20" width="90" height="90" fill="${fill}" stroke="${stroke}" stroke-width="2"/>`;}
+        const caps={nomear:'Qual é o nome desta figura?','calcular-perimetro':'Calcule o perímetro.','calcular-area':'Calcule a área.','identificar-lados':'Quantos lados tem?','contar-angulos':'Quantos vértices/ângulos tem?','identificar-raio-diametro':'Marque o raio e o diâmetro.'};
+        const cap=caps[f.atividade||'nomear']||'Observe a figura.';
+        return `<div class="mat-fig"><svg viewBox="0 0 160 135" width="160" height="135" style="max-width:100%">${g}</svg><div class="mat-fig-cap">${esc(cap)}</div><div class="mat-fig-resp"></div></div>`;
+      }
+      return `<div class="mat-figs">${figs.map(fig).join('')}</div>`;
     },
     'problema-contextualizado':function(d){
       let txt=subLin(d.enunciado||'');
