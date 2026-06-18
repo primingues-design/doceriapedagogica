@@ -768,6 +768,8 @@
   }
 
   // ════════ RENDER: ATIVIDADE (motor pedagógico) ════════
+  // Quebra linha antes de cada sub-item "a)", "b)", "c)"... para não ficarem grudados no parágrafo.
+  function subLin(raw){return esc(raw||'').replace(/\s+(?=[a-jA-J]\))/g,'<br>');}
   function renderAtividade(d,meta){
     const date=fmtData();const md=d.metadados||{};
     const titulo=md.titulo_atividade||meta.tema;const layout=md.tipo_layout||'multiplas_questoes';
@@ -775,7 +777,7 @@
     const bncc=(md.bncc||[]).join(' · ');
     let html=`<div class="prova-doc">`;
     html+=cabecalhoHTML(titulo,[['📚',meta.componente],['👤',md.publico||meta.publico],bncc?['🔖',bncc]:null].filter(Boolean));
-    if(enun) html+=`<div class="prova-enunciado-geral">${esc(enun)}</div>`;
+    if(enun) html+=`<div class="prova-enunciado-geral">${subLin(enun)}</div>`;
     if(layout==='grade_autoditado'){
       html+=`<div class="grade">`;
       itens.forEach((it,i)=>{
@@ -811,7 +813,7 @@
       ? `<div class="prova-opcoes">${opcoes.map((op,oi)=>`<div class="prova-opcao"><div class="prova-bolha">${String.fromCharCode(65+oi)}</div><span>${esc(String(op).replace(/^[A-Da-d]\)\s*/,''))}</span></div>`).join('')}</div>`
       : `<div class="prova-linhas">${Array(3).fill('<div class="prova-linha"></div>').join('')}</div>`;
     const temImg=!!(it._url||(comImagemLateral&&it.api_image_prompt));
-    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${esc(it.enunciado_item||'')}</div>${resp}</div>`;
+    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${subLin(it.enunciado_item)}</div>${resp}</div>`;
     const imgCol=temImg?`<div class="prova-q-img">${imgFrame(it._url,it.api_image_prompt)}</div>`:'';
     return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div></div>`;
   }
@@ -844,7 +846,7 @@
       resp=`<div class="prova-linhas">${Array(n).fill('<div class="prova-linha"></div>').join('')}</div>`;
     }
     const temImg=!!(q._url||q.api_image_prompt);
-    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${esc(q.enunciado||'')}</div>${resp}</div>`;
+    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${subLin(q.enunciado)}</div>${resp}</div>`;
     const imgCol=temImg?`<div class="prova-q-img">${imgFrame(q._url,q.api_image_prompt)}</div>`:'';
     return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div><div class="prova-q-tipo">${TIPO_LABEL[tipo]||''}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div></div>`;
   }
@@ -1084,7 +1086,7 @@ RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
       return h+`</div>`;
     },
     'problema-contextualizado':function(d){
-      let txt=esc(d.enunciado||'');
+      let txt=subLin(d.enunciado||'');
       (d.dados_destacados||[]).forEach(s=>{txt=txt.replace(esc(s),`<strong class="mat-dado">${esc(s)}</strong>`);});
       let resp='';
       if(d.tipo_resposta==='multipla-escolha'&&d.alternativas&&d.alternativas.length){
