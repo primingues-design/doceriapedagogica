@@ -792,7 +792,9 @@ REGRAS:
       }
 
       quizData = parsed;
-      timerSeconds = parseInt(tempo) || 30;
+      // "Sem tempo" = data-val "0" → 0 segundos (não cai no fallback 30). NaN vira 30.
+      const tps = parseInt(tempo, 10);
+      timerSeconds = isNaN(tps) ? 30 : tps;
       showStartScreen(quizData, nivel, num, dif, tempo);
 
     } catch (err) {
