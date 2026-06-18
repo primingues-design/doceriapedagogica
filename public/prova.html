@@ -303,6 +303,16 @@
   .mat-fig svg{display:block}
   .mat-fig-cap{font-size:12px;color:#000;text-align:center;line-height:1.4}
   .mat-fig-resp{border-bottom:1.5px solid #777;width:100%;height:22px}
+  /* Malha / Plano cartesiano */
+  .mat-malha,.mat-plano{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+  .mat-malha svg,.mat-plano svg{display:block}
+  .mat-malha-cap{font-size:13px;color:#000;line-height:1.5}
+  /* Balança / Termômetro */
+  .mat-balancas,.mat-termos{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start}
+  .mat-balanca{display:flex;flex-direction:column;align-items:center;gap:6px;width:240px}
+  .mat-balanca .mat-abaco-resp{width:100%}
+  .mat-termo{display:flex;flex-direction:column;align-items:center;gap:6px;width:140px}
+  .mat-termo svg{display:block}
   /* Stub */
   .mat-stub{border:1px solid var(--border-mid);border-radius:8px;padding:14px;background:#fcfbf9}
   .mat-stub-id{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
@@ -1084,12 +1094,28 @@ dados: {"numero":253,"modo":"mostrar-para-contar|aluno-representa|compor-de-part
 Cubinho=1, barrinha=10, placa=100, cubo=1000. 1º–4º ano, números até 9999. "mostrar-para-contar"=exibe peças, aluno escreve o número; "aluno-representa"=exibe o número, aluno desenha; "compor-de-partes"=peças com "+", aluno soma.
 
 [calendario]
-dados: {"mes":6,"ano":2025,"destacar_dias":[15,22],"lacunas_dias":[5,12,19,26],"perguntas":["Quantas quintas-feiras há neste mês?","Em que dia da semana cai o dia 20?"]}
-EI–4º ano (tempo, dias da semana, datas). destacar_dias=destacados em dourado; lacunas_dias=ficam em branco p/ o aluno preencher; 1–3 perguntas.
+dados: {"mes":6,"ano":${new Date().getFullYear()},"destacar_dias":[15,22],"lacunas_dias":[5,12,19,26],"perguntas":["Quantas quintas-feiras há neste mês?","Em que dia da semana cai o dia 20?"]}
+EI–4º ano (tempo, dias da semana, datas). Use SEMPRE o ano atual (${new Date().getFullYear()}) salvo pedido contrário. destacar_dias=destacados em dourado; lacunas_dias=ficam em branco p/ o aluno preencher; 1–3 perguntas.
 
 [figuras-geometricas]
 dados: {"figuras":[{"tipo":"retangulo","largura":6,"altura":4,"atividade":"calcular-perimetro"},{"tipo":"circulo","raio":5,"atividade":"identificar-raio-diametro"}]}
 tipos: quadrado, retangulo, triangulo-equilatero, triangulo-retangulo, triangulo-isosceles, pentagono, hexagono, circulo. atividades: nomear, calcular-perimetro, calcular-area, identificar-lados, contar-angulos, identificar-raio-diametro. Dimensões em cm (largura/altura/lado/base/raio). 1º–9º ano.
+
+[malha-quadriculada]
+dados: {"linhas":10,"colunas":10,"tamanho_celula":"md","atividade":"calcular-area|calcular-perimetro|simetria|livre","figura_predefinida":[[1,1],[5,1],[5,4],[1,4]],"instrucao_aluno":"Conte os quadradinhos e calcule a área da figura."}
+3º–9º ano. figura_predefinida=vértices [x,y] em coordenadas de grade (canto sup-esq=0,0) que formam o polígono colorido; omita p/ grade em branco.
+
+[balanca]
+dados: {"itens":[{"lado_esq":["2kg","500g"],"lado_dir":["?"],"estado":"desequilibrada","atividade":"completar"}]}
+1º–7º ano. '?'=valor a descobrir; estado: equilibrada|desequilibrada; atividade: completar|verificar|comparar.
+
+[termometro]
+dados: {"itens":[{"temperatura":37,"modo":"mostrar-ler","escala_min":0,"escala_max":50}]}
+3º–7º ano/EJA. "mostrar-ler"=mostra o mercúrio (aluno lê); "marcar"=escala vazia (aluno marca). Use negativos quando o tema pedir.
+
+[plano-cartesiano]
+dados: {"x_min":-5,"x_max":5,"y_min":-5,"y_max":5,"pontos":[{"x":2,"y":3,"label":"A"}],"atividade":"localizar-pontos|identificar-coordenadas|tracar-reta","instrucao_aluno":"..."}
+6º–9º ano. "localizar-pontos"=grade vazia (aluno plota os pontos da instrução); "identificar-coordenadas"=pontos exibidos (aluno escreve as coordenadas); "tracar-reta"=plota e liga os pontos.
 
 [sistema-monetario]
 Valores válidos de cédulas: 2, 5, 10, 20, 50, 100. Moedas: 0.05, 0.10, 0.25, 0.50, 1.00.
@@ -1099,11 +1125,11 @@ Valores válidos de cédulas: 2, 5, 10, 20, 50, 100. Moedas: 0.05, 0.10, 0.25, 0
 
 REGRAS DE ESCOLHA POR ANO:
 - EI: só contagem, sequência de padrões, noções de quantidade, calendario (lúdico)
-- 1º–2º ano: conta-armada simples (1-2 dígitos), qvl, sequencia-numerica, reta-numerica, material-dourado, abaco, calendario, figuras-geometricas
-- 3º–4º ano: conta-armada com reagrupamento, qvl até milhar, material-dourado, abaco, calendario, figuras-geometricas, tabela, grafico-barras, relogio, fracoes-visuais, sistema-monetario
-- 5º ano: fracoes-visuais, operações com decimais, figuras-geometricas, grafico-barras, tabela de dupla entrada, sistema-monetario
-- 6º–9º ano: reta-numerica (negativos), figuras-geometricas, grafico-barras, tabela, fracoes, problemas complexos
-- EJA: problemas com dinheiro (sistema-monetario), tabela de consumo, grafico-barras com dados reais
+- 1º–2º ano: conta-armada simples (1-2 dígitos), qvl, sequencia-numerica, reta-numerica, material-dourado, abaco, calendario, figuras-geometricas, balanca
+- 3º–4º ano: conta-armada com reagrupamento, qvl até milhar, material-dourado, abaco, calendario, figuras-geometricas, malha-quadriculada, balanca, termometro, tabela, grafico-barras, relogio, fracoes-visuais, sistema-monetario
+- 5º ano: fracoes-visuais, operações com decimais, figuras-geometricas, malha-quadriculada, balanca, termometro, grafico-barras, tabela de dupla entrada, sistema-monetario
+- 6º–9º ano: reta-numerica (negativos), figuras-geometricas, malha-quadriculada, plano-cartesiano, termometro, grafico-barras, tabela, fracoes, problemas complexos
+- EJA: problemas com dinheiro (sistema-monetario), termometro, tabela de consumo, grafico-barras com dados reais
 - TEMA DINHEIRO/TROCO/SISTEMA MONETÁRIO: SEMPRE use sistema-monetario. Não use tabela para listar cédulas.
 
 CONTINUIDADE: ao final, proponha "proximo_passo" — pense como uma especialista planejando a progressão do aluno: qual é a evolução pedagógica NATURAL depois deste conteúdo e ano. Texto curto, acolhedor, em 2ª pessoa (fale com o professor).
@@ -1225,6 +1251,81 @@ RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
         return `<div class="mat-fig"><svg viewBox="0 0 160 135" width="160" height="135" style="max-width:100%">${g}</svg><div class="mat-fig-cap">${esc(cap)}</div><div class="mat-fig-resp"></div></div>`;
       }
       return `<div class="mat-figs">${figs.map(fig).join('')}</div>`;
+    },
+    'malha-quadriculada':function(d){
+      const L=Math.min(parseInt(d.linhas)||10,20), C=Math.min(parseInt(d.colunas)||10,20);
+      const cs={sm:18,md:24,lg:30}[d.tamanho_celula||'md']||24, pad=2;
+      const W=C*cs+pad*2, H=L*cs+pad*2;
+      let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="max-width:100%;height:auto">`;
+      for(let i=0;i<=C;i++)s+=`<line x1="${pad+i*cs}" y1="${pad}" x2="${pad+i*cs}" y2="${pad+L*cs}" stroke="#cfd8d8" stroke-width="1"/>`;
+      for(let j=0;j<=L;j++)s+=`<line x1="${pad}" y1="${pad+j*cs}" x2="${pad+C*cs}" y2="${pad+j*cs}" stroke="#cfd8d8" stroke-width="1"/>`;
+      const fig=d.figura_predefinida;
+      if(Array.isArray(fig)&&fig.length>=3){
+        const pts=fig.map(p=>{const x=Array.isArray(p)?p[0]:p.x,y=Array.isArray(p)?p[1]:p.y;return `${pad+x*cs},${pad+y*cs}`;}).join(' ');
+        s+=`<polygon points="${pts}" fill="rgba(45,110,110,.22)" stroke="#2d6e6e" stroke-width="2"/>`;
+      }
+      s+=`</svg>`;
+      const inst=d.instrucao_aluno?`<div class="mat-malha-cap">${esc(d.instrucao_aluno)}</div>`:'';
+      return `<div class="mat-malha">${inst}${s}</div>`;
+    },
+    'balanca':function(d){
+      const itens=d.itens||[];
+      function bal(it){
+        const esq=(it.lado_esq||[]).join(' + ')||'?', dir=(it.lado_dir||[]).join(' + ')||'?';
+        const tilt=it.estado==='desequilibrada'?-8:0, cx=120;
+        let s=`<svg viewBox="0 0 240 150" width="240" height="150" style="max-width:100%">`;
+        s+=`<polygon points="${cx-22},135 ${cx+22},135 ${cx},58" fill="#b98a4a"/><rect x="${cx-32}" y="135" width="64" height="7" rx="3" fill="#8a5a2b"/>`;
+        s+=`<g transform="rotate(${tilt} ${cx} 56)">`;
+        s+=`<line x1="${cx-90}" y1="56" x2="${cx+90}" y2="56" stroke="#8a5a2b" stroke-width="5" stroke-linecap="round"/><circle cx="${cx}" cy="56" r="5" fill="#8a5a2b"/>`;
+        [[cx-90,esq],[cx+90,dir]].forEach(([px,txt])=>{
+          s+=`<line x1="${px}" y1="56" x2="${px}" y2="82" stroke="#b98a4a" stroke-width="1.5"/>`;
+          s+=`<path d="M${px-34},82 Q${px},108 ${px+34},82" fill="#e8f4f4" stroke="#2d6e6e" stroke-width="2"/>`;
+          s+=`<text x="${px}" y="99" text-anchor="middle" font-size="12" font-weight="700" fill="#2d6e6e">${esc(txt)}</text>`;
+        });
+        s+=`</g></svg>`;
+        const caps={completar:'Descubra o valor de "?" para a balança equilibrar.',verificar:'A balança está equilibrada? Justifique.',comparar:'Qual lado é mais pesado?'};
+        return `<div class="mat-balanca">${s}<div class="mat-fig-cap">${esc(caps[it.atividade||'verificar']||'')}</div><div class="mat-abaco-resp"></div></div>`;
+      }
+      return `<div class="mat-balancas">${itens.map(bal).join('')}</div>`;
+    },
+    'termometro':function(d){
+      const itens=d.itens||[];
+      function term(it){
+        const tmin=it.escala_min!=null?it.escala_min:0, tmax=it.escala_max!=null?it.escala_max:50;
+        const temp=Number(it.temperatura)||0, modo=it.modo||'mostrar-ler';
+        const topY=14,botY=168,tubeX=30,tubeW=14, range=(tmax-tmin)||1;
+        const toY=v=>botY-((v-tmin)/range)*(botY-topY);
+        let s=`<svg viewBox="0 0 100 196" width="100" height="196" style="max-width:100%">`;
+        s+=`<rect x="${tubeX}" y="${topY}" width="${tubeW}" height="${botY-topY}" rx="${tubeW/2}" fill="#fff" stroke="#999" stroke-width="2"/>`;
+        s+=`<circle cx="${tubeX+tubeW/2}" cy="${botY+10}" r="15" fill="${modo==='marcar'?'#fff':'#d95f3b'}" stroke="#999" stroke-width="2"/>`;
+        if(modo!=='marcar'){const y=toY(temp);s+=`<rect x="${tubeX+2}" y="${y}" width="${tubeW-4}" height="${botY-y}" fill="#d95f3b"/>`;}
+        const step=range<=20?2:range<=60?5:10;
+        for(let v=tmin;v<=tmax;v+=step){const y=toY(v);s+=`<line x1="${tubeX+tubeW}" y1="${y}" x2="${tubeX+tubeW+5}" y2="${y}" stroke="#666" stroke-width="1"/><text x="${tubeX+tubeW+8}" y="${y+3}" font-size="9" fill="#444">${v}°</text>`;}
+        s+=`</svg>`;
+        const cap=modo==='marcar'?`Marque <strong>${temp}°C</strong> no termômetro.`:`Qual a temperatura? <span class="mat-abaco-resp" style="min-width:54px"></span>`;
+        return `<div class="mat-termo">${s}<div class="mat-fig-cap">${cap}</div></div>`;
+      }
+      return `<div class="mat-termos">${itens.map(term).join('')}</div>`;
+    },
+    'plano-cartesiano':function(d){
+      const xmin=d.x_min!=null?d.x_min:-5, xmax=d.x_max!=null?d.x_max:5, ymin=d.y_min!=null?d.y_min:-5, ymax=d.y_max!=null?d.y_max:5;
+      const pts=d.pontos||[], atv=d.atividade||'localizar-pontos', cell=24, pad=22;
+      const W=(xmax-xmin)*cell+pad*2, H=(ymax-ymin)*cell+pad*2;
+      const toX=x=>pad+(x-xmin)*cell, toY=y=>pad+(ymax-y)*cell;
+      let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="max-width:100%;height:auto">`;
+      for(let x=xmin;x<=xmax;x++)s+=`<line x1="${toX(x)}" y1="${pad}" x2="${toX(x)}" y2="${H-pad}" stroke="#e4e9e9" stroke-width="1"/>`;
+      for(let y=ymin;y<=ymax;y++)s+=`<line x1="${pad}" y1="${toY(y)}" x2="${W-pad}" y2="${toY(y)}" stroke="#e4e9e9" stroke-width="1"/>`;
+      s+=`<line x1="${toX(xmin)}" y1="${toY(0)}" x2="${toX(xmax)}" y2="${toY(0)}" stroke="#333" stroke-width="1.8"/><line x1="${toX(0)}" y1="${toY(ymin)}" x2="${toX(0)}" y2="${toY(ymax)}" stroke="#333" stroke-width="1.8"/>`;
+      s+=`<polygon points="${W-pad},${toY(0)} ${W-pad-7},${toY(0)-4} ${W-pad-7},${toY(0)+4}" fill="#333"/><polygon points="${toX(0)},${pad} ${toX(0)-4},${pad+7} ${toX(0)+4},${pad+7}" fill="#333"/>`;
+      for(let x=xmin;x<=xmax;x++){if(x!==0)s+=`<text x="${toX(x)}" y="${toY(0)+12}" text-anchor="middle" font-size="9" fill="#666">${x}</text>`;}
+      for(let y=ymin;y<=ymax;y++){if(y!==0)s+=`<text x="${toX(0)-7}" y="${toY(y)+3}" text-anchor="end" font-size="9" fill="#666">${y}</text>`;}
+      if(atv!=='localizar-pontos'){
+        if((atv==='tracar-reta'||atv==='plotar-funcao')&&pts.length>1)s+=`<polyline points="${pts.map(p=>`${toX(p.x)},${toY(p.y)}`).join(' ')}" fill="none" stroke="#2d6e6e" stroke-width="2"/>`;
+        pts.forEach(p=>{s+=`<circle cx="${toX(p.x)}" cy="${toY(p.y)}" r="4" fill="#d95f3b"/>${p.label?`<text x="${toX(p.x)+6}" y="${toY(p.y)-6}" font-size="11" font-weight="700" fill="#d95f3b">${esc(p.label)}</text>`:''}`;});
+      }
+      s+=`</svg>`;
+      const inst=d.instrucao_aluno?`<div class="mat-malha-cap">${esc(d.instrucao_aluno)}</div>`:'';
+      return `<div class="mat-plano">${inst}${s}</div>`;
     },
     'problema-contextualizado':function(d){
       let txt=subLin(d.enunciado||'');
