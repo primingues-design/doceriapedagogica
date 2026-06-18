@@ -230,6 +230,7 @@
   .mat-espaco-quad{display:grid;background:#ddd;gap:1px}
   .mat-espaco-quad-cell{background:white;aspect-ratio:1}
   /* Conta armada */
+  .mat-conta-titulo{font-size:14px;font-weight:600;color:#000;margin-bottom:12px}
   .mat-contas-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:20px 28px}
   .mat-conta{font-family:monospace;font-size:18px;display:inline-block}
   .mat-conta-row{display:flex;justify-content:flex-end;align-items:center;gap:6px;min-height:28px}
@@ -807,7 +808,7 @@
 
   // ════════ RENDER: ATIVIDADE (motor pedagógico) ════════
   // Quebra linha antes de cada sub-item "a)", "b)", "c)"... para não ficarem grudados no parágrafo.
-  function subLin(raw){return esc(raw||'').replace(/\s+(?=[a-jA-J]\))/g,'<br>');}
+  function subLin(raw){return esc(raw||'').replace(/\s+(?=\(?[a-jA-J]\))/g,'<br>');}
   function renderAtividade(d,meta){
     const date=fmtData();const md=d.metadados||{};
     const titulo=md.titulo_atividade||meta.tema;const layout=md.tipo_layout||'multiplas_questoes';
@@ -1280,7 +1281,7 @@ RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
         [[cx-90,esq],[cx+90,dir]].forEach(([px,txt])=>{
           s+=`<line x1="${px}" y1="56" x2="${px}" y2="82" stroke="#b98a4a" stroke-width="1.5"/>`;
           s+=`<path d="M${px-34},82 Q${px},108 ${px+34},82" fill="#e8f4f4" stroke="#2d6e6e" stroke-width="2"/>`;
-          s+=`<text x="${px}" y="99" text-anchor="middle" font-size="12" font-weight="700" fill="#2d6e6e">${esc(txt)}</text>`;
+          s+=`<text x="${px}" y="90" text-anchor="middle" font-size="12" font-weight="700" fill="#2d6e6e">${esc(txt)}</text>`;
         });
         s+=`</g></svg>`;
         const caps={completar:'Descubra o valor de "?" para a balança equilibrar.',verificar:'A balança está equilibrada? Justifique.',comparar:'Qual lado é mais pesado?'};
@@ -1300,7 +1301,7 @@ RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
         s+=`<circle cx="${tubeX+tubeW/2}" cy="${botY+10}" r="15" fill="${modo==='marcar'?'#fff':'#d95f3b'}" stroke="#999" stroke-width="2"/>`;
         if(modo!=='marcar'){const y=toY(temp);s+=`<rect x="${tubeX+2}" y="${y}" width="${tubeW-4}" height="${botY-y}" fill="#d95f3b"/>`;}
         const step=range<=20?2:range<=60?5:10;
-        for(let v=tmin;v<=tmax;v+=step){const y=toY(v);s+=`<line x1="${tubeX+tubeW}" y1="${y}" x2="${tubeX+tubeW+5}" y2="${y}" stroke="#666" stroke-width="1"/><text x="${tubeX+tubeW+8}" y="${y+3}" font-size="9" fill="#444">${v}°</text>`;}
+        for(let v=tmin;v<=tmax;v+=step){const y=toY(v);s+=`<line x1="${tubeX+tubeW}" y1="${y}" x2="${tubeX+tubeW+4}" y2="${y}" stroke="#999" stroke-width="1"/><text x="${tubeX+tubeW+12}" y="${y+3}" font-size="9" fill="#444">${v}°</text>`;}
         s+=`</svg>`;
         const cap=modo==='marcar'?`Marque <strong>${temp}°C</strong> no termômetro.`:`Qual a temperatura? <span class="mat-abaco-resp" style="min-width:54px"></span>`;
         return `<div class="mat-termo">${s}<div class="mat-fig-cap">${cap}</div></div>`;
@@ -1351,9 +1352,12 @@ RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
       return `<div class="mat-espaco"><div class="mat-espaco-titulo">${esc(d.titulo||'Resolva aqui:')}</div>${inner}</div>`;
     },
     'conta-armada':function(d){
-      const opSym={adicao:'+',subtracao:'−',multiplicacao:'×',divisao:'÷'}[d.operacao||'adicao']||'+';
+      const op=d.operacao||'adicao';
+      const opSym={adicao:'+',subtracao:'−',multiplicacao:'×',divisao:'÷'}[op]||'+';
+      const opNome={adicao:'as adições',subtracao:'as subtrações',multiplicacao:'as multiplicações',divisao:'as divisões'}[op]||'';
+      const titulo=esc(d.titulo||`Calcule${opNome?' '+opNome:''}:`);
       const itens=d.itens||[];
-      let html=`<div class="mat-contas-wrap">`;
+      let html=`<div class="mat-conta-titulo">${titulo}</div><div class="mat-contas-wrap">`;
       itens.forEach(item=>{
         const parc=(item.parcelas||[item.fator1||0,item.fator2||0]).map(p=>parseInt(p)||0);
         const maxD=Math.max(...parc.map(p=>String(p).length),2);
