@@ -275,6 +275,21 @@
   .mat-decom-eq{font-size:20px;color:var(--teal);font-weight:700}
   .mat-decom-op{font-size:20px;color:var(--gold)}
   .mat-decom-box{padding:6px 14px;border:2px solid var(--teal);border-radius:8px;font-size:16px;font-weight:700}
+  /* Ábaco */
+  .mat-abaco{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .mat-abaco svg{display:block}
+  .mat-abaco-cap{font-size:13px;color:#000;text-align:center}
+  .mat-abaco-resp{display:inline-block;border-bottom:1.5px solid #777;min-width:70px;height:18px;vertical-align:bottom}
+  /* Material dourado */
+  .mat-md{display:flex;flex-direction:column;gap:12px}
+  .mat-md-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px}
+  .mat-md-grupo{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .mat-md-pecas{display:flex;flex-wrap:wrap;align-items:flex-end;gap:3px;justify-content:center;max-width:260px}
+  .mat-md-pecas svg{display:block}
+  .mat-md-label{font-size:11px;color:var(--text-muted);font-weight:600}
+  .mat-md-mais{font-size:22px;color:var(--gold);align-self:center;font-weight:700}
+  .mat-md-cap{font-size:13px;color:#000}
+  .mat-md-espaco{border:1.5px dashed #bbb;border-radius:8px;height:130px;background:#fafafa}
   /* Stub */
   .mat-stub{border:1px solid var(--border-mid);border-radius:8px;padding:14px;background:#fcfbf9}
   .mat-stub-id{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
@@ -1047,6 +1062,14 @@ dados: {"numeros":[456,78,1203]}
 [tabuada-multiplos]
 dados: {"numero":7,"total_linhas":10,"lacunas":[2,5,8]}
 
+[abaco]
+dados: {"numero":347,"num_hastes":3,"modo":"mostrar|aluno-completa","mostrar_rotulos":true}
+num_hastes: 2=D,U; 3=C,D,U; 4=M,C,D,U. "mostrar"=exibe as argolas (aluno escreve o número); "aluno-completa"=aluno desenha as argolas do número dado. 1º–4º ano, valor posicional.
+
+[material-dourado]
+dados: {"numero":253,"modo":"mostrar-para-contar|aluno-representa|compor-de-partes"}
+Cubinho=1, barrinha=10, placa=100, cubo=1000. 1º–4º ano, números até 9999. "mostrar-para-contar"=exibe peças, aluno escreve o número; "aluno-representa"=exibe o número, aluno desenha; "compor-de-partes"=peças com "+", aluno soma.
+
 [sistema-monetario]
 Valores válidos de cédulas: 2, 5, 10, 20, 50, 100. Moedas: 0.05, 0.10, 0.25, 0.50, 1.00.
 "reconhecer-valor": dados={"modo":"reconhecer-valor","composicao":[{"tipo":"cedula","valor":10},{"tipo":"moeda","valor":0.50}]} — exibe notas/moedas, aluno escreve o total.
@@ -1055,8 +1078,8 @@ Valores válidos de cédulas: 2, 5, 10, 20, 50, 100. Moedas: 0.05, 0.10, 0.25, 0
 
 REGRAS DE ESCOLHA POR ANO:
 - EI: só contagem, sequência de padrões, noções de quantidade
-- 1º–2º ano: conta-armada simples (1-2 dígitos), qvl, sequencia-numerica, reta-numerica
-- 3º–4º ano: conta-armada com reagrupamento, qvl até milhar, tabela, grafico-barras, relogio, fracoes-visuais, sistema-monetario
+- 1º–2º ano: conta-armada simples (1-2 dígitos), qvl, sequencia-numerica, reta-numerica, material-dourado, abaco
+- 3º–4º ano: conta-armada com reagrupamento, qvl até milhar, material-dourado, abaco, tabela, grafico-barras, relogio, fracoes-visuais, sistema-monetario
 - 5º ano: fracoes-visuais, operações com decimais, grafico-barras, tabela de dupla entrada, sistema-monetario
 - 6º–9º ano: reta-numerica (negativos), grafico-barras, tabela, fracoes, problemas complexos
 - EJA: problemas com dinheiro (sistema-monetario), tabela de consumo, grafico-barras com dados reais
@@ -1099,6 +1122,48 @@ RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
       h+=`<div class="mat-explica-texto">${txt}</div>`;
       if(d.exemplo) h+=`<div class="mat-explica-exemplo"><div class="mat-explica-exemplo-label">Exemplo</div>${esc(d.exemplo)}</div>`;
       return h+`</div>`;
+    },
+    'abaco':function(d){
+      const num=parseInt(d.numero)||0;
+      const nh=Math.min(Math.max(parseInt(d.num_hastes)||3,2),5);
+      const modo=d.modo||'mostrar', rot=d.mostrar_rotulos!==false;
+      const labels=['DM','M','C','D','U'].slice(-nh);
+      const cor={U:'#2d6e6e',D:'#c8963e',C:'#d95f3b',M:'#6c63d4',DM:'#4a9b9b'};
+      const digits=String(num).padStart(nh,'0').slice(-nh).split('').map(Number);
+      const gap=62,padX=34,topY=16,rodH=150,beadH=13,beadW=42;
+      const W=padX*2+(nh-1)*gap, baseY=topY+rodH, H=baseY+(rot?34:16);
+      let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto">`;
+      s+=`<rect x="10" y="${baseY}" width="${W-20}" height="10" rx="4" fill="#8a5a2b"/>`;
+      for(let i=0;i<nh;i++){
+        const x=padX+i*gap, c=cor[labels[i]]||'#666';
+        s+=`<line x1="${x}" y1="${topY}" x2="${x}" y2="${baseY}" stroke="#b98a4a" stroke-width="4"/><circle cx="${x}" cy="${topY}" r="4" fill="#b98a4a"/>`;
+        if(modo!=='aluno-completa'){
+          for(let k=0;k<digits[i];k++){const cy=baseY-10-k*beadH-beadH/2;s+=`<ellipse cx="${x}" cy="${cy}" rx="${beadW/2}" ry="${beadH/2-1}" fill="${c}" stroke="rgba(0,0,0,.18)"/>`;}
+        }
+        if(rot){s+=`<rect x="${x-16}" y="${baseY+13}" width="32" height="18" rx="4" fill="${c}"/><text x="${x}" y="${baseY+26}" text-anchor="middle" font-size="12" font-weight="700" fill="white">${labels[i]}</text>`;}
+      }
+      s+=`</svg>`;
+      const cap=modo==='aluno-completa'
+        ? `<div class="mat-abaco-cap">Represente o número <strong>${num}</strong> desenhando as argolas em cada haste.</div>`
+        : `<div class="mat-abaco-cap">Que número está representado no ábaco? <span class="mat-abaco-resp"></span></div>`;
+      return `<div class="mat-abaco">${s}${cap}</div>`;
+    },
+    'material-dourado':function(d){
+      const num=parseInt(d.numero)||0, modo=d.modo||'mostrar-para-contar';
+      const m=Math.floor(num/1000),c=Math.floor((num%1000)/100),dz=Math.floor((num%100)/10),u=num%10;
+      const U=7;
+      const unit=()=>`<svg width="${U}" height="${U}"><rect width="${U}" height="${U}" fill="#e8b86d" stroke="#a9772e" stroke-width="0.7"/></svg>`;
+      const bar=()=>{let g='';for(let i=1;i<10;i++)g+=`<line x1="0" y1="${i*U}" x2="${U}" y2="${i*U}" stroke="#a9772e" stroke-width="0.6"/>`;return `<svg width="${U}" height="${U*10}"><rect width="${U}" height="${U*10}" fill="#e8b86d" stroke="#a9772e" stroke-width="0.8"/>${g}</svg>`;};
+      const plate=()=>{let g='';for(let i=1;i<10;i++)g+=`<line x1="${i*U}" y1="0" x2="${i*U}" y2="${U*10}" stroke="#a9772e" stroke-width="0.5"/><line x1="0" y1="${i*U}" x2="${U*10}" y2="${i*U}" stroke="#a9772e" stroke-width="0.5"/>`;return `<svg width="${U*10}" height="${U*10}"><rect width="${U*10}" height="${U*10}" fill="#e8b86d" stroke="#a9772e" stroke-width="0.9"/>${g}</svg>`;};
+      const cube=()=>{const s=U*10,o=U*3;return `<svg width="${s+o}" height="${s+o}"><polygon points="0,${o} ${o},0 ${s+o},0 ${s},${o}" fill="#d9a64e" stroke="#a9772e" stroke-width="0.8"/><polygon points="${s},${o} ${s+o},0 ${s+o},${s} ${s},${s+o}" fill="#c89038" stroke="#a9772e" stroke-width="0.8"/><rect x="0" y="${o}" width="${s}" height="${s}" fill="#e8b86d" stroke="#a9772e" stroke-width="0.8"/></svg>`;};
+      const grupo=(n,builder,nome)=>{ if(n<=0) return ''; let pcs=''; for(let i=0;i<n;i++)pcs+=builder(); return `<div class="mat-md-grupo"><div class="mat-md-pecas">${pcs}</div><div class="mat-md-label">${n} ${nome}${n>1?'s':''}</div></div>`; };
+      const sep=modo==='compor-de-partes'?'<div class="mat-md-mais">+</div>':'';
+      let inner=[grupo(m,cube,'milhar'),grupo(c,plate,'centena'),grupo(dz,bar,'dezena'),grupo(u,unit,'unidade')].filter(Boolean).join(sep);
+      let cap;
+      if(modo==='aluno-representa'){ inner=`<div class="mat-md-espaco"></div>`; cap=`<div class="mat-md-cap">Desenhe o material dourado que representa o número <strong>${num}</strong>.</div>`; }
+      else if(modo==='compor-de-partes'){ cap=`<div class="mat-md-cap">Some as partes. Que número o material dourado forma? <span class="mat-abaco-resp"></span></div>`; }
+      else { cap=`<div class="mat-md-cap">Que número o material dourado representa? <span class="mat-abaco-resp"></span></div>`; }
+      return `<div class="mat-md">${inner?`<div class="mat-md-row">${inner}</div>`:''}${cap}</div>`;
     },
     'problema-contextualizado':function(d){
       let txt=subLin(d.enunciado||'');
