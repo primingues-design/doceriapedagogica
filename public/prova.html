@@ -151,6 +151,10 @@
 
   .img-frame{border-radius:10px;overflow:hidden;background:#f4f2ee;display:flex;align-items:center;justify-content:center}
   .img-frame img{width:100%;height:100%;object-fit:cover;display:block}
+  /* mapas/figuras da biblioteca: mostram inteiros, sem cortar nem distorcer */
+  .img-frame.img-asset{background:#fff}
+  .img-frame.img-asset img{object-fit:contain}
+  .grade-card .img-frame.img-asset,.prova-q-img .img-frame.img-asset,.cena-principal.img-asset{aspect-ratio:auto}
   .img-placeholder{border:1.5px dashed var(--border-mid);color:var(--text-muted);flex-direction:column;gap:6px;text-align:center;padding:12px;background:#fcfbf9}
   .img-placeholder span{font-size:30px;opacity:0.5}
   .img-placeholder small{font-size:10px;line-height:1.3;max-width:90%}
@@ -835,13 +839,16 @@
   }
 
   function imgFrame(url,prompt,extraClass){
-    if(url) return `<div class="img-frame ${extraClass||''}"><img src="${url}" alt=""></div>`;
+    // imagens da biblioteca curada (mapas etc.) mostram inteiras, sem corte
+    const isAsset = typeof url==='string' && url.indexOf('/assets/')===0;
+    const cls = `${extraClass||''}${isAsset?' img-asset':''}`.trim();
+    if(url) return `<div class="img-frame ${cls}"><img src="${url}" alt=""></div>`;
     return `<div class="img-frame img-placeholder ${extraClass||''}"><span>🖼️</span><small>${esc((prompt||'imagem').slice(0,70))}</small></div>`;
   }
 
   // ════════ RENDER: ATIVIDADE (motor pedagógico) ════════
   // Quebra linha antes de cada sub-item "a)", "b)", "c)"... para não ficarem grudados no parágrafo.
-  function subLin(raw){return esc(raw||'').replace(/\s+(?=\(?[a-jA-J]\))/g,'<br>');}
+  function subLin(raw){return esc(raw||'').replace(/\r?\n/g,'<br>').replace(/\s+(?=\(?[a-jA-J]\))/g,'<br>');}
   function renderAtividade(d,meta){
     const date=fmtData();const md=d.metadados||{};
     const titulo=md.titulo_atividade||meta.tema;const layout=md.tipo_layout||'multiplas_questoes';
@@ -985,10 +992,20 @@
     if(!/Geografia/i.test(componente||'')) return '';
     const linhas=Object.entries(lib).map(([k,a])=>`  • "${k}" → ${a.titulo}. Quando usar: ${a.uso_pedagogico} (público: ${(a.publico||[]).join('/')||'todos'}).`).join('\n');
     if(!linhas) return '';
-    return `\nBIBLIOTECA DE MAPAS/IMAGENS CORRETAS (use SEMPRE que precisar de mapa, região ou bioma — eles PRECISAM ser exatos):
-Mapas e biomas NUNCA devem ser gerados pela IA de imagem (ela erra fronteiras e escreve em inglês). Quando o item pedir um destes, deixe "api_image_prompt" VAZIO e preencha "asset_key" com a chave exata desta lista:
+    return `\n════ DECISÃO DE IMAGEM EM GEOGRAFIA (REGRA OBRIGATÓRIA) ════
+Você tem DUAS fontes de imagem e precisa escolher a certa para cada item:
+
+(1) BIBLIOTECA DE MAPAS CORRETOS — para tudo que é cartográfico/factual. Mapas, regiões, estados, fronteiras e biomas PRECISAM ser exatos; a IA de imagem ERRA geografia (inventa fronteiras, escreve em inglês, troca o Brasil pela América do Sul). Então, SEMPRE que o item envolver mapa/região/estado/bioma, deixe "api_image_prompt" VAZIO e use "asset_key" com a chave certa abaixo:
 ${linhas}
-Escolha a chave mais adequada ao público e ao objetivo (anos iniciais/EJA preferem o bioma ILUSTRADO; leitura de mapa temático combina com o bioma técnico). Para imagens NÃO factuais (cenas do cotidiano, paisagens genéricas), continue usando "api_image_prompt" normalmente. Cada item usa OU "asset_key" OU "api_image_prompt", nunca os dois.\n`;
+
+(2) IA DE IMAGEM ("api_image_prompt") — APENAS para cenas NÃO cartográficas e genéricas (ex.: crianças, cotidiano, trabalho, paisagem ilustrativa). NUNCA para mapas.
+
+REGRAS QUE NÃO PODEM SER QUEBRADAS:
+• Se o enunciado disser "observe/veja/analise o mapa", "no mapa", "localize", "região", "estado", "bioma", "fronteira" → a imagem TEM de ser um "asset_key" da biblioteca. É PROIBIDO usar uma foto gerada (crianças, objetos) e ainda assim escrever "observe o mapa".
+• COERÊNCIA TEXTO↔IMAGEM é obrigatória: o enunciado deve falar exatamente do que a imagem mostra. Se você gerar uma foto de crianças por "api_image_prompt", o enunciado deve se referir às crianças — nunca a "um mapa".
+• Escolha do mapa: "mapa político / nome dos estados / localize o estado / em que região fica / estados vizinhos" → use o mapa POLÍTICO COM NOMES. "pinte/identifique as 5 regiões" → mapa de REGIÕES COLORIDAS. "pinte livremente / crie sua legenda" → CONTORNO sem nomes. Biomas em anos iniciais/EJA → bioma ILUSTRADO; leitura de mapa temático → bioma técnico.
+• Cada item usa OU "asset_key" OU "api_image_prompt", nunca os dois.
+• Listas de alternativas/itens para o aluno preencher ou ligar (ex.: "[ ] ___ Região Norte") devem vir com CADA opção em sua própria linha — separe-as com quebra de linha (\\n) dentro do texto, nunca tudo na mesma linha.\n`;
   }
 
   function buildPromptAtividade(o){
