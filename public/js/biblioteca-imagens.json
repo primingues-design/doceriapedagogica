@@ -1,0 +1,37 @@
+{
+  "_doc": "Biblioteca de imagens CURADAS (corretas). Quando a atividade precisa de uma imagem factual exata (mapas, biomas, cartografia), a IA escolhe uma 'chave' daqui em vez de gerar pelo Flux. Geração por IA fica só para cenas genericas. Foco inicial: Geografia / EJA.",
+  "geografia": {
+    "brasil_regioes_cores": {
+      "arquivo": "/assets/geografia/brasil-regioes-cores.svg",
+      "titulo": "Mapa do Brasil — 5 regiões coloridas",
+      "descricao": "Mapa político com as 5 regiões do IBGE em cores diferentes, legenda das regiões e nomes dos estados.",
+      "uso_pedagogico": "Identificar e nomear as 5 regiões; localizar estados; ligar estado a região; ler legenda de cores.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "brasil_contorno_estados": {
+      "arquivo": "/assets/geografia/brasil-contorno-estados.svg",
+      "titulo": "Mapa do Brasil — contorno com estados nomeados (para pintar/marcar)",
+      "descricao": "Mapa do Brasil só com o contorno em preto e branco e o nome de cada estado. Sem cores — ideal para o aluno pintar, circular ou localizar.",
+      "uso_pedagogico": "Pintar regiões, circular estados, localizar capital/Distrito Federal, criar legenda própria.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": true
+    },
+    "biomas_ilustrado": {
+      "arquivo": "/assets/geografia/biomas-ilustrado.png",
+      "titulo": "Biomas brasileiros — mapa ilustrado com fauna e flora",
+      "descricao": "Mapa do Brasil ilustrado com a vegetação e os animais típicos de cada bioma (Amazônia, Cerrado, Caatinga, Pantanal, Mata Atlântica, Pampa), com legenda descritiva.",
+      "uso_pedagogico": "Reconhecer biomas pela paisagem e fauna; observar e descrever; associar animal/vegetação ao bioma. PREFERIR em anos iniciais e EJA (concreto e encantador).",
+      "publico": ["fund1", "eja"],
+      "colorir": false
+    },
+    "biomas_mapa": {
+      "arquivo": "/assets/geografia/biomas-mapa.png",
+      "titulo": "Biomas brasileiros — mapa temático de fronteiras",
+      "descricao": "Mapa do Brasil com os biomas delimitados por cores e legenda. Visão cartográfica/territorial.",
+      "uso_pedagogico": "Leitura de mapa temático; relacionar bioma a região; comparar extensão dos biomas. Mais indicado para fund. 2.",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    }
+  }
+}

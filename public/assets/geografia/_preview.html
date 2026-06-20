@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Preview — Mapas do Brasil (SVG)</title>
+<style>
+  body{font-family:system-ui,Arial,sans-serif;margin:24px;color:#222}
+  h1{font-size:20px}
+  .grid{display:flex;gap:32px;flex-wrap:wrap}
+  .card{border:1px solid #ddd;border-radius:12px;padding:16px;max-width:460px}
+  .card h2{font-size:15px;margin:0 0 10px}
+  .card img{width:100%;height:auto;display:block}
+  .leg{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:13px}
+  .leg span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:14px;height:14px;border-radius:3px;display:inline-block}
+  p.dica{color:#666;font-size:13px}
+  @media print{.card{border:none;page-break-inside:avoid}}
+</style>
+</head>
+<body>
+  <h1>Preview — Mapas do Brasil em SVG (fronteiras exatas, IBGE)</h1>
+  <p class="dica">Dica: dê <b>Ctrl+P</b> para testar como fica impresso. Os mapas são vetoriais — ampliam sem borrar.</p>
+  <div class="grid">
+    <div class="card">
+      <h2>1) Contorno com estados — para pintar / marcar</h2>
+      <img src="brasil-contorno-estados.svg" alt="Mapa do Brasil contorno dos estados">
+    </div>
+    <div class="card">
+      <h2>2) Regiões coloridas (5 regiões do IBGE)</h2>
+      <img src="brasil-regioes-cores.svg" alt="Mapa do Brasil 5 regiões">
+      <div class="leg">
+        <span><i class="sw" style="background:#2e9e4f"></i>Norte</span>
+        <span><i class="sw" style="background:#2f8fd6"></i>Nordeste</span>
+        <span><i class="sw" style="background:#9b59b6"></i>Centro-Oeste</span>
+        <span><i class="sw" style="background:#e74c3c"></i>Sudeste</span>
+        <span><i class="sw" style="background:#f4c020"></i>Sul</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

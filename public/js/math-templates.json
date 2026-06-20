@@ -1,0 +1,848 @@
+{
+  "versao": "1.0",
+  "disciplina": "matematica",
+  "descricao": "Biblioteca interna de templates pedagógicos de Matemática. Não exibida ao professor. A IA consulta este schema para escolher automaticamente os blocos mais adequados ao objetivo de aprendizagem, ano escolar e tema informados. Cada template mapeia para uma função SVG/HTML determinística no código — a IA NUNCA desenha visuais matemáticos, apenas fornece os dados.",
+  "templates": [
+
+    {
+      "id": "contagem-objetos",
+      "nome": "Quadro de Contagem / Correspondência",
+      "objetivo": "Estabelecer correspondência um-a-um entre objetos e numerais. Base da noção de quantidade.",
+      "quando_usar": [
+        "Ed. Infantil ou 1º ano",
+        "tema é quantidade, número, contar",
+        "objetivo é reconhecer numerais ou associar quantidade a símbolo"
+      ],
+      "quando_evitar": [
+        "a partir do 3º ano (conteúdo já consolidado)",
+        "quando objetivo é operar com números (use conta-armada ou problema-contextualizado)"
+      ],
+      "niveis": ["ei", "alfa"],
+      "anos": ["EI", "1"],
+      "bncc": ["EI03ET04", "EI03ET05", "EF01MA01", "EF01MA02"],
+      "render": "svg-contagem",
+      "tamanho": "md",
+      "composivel": true,
+      "dados_ia": {
+        "numeros_alvo": { "tipo": "array-int", "exemplo": [1, 2, 3, 4, 5], "min": 1, "max": 10, "instrucao": "Liste os numerais que o aluno deve trabalhar. Para EI até 5; para 1º ano até 10." },
+        "tipo_representacao": { "tipo": "enum", "valores": ["pontos", "bolinhas", "estrelas"], "padrao": "pontos" },
+        "atividade": { "tipo": "enum", "valores": ["ligar-numeral-quantidade", "contar-e-escrever", "pintar-quantidade"], "padrao": "ligar-numeral-quantidade" }
+      }
+    },
+
+    {
+      "id": "sequencia-padroes",
+      "nome": "Sequência de Padrões (Formas / Cores)",
+      "objetivo": "Desenvolver raciocínio lógico pela identificação e continuação de regularidades antes da álgebra formal.",
+      "quando_usar": [
+        "Ed. Infantil ou 1º–2º ano",
+        "tema é padrão, regularidade, sequência, lógica",
+        "objetivo é perceber a regra e completar"
+      ],
+      "quando_evitar": [
+        "quando o padrão é numérico (use sequencia-numerica)",
+        "a partir do 4º ano (use sequencia-numerica ou expressao-algebrica)"
+      ],
+      "niveis": ["ei", "alfa"],
+      "anos": ["EI", "1", "2"],
+      "bncc": ["EI03ET05", "EF01MA21", "EF02MA24"],
+      "render": "svg-sequencia-formas",
+      "tamanho": "sm",
+      "composivel": true,
+      "dados_ia": {
+        "elementos": { "tipo": "array-string", "exemplo": ["circulo-vermelho", "quadrado-azul", "circulo-vermelho", "quadrado-azul"], "instrucao": "Liste os elementos da sequência incluindo os '?' nas posições que o aluno completa. Use nomes de formas geométricas com cor: triangulo-verde, circulo-amarelo, quadrado-roxo, estrela-laranja, retangulo-azul." },
+        "lacunas": { "tipo": "array-int", "exemplo": [4, 5], "instrucao": "Índices (base 0) dos elementos que o aluno deve completar." },
+        "total": { "tipo": "int", "padrao": 8 }
+      }
+    },
+
+    {
+      "id": "qvl",
+      "nome": "Quadro Valor Posicional (C / D / U)",
+      "objetivo": "Compreender o sistema de numeração decimal — valor de cada ordem (unidade, dezena, centena, milhar).",
+      "quando_usar": [
+        "1º ao 5º ano",
+        "tema é sistema numérico, composição, decomposição, valor posicional",
+        "objetivo é escrever, ler ou comparar números"
+      ],
+      "quando_evitar": [
+        "Ed. Infantil (abstrato demais)",
+        "quando objetivo é operar (use conta-armada)",
+        "quando o número já é trabalhado com material dourado no mesmo bloco — evitar redundância"
+      ],
+      "niveis": ["alfa", "fi"],
+      "anos": ["1", "2", "3", "4", "5"],
+      "bncc": ["EF01MA07", "EF02MA01", "EF02MA04", "EF03MA01", "EF04MA01", "EF05MA01"],
+      "render": "svg-qvl",
+      "tamanho": "md",
+      "composivel": true,
+      "dados_ia": {
+        "numeros": { "tipo": "array-int", "exemplo": [347, 58, 1205], "instrucao": "Lista de números para o aluno decompor no quadro. Calibrar quantidade de ordens pelo ano: 1º–2º até centenas, 3º–4º até milhar, 5º até décimos se decimal." },
+        "colunas": { "tipo": "array-string", "valores_possiveis": ["M", "C", "D", "U", ",", "d", "c"], "exemplo": ["C", "D", "U"], "instrucao": "Inclua apenas as ordens necessárias para os números escolhidos. Para frações decimais inclua vírgula e ordens decimais." },
+        "modo": { "tipo": "enum", "valores": ["aluno-preenche", "mostrar-completo", "completar-lacunas"], "padrao": "aluno-preenche" }
+      }
+    },
+
+    {
+      "id": "material-dourado",
+      "nome": "Material Dourado (Representação Base 10)",
+      "objetivo": "Representar visualmente a composição decimal com cubinho (unidade), barrinha (dezena), placa (centena) e cubo (milhar).",
+      "quando_usar": [
+        "1º ao 4º ano",
+        "tema é sistema de numeração, agrupamento, troca, composição",
+        "quando há introdução de novo conceito posicional (nova ordem)"
+      ],
+      "quando_evitar": [
+        "5º ano em diante (alunos já devem ter internalizado)",
+        "quando número tem mais de 4 ordens (visual fica poluído)",
+        "quando já há QVL no mesmo bloco para o mesmo número"
+      ],
+      "niveis": ["alfa", "fi"],
+      "anos": ["1", "2", "3", "4"],
+      "bncc": ["EF01MA07", "EF02MA04", "EF02MA05", "EF03MA01"],
+      "render": "svg-material-dourado",
+      "tamanho": "md",
+      "composivel": true,
+      "dados_ia": {
+        "numero": { "tipo": "int", "exemplo": 253, "max": 9999, "instrucao": "Número a representar. O código calcula quantos milhares, centenas, dezenas e unidades." },
+        "modo": { "tipo": "enum", "valores": ["mostrar-para-contar", "aluno-representa", "compor-de-partes"], "padrao": "mostrar-para-contar", "instrucao": "'mostrar-para-contar'=exibe material e aluno escreve o número; 'aluno-representa'=exibe número e aluno desenha; 'compor-de-partes'=exibe peças separadas e aluno soma." }
+      }
+    },
+
+    {
+      "id": "abaco",
+      "nome": "Ábaco (Hastes e Argolas)",
+      "objetivo": "Visualizar agrupamentos e trocas entre ordens. Ponte entre concreto e registro numérico formal.",
+      "quando_usar": [
+        "1º ao 4º ano",
+        "tema é sistema posicional, trocas, reagrupamento",
+        "quando professor quer mostrar que 10 unidades = 1 dezena de forma dinâmica"
+      ],
+      "quando_evitar": [
+        "quando já há QVL e material dourado no mesmo bloco (evitar 3 representações do mesmo conceito juntas)",
+        "a partir do 5º ano (conceito consolidado)"
+      ],
+      "niveis": ["alfa", "fi"],
+      "anos": ["1", "2", "3", "4"],
+      "bncc": ["EF01MA07", "EF02MA01", "EF02MA04", "EF03MA01"],
+      "render": "svg-abaco",
+      "tamanho": "sm",
+      "composivel": true,
+      "dados_ia": {
+        "numero": { "tipo": "int", "exemplo": 347, "instrucao": "Número a representar. O código distribui argolas nas hastes." },
+        "num_hastes": { "tipo": "int", "padrao": 3, "min": 2, "max": 5, "instrucao": "Quantidade de hastes (ordens). 2=D,U; 3=C,D,U; 4=M,C,D,U." },
+        "modo": { "tipo": "enum", "valores": ["mostrar", "aluno-completa"], "padrao": "mostrar" },
+        "mostrar_rotulos": { "tipo": "bool", "padrao": true }
+      }
+    },
+
+    {
+      "id": "decomposicao-numerica",
+      "nome": "Decomposição Numérica (Caixas e Setas)",
+      "objetivo": "Compreender que um número pode ser expresso como soma de parcelas por ordem posicional.",
+      "quando_usar": [
+        "1º ao 5º ano",
+        "tema é decomposição, composição, valor posicional",
+        "como complemento ao QVL ou material dourado"
+      ],
+      "quando_evitar": [
+        "Ed. Infantil"
+      ],
+      "niveis": ["alfa", "fi"],
+      "anos": ["1", "2", "3", "4", "5"],
+      "bncc": ["EF01MA07", "EF02MA04", "EF03MA01", "EF04MA01"],
+      "render": "svg-decomposicao",
+      "tamanho": "sm",
+      "composivel": true,
+      "dados_ia": {
+        "numeros": { "tipo": "array-int", "exemplo": [456, 78, 1203], "instrucao": "Números a decompor. O código gera caixas 'N = A + B + C' com setas." },
+        "tipo": { "tipo": "enum", "valores": ["aditiva-posicional", "multipla-formas"], "padrao": "aditiva-posicional", "instrucao": "'aditiva-posicional'=400+50+6; 'multipla-formas'=mostra 2 ou mais maneiras de decompor o mesmo número." },
+        "mostrar_modelo": { "tipo": "bool", "padrao": true }
+      }
+    },
+
+    {
+      "id": "reta-numerica",
+      "nome": "Reta Numérica",
+      "objetivo": "Localizar e ordenar números; visualizar adição e subtração como deslocamento; representar frações e decimais.",
+      "quando_usar": [
+        "1º ao 9º ano e EJA",
+        "tema é localização de números, ordenação, operações, frações, números negativos",
+        "objetivo é visualizar posição relativa ou calcular por deslocamento"
+      ],
+      "quando_evitar": [
+        "Ed. Infantil (abstração formal ainda não adequada)",
+        "quando a faixa de números é muito grande e os pontos ficariam ilegíveis"
+      ],
+      "niveis": ["alfa", "fi", "fii", "eja"],
+      "anos": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "EJA"],
+      "bncc": ["EF01MA01", "EF02MA01", "EF03MA03", "EF03MA14", "EF04MA03", "EF05MA03", "EF06MA01"],
+      "render": "svg-reta-numerica",
+      "tamanho": "sm",
+      "composivel": true,
+      "dados_ia": {
+        "inicio": { "tipo": "number", "exemplo": 0 },
+        "fim": { "tipo": "number", "exemplo": 20 },
+        "passo": { "tipo": "number", "exemplo": 2, "instrucao": "Intervalo entre marcas visíveis." },
+        "lacunas": { "tipo": "array-number", "exemplo": [4, 10, 16], "instrucao": "Valores cujo rótulo fica em branco para o aluno preencher." },
+        "destacar": { "tipo": "array-number", "exemplo": [5, 15], "instrucao": "Valores marcados com ponto especial (exercício de localizar)." },
+        "fracionado": { "tipo": "bool", "padrao": false, "instrucao": "true quando a reta mostra frações (ex: 0, 1/4, 1/2, 3/4, 1)." },
+        "negativos": { "tipo": "bool", "padrao": false, "instrucao": "true quando a reta inclui valores negativos (6º ano+)." }
+      }
+    },
+
+    {
+      "id": "sequencia-numerica",
+      "nome": "Sequência Numérica (Quadradinhos com Lacunas)",
+      "objetivo": "Identificar regularidades; trabalhar antecessor/sucessor; contar de N em N; perceber padrões aritméticos.",
+      "quando_usar": [
+        "1º ao 6º ano",
+        "tema é contagem, múltiplos, progressão aritmética, padrão numérico",
+        "objetivo é completar, identificar a regra ou encontrar o termo seguinte"
+      ],
+      "quando_evitar": [
+        "Ed. Infantil (use sequencia-padroes com formas)",
+        "quando o padrão é geométrico (use sequencia-padroes)"
+      ],
+      "niveis": ["alfa", "fi", "fii", "eja"],
+      "anos": ["1", "2", "3", "4", "5", "6", "EJA"],
+      "bncc": ["EF01MA02", "EF02MA04", "EF03MA03", "EF04MA07", "EF05MA08", "EF06MA35"],
+      "render": "svg-sequencia-numerica",
+      "tamanho": "sm",
+      "composivel": true,
+      "dados_ia": {
+        "inicio": { "tipo": "number", "exemplo": 5 },
+        "razao": { "tipo": "number", "exemplo": 5, "instrucao": "Passo da progressão. Pode ser negativo (sequência decrescente)." },
+        "total_termos": { "tipo": "int", "padrao": 8, "min": 4, "max": 12 },
+        "lacunas": { "tipo": "array-int", "exemplo": [1, 3, 6], "instrucao": "Índices (base 0) dos termos que o aluno deve preencher." },
+        "direcao": { "tipo": "enum", "valores": ["horizontal", "tabela-5colunas"], "padrao": "horizontal" }
+      }
+    },
+
+    {
+      "id": "tabuada-multiplos",
+      "nome": "Tabuada / Tabela de Múltiplos",
+      "objetivo": "Memorizar e compreender a tabuada; identificar múltiplos e regularidades dos produtos.",
+      "quando_usar": [
+        "2º ao 5º ano",
+        "tema é multiplicação, tabuada, múltiplos, divisão",
+        "objetivo é praticar fatos básicos ou identificar múltiplos em uma faixa"
+      ],
+      "quando_evitar": [
+        "1º ano e Ed. Infantil",
+        "quando objetivo é resolução de problema (use problema-contextualizado)"
+      ],
+      "niveis": ["alfa", "fi"],
+      "anos": ["2", "3", "4", "5"],
+      "bncc": ["EF02MA06", "EF03MA03", "EF03MA07", "EF04MA07"],
+      "render": "svg-tabuada",
+      "tamanho": "sm",
+      "composivel": true,
+      "dados_ia": {
+        "numero": { "tipo": "int", "exemplo": 7, "min": 2, "max": 10 },
+        "tipo": { "tipo": "enum", "valores": ["tabuada-simples", "multiplos-ate-N", "tabela-completa-10x10"], "padrao": "tabuada-simples", "instrucao": "'tabuada-simples'=coluna única 1×N a 10×N; 'multiplos-ate-N'=sequência de múltiplos em grid; 'tabela-completa-10x10'=tabuada de Pitágoras completa." },
+        "total_linhas": { "tipo": "int", "padrao": 10 },
+        "lacunas": { "tipo": "array-int", "exemplo": [2, 5, 8], "instrucao": "Índices (base 0) dos resultados que o aluno preenche. Vazio = todas as lacunas abertas." }
+      }
+    },
+
+    {
+      "id": "conta-armada",
+      "nome": "Conta Armada (Algoritmo Vertical)",
+      "objetivo": "Executar as 4 operações com registro vertical organizado por casa decimal.",
+      "quando_usar": [
+        "1º ao 5º ano e EJA",
+        "tema é adição, subtração, multiplicação, divisão",
+        "objetivo é praticar o algoritmo ou fixar o procedimento de cálculo"
+      ],
+      "quando_evitar": [
+        "Ed. Infantil",
+        "quando objetivo é estimativa ou cálculo mental (não precisam do algoritmo formal)",
+        "quando há apenas 1 operação simples e o espaço para cálculo dentro de problema-contextualizado é suficiente"
+      ],
+      "niveis": ["alfa", "fi", "eja"],
+      "anos": ["1", "2", "3", "4", "5", "EJA"],
+      "bncc": ["EF01MA09", "EF02MA07", "EF03MA06", "EF03MA07", "EF03MA08", "EF04MA07", "EF05MA06"],
+      "render": "svg-conta-armada",
+      "tamanho": "xs",
+      "composivel": true,
+      "dados_ia": {
+        "operacao": { "tipo": "enum", "valores": ["adicao", "subtracao", "multiplicacao", "divisao"], "instrucao": "Escolher conforme tema e habilidade do ano." },
+        "itens": { "tipo": "array", "exemplo": [{"parcelas": [347, 258]}, {"parcelas": [125, 89]}], "instrucao": "Cada item é uma conta. Para divisão: {'dividendo':84,'divisor':7}. Para multiplicação: {'fator1':23,'fator2':4}." },
+        "quantidade": { "tipo": "int", "padrao": 4, "min": 2, "max": 8 },
+        "num_digitos": { "tipo": "int", "padrao": 2, "min": 1, "max": 4, "instrucao": "Calibrar pelo ano: 1º=1–2 algarismos, 2º=2–3, 3º–4º=3–4, 5º=4+." },
+        "com_reagrupamento": { "tipo": "bool", "instrucao": "Ativar a partir do 2º ano." },
+        "mostrar_gabarito": { "tipo": "bool", "padrao": false }
+      }
+    },
+
+    {
+      "id": "calendario",
+      "nome": "Calendário Mensal",
+      "objetivo": "Trabalhar noções de tempo — dias da semana, meses, antes/depois, duração, contagem de dias.",
+      "quando_usar": [
+        "Ed. Infantil ao 4º ano",
+        "tema é calendário, dias da semana, meses, tempo, data"
+      ],
+      "quando_evitar": [
+        "5º ano em diante (já dominam — prefira problemas de intervalos de tempo)",
+        "quando o objetivo é medir horas e minutos (use relogio)"
+      ],
+      "niveis": ["ei", "alfa", "fi"],
+      "anos": ["EI", "1", "2", "3", "4"],
+      "bncc": ["EF01MA17", "EF01MA18", "EF02MA20", "EF03MA18"],
+      "render": "svg-calendario",
+      "tamanho": "lg",
+      "composivel": false,
+      "dados_ia": {
+        "mes": { "tipo": "int", "exemplo": 6, "min": 1, "max": 12, "instrucao": "Mês numérico (1=jan, 12=dez). Prefira mês corrente ou próximo." },
+        "ano": { "tipo": "int", "exemplo": 2025 },
+        "destacar_dias": { "tipo": "array-int", "exemplo": [1, 15, 22], "instrucao": "Dias a circular ou colorir para atividade." },
+        "lacunas_dias": { "tipo": "array-int", "exemplo": [5, 12, 19, 26], "instrucao": "Dias cujos números ficam em branco para o aluno preencher." },
+        "perguntas": { "tipo": "array-string", "exemplo": ["Quantas quintas-feiras há neste mês?", "Em que dia da semana cai o dia 20?"], "instrucao": "1 a 3 perguntas sobre o calendário gerado." }
+      }
+    },
+
+    {
+      "id": "relogio",
+      "nome": "Relógio Analógico",
+      "objetivo": "Ler horas e minutos; associar horário analógico ao digital; calcular intervalos de tempo.",
+      "quando_usar": [
+        "1º ao 5º ano e EJA",
+        "tema é horas, tempo, rotina, intervalo de tempo",
+        "objetivo é ler o relógio, marcar ponteiros ou calcular quanto tempo passou"
+      ],
+      "quando_evitar": [
+        "Ed. Infantil (use calendário e rotina visual)",
+        "quando objetivo é trabalhar datas e dias (use calendario)"
+      ],
+      "niveis": ["alfa", "fi", "eja"],
+      "anos": ["1", "2", "3", "4", "5", "EJA"],
+      "bncc": ["EF02MA20", "EF03MA18"],
+      "render": "svg-relogio",
+      "tamanho": "sm",
+      "composivel": true,
+      "dados_ia": {
+        "itens": {
+          "tipo": "array",
+          "exemplo": [
+            {"hora": 8, "minuto": 30, "modo": "mostrar-ler"},
+            {"hora": 14, "minuto": 0,  "modo": "mostrar-ler"},
+            {"hora": 10, "minuto": 45, "modo": "digital-para-analogico"}
+          ],
+          "instrucao": "Cada item gera um relógio. 'mostrar-ler'=exibe ponteiros, aluno escreve a hora; 'digital-para-analogico'=exibe hora escrita, aluno marca os ponteiros (relógio vazio); 'calcular-intervalo'=exibe dois relógios e aluno calcula quanto tempo passou."
+        },
+        "precisao": { "tipo": "enum", "valores": ["horas-inteiras", "meia-hora", "quarto-hora", "minutos"], "padrao": "meia-hora", "instrucao": "Calibrar pelo ano: 1º=horas-inteiras, 2º=meia-hora, 3º+=quarto-hora ou minutos." }
+      }
+    },
+
+    {
+      "id": "sistema-monetario",
+      "nome": "Sistema Monetário (Notas e Moedas BRL)",
+      "objetivo": "Reconhecer cédulas e moedas; calcular valor total; calcular troco; resolver problemas de compra e venda.",
+      "quando_usar": [
+        "2º ao 5º ano e EJA",
+        "tema é dinheiro, valor, compra, venda, troco, sistema monetário"
+      ],
+      "quando_evitar": [
+        "Ed. Infantil e 1º ano (noção de valor ainda em construção)",
+        "quando objetivo é cálculo puro sem contexto monetário (use conta-armada)"
+      ],
+      "niveis": ["alfa", "fi", "eja"],
+      "anos": ["2", "3", "4", "5", "EJA"],
+      "bncc": ["EF02MA06", "EF03MA06", "EF04MA08", "EF05MA06"],
+      "render": "svg-dinheiro",
+      "tamanho": "md",
+      "composivel": true,
+      "dados_ia": {
+        "modo": { "tipo": "enum", "valores": ["reconhecer-valor", "calcular-total", "calcular-troco", "compor-valor-alvo"], "instrucao": "'reconhecer-valor'=exibe notas/moedas, aluno soma; 'calcular-total'=lista de itens com preço, aluno totaliza; 'calcular-troco'=valor pago e valor da compra, aluno calcula troco; 'compor-valor-alvo'=dado um valor, aluno escolhe quais notas e moedas usar." },
+        "composicao": { "tipo": "array", "exemplo": [{"tipo": "cedula", "valor": 10}, {"tipo": "cedula", "valor": 5}, {"tipo": "moeda", "valor": 0.50}], "instrucao": "Usado em 'reconhecer-valor'. Valores válidos de cédulas: 2, 5, 10, 20, 50, 100. Moedas: 0.05, 0.10, 0.25, 0.50, 1.00." },
+        "valor_compra": { "tipo": "number", "exemplo": 12.30, "instrucao": "Usado em 'calcular-troco' e 'calcular-total'." },
+        "valor_pago": { "tipo": "number", "exemplo": 20.00, "instrucao": "Usado em 'calcular-troco'." }
+      }
+    },
+
+    {
+      "id": "fracoes-visuais",
+      "nome": "Frações Visuais (Pizza / Barra Sombreada)",
+      "objetivo": "Representar e comparar frações como parte de um inteiro usando modelos de área.",
+      "quando_usar": [
+        "3º ao 7º ano",
+        "tema é fração, parte de um todo, metade, terço, quarto, comparação de frações",
+        "objetivo é introduzir ou fixar o conceito antes de operações formais"
+      ],
+      "quando_evitar": [
+        "Ed. Infantil e 1º–2º ano",
+        "quando objetivo é operar com frações (use problema-contextualizado com espaço de cálculo)"
+      ],
+      "niveis": ["fi", "fii"],
+      "anos": ["3", "4", "5", "6", "7"],
+      "bncc": ["EF03MA14", "EF04MA03", "EF05MA03", "EF05MA09", "EF06MA03"],
+      "render": "svg-fracoes",
+      "tamanho": "sm",
+      "composivel": true,
+      "dados_ia": {
+        "itens": {
+          "tipo": "array",
+          "exemplo": [
+            {"numerador": 3, "denominador": 4, "modelo": "pizza", "atividade": "pintar"},
+            {"numerador": 1, "denominador": 2, "modelo": "barra", "atividade": "identificar"}
+          ],
+          "instrucao": "Cada item gera uma figura. 'modelo': pizza (círculo) ou barra (retângulo). 'atividade': 'pintar'=figura intacta, aluno pinta; 'identificar'=figura com partes sombreadas, aluno escreve a fração; 'comparar'=dois modelos lado a lado, aluno compara."
+        }
+      }
+    },
+
+    {
+      "id": "tabela",
+      "nome": "Tabela de Dados (Linhas × Colunas)",
+      "objetivo": "Organizar, ler e interpretar dados tabulados. Base para pensamento estatístico.",
+      "quando_usar": [
+        "1º ao 9º ano e EJA",
+        "tema é organização de dados, pesquisa, frequência, tabela comparativa",
+        "objetivo é registrar dados coletados ou ler e interpretar uma tabela"
+      ],
+      "quando_evitar": [
+        "quando o número de categorias é ≥ 6 e cabe melhor em gráfico",
+        "quando os dados mostram variação no tempo (prefira grafico-linhas)"
+      ],
+      "niveis": ["ei", "alfa", "fi", "fii", "eja"],
+      "anos": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "EJA"],
+      "bncc": ["EF03MA25", "EF04MA25", "EF04MA26", "EF05MA25"],
+      "render": "html-tabela",
+      "tamanho": "md",
+      "composivel": true,
+      "dados_ia": {
+        "titulo": { "tipo": "string", "exemplo": "Temperatura da semana" },
+        "colunas": { "tipo": "array-string", "exemplo": ["Dia", "Temperatura (°C)"] },
+        "linhas": { "tipo": "array-array", "exemplo": [["Segunda", "28"], ["Terça", ""], ["Quarta", "25"]], "instrucao": "String vazia '' = lacuna para o aluno preencher." },
+        "perguntas": { "tipo": "array-string", "exemplo": ["Em qual dia fez mais calor?", "Qual a diferença de temperatura entre segunda e quarta?"] },
+        "dupla_entrada": { "tipo": "bool", "padrao": false, "instrucao": "true para tabelas de dupla entrada (linha e coluna formam cruzamento)." }
+      }
+    },
+
+    {
+      "id": "grafico-barras",
+      "nome": "Gráfico de Barras / Colunas",
+      "objetivo": "Visualizar e comparar quantidades entre categorias; ler eixos; extrair informações de representações gráficas.",
+      "quando_usar": [
+        "2º ao 9º ano e EJA",
+        "tema é gráfico, dados comparativos, pesquisa, estatística",
+        "dados são categorias com contagens ou valores a comparar"
+      ],
+      "quando_evitar": [
+        "quando objetivo é mostrar variação no tempo com muitos pontos (prefira grafico-linhas)",
+        "quando há apenas 2 categorias (tabela é mais limpa)"
+      ],
+      "niveis": ["alfa", "fi", "fii", "eja"],
+      "anos": ["2", "3", "4", "5", "6", "7", "8", "9", "EJA"],
+      "bncc": ["EF03MA25", "EF04MA25", "EF04MA26", "EF05MA25"],
+      "render": "svg-grafico-barras",
+      "tamanho": "lg",
+      "composivel": false,
+      "dados_ia": {
+        "titulo": { "tipo": "string", "exemplo": "Esporte favorito da turma" },
+        "eixo_x_label": { "tipo": "string", "exemplo": "Esporte" },
+        "eixo_y_label": { "tipo": "string", "exemplo": "Número de alunos" },
+        "dados": { "tipo": "array", "exemplo": [{"categoria": "Futebol", "valor": 12}, {"categoria": "Vôlei", "valor": 7}, {"categoria": "Natação", "valor": 5}], "instrucao": "2 a 6 categorias com valores inteiros positivos. Inventar dados verossímeis e pedagógicos." },
+        "orientacao": { "tipo": "enum", "valores": ["colunas", "barras"], "padrao": "colunas" },
+        "tipo_atividade": { "tipo": "enum", "valores": ["ler-e-responder", "construir-do-zero", "completar-barras"], "padrao": "ler-e-responder", "instrucao": "'ler-e-responder'=gráfico pronto com perguntas; 'construir-do-zero'=só eixos e tabela de dados, aluno desenha; 'completar-barras'=algumas barras presentes, aluno completa." },
+        "perguntas": { "tipo": "array-string", "exemplo": ["Qual esporte é o mais praticado?", "Quantos alunos a mais preferem futebol do que natação?"] }
+      }
+    },
+
+    {
+      "id": "grafico-linhas",
+      "nome": "Gráfico de Linhas",
+      "objetivo": "Visualizar variação de uma grandeza ao longo do tempo; identificar tendências, aumentos e quedas.",
+      "quando_usar": [
+        "4º ao 9º ano e EJA",
+        "dados mostram evolução temporal (temperatura, crescimento, consumo)",
+        "objetivo é perceber tendência ou calcular variação entre períodos"
+      ],
+      "quando_evitar": [
+        "até o 3º ano (prefira grafico-barras — mais intuitivo)",
+        "quando os dados são categorias sem ordem temporal (prefira grafico-barras)"
+      ],
+      "niveis": ["fi", "fii", "eja"],
+      "anos": ["4", "5", "6", "7", "8", "9", "EJA"],
+      "bncc": ["EF04MA26", "EF05MA25"],
+      "render": "svg-grafico-linhas",
+      "tamanho": "lg",
+      "composivel": false,
+      "dados_ia": {
+        "titulo": { "tipo": "string", "exemplo": "Temperatura ao longo da semana" },
+        "eixo_x_label": { "tipo": "string", "exemplo": "Dia" },
+        "eixo_y_label": { "tipo": "string", "exemplo": "Temperatura (°C)" },
+        "pontos": { "tipo": "array", "exemplo": [{"x": "Seg", "y": 28}, {"x": "Ter", "y": 30}, {"x": "Qua", "y": 25}] },
+        "perguntas": { "tipo": "array-string", "exemplo": ["Em que dia fez mais calor?", "Qual foi a variação entre segunda e sexta-feira?"] }
+      }
+    },
+
+    {
+      "id": "grafico-pizza",
+      "nome": "Gráfico de Setores (Pizza)",
+      "objetivo": "Representar partes de um todo e proporções; introduzir porcentagem de forma visual.",
+      "quando_usar": [
+        "4º ao 9º ano",
+        "tema é porcentagem, proporção, partes do todo",
+        "dados somam 100% e há no máximo 5 categorias"
+      ],
+      "quando_evitar": [
+        "até o 3º ano",
+        "quando há mais de 5 categorias (gráfico fica ilegível)",
+        "quando objetivo é comparar categorias (prefira grafico-barras)"
+      ],
+      "niveis": ["fi", "fii"],
+      "anos": ["4", "5", "6", "7", "8", "9"],
+      "bncc": ["EF05MA25", "EF06MA03"],
+      "render": "svg-grafico-pizza",
+      "tamanho": "md",
+      "composivel": false,
+      "dados_ia": {
+        "titulo": { "tipo": "string", "exemplo": "Animal de estimação preferido" },
+        "dados": { "tipo": "array", "exemplo": [{"categoria": "Cão", "percentual": 45}, {"categoria": "Gato", "percentual": 30}, {"categoria": "Peixe", "percentual": 25}], "instrucao": "Percentuais devem somar exatamente 100. Máximo 5 categorias." },
+        "perguntas": { "tipo": "array-string", "exemplo": ["Qual animal é preferido pela maioria?", "Que fração dos alunos prefere gato?"] }
+      }
+    },
+
+    {
+      "id": "malha-quadriculada",
+      "nome": "Malha Quadriculada (Grade)",
+      "objetivo": "Calcular área por contagem; construir figuras; trabalhar perímetro, proporcionalidade e simetria.",
+      "quando_usar": [
+        "3º ao 9º ano",
+        "tema é área, perímetro, figuras planas, simetria, ampliação, proporcionalidade",
+        "objetivo requer espaço para construção ou cálculo geométrico"
+      ],
+      "quando_evitar": [
+        "quando não há trabalho geométrico (use espaco-calculo)"
+      ],
+      "niveis": ["fi", "fii"],
+      "anos": ["3", "4", "5", "6", "7", "8", "9"],
+      "bncc": ["EF05MA19", "EF07MA17"],
+      "render": "svg-malha",
+      "tamanho": "lg",
+      "composivel": false,
+      "dados_ia": {
+        "linhas": { "tipo": "int", "padrao": 10, "max": 20 },
+        "colunas": { "tipo": "int", "padrao": 10, "max": 20 },
+        "tamanho_celula": { "tipo": "enum", "valores": ["sm", "md", "lg"], "padrao": "md" },
+        "atividade": { "tipo": "enum", "valores": ["livre", "calcular-area", "calcular-perimetro", "construir-figura", "simetria", "ampliar"], "padrao": "livre" },
+        "figura_predefinida": { "tipo": "array-pontos-ou-null", "instrucao": "Se não for 'livre', lista de pontos [x,y] que formam a figura pré-desenhada. null = grade em branco." },
+        "instrucao_aluno": { "tipo": "string", "exemplo": "Calcule a área da figura colorida contando os quadradinhos." }
+      }
+    },
+
+    {
+      "id": "figuras-geometricas",
+      "nome": "Figuras Planas Nomeadas",
+      "objetivo": "Identificar, classificar e calcular propriedades de figuras planas — lados, ângulos, perímetro, área.",
+      "quando_usar": [
+        "1º ao 9º ano",
+        "tema é geometria, formas, lados, ângulos, perímetro, área",
+        "objetivo é reconhecer ou calcular propriedades de figuras"
+      ],
+      "quando_evitar": [
+        "quando a atividade precisa de malha para construção (use malha-quadriculada)"
+      ],
+      "niveis": ["alfa", "fi", "fii"],
+      "anos": ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+      "bncc": ["EF02MA22", "EF04MA01", "EF05MA19", "EF06MA29"],
+      "render": "svg-figuras",
+      "tamanho": "md",
+      "composivel": true,
+      "dados_ia": {
+        "figuras": {
+          "tipo": "array",
+          "exemplo": [
+            {"tipo": "retangulo", "largura": 6, "altura": 4, "atividade": "calcular-perimetro"},
+            {"tipo": "triangulo-retangulo", "base": 3, "altura": 4, "atividade": "nomear"},
+            {"tipo": "circulo", "raio": 5, "atividade": "identificar-raio-diametro"}
+          ],
+          "instrucao": "Tipos disponíveis: quadrado, retangulo, triangulo-equilatero, triangulo-retangulo, triangulo-isosceles, hexagono, pentagono, circulo. Atividades: nomear, calcular-perimetro, calcular-area, identificar-lados, contar-angulos, identificar-raio-diametro."
+        }
+      }
+    },
+
+    {
+      "id": "balanca",
+      "nome": "Balança de Dois Pratos",
+      "objetivo": "Visualizar igualdade e desigualdade; introduzir noção de equação por equilíbrio; trabalhar massa.",
+      "quando_usar": [
+        "1º ao 7º ano",
+        "tema é comparação de massas, igualdade, equação, pré-álgebra",
+        "objetivo é verificar equilíbrio ou encontrar valor desconhecido"
+      ],
+      "quando_evitar": [
+        "quando o foco é resolução formal de equação (use expressao-algebrica no 7º ano+)"
+      ],
+      "niveis": ["alfa", "fi", "fii"],
+      "anos": ["1", "2", "3", "4", "5", "6", "7"],
+      "bncc": ["EF01MA19", "EF03MA18", "EF06MA29"],
+      "render": "svg-balanca",
+      "tamanho": "sm",
+      "composivel": true,
+      "dados_ia": {
+        "itens": {
+          "tipo": "array",
+          "exemplo": [
+            {"lado_esq": ["2kg", "500g"], "lado_dir": ["?"], "estado": "desequilibrada", "atividade": "completar"},
+            {"lado_esq": ["1kg", "300g"], "lado_dir": ["1300g"], "estado": "equilibrada", "atividade": "verificar"}
+          ],
+          "instrucao": "Cada item gera uma balança. '?' nos valores indica o que o aluno deve descobrir. 'estado': equilibrada ou desequilibrada. 'atividade': completar, verificar, comparar."
+        }
+      }
+    },
+
+    {
+      "id": "termometro",
+      "nome": "Termômetro",
+      "objetivo": "Ler escala; trabalhar números negativos em contexto; comparar temperaturas; calcular variações.",
+      "quando_usar": [
+        "3º ao 7º ano e EJA",
+        "tema é temperatura, escala, números negativos, variação",
+        "objetivo é ler, marcar ou calcular diferença de temperaturas"
+      ],
+      "quando_evitar": [
+        "Ed. Infantil e 1º–2º ano"
+      ],
+      "niveis": ["fi", "fii", "eja"],
+      "anos": ["3", "4", "5", "6", "7", "EJA"],
+      "bncc": ["EF05MA06", "EF06MA01"],
+      "render": "svg-termometro",
+      "tamanho": "sm",
+      "composivel": true,
+      "dados_ia": {
+        "itens": {
+          "tipo": "array",
+          "exemplo": [
+            {"temperatura": 37, "modo": "mostrar-ler", "escala_min": 0, "escala_max": 50},
+            {"temperatura": -5, "modo": "marcar", "escala_min": -20, "escala_max": 40}
+          ],
+          "instrucao": "Cada item gera um termômetro. 'mostrar-ler'=exibe mercúrio, aluno escreve o valor; 'marcar'=exibe escala vazia, aluno marca a temperatura indicada. Negativos ativam escala abaixo do zero."
+        }
+      }
+    },
+
+    {
+      "id": "regua",
+      "nome": "Régua Graduada",
+      "objetivo": "Medir comprimento; converter unidades (mm, cm, m); estimativa; leitura de escala.",
+      "quando_usar": [
+        "1º ao 7º ano",
+        "tema é medidas de comprimento, régua, centímetros, milímetros"
+      ],
+      "quando_evitar": [
+        "quando objetivo é calcular área ou perímetro (use figuras-geometricas ou malha-quadriculada)"
+      ],
+      "niveis": ["alfa", "fi", "fii"],
+      "anos": ["1", "2", "3", "4", "5", "6", "7"],
+      "bncc": ["EF01MA19", "EF02MA20", "EF03MA18"],
+      "render": "svg-regua",
+      "tamanho": "sm",
+      "composivel": true,
+      "dados_ia": {
+        "itens": {
+          "tipo": "array",
+          "exemplo": [
+            {"objeto": "lápis", "comprimento_cm": 12.5, "modo": "medir"},
+            {"comprimento_cm": 8, "modo": "representar"}
+          ],
+          "instrucao": "'medir'=régua com objeto, aluno lê o valor; 'representar'=régua vazia, aluno marca o ponto que corresponde ao valor dado."
+        }
+      }
+    },
+
+    {
+      "id": "diagrama-venn",
+      "nome": "Diagrama de Venn",
+      "objetivo": "Representar conjuntos, interseção, reunião e diferença. Base para lógica e probabilidade.",
+      "quando_usar": [
+        "4º ao 9º ano",
+        "tema é conjuntos, classificação em múltiplos critérios, lógica"
+      ],
+      "quando_evitar": [
+        "até o 3º ano (use tabela de classificação simples)"
+      ],
+      "niveis": ["fi", "fii"],
+      "anos": ["4", "5", "6", "7", "8", "9"],
+      "bncc": ["EF06MA35", "EF07MA13"],
+      "render": "svg-diagrama-venn",
+      "tamanho": "md",
+      "composivel": true,
+      "dados_ia": {
+        "num_conjuntos": { "tipo": "int", "padrao": 2, "min": 2, "max": 3 },
+        "rotulos": { "tipo": "array-string", "exemplo": ["Múltiplos de 2", "Múltiplos de 3"] },
+        "elementos_esq": { "tipo": "array-string", "exemplo": ["4", "8", "14"] },
+        "elementos_intersecao": { "tipo": "array-string", "exemplo": ["6", "12", "18"] },
+        "elementos_dir": { "tipo": "array-string", "exemplo": ["9", "15", "21"] },
+        "modo": { "tipo": "enum", "valores": ["preenchido", "aluno-classifica"], "padrao": "aluno-classifica" }
+      }
+    },
+
+    {
+      "id": "plano-cartesiano",
+      "nome": "Plano Cartesiano",
+      "objetivo": "Localizar pontos por coordenadas (x,y); traçar retas; representar funções graficamente.",
+      "quando_usar": [
+        "6º ao 9º ano",
+        "tema é coordenadas, pares ordenados, reta, função, geometria analítica"
+      ],
+      "quando_evitar": [
+        "até o 5º ano"
+      ],
+      "niveis": ["fii"],
+      "anos": ["6", "7", "8", "9"],
+      "bncc": ["EF06MA01", "EF07MA01", "EF08MA07", "EF09MA10", "EF09MA14"],
+      "render": "svg-plano-cartesiano",
+      "tamanho": "lg",
+      "composivel": false,
+      "dados_ia": {
+        "x_min": { "tipo": "int", "padrao": -5 },
+        "x_max": { "tipo": "int", "padrao": 5 },
+        "y_min": { "tipo": "int", "padrao": -5 },
+        "y_max": { "tipo": "int", "padrao": 5 },
+        "pontos": { "tipo": "array", "exemplo": [{"x": 2, "y": 3, "label": "A"}, {"x": -1, "y": 4, "label": "B"}] },
+        "atividade": { "tipo": "enum", "valores": ["localizar-pontos", "tracar-reta", "identificar-coordenadas", "plotar-funcao"], "padrao": "localizar-pontos" },
+        "instrucao_aluno": { "tipo": "string", "exemplo": "Plote os pontos e ligue-os em ordem para formar a figura." }
+      }
+    },
+
+    {
+      "id": "expressao-algebrica",
+      "nome": "Equação / Expressão Algébrica",
+      "objetivo": "Visualizar e resolver equações com incógnita; registrar passo a passo da resolução formal.",
+      "quando_usar": [
+        "6º ao 9º ano",
+        "tema é equação, incógnita, expressão algébrica, resolução passo a passo"
+      ],
+      "quando_evitar": [
+        "até o 5º ano (use balanca para a ideia de igualdade)"
+      ],
+      "niveis": ["fii"],
+      "anos": ["6", "7", "8", "9"],
+      "bncc": ["EF06MA29", "EF07MA01", "EF08MA20", "EF08MA07"],
+      "render": "html-equacao",
+      "tamanho": "md",
+      "composivel": true,
+      "dados_ia": {
+        "itens": {
+          "tipo": "array",
+          "exemplo": [
+            {"equacao": "2x + 3 = 11", "tipo": "1grau", "mostrar_passos": false},
+            {"equacao": "x² - 9 = 0", "tipo": "2grau", "mostrar_passos": false}
+          ],
+          "instrucao": "Cada item gera um bloco com a equação e linhas para resolução. 'mostrar_passos': false=aluno resolve; true=equação com passo a passo guiado (linhas numeradas com dicas)."
+        }
+      }
+    },
+
+    {
+      "id": "tabela-proporcionalidade",
+      "nome": "Tabela de Proporcionalidade",
+      "objetivo": "Identificar relação de proporcionalidade direta ou inversa; calcular valores na regra de três.",
+      "quando_usar": [
+        "5º ao 8º ano e EJA",
+        "tema é proporção, regra de três, razão, escala",
+        "dados formam pares proporcionais"
+      ],
+      "quando_evitar": [
+        "até o 4º ano"
+      ],
+      "niveis": ["fi", "fii", "eja"],
+      "anos": ["5", "6", "7", "8", "EJA"],
+      "bncc": ["EF05MA06", "EF06MA29", "EF07MA13"],
+      "render": "html-tabela",
+      "tamanho": "md",
+      "composivel": true,
+      "dados_ia": {
+        "tipo_proporcionalidade": { "tipo": "enum", "valores": ["direta", "inversa"], "padrao": "direta" },
+        "contexto": { "tipo": "string", "exemplo": "Receita de bolo para 4 pessoas" },
+        "colunas": { "tipo": "array-string", "exemplo": ["Porções", "Farinha (xícaras)"] },
+        "linhas": { "tipo": "array-array", "exemplo": [["4", "2"], ["8", ""], ["12", ""], ["2", ""]], "instrucao": "String vazia '' = lacuna que o aluno preenche." },
+        "perguntas": { "tipo": "array-string", "exemplo": ["Qual a constante de proporcionalidade?", "Para 10 porções, quantas xícaras de farinha são necessárias?"] }
+      }
+    },
+
+    {
+      "id": "cupom-fiscal",
+      "nome": "Cupom Fiscal Simulado (EJA / Vida Real)",
+      "objetivo": "Calcular totais, descontos e trocos em contexto real de consumo adulto. Matemática financeira cotidiana.",
+      "quando_usar": [
+        "EJA",
+        "tema é compras, desconto, porcentagem, troco, orçamento",
+        "objetivo é contextualizar matemática na vida do trabalhador adulto"
+      ],
+      "quando_evitar": [
+        "Educação Infantil e Fundamental I (use sistema-monetario)"
+      ],
+      "niveis": ["eja"],
+      "anos": ["EJA"],
+      "bncc": ["EF05MA06", "EF06MA03"],
+      "render": "html-cupom-fiscal",
+      "tamanho": "lg",
+      "composivel": false,
+      "dados_ia": {
+        "itens": { "tipo": "array", "exemplo": [{"produto": "Arroz 5kg", "preco": 28.90}, {"produto": "Feijão 1kg", "preco": 8.50}, {"produto": "Óleo 900ml", "preco": 7.80}], "instrucao": "3 a 6 produtos com preços reais e coerentes com o mercado brasileiro atual." },
+        "valor_pago": { "tipo": "number", "exemplo": 50.00 },
+        "desconto_percentual": { "tipo": "number", "padrao": 0, "instrucao": "Se > 0, gera pergunta de desconto (ex: 10% de desconto no total)." },
+        "atividades": { "tipo": "array-string", "exemplo": ["Calcule o total das compras", "Qual o troco para R$ 50,00?", "Qual produto é mais caro?"] }
+      }
+    },
+
+    {
+      "id": "espaco-calculo",
+      "nome": "Espaço para Cálculo / Rascunho",
+      "objetivo": "Oferecer área estruturada para registro de estratégias e cálculos intermediários. Metacognição.",
+      "quando_usar": [
+        "qualquer nível",
+        "sempre que outro bloco pede resolução mas não tem espaço suficiente",
+        "após problema-contextualizado ou conta-armada complexa"
+      ],
+      "quando_evitar": [
+        "quando o template principal já inclui espaço nativo (conta-armada, sequencia-numerica)"
+      ],
+      "niveis": ["ei", "alfa", "fi", "fii", "eja"],
+      "anos": ["EI", "1", "2", "3", "4", "5", "6", "7", "8", "9", "EJA"],
+      "bncc": [],
+      "render": "svg-espaco-calculo",
+      "tamanho": "sm",
+      "composivel": true,
+      "dados_ia": {
+        "linhas": { "tipo": "int", "padrao": 4, "min": 2, "max": 8 },
+        "titulo": { "tipo": "string", "padrao": "Mostre como pensou:", "instrucao": "Varie: 'Faça o cálculo aqui:', 'Resolução:', 'Estratégia utilizada:'" },
+        "tipo": { "tipo": "enum", "valores": ["linhas", "quadriculado", "livre-pontilhado"], "padrao": "linhas" }
+      }
+    },
+
+    {
+      "id": "problema-contextualizado",
+      "nome": "Bloco de Problema Contextualizado",
+      "objetivo": "Desenvolver interpretação, modelagem e resolução em situação real. Eixo central da aprendizagem matemática.",
+      "quando_usar": [
+        "todos os níveis",
+        "qualquer tema matemático com aplicação em contexto",
+        "quando o objetivo é resolver, explicar ou criar um problema"
+      ],
+      "quando_evitar": [
+        "quando o objetivo é só praticar o algoritmo isolado — use conta-armada para isso"
+      ],
+      "niveis": ["ei", "alfa", "fi", "fii", "eja"],
+      "anos": ["EI", "1", "2", "3", "4", "5", "6", "7", "8", "9", "EJA"],
+      "bncc": ["EF01MA09", "EF02MA07", "EF03MA06", "EF03MA07", "EF03MA08", "EF04MA08", "EF05MA06", "EF05MA08", "EF07MA01"],
+      "render": "html-problema",
+      "tamanho": "md",
+      "composivel": true,
+      "dados_ia": {
+        "enunciado": { "tipo": "string", "instrucao": "Problema contextualizado real, com dados numéricos claros, adequado ao ano e tema. Para EJA: contexto de trabalho, família, consumo. Para EI/1º: historia curta com personagem." },
+        "dados_destacados": { "tipo": "array-string", "instrucao": "Valores e informações-chave para sublinhar no enunciado." },
+        "tipo_resposta": { "tipo": "enum", "valores": ["calculo-numerico", "dissertativo", "multipla-escolha", "verdadeiro-falso"], "padrao": "calculo-numerico" },
+        "alternativas": { "tipo": "array-string", "instrucao": "Obrigatório se tipo_resposta='multipla-escolha'. 4 alternativas, apenas 1 correta." },
+        "incluir_espaco_calculo": { "tipo": "bool", "padrao": true },
+        "template_visual_sugerido": { "tipo": "string-ou-null", "instrucao": "ID de outro template a renderizar junto para apoiar a resolução. Ex: 'reta-numerica', 'tabela'. null = não precisa." }
+      }
+    }
+
+  ]
+}

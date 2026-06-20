@@ -713,6 +713,7 @@
     desligarEdicao();
     setStep(1);await delay(450);setStep(2);
 
+    await getBiblioteca();   // disponibiliza as chaves de mapas/imagens curadas para o prompt
     const prompt = (MODE==='avaliacao') ? buildPromptAvaliacao(cfg) : cfg.isMath ? buildPromptMatematica(cfg) : buildPromptAtividade(cfg);
     try{
       setStep(3);
@@ -785,13 +786,45 @@
   }
   function val(id,trim){const el=document.getElementById(id);if(!el)return '';return trim?el.value.trim():el.value;}
 
+  // ── biblioteca de imagens curadas (mapas corretos etc.) ──
+  let BIBLIOTECA=null;
+  async function getBiblioteca(){
+    if(BIBLIOTECA) return BIBLIOTECA;
+    try{ const r=await fetch('/js/biblioteca-imagens.json'); BIBLIOTECA = r.ok ? await r.json() : {}; }
+    catch(_){ BIBLIOTECA={}; }
+    return BIBLIOTECA;
+  }
+  // resolve uma chave da biblioteca (qualquer categoria) para uma URL local
+  function assetUrl(key){
+    if(!BIBLIOTECA||!key) return null;
+    for(const cat of Object.keys(BIBLIOTECA)){
+      const c=BIBLIOTECA[cat]; if(c&&typeof c==='object'&&c[key]&&c[key].arquivo) return c[key].arquivo;
+    }
+    return null;
+  }
+  // Se um objeto tem asset_key válido, fixa _url direto da biblioteca (sem chamar a IA de imagem).
+  function resolverAsset(obj){
+    if(!obj) return false;
+    const k=(obj.asset_key||'').trim();
+    if(!k) return false;
+    const u=assetUrl(k);
+    if(u){ obj._url=u; return true; }
+    return false;
+  }
+
   // ── imagens (fal.ai, teto 6) ──
   async function gerarImagens(data){
+    await getBiblioteca();
+    // 1) Mapas/figuras factuais → biblioteca curada (não conta no teto da IA)
+    if(data.conteudo_principal && resolverAsset(data.conteudo_principal)) data._principalUrl=data.conteudo_principal._url;
+    (data.itens_atividade||[]).forEach(it=>resolverAsset(it));
+    (data.questoes||[]).forEach(q=>resolverAsset(q));
+
     const cands=[];
     const principal=(data.conteudo_principal?.imagem_principal_prompt||'').trim();
-    if(principal) cands.push({key:'principal',prompt:principal,size:'landscape_4_3'});
-    (data.itens_atividade||[]).forEach((it,idx)=>{const p=(it.api_image_prompt||'').trim();if(p)cands.push({key:'item',arr:'itens_atividade',idx,prompt:p,size:'square_hd'});});
-    (data.questoes||[]).forEach((q,idx)=>{const p=(q.api_image_prompt||'').trim();if(p)cands.push({key:'q',arr:'questoes',idx,prompt:p,size:'square_hd'});});
+    if(principal && !data._principalUrl) cands.push({key:'principal',prompt:principal,size:'landscape_4_3'});
+    (data.itens_atividade||[]).forEach((it,idx)=>{const p=(it.api_image_prompt||'').trim();if(p&&!it._url)cands.push({key:'item',arr:'itens_atividade',idx,prompt:p,size:'square_hd'});});
+    (data.questoes||[]).forEach((q,idx)=>{const p=(q.api_image_prompt||'').trim();if(p&&!q._url)cands.push({key:'q',arr:'questoes',idx,prompt:p,size:'square_hd'});});
     const usar=cands.slice(0,6);
     await Promise.all(usar.map(async c=>{
       try{
@@ -945,6 +978,19 @@
 7. BNCC: alinhe à habilidade correta para o tema e o ano, e informe o(s) código(s).
 `;
 
+  // Lista as imagens curadas disponíveis para o componente (hoje: Geografia) e instrui a IA a usá-las
+  // em vez de gerar mapas/figuras factuais pela IA de imagem (que erra geografia).
+  function blocoBiblioteca(componente){
+    const lib=(BIBLIOTECA&&BIBLIOTECA.geografia)||{};
+    if(!/Geografia/i.test(componente||'')) return '';
+    const linhas=Object.entries(lib).map(([k,a])=>`  • "${k}" → ${a.titulo}. Quando usar: ${a.uso_pedagogico} (público: ${(a.publico||[]).join('/')||'todos'}).`).join('\n');
+    if(!linhas) return '';
+    return `\nBIBLIOTECA DE MAPAS/IMAGENS CORRETAS (use SEMPRE que precisar de mapa, região ou bioma — eles PRECISAM ser exatos):
+Mapas e biomas NUNCA devem ser gerados pela IA de imagem (ela erra fronteiras e escreve em inglês). Quando o item pedir um destes, deixe "api_image_prompt" VAZIO e preencha "asset_key" com a chave exata desta lista:
+${linhas}
+Escolha a chave mais adequada ao público e ao objetivo (anos iniciais/EJA preferem o bioma ILUSTRADO; leitura de mapa temático combina com o bioma técnico). Para imagens NÃO factuais (cenas do cotidiano, paisagens genéricas), continue usando "api_image_prompt" normalmente. Cada item usa OU "asset_key" OU "api_image_prompt", nunca os dois.\n`;
+  }
+
   function buildPromptAtividade(o){
     const obj=o.objetivo==='introduzir'?'INTRODUZIR o conceito — observação guiada, muito apoio, comece pelo concreto, dificuldade inicial.'
       :o.objetivo==='aprofundar'?'APROFUNDAR/DESAFIAR — análise, comparação, criação; múltiplas etapas; exigir justificativa do raciocínio.'
@@ -972,11 +1018,11 @@ COMO VOCÊ USA A IMAGEM (específico desta atividade — siga rigorosamente):
 REGRAS api_image_prompt (em INGLÊS): realista/fotográfico ("Photorealistic, 8k, studio light"); objeto isolado = centralizado, FUNDO BRANCO; cenas = iluminação, personagens (diversidade/faixa etária), cenário. NUNCA peça texto/números/legendas DENTRO da imagem. TETO: máx 6 imagens no total.
 MÚLTIPLA ESCOLHA: o "enunciado_item" contém SÓ a pergunta — NUNCA inclua as alternativas dentro dele; elas vão SÓ em "opcoes_selecao".
 CONTINUIDADE: ao final, proponha "proximo_passo" pensando na progressão natural do aluno depois deste tema/ano. Texto curto, acolhedor, em 2ª pessoa (fale com o professor).
-
+${blocoBiblioteca(o.componente)}
 RESPONDA SÓ COM ESTE JSON:
 {"metadados":{"titulo_atividade":"...","componente":"${o.componente}","tipo_layout":"'grade_autoditado'|'cena_unica_perguntas'|'multiplas_questoes'|'texto_e_imagem'","publico":"${o.publico}","bncc":["EFxxXXxx"]},
-"conteudo_principal":{"enunciado_geral":"...","imagem_principal_prompt":"prompt em inglês da cena única, ou vazio"},
-"itens_atividade":[{"id":1,"enunciado_item":"...","opcoes_selecao":[],"palavra_alvo_alfabetizacao":"se sondagem/autoditado","classificacao_silabica":"se aplicável","api_image_prompt":"prompt em inglês ou vazio"}],
+"conteudo_principal":{"enunciado_geral":"...","imagem_principal_prompt":"prompt em inglês da cena única, ou vazio","asset_key":"chave da biblioteca p/ mapa correto, ou vazio"},
+"itens_atividade":[{"id":1,"enunciado_item":"...","opcoes_selecao":[],"palavra_alvo_alfabetizacao":"se sondagem/autoditado","classificacao_silabica":"se aplicável","api_image_prompt":"prompt em inglês ou vazio","asset_key":"chave da biblioteca ou vazio"}],
 "proximo_passo":{"sugestao":"texto curto e amigável sugerindo a próxima atividade e por quê","tema":"tema sugerido para a próxima atividade"}}`;
   }
 
