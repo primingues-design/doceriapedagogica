@@ -176,6 +176,10 @@
   .prova-q-num{width:28px;height:28px;border-radius:50%;background:var(--gold);color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
   .prova-q-tipo{font-size:10.5px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--teal)}
   .prova-q-enunciado{font-size:14px;font-weight:500;line-height:1.6;color:#000}
+  .prova-tabela{border-collapse:collapse;width:100%;margin:10px 0;font-size:13px}
+  .prova-tabela th,.prova-tabela td{border:1.3px solid var(--border);padding:7px 9px;text-align:left;vertical-align:top}
+  .prova-tabela th{background:var(--teal-pale);font-weight:700;color:#000}
+  .prova-tabela td{height:30px}
   .prova-q-row{display:flex;gap:18px;align-items:flex-start}
   .prova-q-conteudo{flex:1;min-width:0}
   .prova-q-img{flex-shrink:0;width:150px}
@@ -338,6 +342,11 @@
 
     /* IMAGENS: tamanho controlado para não ocupar a página toda */
     .cena-principal { width: 105mm !important; height: 62mm !important; aspect-ratio: auto !important; max-width: 60% !important; margin: 0 auto 12px !important; }
+    /* mapas/ilustrações da biblioteca: grandes o suficiente para LER as informações (ex.: biomas ilustrado) */
+    .cena-principal.img-asset { width: auto !important; height: auto !important; max-width: 88% !important; max-height: 155mm !important; }
+    .cena-principal.img-asset img { width: auto !important; height: auto !important; max-width: 100% !important; max-height: 155mm !important; object-fit: contain !important; }
+    .prova-tabela { width: 100% !important; table-layout: fixed; font-size: 12px !important; break-inside: avoid; page-break-inside: avoid; }
+    .prova-tabela td { height: 24px !important; }
     .grade { grid-template-columns: repeat(3, 1fr) !important; gap: 9px !important; }
     .grade-card { padding: 9px !important; gap: 7px !important; }
     .grade-card .img-frame { width: 38mm !important; height: 38mm !important; aspect-ratio: auto !important; margin: 0 auto !important; }
@@ -861,6 +870,32 @@
   // ════════ RENDER: ATIVIDADE (motor pedagógico) ════════
   // Quebra linha antes de cada sub-item "a)", "b)", "c)"... para não ficarem grudados no parágrafo.
   function subLin(raw){return esc(raw||'').replace(/\r?\n/g,'<br>').replace(/\s+(?=\(?[a-jA-J]\))/g,'<br>');}
+  // Renderiza uma tabela markdown (| a | b |) como <table> de verdade; células vazias viram espaço para escrever.
+  function renderTabelaMD(rows){
+    const cells=r=>r.replace(/^\s*\|/,'').replace(/\|\s*$/,'').split('|').map(c=>c.trim());
+    const head=cells(rows[0]);
+    const body=rows.slice(2).map(cells);
+    const th=head.map(h=>`<th>${esc(h)}</th>`).join('');
+    const tb=body.map(r=>`<tr>${head.map((_,k)=>`<td>${esc(r[k]||'')}</td>`).join('')}</tr>`).join('');
+    return `<table class="prova-tabela"><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table>`;
+  }
+  // Texto rico: detecta tabelas markdown no meio do enunciado e renderiza; o resto segue subLin (quebras/sub-itens).
+  function richText(raw){
+    const lines=String(raw==null?'':raw).split(/\r?\n/);
+    let html='',buf=[];
+    const flush=()=>{ if(buf.length){ html+=(html?'<br>':'')+buf.map(subLin).join('<br>'); buf=[]; } };
+    for(let i=0;i<lines.length;i++){
+      const sep = i+1<lines.length && lines[i+1].includes('-') && /^[\s:|-]+$/.test(lines[i+1].trim());
+      if(lines[i].includes('|') && sep){
+        flush();
+        let t=[lines[i],lines[i+1]],j=i+2;
+        while(j<lines.length && lines[j].includes('|') && lines[j].trim()){ t.push(lines[j]); j++; }
+        html+=renderTabelaMD(t); i=j-1;
+      } else buf.push(lines[i]);
+    }
+    flush();
+    return html;
+  }
   function renderAtividade(d,meta){
     const date=fmtData();const md=d.metadados||{};
     const titulo=md.titulo_atividade||meta.tema;const layout=md.tipo_layout||'multiplas_questoes';
@@ -868,7 +903,7 @@
     const bncc=(md.bncc||[]).join(' · ');
     let html=`<div class="prova-doc">`;
     html+=cabecalhoHTML(titulo,[['📚',meta.componente],['👤',md.publico||meta.publico],bncc?['🔖',bncc]:null].filter(Boolean));
-    if(enun) html+=`<div class="prova-enunciado-geral">${subLin(enun)}</div>`;
+    if(enun) html+=`<div class="prova-enunciado-geral">${richText(enun)}</div>`;
     if(layout==='grade_autoditado'){
       html+=`<div class="grade">`;
       itens.forEach((it,i)=>{
@@ -908,7 +943,7 @@
       ? `<div class="prova-opcoes">${opcoes.map((op,oi)=>`<div class="prova-opcao"><div class="prova-bolha">${String.fromCharCode(65+oi)}</div><span>${esc(String(op).replace(/^[A-Da-d]\)\s*/,''))}</span></div>`).join('')}</div>`
       : `<div class="prova-linhas">${Array(3).fill('<div class="prova-linha"></div>').join('')}</div>`;
     const temImg=!!(it._url||(comImagemLateral&&it.api_image_prompt));
-    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${subLin(it.enunciado_item)}</div>${resp}</div>`;
+    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${richText(it.enunciado_item)}</div>${resp}</div>`;
     const imgCol=temImg?`<div class="prova-q-img">${imgFrame(it._url,it.api_image_prompt)}</div>`:'';
     return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div></div>`;
   }
@@ -941,7 +976,7 @@
       resp=`<div class="prova-linhas">${Array(n).fill('<div class="prova-linha"></div>').join('')}</div>`;
     }
     const temImg=!!(q._url||q.api_image_prompt);
-    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${subLin(q.enunciado)}</div>${resp}</div>`;
+    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${richText(q.enunciado)}</div>${resp}</div>`;
     const imgCol=temImg?`<div class="prova-q-img">${imgFrame(q._url,q.api_image_prompt)}</div>`:'';
     return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div><div class="prova-q-tipo">${TIPO_LABEL[tipo]||''}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div></div>`;
   }
@@ -1022,7 +1057,7 @@ REGRAS QUE NÃO PODEM SER QUEBRADAS:
 • Escolha do mapa:
    – "observe/escolha/localize um estado", "nome do estado", "em que região fica o estado", "estados vizinhos", "mapa político" → mapa POLÍTICO COM NOMES (é colorido e tem os nomes).
    – "quais são as regiões", "identifique/pinte as 5 regiões", "a que região pertence" → mapa de REGIÕES COLORIDAS.
-   – Biomas em anos iniciais/EJA → bioma ILUSTRADO; leitura de mapa temático → bioma técnico.
+   – Biomas, OBSERVAR paisagem/fauna/flora (anos iniciais/EJA) → bioma ILUSTRADO (biomas_ilustrado). Biomas, questões de TAMANHO/EXTENSÃO/LOCALIZAÇÃO/comparação de área ou leitura de mapa temático → bioma TÉCNICO (biomas_mapa). Atenção: são DOIS mapas diferentes, não os confunda.
    – ⚠️ O mapa de CONTORNO (sem cores e SEM NOMES) só pode ser usado quando o ALUNO vai PINTAR/COLORIR ou criar a própria legenda. É PROIBIDO usá-lo quando o aluno precisa LER, identificar, escolher ou localizar um estado — ele não tem nomes, o aluno não conseguiria responder.
 • Se uma imagem (ex.: mapa de biomas) vale para a atividade toda, coloque-a em "conteudo_principal.asset_key" e use o tipo_layout adequado para ela aparecer.
 • Cada item usa OU "asset_key" OU "api_image_prompt", nunca os dois.
@@ -1056,6 +1091,7 @@ COMO VOCÊ USA A IMAGEM (específico desta atividade — siga rigorosamente):
 REGRAS api_image_prompt (em INGLÊS): realista/fotográfico ("Photorealistic, 8k, studio light"); objeto isolado = centralizado, FUNDO BRANCO; cenas = iluminação, personagens (diversidade/faixa etária), cenário. NUNCA peça texto/números/legendas DENTRO da imagem. TETO: máx 6 imagens no total.
 MÚLTIPLA ESCOLHA: o "enunciado_item" contém SÓ a pergunta — NUNCA inclua as alternativas dentro dele; elas vão SÓ em "opcoes_selecao".
 CONTINUIDADE: ao final, proponha "proximo_passo" pensando na progressão natural do aluno depois deste tema/ano. Texto curto, acolhedor, em 2ª pessoa (fale com o professor).
+ECONOMIA DE PAPEL (A4): a atividade será impressa. Aproveite bem o espaço — enunciados objetivos (sem encher linguiça), sem repetir comandos, e peça espaço de resposta PROPORCIONAL (pergunta curta = 1-2 linhas; média = 3; só dê muitas linhas/quadros quando a resposta realmente exigir). Quando for comparar características ou organizar dados, use uma TABELA markdown (| col | col |\\n|---|---|\\n| ... |) com células vazias para o aluno preencher — fica compacto e claro. Não infle a quantidade de itens só para preencher; priorize qualidade. Mire numa atividade enxuta que caiba em poucas folhas, a menos que o professor peça mais.
 ${blocoBiblioteca(o.componente)}
 RESPONDA SÓ COM ESTE JSON:
 {"metadados":{"titulo_atividade":"...","componente":"${o.componente}","tipo_layout":"'grade_autoditado'|'cena_unica_perguntas'|'multiplas_questoes'|'texto_e_imagem'","publico":"${o.publico}","bncc":["EFxxXXxx"]},
