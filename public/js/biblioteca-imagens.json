@@ -4,24 +4,24 @@
     "brasil_regioes_cores": {
       "arquivo": "/assets/geografia/brasil-regioes-cores.svg",
       "titulo": "Mapa do Brasil — 5 regiões coloridas",
-      "descricao": "Mapa político com as 5 regiões do IBGE em cores diferentes, legenda das regiões e nomes dos estados.",
-      "uso_pedagogico": "Identificar e nomear as 5 regiões; localizar estados; ligar estado a região; ler legenda de cores.",
+      "descricao": "Mapa com as 5 regiões do IBGE em CORES FORTES, com os nomes dos estados.",
+      "uso_pedagogico": "Use para ENSINAR/IDENTIFICAR as 5 REGIÕES (cada região numa cor). Bom para 'quais são as regiões', 'pinte/identifique as regiões', 'a que região pertence'. Para focar em ESTADOS, prefira o mapa político com nomes.",
       "publico": ["fund1", "fund2", "eja"],
       "colorir": false
     },
     "brasil_politico_nomes": {
       "arquivo": "/assets/geografia/brasil-politico-nomes.svg",
       "titulo": "Mapa político do Brasil — estados com NOMES",
-      "descricao": "Mapa político com o contorno de todos os estados e o NOME de cada um (rótulos externos com linha-guia para os estados pequenos do litoral). Fundo branco.",
-      "uso_pedagogico": "Localizar e nomear estados; identificar em qual região um estado fica; estados vizinhos/fronteiras; ler mapa político. Use quando o enunciado disser 'observe o mapa político', 'localize o estado', 'nome dos estados'.",
+      "descricao": "Mapa político COLORIDO (tons suaves por região) com o NOME de cada estado em destaque. Estados pequenos do litoral com linha-guia.",
+      "uso_pedagogico": "ESTE é o mapa padrão para trabalhar ESTADOS. Use quando o enunciado disser 'observe/escolha/localize um estado', 'em que região fica o estado', 'estados vizinhos', 'mapa político', 'nome dos estados'. É colorido e tem os nomes.",
       "publico": ["fund1", "fund2", "eja"],
       "colorir": false
     },
     "brasil_contorno_estados": {
       "arquivo": "/assets/geografia/brasil-contorno-estados.svg",
       "titulo": "Mapa do Brasil — contorno com estados nomeados (para pintar/marcar)",
-      "descricao": "Mapa do Brasil só com o contorno em preto e branco e o nome de cada estado. Sem cores — ideal para o aluno pintar, circular ou localizar.",
-      "uso_pedagogico": "Pintar regiões, circular estados, localizar capital/Distrito Federal, criar legenda própria.",
+      "descricao": "Mapa do Brasil em preto e branco, SEM cores e SEM nomes dos estados. Só o contorno dos estados.",
+      "uso_pedagogico": "Use SOMENTE quando o ALUNO vai PINTAR/COLORIR ou criar a própria legenda (ex.: 'pinte cada região de uma cor', 'crie sua legenda'). NÃO use para observar, identificar, escolher ou localizar estado — nesses casos use o mapa político com nomes (este aqui não tem nomes).",
       "publico": ["fund1", "fund2", "eja"],
       "colorir": true
     },

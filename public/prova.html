@@ -798,12 +798,24 @@
     catch(_){ BIBLIOTECA={}; }
     return BIBLIOTECA;
   }
-  // resolve uma chave da biblioteca (qualquer categoria) para uma URL local
+  // resolve uma chave da biblioteca (qualquer categoria) para uma URL local — tolerante a variações
+  function _norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');}
   function assetUrl(key){
     if(!BIBLIOTECA||!key) return null;
+    // mapa de todas as chaves -> arquivo
+    const all={};
     for(const cat of Object.keys(BIBLIOTECA)){
-      const c=BIBLIOTECA[cat]; if(c&&typeof c==='object'&&c[key]&&c[key].arquivo) return c[key].arquivo;
+      const c=BIBLIOTECA[cat]; if(c&&typeof c==='object') for(const k of Object.keys(c)){ if(c[k]&&c[k].arquivo) all[k]=c[k].arquivo; }
     }
+    if(all[key]) return all[key];                         // 1) exata
+    const nk=_norm(key);
+    for(const k of Object.keys(all)){ if(_norm(k)===nk) return all[k]; } // 2) normalizada
+    // 3) por palavras-chave (a IA às vezes inventa o nome da chave)
+    const has=(...w)=>w.every(x=>nk.includes(x));
+    if(has('bioma')){ return (nk.includes('ilustr')||nk.includes('fauna')||nk.includes('animal')||nk.includes('infantil')) ? (all.biomas_ilustrado||all.biomas_mapa) : (nk.includes('mapa')||nk.includes('tematic')||nk.includes('tecnic')) ? (all.biomas_mapa||all.biomas_ilustrado) : (all.biomas_ilustrado||all.biomas_mapa); }
+    if(nk.includes('contorno')||nk.includes('pintar')||nk.includes('colorir')||nk.includes('branco')||nk.includes('mudo')) return all.brasil_contorno_estados||null;
+    if(nk.includes('regi') && (nk.includes('cor')||nk.includes('color'))) return all.brasil_regioes_cores||null;
+    if(nk.includes('politic')||nk.includes('estado')||nk.includes('nomes')||nk.includes('cap ')||nk.includes('regi')) return all.brasil_regioes_cores||all.brasil_politico_nomes||null;
     return null;
   }
   // Se um objeto tem asset_key válido, fixa _url direto da biblioteca (sem chamar a IA de imagem).
@@ -872,7 +884,11 @@
     } else if(layout==='texto_e_imagem'){
       if(d._principalUrl||d.conteudo_principal?.imagem_principal_prompt) html+=imgFrame(d._principalUrl,d.conteudo_principal?.imagem_principal_prompt,'cena-principal');
       itens.forEach((it,i)=>html+=questaoAtivHTML(it,i));
-    } else { itens.forEach((it,i)=>html+=questaoAtivHTML(it,i,true)); }
+    } else {
+      // layout padrão (múltiplas questões): se há imagem principal (ex.: mapa de biomas), mostra antes das questões
+      if(d._principalUrl||d.conteudo_principal?.imagem_principal_prompt) html+=imgFrame(d._principalUrl,d.conteudo_principal?.imagem_principal_prompt,'cena-principal');
+      itens.forEach((it,i)=>html+=questaoAtivHTML(it,i,true));
+    }
     const comAlvo=itens.filter(it=>(it.palavra_alvo_alfabetizacao||'').trim());
     if(comAlvo.length){
       html+=`<div class="page-break"></div><div class="gabarito"><div class="gabarito-titulo">Gabarito — palavras</div><ol class="gabarito-lista">${itens.map((it,i)=>(it.palavra_alvo_alfabetizacao||'').trim()?`<li class="gabarito-item"><strong>${it.id||i+1}.</strong> ${esc(it.palavra_alvo_alfabetizacao)}${it.classificacao_silabica?` <em style="color:var(--text-muted)">(${esc(it.classificacao_silabica)})</em>`:''}</li>`:'').join('')}</ol></div>`;
@@ -1003,7 +1019,12 @@ ${linhas}
 REGRAS QUE NÃO PODEM SER QUEBRADAS:
 • Se o enunciado disser "observe/veja/analise o mapa", "no mapa", "localize", "região", "estado", "bioma", "fronteira" → a imagem TEM de ser um "asset_key" da biblioteca. É PROIBIDO usar uma foto gerada (crianças, objetos) e ainda assim escrever "observe o mapa".
 • COERÊNCIA TEXTO↔IMAGEM é obrigatória: o enunciado deve falar exatamente do que a imagem mostra. Se você gerar uma foto de crianças por "api_image_prompt", o enunciado deve se referir às crianças — nunca a "um mapa".
-• Escolha do mapa: "mapa político / nome dos estados / localize o estado / em que região fica / estados vizinhos" → use o mapa POLÍTICO COM NOMES. "pinte/identifique as 5 regiões" → mapa de REGIÕES COLORIDAS. "pinte livremente / crie sua legenda" → CONTORNO sem nomes. Biomas em anos iniciais/EJA → bioma ILUSTRADO; leitura de mapa temático → bioma técnico.
+• Escolha do mapa:
+   – "observe/escolha/localize um estado", "nome do estado", "em que região fica o estado", "estados vizinhos", "mapa político" → mapa POLÍTICO COM NOMES (é colorido e tem os nomes).
+   – "quais são as regiões", "identifique/pinte as 5 regiões", "a que região pertence" → mapa de REGIÕES COLORIDAS.
+   – Biomas em anos iniciais/EJA → bioma ILUSTRADO; leitura de mapa temático → bioma técnico.
+   – ⚠️ O mapa de CONTORNO (sem cores e SEM NOMES) só pode ser usado quando o ALUNO vai PINTAR/COLORIR ou criar a própria legenda. É PROIBIDO usá-lo quando o aluno precisa LER, identificar, escolher ou localizar um estado — ele não tem nomes, o aluno não conseguiria responder.
+• Se uma imagem (ex.: mapa de biomas) vale para a atividade toda, coloque-a em "conteudo_principal.asset_key" e use o tipo_layout adequado para ela aparecer.
 • Cada item usa OU "asset_key" OU "api_image_prompt", nunca os dois.
 • Listas de alternativas/itens para o aluno preencher ou ligar (ex.: "[ ] ___ Região Norte") devem vir com CADA opção em sua própria linha — separe-as com quebra de linha (\\n) dentro do texto, nunca tudo na mesma linha.\n`;
   }
