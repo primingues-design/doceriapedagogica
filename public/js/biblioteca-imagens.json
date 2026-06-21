@@ -40,6 +40,46 @@
       "uso_pedagogico": "Leitura de mapa temático; relacionar bioma a região; comparar extensão dos biomas. Mais indicado para fund. 2.",
       "publico": ["fund2", "eja"],
       "colorir": false
+    },
+    "coordenadas_globo": {
+      "arquivo": "/assets/geografia/coordenadas-globo.svg",
+      "titulo": "Globo — paralelos e meridianos (com nomes)",
+      "descricao": "Globo terrestre esquemático mostrando paralelos e meridianos, com Equador, Meridiano de Greenwich, Trópicos de Câncer e Capricórnio e os polos identificados.",
+      "uso_pedagogico": "Ensinar coordenadas geográficas: paralelos, meridianos, Equador, Greenwich, trópicos, polos, hemisférios. Use quando o aluno precisa VER as linhas já nomeadas.",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
+    "coordenadas_globo_ab": {
+      "arquivo": "/assets/geografia/coordenadas-globo-ab.svg",
+      "titulo": "Globo com setas A e B (linhas SEM nome)",
+      "descricao": "Mesmo globo de paralelos e meridianos, mas com uma seta A apontando para um paralelo e uma seta B apontando para um meridiano, sem nomear as linhas.",
+      "uso_pedagogico": "Use quando o enunciado pedir para o ALUNO identificar/nomear as linhas indicadas (ex.: 'escreva o nome das linhas indicadas por A e B'). A=paralelo, B=meridiano.",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
+    "rosa_dos_ventos": {
+      "arquivo": "/assets/geografia/rosa-dos-ventos.svg",
+      "titulo": "Rosa dos ventos (pontos cardeais e colaterais)",
+      "descricao": "Rosa dos ventos com os pontos cardeais N, S, L (Leste), O (Oeste) e os colaterais NE, NO, SE, SO.",
+      "uso_pedagogico": "Ensinar orientação e pontos cardeais/colaterais. Atenção: em português é L (Leste) e O (Oeste), nunca E/W.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "hemisferios": {
+      "arquivo": "/assets/geografia/hemisferios.svg",
+      "titulo": "Hemisférios (Norte/Sul e Leste/Oeste)",
+      "descricao": "Dois globos: um dividido pelo Equador (Hemisfério Norte e Sul) e outro pelo Meridiano de Greenwich (Leste e Oeste).",
+      "uso_pedagogico": "Ensinar a divisão da Terra em hemisférios pelo Equador e pelo Meridiano de Greenwich.",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
+    "sistema_solar": {
+      "arquivo": "/assets/geografia/sistema-solar.svg",
+      "titulo": "Sistema Solar — ordem dos planetas",
+      "descricao": "O Sol e os 8 planetas na ordem correta (Mercúrio, Vênus, Terra, Marte, Júpiter, Saturno com anel, Urano, Netuno), com tamanhos relativos aproximados.",
+      "uso_pedagogico": "Ensinar o Sistema Solar e a ordem/sequência dos planetas a partir do Sol.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
     }
   }
 }
