@@ -155,6 +155,9 @@
   .img-frame.img-asset{background:#fff}
   .img-frame.img-asset img{object-fit:contain}
   .grade-card .img-frame.img-asset,.prova-q-img .img-frame.img-asset,.cena-principal.img-asset{aspect-ratio:auto}
+  /* mapa de Geografia: grande, abaixo da pergunta, centralizado */
+  .img-frame.mapa-geo{width:100%;max-width:360px;height:auto;aspect-ratio:auto;margin:12px auto 4px;background:#fff;border:1px solid var(--border)}
+  .img-frame.mapa-geo img{width:auto;height:auto;max-width:100%;max-height:460px;object-fit:contain}
   .img-placeholder{border:1.5px dashed var(--border-mid);color:var(--text-muted);flex-direction:column;gap:6px;text-align:center;padding:12px;background:#fcfbf9}
   .img-placeholder span{font-size:30px;opacity:0.5}
   .img-placeholder small{font-size:10px;line-height:1.3;max-width:90%}
@@ -347,6 +350,9 @@
     .cena-principal.img-asset img { width: auto !important; height: auto !important; max-width: 100% !important; max-height: 155mm !important; object-fit: contain !important; }
     .prova-tabela { width: 100% !important; table-layout: fixed; font-size: 12px !important; break-inside: avoid; page-break-inside: avoid; }
     .prova-tabela td { height: 24px !important; }
+    /* mapa de Geografia abaixo da pergunta: grande e legível na folha */
+    .img-frame.mapa-geo { max-width: 130mm !important; width: auto !important; height: auto !important; margin: 6px auto 8px !important; border: 0 !important; break-inside: avoid; page-break-inside: avoid; }
+    .img-frame.mapa-geo img { max-width: 100% !important; max-height: 150mm !important; width: auto !important; height: auto !important; object-fit: contain !important; }
     .grade { grid-template-columns: repeat(3, 1fr) !important; gap: 9px !important; }
     .grade-card { padding: 9px !important; gap: 7px !important; }
     .grade-card .img-frame { width: 38mm !important; height: 38mm !important; aspect-ratio: auto !important; margin: 0 auto !important; }
@@ -859,6 +865,7 @@
     }));
   }
 
+  function isGeoAsset(url){ return typeof url==='string' && url.indexOf('/assets/geografia/')===0; }
   function imgFrame(url,prompt,extraClass){
     // imagens da biblioteca curada (mapas etc.) mostram inteiras, sem corte
     const isAsset = typeof url==='string' && url.indexOf('/assets/')===0;
@@ -942,10 +949,13 @@
     let resp = opcoes.length
       ? `<div class="prova-opcoes">${opcoes.map((op,oi)=>`<div class="prova-opcao"><div class="prova-bolha">${String.fromCharCode(65+oi)}</div><span>${esc(String(op).replace(/^[A-Da-d]\)\s*/,''))}</span></div>`).join('')}</div>`
       : `<div class="prova-linhas">${Array(3).fill('<div class="prova-linha"></div>').join('')}</div>`;
+    const geo=isGeoAsset(it._url);
     const temImg=!!(it._url||(comImagemLateral&&it.api_image_prompt));
     const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${richText(it.enunciado_item)}</div>${resp}</div>`;
-    const imgCol=temImg?`<div class="prova-q-img">${imgFrame(it._url,it.api_image_prompt)}</div>`:'';
-    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div></div>`;
+    // mapa de Geografia: grande, ABAIXO da pergunta; demais imagens: coluna lateral como hoje
+    const imgCol=(temImg&&!geo)?`<div class="prova-q-img">${imgFrame(it._url,it.api_image_prompt)}</div>`:'';
+    const mapaAbaixo=geo?imgFrame(it._url,it.api_image_prompt,'mapa-geo'):'';
+    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div>${mapaAbaixo}</div>`;
   }
 
   // ════════ RENDER: AVALIAÇÃO ════════
@@ -975,10 +985,12 @@
       const n=Math.max(parseInt(q.linhas,10)||4,2);
       resp=`<div class="prova-linhas">${Array(n).fill('<div class="prova-linha"></div>').join('')}</div>`;
     }
+    const geo=isGeoAsset(q._url);
     const temImg=!!(q._url||q.api_image_prompt);
     const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${richText(q.enunciado)}</div>${resp}</div>`;
-    const imgCol=temImg?`<div class="prova-q-img">${imgFrame(q._url,q.api_image_prompt)}</div>`:'';
-    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div><div class="prova-q-tipo">${TIPO_LABEL[tipo]||''}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div></div>`;
+    const imgCol=(temImg&&!geo)?`<div class="prova-q-img">${imgFrame(q._url,q.api_image_prompt)}</div>`:'';
+    const mapaAbaixo=geo?imgFrame(q._url,q.api_image_prompt,'mapa-geo'):'';
+    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div><div class="prova-q-tipo">${TIPO_LABEL[tipo]||''}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div>${mapaAbaixo}</div>`;
   }
   function respostaGabarito(q){
     if(q.tipo==='multipla_escolha') return q.resposta||'—';
