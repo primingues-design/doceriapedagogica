@@ -251,6 +251,62 @@
       "publico": ["fund2", "eja"],
       "colorir": false
     },
+    "celula_vegetal": {
+      "arquivo": "/assets/ciencias/celula-vegetal.png",
+      "titulo": "Célula Vegetal",
+      "descricao": "Infográfico da célula vegetal com as organelas identificadas (núcleo, parede celular, cloroplastos, vacúolo central, mitocôndria etc.) e suas funções.",
+      "uso_pedagogico": "Ensinar a célula vegetal, suas organelas e funções; comparar com a célula animal (parede celular, cloroplastos, vacúolo central).",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
+    "celula_animal": {
+      "arquivo": "/assets/ciencias/celula-animal.png",
+      "titulo": "Célula Animal",
+      "descricao": "Infográfico da célula animal com as organelas identificadas (núcleo, membrana plasmática, mitocôndria, lisossoma, centríolos etc.) e suas funções.",
+      "uso_pedagogico": "Ensinar a célula animal, suas organelas e funções; comparar com a célula vegetal.",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
+    "sistema_nervoso": {
+      "arquivo": "/assets/ciencias/sistema-nervoso.png",
+      "titulo": "Sistema Nervoso",
+      "descricao": "Diagrama do sistema nervoso com cérebro, cerebelo, tronco encefálico, medula espinhal, nervos periféricos e gânglios, com funções.",
+      "uso_pedagogico": "Ensinar o sistema nervoso, suas partes e funções (controle e coordenação do corpo).",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
+    "sistema_esqueletico": {
+      "arquivo": "/assets/ciencias/sistema-esqueletico.png",
+      "titulo": "Sistema Esquelético",
+      "descricao": "Esqueleto humano com os principais ossos identificados (crânio, caixa torácica, coluna vertebral, clavícula, úmero, pelve, fêmur, tíbia, fíbula) e funções.",
+      "uso_pedagogico": "Ensinar o sistema esquelético, os principais ossos e suas funções (sustentação, proteção, movimento).",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "sistema_respiratorio": {
+      "arquivo": "/assets/ciencias/sistema-respiratorio.png",
+      "titulo": "Sistema Respiratório",
+      "descricao": "Sistema respiratório com fossas nasais, cavidade oral, faringe, laringe, traqueia, brônquios, bronquíolos, pulmões e diafragma identificados.",
+      "uso_pedagogico": "Ensinar o sistema respiratório, suas partes e o caminho do ar; observar e identificar os órgãos.",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
+    "sistema_circulatorio": {
+      "arquivo": "/assets/ciencias/sistema-circulatorio.png",
+      "titulo": "Sistema Circulatório",
+      "descricao": "Sistema circulatório com coração, artérias (sangue rico em oxigênio) e veias (sangue pobre em oxigênio), e os principais vasos, com legenda.",
+      "uso_pedagogico": "Ensinar o sistema circulatório, coração, artérias e veias, e o transporte do sangue.",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
+    "sistema_digestorio": {
+      "arquivo": "/assets/ciencias/sistema-digestorio.png",
+      "titulo": "Sistema Digestório",
+      "descricao": "Sistema digestivo com boca, glândulas salivares, esôfago, estômago, fígado, vesícula biliar, pâncreas, intestino delgado, intestino grosso, reto e ânus.",
+      "uso_pedagogico": "Ensinar o sistema digestório, seus órgãos e o caminho dos alimentos.",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
     "sistema_solar": {
       "arquivo": "/assets/geografia/sistema-solar.svg",
       "titulo": "Sistema Solar — ordem dos planetas",
