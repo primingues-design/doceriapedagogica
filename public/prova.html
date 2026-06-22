@@ -179,6 +179,11 @@
   .prova-q-num{width:28px;height:28px;border-radius:50%;background:var(--gold);color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
   .prova-q-tipo{font-size:10.5px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--teal)}
   .prova-q-enunciado{font-size:14px;font-weight:500;line-height:1.6;color:#000}
+  /* EJA: fontes maiores (adultos reclamam do tamanho) */
+  .prova-doc.eja .prova-q-enunciado,.prova-doc.eja .prova-enunciado-geral{font-size:16.5px;line-height:1.7}
+  .prova-doc.eja .prova-opcao span,.prova-doc.eja .prova-vf-item span{font-size:15.5px}
+  .prova-doc.eja .prova-texto-base{font-size:15.5px;line-height:1.7}
+  .prova-doc.eja .prova-q-num{width:30px;height:30px;font-size:14px}
   .prova-tabela{border-collapse:collapse;width:100%;margin:10px 0;font-size:13px}
   .prova-tabela th,.prova-tabela td{border:1.3px solid var(--border);padding:7px 9px;text-align:left;vertical-align:top}
   .prova-tabela th{background:var(--teal-pale);font-weight:700;color:#000}
@@ -340,6 +345,8 @@
     .prova-doc { border-radius: 0 !important; box-shadow: none !important; padding: 0 !important; outline: none !important; }
     .prova-questao, .grade-card, .gabarito { break-inside: avoid; page-break-inside: avoid; }
     .prova-questao { margin-bottom: 11px !important; padding: 10px 12px !important; }
+    .prova-doc.eja .prova-q-enunciado, .prova-doc.eja .prova-enunciado-geral { font-size: 15px !important; line-height: 1.65 !important; }
+    .prova-doc.eja .prova-opcao span, .prova-doc.eja .prova-vf-item span, .prova-doc.eja .prova-texto-base { font-size: 14px !important; }
     .prova-cabecalho { padding: 12px 0 12px !important; margin-bottom: 14px !important; }
     .prova-enunciado-geral, .prova-texto-base { padding: 10px 14px !important; margin-bottom: 14px !important; }
 
@@ -538,6 +545,10 @@
       </div>
 
       <div class="form-section">
+        <div class="mat-ia-intro">
+          <div class="mat-ia-avatar">✦</div>
+          <div class="mat-ia-msg">Vamos montar uma avaliação de excelência! Quer incluir um <strong>texto de apoio</strong>? Você cola o seu ou eu crio um inédito sobre o tema.</div>
+        </div>
         <div class="form-section-title">Texto de apoio</div>
         <label class="radio-card sel" id="vrc-A">
           <input type="radio" name="vTexto" value="A" onchange="onTextoChange()" checked>
@@ -557,27 +568,13 @@
       </div>
 
       <div class="form-section">
-        <div class="form-section-title">Imagens</div>
-        <div class="toggle-row">
-          <div><div class="toggle-label">🖼️ Incluir imagens</div><div class="toggle-sub">Geradas por IA</div></div>
-          <button class="toggle" id="v_togImg" onclick="toggleBtn(this);onImgToggle()"></button>
+        <div class="form-section-title">Grau de dificuldade</div>
+        <div class="mat-chips" data-group="v_dificuldade">
+          <button type="button" class="mat-chip" data-value="facil">Fácil</button>
+          <button type="button" class="mat-chip sel" data-value="medio">Médio</button>
+          <button type="button" class="mat-chip" data-value="dificil">Difícil</button>
         </div>
-        <div id="vImgOpts" style="display:none;margin-top:8px;">
-          <div class="field-2col">
-            <div class="field">
-              <label class="field-label">Quantas (máx 6)</label>
-              <input type="number" id="v_numImg" min="1" max="6" value="3" />
-            </div>
-            <div class="field">
-              <label class="field-label">Função</label>
-              <select id="v_propImg">
-                <option value="ilustrativa">Ilustrativa</option>
-                <option value="compoe">Compõem as questões</option>
-              </select>
-            </div>
-          </div>
-          <div class="field-hint">“Compõem” = a IA cria perguntas a partir da imagem (analise, relacione...).</div>
-        </div>
+        <div class="field-hint">A IA calibra o nível das questões (vocabulário, etapas de raciocínio, distratores) ao grau escolhido.</div>
       </div>
 
       <div class="form-section">
@@ -793,7 +790,8 @@
     const c={
       titulo:val('v_titulo',true),publico:val('v_publico'),disciplina:val('v_disciplina',true),tema:val('v_tema',true),
       textoOrigem:getTextoOrigem(),textoBase:val('v_textoBase',true),
-      incluiImg:isOn('v_togImg'),numImg:Math.min(parseInt(val('v_numImg'),10)||0,6),propImg:val('v_propImg'),
+      dificuldade:chipVal('v_dificuldade','medio'),
+      eja:/EJA/i.test(val('v_publico')),
       tipos,instrucoes:val('instrucoes',true)
     };
     if(!c.titulo) throw new Error('Dê um nome/título à avaliação.');
@@ -962,13 +960,14 @@
   const TIPO_LABEL={multipla_escolha:'Múltipla escolha',dissertativa:'Dissertativa',vf:'Verdadeiro ou Falso'};
   function renderAvaliacao(d,cfg){
     const date=fmtData();const titulo=d.titulo||cfg.titulo;const questoes=d.questoes||[];
-    let html=`<div class="prova-doc">`;
-    html+=cabecalhoHTML(titulo,[['📚',cfg.disciplina||cfg.tema],['👤',cfg.publico]]);
+    const bncc=((d.metadados&&d.metadados.bncc)||[]).join(' · ');
+    let html=`<div class="prova-doc${cfg.eja?' eja':''}">`;
+    html+=cabecalhoHTML(titulo,[['📚',cfg.disciplina||cfg.tema],['👤',cfg.publico],bncc?['🔖',bncc]:null].filter(Boolean));
     const tb=(d.texto_base||'').trim();
     if(tb){const ps=tb.split('\n').filter(p=>p.trim());html+=`<div class="prova-texto-base"><div class="prova-texto-titulo">Texto</div>${ps.map(p=>`<p>${esc(p.trim())}</p>`).join('')}</div>`;}
     questoes.forEach((q,i)=>html+=questaoAvalHTML(q,i));
     // gabarito
-    html+=`<div class="page-break"></div><div class="gabarito"><div class="gabarito-titulo">Gabarito</div><ol class="gabarito-lista">${questoes.map((q,i)=>`<li class="gabarito-item"><strong>${i+1}.</strong> ${esc(respostaGabarito(q))}</li>`).join('')}</ol></div>`;
+    html+=`<div class="page-break"></div><div class="gabarito"><div class="gabarito-titulo">Gabarito</div><ol class="gabarito-lista">${questoes.map((q,i)=>`<li class="gabarito-item"><strong>${i+1}.</strong> ${esc(respostaGabarito(q))}${(q.avalia&&String(q.avalia).trim())?`<em style="display:block;color:var(--text-muted);font-size:11px;font-weight:400;margin-top:2px">Avalia: ${esc(q.avalia)}</em>`:''}</li>`).join('')}</ol></div>`;
     html+=rodapeHTML(cfg.disciplina||'Avaliação',cfg.tema,date)+`</div>`;
     mostrar(html,titulo,`${cfg.publico} • ${cfg.disciplina||cfg.tema}`,'prova',cfg.tema,cfg.publico);
   }
@@ -993,7 +992,7 @@
     return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div><div class="prova-q-tipo">${TIPO_LABEL[tipo]||''}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div>${mapaAbaixo}</div>`;
   }
   function respostaGabarito(q){
-    if(q.tipo==='multipla_escolha') return q.resposta||'—';
+    if(q.tipo==='multipla_escolha'){const L=(q.resposta||'').trim().toUpperCase();const idx=L.charCodeAt(0)-65;const op=(q.opcoes||[])[idx];return (L||'—')+(op?') '+String(op).replace(/^[A-Da-d]\)\s*/,''):'');}
     if(q.tipo==='vf'){const afs=(q.afirmacoes||[]);return afs.map((a,j)=>`${String.fromCharCode(97+j)}) ${a.resposta||'?'}`).join('   ');}
     return q.resposta_modelo||'Resposta pessoal / aberta.';
   }
@@ -1135,34 +1134,38 @@ RESPONDA SÓ COM ESTE JSON:
         : `SEM TEXTO DE APOIO: "texto_base" vazio.`;
     const tiposBloco = o.tipos.map(t=>`${t.qtd}x ${TIPO_LABEL[t.tipo]} (tipo:"${t.tipo}")`).join(', ');
     const total=o.tipos.reduce((s,t)=>s+t.qtd,0);
-    let imgBloco;
-    if(o.incluiImg && o.numImg>0){
-      imgBloco = o.propImg==='compoe'
-        ? `IMAGENS: gere ${o.numImg} imagens (máx 6) que COMPÕEM a avaliação. Em ${o.numImg} questões, preencha "api_image_prompt" e faça o ENUNCIADO depender da imagem, começando com algo como "Analise a imagem...", "A partir da imagem...", "Observe a imagem e..." ou "Relacione...". Use sua lógica para a pergunta fazer sentido com a imagem. Demais questões: api_image_prompt vazio.`
-        : `IMAGENS: gere ${o.numImg} imagens ILUSTRATIVAS (máx 6). Distribua "api_image_prompt" em ${o.numImg} questões, de forma decorativa — a resposta NÃO depende da imagem. Demais questões: api_image_prompt vazio.`;
-    } else { imgBloco = `IMAGENS: nenhuma. Todas as questões com "api_image_prompt" vazio.`; }
+    const dif = o.dificuldade==='facil'
+      ? 'FÁCIL — questões diretas, vocabulário simples, 1 etapa de raciocínio, foco em lembrar/compreender.'
+      : o.dificuldade==='dificil'
+        ? 'DIFÍCIL — exige analisar/avaliar/criar, múltiplas etapas, interpretação e justificativa do raciocínio.'
+        : 'MÉDIO — equilíbrio: começa em compreender/aplicar e avança para analisar; etapas moderadas.';
 
-    return `Você é o motor pedagógico da Doceria Pedagógica. Monte uma AVALIAÇÃO escolar.
+    return `Você é o motor pedagógico da Doceria Pedagógica (Especialista Sênior em Avaliação Educacional). Monte uma AVALIAÇÃO escolar de EXCELÊNCIA.
 - TÍTULO: ${o.titulo}
 - PUBLICO_ALVO: ${o.publico}
 ${o.disciplina?`- DISCIPLINA: ${o.disciplina}`:''}
 - TEMA: ${o.tema}
+- GRAU DE DIFICULDADE: ${dif}
+${o.eja?'- EJA (ADULTOS): linguagem respeitosa e contexto adulto/funcional (trabalho, casa, dinheiro, direitos, cidadania). NUNCA infantilize. Enunciados claros e objetivos.':''}
 ${o.instrucoes?`- INSTRUÇÕES EXTRAS: ${o.instrucoes}`:''}
 
 ${textoBloco}
 
 ${CEREBRO_PEDAGOGICO}
 QUESTÕES: gere exatamente estas (${total} no total), distribuídas: ${tiposBloco}.
-- multipla_escolha: o "enunciado" contém SOMENTE a pergunta/comando — NUNCA repita as alternativas (A, B, C, D) dentro do enunciado. As alternativas vão EXCLUSIVAMENTE no array "opcoes" (4 itens, texto puro, sem "A)"/"B)" na frente). "resposta" = letra correta (A/B/C/D).
-- vf: "afirmacoes" = lista de {texto, resposta:"V"|"F"} (3 a 5 afirmações).
-- dissertativa: "enunciado" claro; "linhas" (3-5); "resposta_modelo" curto p/ o gabarito.
+- DISTRIBUA os níveis de Bloom entre as questões conforme a dificuldade (não deixe tudo no mesmo nível raso). AO MENOS UMA questão deve confrontar o ERRO COMUM do tema.
+- multipla_escolha: o "enunciado" contém SOMENTE a pergunta/comando — NUNCA repita as alternativas (A, B, C, D) dentro do enunciado. As alternativas vão SÓ no array "opcoes" (4 itens, texto puro, sem "A)"/"B)"). "resposta" = letra correta (A/B/C/D). DISTRATORES INTELIGENTES: as 3 alternativas erradas devem ser PLAUSÍVEIS e ancoradas em erros TÍPICOS do aluno (não óbvias nem absurdas), com extensão parecida.
+- vf: "afirmacoes" = lista de {texto, resposta:"V"|"F"} (3 a 5); inclua afirmações que pegam concepções equivocadas comuns.
+- dissertativa: "enunciado" claro; "linhas" (2-5, proporcional à resposta esperada); "resposta_modelo" curto p/ o gabarito.
+- Para CADA questão, preencha "avalia" = o que ela avalia (1 frase curta — vai no gabarito como apoio ao professor).
+- Alinhe à BNCC e devolva os códigos em "metadados.bncc".
 
-${imgBloco}
-REGRAS api_image_prompt (INGLÊS): realista/fotográfico; NUNCA texto/números/legendas dentro da imagem; valores/rótulos vão no enunciado. Adeque ao público ${o.publico}.
+${blocoBiblioteca(o.disciplina)}
+DECISÃO DE IMAGEM (VOCÊ decide, o professor NÃO): use imagem só quando ela realmente eleva a QUALIDADE pedagógica, a estética e o avanço do aluno — não force, a maioria das questões pode não ter imagem. Para conteúdo factual (mapas, biomas, diagramas científicos) use "asset_key" da biblioteca; para cenas genéricas não factuais use "api_image_prompt" (realista/fotográfico, em inglês, SEM texto/números dentro). Coerência texto↔imagem obrigatória. Cada questão usa OU "asset_key" OU "api_image_prompt", nunca os dois.
 
 RESPONDA SÓ COM ESTE JSON:
-{"titulo":"${o.titulo}","texto_base":"texto ou vazio",
-"questoes":[{"tipo":"multipla_escolha|dissertativa|vf","enunciado":"...","opcoes":[],"resposta":"","afirmacoes":[],"resposta_modelo":"","linhas":4,"api_image_prompt":""}]}`;
+{"titulo":"${o.titulo}","metadados":{"bncc":["EFxxXXxx"]},"texto_base":"texto ou vazio",
+"questoes":[{"tipo":"multipla_escolha|dissertativa|vf","enunciado":"...","opcoes":[],"resposta":"","afirmacoes":[],"resposta_modelo":"","linhas":4,"avalia":"o que a questão avalia","asset_key":"chave da biblioteca ou vazio","api_image_prompt":"prompt em inglês ou vazio"}]}`;
   }
 
   function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
