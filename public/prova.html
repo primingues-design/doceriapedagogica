@@ -518,11 +518,11 @@
         <div class="form-section-title">Avaliação</div>
         <div class="field">
           <label class="field-label">Nome / título da avaliação <span class="req">*</span></label>
-          <input type="text" id="v_titulo" placeholder="Ex: Avaliação de Ciências — 1º Bimestre" />
+          <input type="text" id="v_titulo" placeholder="Ex: Avaliação de Ciências — 1º Bimestre" oninput="updateAvalFlow()" />
         </div>
         <div class="field">
           <label class="field-label">Público-alvo <span class="req">*</span></label>
-          <select id="v_publico">
+          <select id="v_publico" onchange="updateAvalFlow()">
             <option value="">Selecione...</option>
             <option>Educação Infantil</option>
             <option>Ensino Fundamental I (1º ao 5º ano)</option>
@@ -539,19 +539,19 @@
           </div>
           <div class="field">
             <label class="field-label">Tema <span class="req">*</span></label>
-            <input type="text" id="v_tema" placeholder="Ex: Ciclo da água" />
+            <input type="text" id="v_tema" placeholder="Ex: Ciclo da água" oninput="updateAvalFlow()" />
           </div>
         </div>
       </div>
 
-      <div class="form-section">
+      <div class="form-section" id="av-step-texto" style="display:none;">
         <div class="mat-ia-intro">
           <div class="mat-ia-avatar">✦</div>
           <div class="mat-ia-msg">Vamos montar uma avaliação de excelência! Quer incluir um <strong>texto de apoio</strong>? Você cola o seu ou eu crio um inédito sobre o tema.</div>
         </div>
         <div class="form-section-title">Texto de apoio</div>
-        <label class="radio-card sel" id="vrc-A">
-          <input type="radio" name="vTexto" value="A" onchange="onTextoChange()" checked>
+        <label class="radio-card" id="vrc-A">
+          <input type="radio" name="vTexto" value="A" onchange="onTextoChange()">
           <div><div class="rc-title">Eu vou colar um texto</div><div class="rc-sub">As questões usam o seu texto</div></div>
         </label>
         <label class="radio-card" id="vrc-B">
@@ -567,17 +567,25 @@
         </div>
       </div>
 
-      <div class="form-section">
+      <div class="form-section" id="av-step-dif" style="display:none;">
+        <div class="mat-ia-intro">
+          <div class="mat-ia-avatar">✦</div>
+          <div class="mat-ia-msg">Ótimo! E qual o <strong>grau de dificuldade</strong>?</div>
+        </div>
         <div class="form-section-title">Grau de dificuldade</div>
         <div class="mat-chips" data-group="v_dificuldade">
           <button type="button" class="mat-chip" data-value="facil">Fácil</button>
-          <button type="button" class="mat-chip sel" data-value="medio">Médio</button>
+          <button type="button" class="mat-chip" data-value="medio">Médio</button>
           <button type="button" class="mat-chip" data-value="dificil">Difícil</button>
         </div>
         <div class="field-hint">A IA calibra o nível das questões (vocabulário, etapas de raciocínio, distratores) ao grau escolhido.</div>
       </div>
 
-      <div class="form-section">
+      <div class="form-section" id="av-step-questoes" style="display:none;">
+        <div class="mat-ia-intro">
+          <div class="mat-ia-avatar">✦</div>
+          <div class="mat-ia-msg">Por último: <strong>quantas questões</strong> de cada tipo?</div>
+        </div>
         <div class="form-section-title">Questões (escolha e diga quantas)</div>
         <div class="qtipo-row">
           <label class="qtipo-check"><input type="checkbox" id="v_mcOn" checked> Múltipla escolha</label>
@@ -595,7 +603,7 @@
     </div>
 
     <!-- comum aos dois modos -->
-    <div class="form-section">
+    <div class="form-section" id="finish-section">
       <div class="form-section-title">Acabamento</div>
       <div class="toggle-row">
         <div><div class="toggle-label">🧾 Cabeçalho do aluno</div><div class="toggle-sub">Nome, turma, data e nota</div></div>
@@ -696,17 +704,32 @@
     document.getElementById('modeAtividade').classList.toggle('active', m==='atividade');
     document.getElementById('modeAvaliacao').classList.toggle('active', m==='avaliacao');
     document.getElementById('genLabel').textContent = m==='avaliacao'?'Gerar Avaliação':'Gerar Atividade';
+    if(m==='avaliacao'){ updateAvalFlow(); } else { document.getElementById('genBtn').style.display=''; document.getElementById('finish-section').style.display=''; }
   }
 
   function toggleBtn(el){el.classList.toggle('on')}
   function isOn(id){return document.getElementById(id).classList.contains('on')}
-  function getTextoOrigem(){return document.querySelector('input[name="vTexto"]:checked').value}
+  function getTextoOrigem(){const el=document.querySelector('input[name="vTexto"]:checked');return el?el.value:''}
   function onTextoChange(){
     const v=getTextoOrigem();
     document.getElementById('vTextoWrap').style.display = v==='A'?'block':'none';
     ['A','B','C'].forEach(k=>document.getElementById('vrc-'+k).classList.toggle('sel',k===v));
+    updateAvalFlow();
   }
-  function onImgToggle(){ document.getElementById('vImgOpts').style.display = isOn('v_togImg')?'block':'none'; }
+  // Passo a passo conversacional da Avaliação: cada resposta revela a próxima pergunta.
+  function updateAvalFlow(){
+    if(MODE!=='avaliacao') return;
+    const basics = val('v_titulo',true) && val('v_publico') && val('v_tema',true);
+    const textoOk = !!getTextoOrigem();
+    const difOk = !!document.querySelector('.mat-chips[data-group="v_dificuldade"] .mat-chip.sel');
+    const show=(id,on)=>{const el=document.getElementById(id);if(el)el.style.display=on?'block':'none';};
+    show('av-step-texto', basics);
+    show('av-step-dif', basics&&textoOk);
+    show('av-step-questoes', basics&&textoOk&&difOk);
+    const done = basics&&textoOk&&difOk;
+    document.getElementById('finish-section').style.display = done?'':'none';
+    document.getElementById('genBtn').style.display = done?'':'none';
+  }
 
   function setStep(n,total=5){
     for(let i=1;i<=total;i++){const el=document.getElementById('ps'+i);if(!el)continue;el.classList.remove('active','done');const dot=el.querySelector('.prog-dot');if(i<n){el.classList.add('done');dot.textContent='✓';}else if(i===n){el.classList.add('active');dot.textContent=i;}else dot.textContent=i;}
@@ -1759,6 +1782,7 @@ RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
       const chip=e.target.closest('.mat-chip'); if(!chip)return;
       group.querySelectorAll('.mat-chip').forEach(c=>c.classList.remove('sel'));
       chip.classList.add('sel');
+      if(group.dataset.group==='v_dificuldade') updateAvalFlow();
     });
   });
   (function(){
