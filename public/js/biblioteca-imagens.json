@@ -123,6 +123,54 @@
       "publico": ["fund1", "fund2", "eja"],
       "colorir": false
     },
+    "fotossintese": {
+      "arquivo": "/assets/ciencias/fotossintese.svg",
+      "titulo": "Fotossíntese",
+      "descricao": "Esquema da fotossíntese: luz do sol, entrada de gás carbônico (CO₂), água (H₂O) pelas raízes, saída de oxigênio (O₂) e produção de glicose.",
+      "uso_pedagogico": "Ensinar o processo da fotossíntese e o que a planta absorve e produz.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "germinacao": {
+      "arquivo": "/assets/ciencias/germinacao.svg",
+      "titulo": "Germinação da Semente",
+      "descricao": "Etapas da germinação: semente, raiz, broto e plântula, com a linha do solo.",
+      "uso_pedagogico": "Ensinar as etapas do desenvolvimento da planta a partir da semente.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "metamorfose": {
+      "arquivo": "/assets/ciencias/metamorfose.svg",
+      "titulo": "Metamorfose da Borboleta",
+      "descricao": "Ciclo de vida da borboleta: ovos, lagarta, pupa (casulo) e borboleta.",
+      "uso_pedagogico": "Ensinar metamorfose e ciclo de vida (completo) da borboleta.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "circuito_eletrico": {
+      "arquivo": "/assets/ciencias/circuito-eletrico.svg",
+      "titulo": "Circuito Elétrico Simples",
+      "descricao": "Circuito com pilha, fios, lâmpada e interruptor, formando um caminho fechado.",
+      "uso_pedagogico": "Ensinar circuito elétrico simples e seus componentes (pilha, fio, lâmpada, interruptor).",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
+    "camadas_da_terra": {
+      "arquivo": "/assets/ciencias/camadas-da-terra.svg",
+      "titulo": "Camadas da Terra",
+      "descricao": "Corte da Terra mostrando crosta, manto, núcleo externo e núcleo interno.",
+      "uso_pedagogico": "Ensinar e identificar as camadas internas da Terra.",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
+    "movimentos_da_terra": {
+      "arquivo": "/assets/ciencias/movimentos-da-terra.svg",
+      "titulo": "Movimentos da Terra (rotação e translação)",
+      "descricao": "A Terra orbitando o Sol com as 4 estações, mostrando a translação (1 ano, estações) e a rotação (dia e noite).",
+      "uso_pedagogico": "Ensinar rotação (dia e noite) e translação (ano e estações do ano).",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
     "sistema_solar": {
       "arquivo": "/assets/geografia/sistema-solar.svg",
       "titulo": "Sistema Solar — ordem dos planetas",
