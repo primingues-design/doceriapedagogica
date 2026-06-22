@@ -171,6 +171,86 @@
       "publico": ["fund2", "eja"],
       "colorir": false
     },
+    "piramide_alimentar": {
+      "arquivo": "/assets/ciencias/piramide-alimentar.svg",
+      "titulo": "Pirâmide Alimentar",
+      "descricao": "Pirâmide com os grupos de alimentos: base de cereais/pães, frutas e verduras, carnes/leite/ovos e, no topo, açúcares e gorduras (com moderação).",
+      "uso_pedagogico": "Ensinar grupos alimentares e alimentação saudável.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "orgaos_dos_sentidos": {
+      "arquivo": "/assets/ciencias/orgaos-dos-sentidos.svg",
+      "titulo": "Órgãos dos Sentidos",
+      "descricao": "Os 5 sentidos e seus órgãos: visão (olhos), audição (orelhas), olfato (nariz), paladar (língua) e tato (pele/mãos).",
+      "uso_pedagogico": "Ensinar os 5 sentidos e os órgãos correspondentes.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "classificacao_animais": {
+      "arquivo": "/assets/ciencias/classificacao-animais.svg",
+      "titulo": "Classificação dos Animais",
+      "descricao": "Esquema: Animais → Vertebrados (mamíferos, aves, répteis, anfíbios, peixes) e Invertebrados (insetos, moluscos).",
+      "uso_pedagogico": "Ensinar a classificação dos animais em vertebrados/invertebrados e seus grupos.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "ima_magnetismo": {
+      "arquivo": "/assets/ciencias/ima-magnetismo.svg",
+      "titulo": "Ímã e Magnetismo",
+      "descricao": "Ímã em barra com polo norte e polo sul, linhas de campo magnético e uma bússola.",
+      "uso_pedagogico": "Ensinar magnetismo, polos do ímã, linhas de campo e bússola.",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
+    "maquinas_simples": {
+      "arquivo": "/assets/ciencias/maquinas-simples.svg",
+      "titulo": "Máquinas Simples",
+      "descricao": "Alavanca, roldana e plano inclinado.",
+      "uso_pedagogico": "Ensinar máquinas simples e como facilitam o trabalho.",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
+    "separacao_misturas": {
+      "arquivo": "/assets/ciencias/separacao-misturas.svg",
+      "titulo": "Separação de Misturas",
+      "descricao": "Métodos de separação: filtração (filtro retém o sólido) e decantação (líquidos se separam, óleo e água).",
+      "uso_pedagogico": "Ensinar métodos de separação de misturas (filtração, decantação).",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
+    "coleta_seletiva": {
+      "arquivo": "/assets/ciencias/coleta-seletiva.svg",
+      "titulo": "Coleta Seletiva (cores das lixeiras)",
+      "descricao": "As lixeiras da coleta seletiva: azul (papel), vermelho (plástico), verde (vidro), amarelo (metal) e marrom (orgânico).",
+      "uso_pedagogico": "Ensinar coleta seletiva, reciclagem e as cores das lixeiras por material.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "eclipses": {
+      "arquivo": "/assets/ciencias/eclipses.svg",
+      "titulo": "Eclipses (solar e lunar)",
+      "descricao": "Eclipse solar (a Lua entre o Sol e a Terra) e eclipse lunar (a Terra entre o Sol e a Lua), com as sombras.",
+      "uso_pedagogico": "Ensinar a diferença entre eclipse solar e lunar e o alinhamento Sol-Terra-Lua.",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
+    "dia_e_noite": {
+      "arquivo": "/assets/ciencias/dia-e-noite.svg",
+      "titulo": "Dia e Noite",
+      "descricao": "O Sol iluminando metade da Terra (dia) enquanto a outra metade fica no escuro (noite), com a rotação.",
+      "uso_pedagogico": "Ensinar a sucessão dia/noite pela rotação da Terra e iluminação do Sol.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "camadas_atmosfera": {
+      "arquivo": "/assets/ciencias/camadas-atmosfera.svg",
+      "titulo": "Camadas da Atmosfera",
+      "descricao": "As camadas da atmosfera da mais baixa à mais alta: troposfera, estratosfera, mesosfera, termosfera e exosfera.",
+      "uso_pedagogico": "Ensinar e ordenar as camadas da atmosfera.",
+      "publico": ["fund2", "eja"],
+      "colorir": false
+    },
     "sistema_solar": {
       "arquivo": "/assets/geografia/sistema-solar.svg",
       "titulo": "Sistema Solar — ordem dos planetas",
