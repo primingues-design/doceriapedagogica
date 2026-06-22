@@ -865,7 +865,7 @@
     }));
   }
 
-  function isGeoAsset(url){ return typeof url==='string' && url.indexOf('/assets/geografia/')===0; }
+  function isLibAsset(url){ return typeof url==='string' && url.indexOf('/assets/')===0; }
   function imgFrame(url,prompt,extraClass){
     // imagens da biblioteca curada (mapas etc.) mostram inteiras, sem corte
     const isAsset = typeof url==='string' && url.indexOf('/assets/')===0;
@@ -949,7 +949,7 @@
     let resp = opcoes.length
       ? `<div class="prova-opcoes">${opcoes.map((op,oi)=>`<div class="prova-opcao"><div class="prova-bolha">${String.fromCharCode(65+oi)}</div><span>${esc(String(op).replace(/^[A-Da-d]\)\s*/,''))}</span></div>`).join('')}</div>`
       : `<div class="prova-linhas">${Array(3).fill('<div class="prova-linha"></div>').join('')}</div>`;
-    const geo=isGeoAsset(it._url);
+    const geo=isLibAsset(it._url);
     const temImg=!!(it._url||(comImagemLateral&&it.api_image_prompt));
     const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${richText(it.enunciado_item)}</div>${resp}</div>`;
     // mapa de Geografia: grande, ABAIXO da pergunta; demais imagens: coluna lateral como hoje
@@ -985,7 +985,7 @@
       const n=Math.max(parseInt(q.linhas,10)||4,2);
       resp=`<div class="prova-linhas">${Array(n).fill('<div class="prova-linha"></div>').join('')}</div>`;
     }
-    const geo=isGeoAsset(q._url);
+    const geo=isLibAsset(q._url);
     const temImg=!!(q._url||q.api_image_prompt);
     const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${richText(q.enunciado)}</div>${resp}</div>`;
     const imgCol=(temImg&&!geo)?`<div class="prova-q-img">${imgFrame(q._url,q.api_image_prompt)}</div>`:'';
@@ -1052,10 +1052,22 @@
   // Lista as imagens curadas disponíveis para o componente (hoje: Geografia) e instrui a IA a usá-las
   // em vez de gerar mapas/figuras factuais pela IA de imagem (que erra geografia).
   function blocoBiblioteca(componente){
-    const lib=(BIBLIOTECA&&BIBLIOTECA.geografia)||{};
-    if(!/Geografia/i.test(componente||'')) return '';
+    const isGeo=/Geografia/i.test(componente||'');
+    const isCie=/Ci[eê]ncias/i.test(componente||'');
+    const cat=isGeo?'geografia':isCie?'ciencias':null;
+    if(!cat) return '';
+    const lib=(BIBLIOTECA&&BIBLIOTECA[cat])||{};
     const linhas=Object.entries(lib).map(([k,a])=>`  • "${k}" → ${a.titulo}. Quando usar: ${a.uso_pedagogico} (público: ${(a.publico||[]).join('/')||'todos'}).`).join('\n');
     if(!linhas) return '';
+    if(isCie) return `\n════ DECISÃO DE IMAGEM EM CIÊNCIAS (REGRA OBRIGATÓRIA) ════
+Diagramas científicos (ciclo da água, partes da planta, cadeia alimentar, estados da matéria, fases da Lua, sistema solar etc.) PRECISAM ser corretos — a IA de imagem erra (rótulos trocados, em inglês, partes erradas). Quando o item envolver um destes temas, deixe "api_image_prompt" VAZIO e use "asset_key" com a chave certa:
+${linhas}
+REGRAS:
+• Coerência texto↔imagem: o enunciado deve falar exatamente do que o diagrama mostra.
+• Use "api_image_prompt" (IA de imagem) SOMENTE para cenas genéricas NÃO factuais (crianças num experimento, hábitos de higiene, alimentação saudável, paisagem). NUNCA para diagramas científicos.
+• Cada item usa OU "asset_key" OU "api_image_prompt", nunca os dois.
+• Se um diagrama vale para a atividade toda, coloque-o em "conteudo_principal.asset_key".
+• Listas de alternativas/itens para preencher ou relacionar: cada opção em sua própria linha (separe com \\n).\n`;
     return `\n════ DECISÃO DE IMAGEM EM GEOGRAFIA (REGRA OBRIGATÓRIA) ════
 Você tem DUAS fontes de imagem e precisa escolher a certa para cada item:
 

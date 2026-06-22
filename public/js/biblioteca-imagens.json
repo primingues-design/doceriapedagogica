@@ -81,5 +81,55 @@
       "publico": ["fund1", "fund2", "eja"],
       "colorir": false
     }
+  },
+  "ciencias": {
+    "ciclo_da_agua": {
+      "arquivo": "/assets/ciencias/ciclo-da-agua.svg",
+      "titulo": "Ciclo da Água",
+      "descricao": "Esquema do ciclo da água com sol, mar, nuvem e chuva, indicando evaporação, condensação e precipitação.",
+      "uso_pedagogico": "Ensinar as etapas do ciclo da água (evaporação, condensação, precipitação).",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "partes_da_planta": {
+      "arquivo": "/assets/ciencias/partes-da-planta.svg",
+      "titulo": "Partes da Planta",
+      "descricao": "Planta com raiz, caule, folha, flor e fruto identificados por rótulos.",
+      "uso_pedagogico": "Identificar e nomear as partes da planta e suas funções.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "cadeia_alimentar": {
+      "arquivo": "/assets/ciencias/cadeia-alimentar.svg",
+      "titulo": "Cadeia Alimentar",
+      "descricao": "Cadeia alimentar: sol → capim (produtor) → gafanhoto → sapo → gavião, com setas e os papéis (produtor/consumidores).",
+      "uso_pedagogico": "Ensinar cadeia alimentar, fluxo de energia, produtores e consumidores.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "estados_da_materia": {
+      "arquivo": "/assets/ciencias/estados-da-materia.svg",
+      "titulo": "Estados Físicos da Água (sólido, líquido, gasoso)",
+      "descricao": "Gelo (sólido), água (líquido) e vapor (gasoso), com as mudanças de estado (fusão, solidificação, vaporização, condensação).",
+      "uso_pedagogico": "Ensinar estados físicos da matéria e mudanças de estado, usando a água como exemplo.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "fases_da_lua": {
+      "arquivo": "/assets/ciencias/fases-da-lua.svg",
+      "titulo": "Fases da Lua",
+      "descricao": "As 8 fases da Lua (nova, crescente, quarto crescente, gibosa crescente, cheia, gibosa minguante, quarto minguante, minguante).",
+      "uso_pedagogico": "Ensinar e identificar as fases da Lua.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    },
+    "sistema_solar": {
+      "arquivo": "/assets/geografia/sistema-solar.svg",
+      "titulo": "Sistema Solar — ordem dos planetas",
+      "descricao": "O Sol e os 8 planetas na ordem correta (Mercúrio a Netuno), com tamanhos relativos aproximados.",
+      "uso_pedagogico": "Ensinar o Sistema Solar e a ordem dos planetas a partir do Sol.",
+      "publico": ["fund1", "fund2", "eja"],
+      "colorir": false
+    }
   }
 }
