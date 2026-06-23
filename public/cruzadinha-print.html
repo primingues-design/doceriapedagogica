@@ -54,15 +54,15 @@ body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);mi
 .sh-label{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
 .sh-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--text);margin-bottom:4px}
 .sh-meta{font-size:11px;color:var(--text-muted)}
-.sh-body{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap}
+.sh-body{display:block}
 
 .cw-grid-print{display:inline-grid;border:2px solid #444;gap:0}
 .cw-cell-blank{background:#e8e2d8}
 .cw-cell-white{background:white;border:1.5px solid #555;position:relative;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Outfit',sans-serif;color:var(--text)}
 .cw-num{position:absolute;top:1px;left:2px;font-size:6px;font-weight:700;color:#888;line-height:1}
 
-.clues-panel{flex:1;min-width:160px}
-.clue-section{margin-bottom:14px}
+.clues-panel{width:100%;display:flex;gap:32px;flex-wrap:wrap;align-items:flex-start}
+.clue-section{margin-bottom:14px;flex:1;min-width:250px}
 .clue-section-title{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid var(--border)}
 .clue-item{display:flex;align-items:flex-start;gap:6px;padding:4px 0;font-size:12px;color:var(--text-mid);border-bottom:1px solid var(--border);line-height:1.4}
 .clue-num{font-weight:700;color:var(--gold);min-width:22px;flex-shrink:0}
@@ -276,8 +276,8 @@ function updateSheets(){
   if(!cwGridData.length||!lastNivel) return;
   const isLG=document.body.classList.contains('letra-grande');
   const cellPx=isLG
-    ?Math.min(32,Math.max(22,Math.floor(310/cwCols)))
-    :Math.min(26,Math.max(18,Math.floor(260/cwCols)));
+    ?Math.min(54,Math.max(34,Math.floor(740/cwCols)))
+    :Math.min(46,Math.max(28,Math.floor(640/cwCols)));
 
   document.getElementById('emptyState').style.display='none';
   document.getElementById('doc-preview').style.display='block';
@@ -317,7 +317,7 @@ function buildSheetHTML(isGaba,cellPx){
       <div class="sh-meta">${lastNivel} • ${cwPlacements.length} palavras • ${lastDate}</div>
     </div>
     <div class="sh-body">
-      <div style="flex-shrink:0;">
+      <div style="text-align:center;margin:0 auto 20px;">
         <div class="cw-grid-print" style="grid-template-columns:repeat(${cwCols},${cellPx}px);grid-template-rows:repeat(${rows},${cellPx}px);">${gridHtml}</div>
       </div>`;
 }

@@ -196,7 +196,8 @@
   .prova-opcao{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#000;line-height:1.5}
   .prova-bolha{width:24px;height:24px;border-radius:50%;border:1.5px solid #555;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#333;flex-shrink:0;margin-top:1px;background:white}
   .prova-linhas{display:flex;flex-direction:column;gap:0;margin-top:10px}
-  .prova-linha{border-bottom:1.5px dotted #555;min-height:30px;display:block}
+  .prova-linhas.full{width:100%;margin-top:12px}
+  .prova-linha{border-bottom:1.5px dotted #555;min-height:30px;display:block;width:100%}
   .prova-vf-item{display:flex;align-items:center;gap:12px;font-size:14px;color:#000;padding:6px 0;border-bottom:1px dotted #ccc;line-height:1.5}
   .prova-vf-item:last-child{border-bottom:none}
   .prova-vf-bubble{display:flex;gap:4px;flex-shrink:0}
@@ -967,16 +968,18 @@
   function questaoAtivHTML(it,i,comImagemLateral){
     const num=it.id||i+1;
     const opcoes=Array.isArray(it.opcoes_selecao)?it.opcoes_selecao.filter(o=>String(o).trim()):[];
-    let resp = opcoes.length
+    // múltipla escolha fica na coluna do conteúdo; linhas de resposta vão na LARGURA TODA, abaixo
+    const respInline = opcoes.length
       ? `<div class="prova-opcoes">${opcoes.map((op,oi)=>`<div class="prova-opcao"><div class="prova-bolha">${String.fromCharCode(65+oi)}</div><span>${esc(String(op).replace(/^[A-Da-d]\)\s*/,''))}</span></div>`).join('')}</div>`
-      : `<div class="prova-linhas">${Array(3).fill('<div class="prova-linha"></div>').join('')}</div>`;
+      : '';
+    const respLinhas = opcoes.length ? '' : `<div class="prova-linhas full">${Array(3).fill('<div class="prova-linha"></div>').join('')}</div>`;
     const geo=isLibAsset(it._url);
     const temImg=!!(it._url||(comImagemLateral&&it.api_image_prompt));
-    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${richText(it.enunciado_item)}</div>${resp}</div>`;
+    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${richText(it.enunciado_item)}</div>${respInline}</div>`;
     // mapa de Geografia: grande, ABAIXO da pergunta; demais imagens: coluna lateral como hoje
     const imgCol=(temImg&&!geo)?`<div class="prova-q-img">${imgFrame(it._url,it.api_image_prompt)}</div>`:'';
     const mapaAbaixo=geo?imgFrame(it._url,it.api_image_prompt,'mapa-geo'):'';
-    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div>${mapaAbaixo}</div>`;
+    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div>${respLinhas}${mapaAbaixo}</div>`;
   }
 
   // ════════ RENDER: AVALIAÇÃO ════════
@@ -996,23 +999,24 @@
   }
   function questaoAvalHTML(q,i){
     const num=i+1;const tipo=q.tipo||'dissertativa';
-    let resp='';
+    let respInline='',respLinhas='';
     if(tipo==='multipla_escolha'){
       const ops=(q.opcoes||[]).filter(o=>String(o).trim());
-      resp=`<div class="prova-opcoes">${ops.map((op,oi)=>`<div class="prova-opcao"><div class="prova-bolha">${String.fromCharCode(65+oi)}</div><span>${esc(String(op).replace(/^[A-Da-d]\)\s*/,''))}</span></div>`).join('')}</div>`;
+      respInline=`<div class="prova-opcoes">${ops.map((op,oi)=>`<div class="prova-opcao"><div class="prova-bolha">${String.fromCharCode(65+oi)}</div><span>${esc(String(op).replace(/^[A-Da-d]\)\s*/,''))}</span></div>`).join('')}</div>`;
     } else if(tipo==='vf'){
       const afs=(q.afirmacoes||[]).filter(a=>a&&String(a.texto||'').trim());
-      resp=`<div style="margin-top:10px;">${afs.map(a=>`<div class="prova-vf-item"><div class="prova-vf-bubble"><div class="prova-vf-box">V</div><div class="prova-vf-box">F</div></div><span>${esc(a.texto)}</span></div>`).join('')}</div>`;
+      respInline=`<div style="margin-top:10px;">${afs.map(a=>`<div class="prova-vf-item"><div class="prova-vf-bubble"><div class="prova-vf-box">V</div><div class="prova-vf-box">F</div></div><span>${esc(a.texto)}</span></div>`).join('')}</div>`;
     } else {
+      // dissertativa: linhas de resposta na LARGURA TODA, abaixo da pergunta
       const n=Math.max(parseInt(q.linhas,10)||4,2);
-      resp=`<div class="prova-linhas">${Array(n).fill('<div class="prova-linha"></div>').join('')}</div>`;
+      respLinhas=`<div class="prova-linhas full">${Array(n).fill('<div class="prova-linha"></div>').join('')}</div>`;
     }
     const geo=isLibAsset(q._url);
     const temImg=!!(q._url||q.api_image_prompt);
-    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${richText(q.enunciado)}</div>${resp}</div>`;
+    const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${richText(q.enunciado)}</div>${respInline}</div>`;
     const imgCol=(temImg&&!geo)?`<div class="prova-q-img">${imgFrame(q._url,q.api_image_prompt)}</div>`:'';
     const mapaAbaixo=geo?imgFrame(q._url,q.api_image_prompt,'mapa-geo'):'';
-    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div><div class="prova-q-tipo">${TIPO_LABEL[tipo]||''}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div>${mapaAbaixo}</div>`;
+    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div><div class="prova-q-tipo">${TIPO_LABEL[tipo]||''}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div>${respLinhas}${mapaAbaixo}</div>`;
   }
   function respostaGabarito(q){
     if(q.tipo==='multipla_escolha'){const L=(q.resposta||'').trim().toUpperCase();const idx=L.charCodeAt(0)-65;const op=(q.opcoes||[])[idx];return (L||'—')+(op?') '+String(op).replace(/^[A-Da-d]\)\s*/,''):'');}
