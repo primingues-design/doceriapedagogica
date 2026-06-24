@@ -457,10 +457,14 @@ INSTRUÇÃO ESPECIAL: gere APENAS o que as OBSERVAÇÕES solicitam. Não invente
       ? 'Quantidade exata conforme as OBSERVAÇÕES solicitam. Se pedir 6, gere 6. Se pedir 10, gere 10.'
       : '5 a 7 atividades variadas';
 
+    const religiosoBloco = /religios/i.test(disciplina||'')
+      ? `\nENSINO RELIGIOSO (BNCC, NÃO CONFESSIONAL): nunca faça proselitismo nem favoreça uma única religião; aborde a diversidade religiosa E visões não religiosas com respeito, como fenômeno cultural. Foque em respeito às diferenças, alteridade, convivência e valores. Linguagem inclusiva a todas as crianças, com ou sem fé.`
+      : '';
+
     return `Crie uma atividade pedagógica.
 TEMA: ${tema}
 NÍVEL: ${nivel}
-${disciplina?'DISCIPLINA: '+disciplina:''}
+${disciplina?'DISCIPLINA: '+disciplina:''}${religiosoBloco}
 ${objetivo?'OBJETIVO: '+objetivo:''}
 ${obs?'OBSERVAÇÕES (siga à risca): '+obs:''}
 ${tiposBloco}
