@@ -84,6 +84,8 @@ body.letra-grande .name-row{font-size:14px}
 @media print {
   @page { size: A4 portrait; margin: 10mm 12mm; }
   body { background: white !important; }
+  .sh-header { page-break-after: avoid; }
+  .cw-grid-print { page-break-inside: avoid; }
   .topbar, .main > .form-panel, .preview-top { display: none !important; }
   .main { display: block !important; padding: 0 !important; }
   .preview-panel { display: block !important; }
@@ -276,8 +278,8 @@ function updateSheets(){
   if(!cwGridData.length||!lastNivel) return;
   const isLG=document.body.classList.contains('letra-grande');
   const cellPx=isLG
-    ?Math.min(54,Math.max(34,Math.floor(740/cwCols)))
-    :Math.min(46,Math.max(28,Math.floor(640/cwCols)));
+    ?Math.min(44,Math.max(28,Math.floor(560/cwCols)))
+    :Math.min(38,Math.max(24,Math.floor(480/cwCols)));
 
   document.getElementById('emptyState').style.display='none';
   document.getElementById('doc-preview').style.display='block';

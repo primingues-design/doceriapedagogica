@@ -85,6 +85,8 @@ body.letra-grande .name-row{font-size:14px}
 @media print {
   @page { size: A4 portrait; margin: 10mm 12mm; }
   body { background: white !important; }
+  .sh-header { page-break-after: avoid; }
+  .ws-grid-wrap { page-break-inside: avoid; }
   .topbar, .main > .form-panel, .preview-top { display: none !important; }
   .main { display: block !important; padding: 0 !important; }
   .preview-panel { display: block !important; }
@@ -183,8 +185,8 @@ function norm(str){
 }
 
 function calcCell(size){
-  // grade em cima ocupando a largura toda da folha (A4 útil ~700px)
-  return Math.min(56,Math.max(30,Math.floor(660/size)));
+  // grade em cima, maior que antes mas cabendo em UMA página (largura+altura A4)
+  return Math.min(46,Math.max(30,Math.floor(520/size)));
 }
 
 function calcFont(size){
