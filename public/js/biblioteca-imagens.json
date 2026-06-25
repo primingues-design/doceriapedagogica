@@ -6,7 +6,11 @@
       "titulo": "Mapa do Brasil — 5 regiões coloridas",
       "descricao": "Mapa com as 5 regiões do IBGE em CORES FORTES, com os nomes dos estados.",
       "uso_pedagogico": "Use para ENSINAR/IDENTIFICAR as 5 REGIÕES (cada região numa cor). Bom para 'quais são as regiões', 'pinte/identifique as regiões', 'a que região pertence'. Para focar em ESTADOS, prefira o mapa político com nomes.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "brasil_politico_nomes": {
@@ -14,7 +18,11 @@
       "titulo": "Mapa político do Brasil — estados com NOMES",
       "descricao": "Mapa político COLORIDO (tons suaves por região) com o NOME de cada estado em destaque. Estados pequenos do litoral com linha-guia.",
       "uso_pedagogico": "ESTE é o mapa padrão para trabalhar ESTADOS. Use quando o enunciado disser 'observe/escolha/localize um estado', 'em que região fica o estado', 'estados vizinhos', 'mapa político', 'nome dos estados'. É colorido e tem os nomes.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "brasil_contorno_estados": {
@@ -22,7 +30,11 @@
       "titulo": "Mapa do Brasil — contorno com estados nomeados (para pintar/marcar)",
       "descricao": "Mapa do Brasil em preto e branco, SEM cores e SEM nomes dos estados. Só o contorno dos estados.",
       "uso_pedagogico": "Use SOMENTE quando o ALUNO vai PINTAR/COLORIR ou criar a própria legenda (ex.: 'pinte cada região de uma cor', 'crie sua legenda'). NÃO use para observar, identificar, escolher ou localizar estado — nesses casos use o mapa político com nomes (este aqui não tem nomes).",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": true
     },
     "biomas_ilustrado": {
@@ -30,7 +42,10 @@
       "titulo": "Biomas brasileiros — mapa ilustrado com fauna e flora",
       "descricao": "Mapa do Brasil ilustrado com a vegetação e os animais típicos de cada bioma (Amazônia, Cerrado, Caatinga, Pantanal, Mata Atlântica, Pampa), com legenda descritiva.",
       "uso_pedagogico": "Reconhecer biomas pela paisagem e fauna; observar e descrever; associar animal/vegetação ao bioma. PREFERIR em anos iniciais e EJA (concreto e encantador).",
-      "publico": ["fund1", "eja"],
+      "publico": [
+        "fund1",
+        "eja"
+      ],
       "colorir": false
     },
     "biomas_mapa": {
@@ -38,7 +53,10 @@
       "titulo": "Biomas brasileiros — mapa temático de fronteiras",
       "descricao": "Mapa do Brasil com os biomas delimitados por cores e legenda. Visão cartográfica/territorial.",
       "uso_pedagogico": "Leitura de mapa temático; relacionar bioma a região; comparar extensão dos biomas. Mais indicado para fund. 2.",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "coordenadas_globo": {
@@ -46,7 +64,10 @@
       "titulo": "Globo — paralelos e meridianos (com nomes)",
       "descricao": "Globo terrestre esquemático mostrando paralelos e meridianos, com Equador, Meridiano de Greenwich, Trópicos de Câncer e Capricórnio e os polos identificados.",
       "uso_pedagogico": "Ensinar coordenadas geográficas: paralelos, meridianos, Equador, Greenwich, trópicos, polos, hemisférios. Use quando o aluno precisa VER as linhas já nomeadas.",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "coordenadas_globo_ab": {
@@ -54,7 +75,10 @@
       "titulo": "Globo com setas A e B (linhas SEM nome)",
       "descricao": "Mesmo globo de paralelos e meridianos, mas com uma seta A apontando para um paralelo e uma seta B apontando para um meridiano, sem nomear as linhas.",
       "uso_pedagogico": "Use quando o enunciado pedir para o ALUNO identificar/nomear as linhas indicadas (ex.: 'escreva o nome das linhas indicadas por A e B'). A=paralelo, B=meridiano.",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "rosa_dos_ventos": {
@@ -62,7 +86,11 @@
       "titulo": "Rosa dos ventos (pontos cardeais e colaterais)",
       "descricao": "Rosa dos ventos com os pontos cardeais N, S, L (Leste), O (Oeste) e os colaterais NE, NO, SE, SO.",
       "uso_pedagogico": "Ensinar orientação e pontos cardeais/colaterais. Atenção: em português é L (Leste) e O (Oeste), nunca E/W.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "hemisferios": {
@@ -70,7 +98,10 @@
       "titulo": "Hemisférios (Norte/Sul e Leste/Oeste)",
       "descricao": "Dois globos: um dividido pelo Equador (Hemisfério Norte e Sul) e outro pelo Meridiano de Greenwich (Leste e Oeste).",
       "uso_pedagogico": "Ensinar a divisão da Terra em hemisférios pelo Equador e pelo Meridiano de Greenwich.",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "sistema_solar": {
@@ -78,7 +109,11 @@
       "titulo": "Sistema Solar — ordem dos planetas",
       "descricao": "O Sol e os 8 planetas na ordem correta (Mercúrio, Vênus, Terra, Marte, Júpiter, Saturno com anel, Urano, Netuno), com tamanhos relativos aproximados.",
       "uso_pedagogico": "Ensinar o Sistema Solar e a ordem/sequência dos planetas a partir do Sol.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     }
   },
@@ -88,7 +123,11 @@
       "titulo": "Ciclo da Água",
       "descricao": "Esquema do ciclo da água com sol, mar, nuvem e chuva, indicando evaporação, condensação e precipitação.",
       "uso_pedagogico": "Ensinar as etapas do ciclo da água (evaporação, condensação, precipitação).",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "partes_da_planta": {
@@ -96,7 +135,11 @@
       "titulo": "Partes da Planta",
       "descricao": "Planta com raiz, caule, folha, flor e fruto identificados por rótulos.",
       "uso_pedagogico": "Identificar e nomear as partes da planta e suas funções.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "cadeia_alimentar": {
@@ -104,7 +147,11 @@
       "titulo": "Cadeia Alimentar",
       "descricao": "Cadeia alimentar: sol → capim (produtor) → gafanhoto → sapo → gavião, com setas e os papéis (produtor/consumidores).",
       "uso_pedagogico": "Ensinar cadeia alimentar, fluxo de energia, produtores e consumidores.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "estados_da_materia": {
@@ -112,7 +159,11 @@
       "titulo": "Estados Físicos da Água (sólido, líquido, gasoso)",
       "descricao": "Gelo (sólido), água (líquido) e vapor (gasoso), com as mudanças de estado (fusão, solidificação, vaporização, condensação).",
       "uso_pedagogico": "Ensinar estados físicos da matéria e mudanças de estado, usando a água como exemplo.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "fases_da_lua": {
@@ -120,7 +171,11 @@
       "titulo": "Fases da Lua",
       "descricao": "As 8 fases da Lua (nova, crescente, quarto crescente, gibosa crescente, cheia, gibosa minguante, quarto minguante, minguante).",
       "uso_pedagogico": "Ensinar e identificar as fases da Lua.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "fotossintese": {
@@ -128,7 +183,11 @@
       "titulo": "Fotossíntese",
       "descricao": "Esquema da fotossíntese: luz do sol, entrada de gás carbônico (CO₂), água (H₂O) pelas raízes, saída de oxigênio (O₂) e produção de glicose.",
       "uso_pedagogico": "Ensinar o processo da fotossíntese e o que a planta absorve e produz.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "germinacao": {
@@ -136,7 +195,11 @@
       "titulo": "Germinação da Semente",
       "descricao": "Etapas da germinação: semente, raiz, broto e plântula, com a linha do solo.",
       "uso_pedagogico": "Ensinar as etapas do desenvolvimento da planta a partir da semente.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "metamorfose": {
@@ -144,7 +207,11 @@
       "titulo": "Metamorfose da Borboleta",
       "descricao": "Ciclo de vida da borboleta: ovos, lagarta, pupa (casulo) e borboleta.",
       "uso_pedagogico": "Ensinar metamorfose e ciclo de vida (completo) da borboleta.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "circuito_eletrico": {
@@ -152,7 +219,10 @@
       "titulo": "Circuito Elétrico Simples",
       "descricao": "Circuito com pilha, fios, lâmpada e interruptor, formando um caminho fechado.",
       "uso_pedagogico": "Ensinar circuito elétrico simples e seus componentes (pilha, fio, lâmpada, interruptor).",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "camadas_da_terra": {
@@ -160,7 +230,10 @@
       "titulo": "Camadas da Terra",
       "descricao": "Corte da Terra mostrando crosta, manto, núcleo externo e núcleo interno.",
       "uso_pedagogico": "Ensinar e identificar as camadas internas da Terra.",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "movimentos_da_terra": {
@@ -168,7 +241,10 @@
       "titulo": "Movimentos da Terra (rotação e translação)",
       "descricao": "A Terra orbitando o Sol com as 4 estações, mostrando a translação (1 ano, estações) e a rotação (dia e noite).",
       "uso_pedagogico": "Ensinar rotação (dia e noite) e translação (ano e estações do ano).",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "piramide_alimentar": {
@@ -176,7 +252,11 @@
       "titulo": "Pirâmide Alimentar",
       "descricao": "Pirâmide com os grupos de alimentos: base de cereais/pães, frutas e verduras, carnes/leite/ovos e, no topo, açúcares e gorduras (com moderação).",
       "uso_pedagogico": "Ensinar grupos alimentares e alimentação saudável.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "orgaos_dos_sentidos": {
@@ -184,7 +264,11 @@
       "titulo": "Órgãos dos Sentidos",
       "descricao": "Os 5 sentidos e seus órgãos: visão (olhos), audição (orelhas), olfato (nariz), paladar (língua) e tato (pele/mãos).",
       "uso_pedagogico": "Ensinar os 5 sentidos e os órgãos correspondentes.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "classificacao_animais": {
@@ -192,7 +276,11 @@
       "titulo": "Classificação dos Animais",
       "descricao": "Esquema: Animais → Vertebrados (mamíferos, aves, répteis, anfíbios, peixes) e Invertebrados (insetos, moluscos).",
       "uso_pedagogico": "Ensinar a classificação dos animais em vertebrados/invertebrados e seus grupos.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "ima_magnetismo": {
@@ -200,7 +288,10 @@
       "titulo": "Ímã e Magnetismo",
       "descricao": "Ímã em barra com polo norte e polo sul, linhas de campo magnético e uma bússola.",
       "uso_pedagogico": "Ensinar magnetismo, polos do ímã, linhas de campo e bússola.",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "maquinas_simples": {
@@ -208,7 +299,10 @@
       "titulo": "Máquinas Simples",
       "descricao": "Alavanca, roldana e plano inclinado.",
       "uso_pedagogico": "Ensinar máquinas simples e como facilitam o trabalho.",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "separacao_misturas": {
@@ -216,7 +310,10 @@
       "titulo": "Separação de Misturas",
       "descricao": "Métodos de separação: filtração (filtro retém o sólido) e decantação (líquidos se separam, óleo e água).",
       "uso_pedagogico": "Ensinar métodos de separação de misturas (filtração, decantação).",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "coleta_seletiva": {
@@ -224,7 +321,11 @@
       "titulo": "Coleta Seletiva (cores das lixeiras)",
       "descricao": "As lixeiras da coleta seletiva: azul (papel), vermelho (plástico), verde (vidro), amarelo (metal) e marrom (orgânico).",
       "uso_pedagogico": "Ensinar coleta seletiva, reciclagem e as cores das lixeiras por material.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "eclipses": {
@@ -232,7 +333,10 @@
       "titulo": "Eclipses (solar e lunar)",
       "descricao": "Eclipse solar (a Lua entre o Sol e a Terra) e eclipse lunar (a Terra entre o Sol e a Lua), com as sombras.",
       "uso_pedagogico": "Ensinar a diferença entre eclipse solar e lunar e o alinhamento Sol-Terra-Lua.",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "dia_e_noite": {
@@ -240,7 +344,11 @@
       "titulo": "Dia e Noite",
       "descricao": "O Sol iluminando metade da Terra (dia) enquanto a outra metade fica no escuro (noite), com a rotação.",
       "uso_pedagogico": "Ensinar a sucessão dia/noite pela rotação da Terra e iluminação do Sol.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "camadas_atmosfera": {
@@ -248,7 +356,10 @@
       "titulo": "Camadas da Atmosfera",
       "descricao": "As camadas da atmosfera da mais baixa à mais alta: troposfera, estratosfera, mesosfera, termosfera e exosfera.",
       "uso_pedagogico": "Ensinar e ordenar as camadas da atmosfera.",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "celula_vegetal": {
@@ -256,7 +367,10 @@
       "titulo": "Célula Vegetal",
       "descricao": "Infográfico da célula vegetal com as organelas identificadas (núcleo, parede celular, cloroplastos, vacúolo central, mitocôndria etc.) e suas funções.",
       "uso_pedagogico": "Ensinar a célula vegetal, suas organelas e funções; comparar com a célula animal (parede celular, cloroplastos, vacúolo central).",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "celula_animal": {
@@ -264,7 +378,10 @@
       "titulo": "Célula Animal",
       "descricao": "Infográfico da célula animal com as organelas identificadas (núcleo, membrana plasmática, mitocôndria, lisossoma, centríolos etc.) e suas funções.",
       "uso_pedagogico": "Ensinar a célula animal, suas organelas e funções; comparar com a célula vegetal.",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "sistema_nervoso": {
@@ -272,7 +389,10 @@
       "titulo": "Sistema Nervoso",
       "descricao": "Diagrama do sistema nervoso com cérebro, cerebelo, tronco encefálico, medula espinhal, nervos periféricos e gânglios, com funções.",
       "uso_pedagogico": "Ensinar o sistema nervoso, suas partes e funções (controle e coordenação do corpo).",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "sistema_esqueletico": {
@@ -280,7 +400,11 @@
       "titulo": "Sistema Esquelético",
       "descricao": "Esqueleto humano com os principais ossos identificados (crânio, caixa torácica, coluna vertebral, clavícula, úmero, pelve, fêmur, tíbia, fíbula) e funções.",
       "uso_pedagogico": "Ensinar o sistema esquelético, os principais ossos e suas funções (sustentação, proteção, movimento).",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "sistema_respiratorio": {
@@ -288,7 +412,10 @@
       "titulo": "Sistema Respiratório",
       "descricao": "Sistema respiratório com fossas nasais, cavidade oral, faringe, laringe, traqueia, brônquios, bronquíolos, pulmões e diafragma identificados.",
       "uso_pedagogico": "Ensinar o sistema respiratório, suas partes e o caminho do ar; observar e identificar os órgãos.",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "sistema_circulatorio": {
@@ -296,7 +423,10 @@
       "titulo": "Sistema Circulatório",
       "descricao": "Sistema circulatório com coração, artérias (sangue rico em oxigênio) e veias (sangue pobre em oxigênio), e os principais vasos, com legenda.",
       "uso_pedagogico": "Ensinar o sistema circulatório, coração, artérias e veias, e o transporte do sangue.",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "sistema_digestorio": {
@@ -304,7 +434,10 @@
       "titulo": "Sistema Digestório",
       "descricao": "Sistema digestivo com boca, glândulas salivares, esôfago, estômago, fígado, vesícula biliar, pâncreas, intestino delgado, intestino grosso, reto e ânus.",
       "uso_pedagogico": "Ensinar o sistema digestório, seus órgãos e o caminho dos alimentos.",
-      "publico": ["fund2", "eja"],
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     },
     "sistema_solar": {
@@ -312,7 +445,334 @@
       "titulo": "Sistema Solar — ordem dos planetas",
       "descricao": "O Sol e os 8 planetas na ordem correta (Mercúrio a Netuno), com tamanhos relativos aproximados.",
       "uso_pedagogico": "Ensinar o Sistema Solar e a ordem dos planetas a partir do Sol.",
-      "publico": ["fund1", "fund2", "eja"],
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    }
+  },
+  "fisica": {
+    "forcas_vetores": {
+      "arquivo": "/assets/fisica/forcas-vetores.svg",
+      "titulo": "Forças e Vetores",
+      "descricao": "Forças e Vetores.",
+      "uso_pedagogico": "Ensinar forças, vetores e diagrama de forças (peso, normal, atrito).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "graficos_movimento": {
+      "arquivo": "/assets/fisica/graficos-movimento.svg",
+      "titulo": "Gráficos do Movimento",
+      "descricao": "Gráficos do Movimento.",
+      "uso_pedagogico": "Interpretar gráficos s×t e v×t (MRU).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "leis_newton": {
+      "arquivo": "/assets/fisica/leis-newton.svg",
+      "titulo": "Ação e Reação",
+      "descricao": "Ação e Reação.",
+      "uso_pedagogico": "Ensinar a 3ª Lei de Newton (ação e reação).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "tipos_energia": {
+      "arquivo": "/assets/fisica/tipos-energia.svg",
+      "titulo": "Tipos de Energia",
+      "descricao": "Tipos de Energia.",
+      "uso_pedagogico": "Energia cinética e potencial e suas transformações.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "reflexao_luz": {
+      "arquivo": "/assets/fisica/reflexao-luz.svg",
+      "titulo": "Reflexão da Luz",
+      "descricao": "Reflexão da Luz.",
+      "uso_pedagogico": "Reflexão da luz em espelho plano; ângulo de incidência = ângulo de reflexão.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "refracao_luz": {
+      "arquivo": "/assets/fisica/refracao-luz.svg",
+      "titulo": "Refração da Luz",
+      "descricao": "Refração da Luz.",
+      "uso_pedagogico": "Refração da luz ao passar do ar para a água (muda de direção).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "lentes": {
+      "arquivo": "/assets/fisica/lentes.svg",
+      "titulo": "Lentes",
+      "descricao": "Lentes.",
+      "uso_pedagogico": "Lentes convergente e divergente e o foco.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "decomposicao_luz": {
+      "arquivo": "/assets/fisica/decomposicao-luz.svg",
+      "titulo": "Decomposição da Luz",
+      "descricao": "Decomposição da Luz.",
+      "uso_pedagogico": "Decomposição da luz branca no prisma (cores).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "espelhos_curvos": {
+      "arquivo": "/assets/fisica/espelhos-curvos.svg",
+      "titulo": "Espelhos Côncavo e Convexo",
+      "descricao": "Espelhos Côncavo e Convexo.",
+      "uso_pedagogico": "Espelhos curvos e o comportamento dos raios.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "olho_humano": {
+      "arquivo": "/assets/fisica/olho-humano.svg",
+      "titulo": "O Olho Humano",
+      "descricao": "O Olho Humano.",
+      "uso_pedagogico": "Formação da imagem no olho (cristalino, retina, imagem invertida).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "onda": {
+      "arquivo": "/assets/fisica/onda.svg",
+      "titulo": "Partes de uma Onda",
+      "descricao": "Partes de uma Onda.",
+      "uso_pedagogico": "Crista, vale, amplitude e comprimento de onda.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "som_propagacao": {
+      "arquivo": "/assets/fisica/som-propagacao.svg",
+      "titulo": "Propagação do Som",
+      "descricao": "Propagação do Som.",
+      "uso_pedagogico": "O som se propaga em ondas pelo ar.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "espectro_eletromagnetico": {
+      "arquivo": "/assets/fisica/espectro-eletromagnetico.svg",
+      "titulo": "Espectro Eletromagnético",
+      "descricao": "Espectro Eletromagnético.",
+      "uso_pedagogico": "Ondas eletromagnéticas do rádio aos raios gama.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "transmissao_calor": {
+      "arquivo": "/assets/fisica/transmissao-calor.svg",
+      "titulo": "Transmissão de Calor",
+      "descricao": "Transmissão de Calor.",
+      "uso_pedagogico": "Condução, convecção e radiação.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "dilatacao_termica": {
+      "arquivo": "/assets/fisica/dilatacao-termica.svg",
+      "titulo": "Dilatação Térmica",
+      "descricao": "Dilatação Térmica.",
+      "uso_pedagogico": "Materiais aumentam de tamanho ao esquentar.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "circuito_serie_paralelo": {
+      "arquivo": "/assets/fisica/circuito-serie-paralelo.svg",
+      "titulo": "Circuito em Série e Paralelo",
+      "descricao": "Circuito em Série e Paralelo.",
+      "uso_pedagogico": "Diferença entre circuito em série e em paralelo.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "corrente_tensao_resistencia": {
+      "arquivo": "/assets/fisica/corrente-tensao-resistencia.svg",
+      "titulo": "Corrente, Tensão e Resistência",
+      "descricao": "Corrente, Tensão e Resistência.",
+      "uso_pedagogico": "Grandezas elétricas: corrente (A), tensão (V), resistência (Ω).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "eletroima": {
+      "arquivo": "/assets/fisica/eletroima.svg",
+      "titulo": "Eletroímã",
+      "descricao": "Eletroímã.",
+      "uso_pedagogico": "Corrente elétrica cria campo magnético (ímã temporário).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    }
+  },
+  "quimica": {
+    "substancia_mistura": {
+      "arquivo": "/assets/quimica/substancia-mistura.svg",
+      "titulo": "Substância e Mistura",
+      "descricao": "Substância e Mistura.",
+      "uso_pedagogico": "Substância pura × mistura homogênea/heterogênea.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "atomo": {
+      "arquivo": "/assets/quimica/atomo.svg",
+      "titulo": "O Átomo",
+      "descricao": "O Átomo.",
+      "uso_pedagogico": "Estrutura do átomo: núcleo (prótons/nêutrons) e eletrosfera (elétrons).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "modelos_atomicos": {
+      "arquivo": "/assets/quimica/modelos-atomicos.svg",
+      "titulo": "Modelos Atômicos",
+      "descricao": "Modelos Atômicos.",
+      "uso_pedagogico": "Evolução dos modelos: Dalton, Thomson, Rutherford e Bohr.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "distribuicao_eletronica": {
+      "arquivo": "/assets/quimica/distribuicao-eletronica.svg",
+      "titulo": "Distribuição Eletrônica",
+      "descricao": "Distribuição Eletrônica.",
+      "uso_pedagogico": "Elétrons em camadas (K, L, M...).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "ions": {
+      "arquivo": "/assets/quimica/ions.svg",
+      "titulo": "Íons",
+      "descricao": "Íons.",
+      "uso_pedagogico": "Cátion (perde elétron, +) e ânion (ganha elétron, –).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "ligacoes_quimicas": {
+      "arquivo": "/assets/quimica/ligacoes-quimicas.svg",
+      "titulo": "Ligações Químicas",
+      "descricao": "Ligações Químicas.",
+      "uso_pedagogico": "Ligação iônica, covalente e metálica.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "molecula_agua": {
+      "arquivo": "/assets/quimica/molecula-agua.svg",
+      "titulo": "Molécula da Água",
+      "descricao": "Molécula da Água.",
+      "uso_pedagogico": "H2O: 2 hidrogênios e 1 oxigênio.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "reacao_quimica": {
+      "arquivo": "/assets/quimica/reacao-quimica.svg",
+      "titulo": "Reação Química",
+      "descricao": "Reação Química.",
+      "uso_pedagogico": "Reagentes formam produtos; conservação da massa (Lavoisier).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "escala_ph": {
+      "arquivo": "/assets/quimica/escala-ph.svg",
+      "titulo": "Escala de pH",
+      "descricao": "Escala de pH.",
+      "uso_pedagogico": "Escala 0-14: ácido, neutro (7) e básico.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "vidrarias_laboratorio": {
+      "arquivo": "/assets/quimica/vidrarias-laboratorio.svg",
+      "titulo": "Vidrarias de Laboratório",
+      "descricao": "Vidrarias de Laboratório.",
+      "uso_pedagogico": "Béquer, erlenmeyer, proveta e tubo de ensaio.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "simbolos_seguranca": {
+      "arquivo": "/assets/quimica/simbolos-seguranca.svg",
+      "titulo": "Símbolos de Segurança",
+      "descricao": "Símbolos de Segurança.",
+      "uso_pedagogico": "Símbolos de risco no laboratório (inflamável, tóxico, corrosivo).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
       "colorir": false
     }
   }

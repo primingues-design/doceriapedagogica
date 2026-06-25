@@ -1083,13 +1083,15 @@
   function blocoBiblioteca(componente){
     const isGeo=/Geografia/i.test(componente||'');
     const isCie=/Ci[eê]ncias/i.test(componente||'');
-    const cat=isGeo?'geografia':isCie?'ciencias':null;
+    const isFis=/F[ií]sica/i.test(componente||'');
+    const isQui=/Qu[ií]mica/i.test(componente||'');
+    const cat=isGeo?'geografia':isCie?'ciencias':isFis?'fisica':isQui?'quimica':null;
     if(!cat) return '';
     const lib=(BIBLIOTECA&&BIBLIOTECA[cat])||{};
     const linhas=Object.entries(lib).map(([k,a])=>`  • "${k}" → ${a.titulo}. Quando usar: ${a.uso_pedagogico} (público: ${(a.publico||[]).join('/')||'todos'}).`).join('\n');
     if(!linhas) return '';
-    if(isCie) return `\n════ DECISÃO DE IMAGEM EM CIÊNCIAS (REGRA OBRIGATÓRIA) ════
-Diagramas científicos (ciclo da água, partes da planta, cadeia alimentar, estados da matéria, fases da Lua, sistema solar etc.) PRECISAM ser corretos — a IA de imagem erra (rótulos trocados, em inglês, partes erradas). Quando o item envolver um destes temas, deixe "api_image_prompt" VAZIO e use "asset_key" com a chave certa:
+    if(isCie||isFis||isQui) return `\n════ DECISÃO DE IMAGEM EM ${isFis?'FÍSICA':isQui?'QUÍMICA':'CIÊNCIAS'} (REGRA OBRIGATÓRIA) ════
+Diagramas e esquemas científicos (mapas de conceito, reflexão/refração, ondas, circuitos, átomo, moléculas, escala de pH, reações etc.) PRECISAM ser corretos — a IA de imagem erra (rótulos trocados, em inglês, geometria errada). Quando o item envolver um destes temas, deixe "api_image_prompt" VAZIO e use "asset_key" com a chave certa:
 ${linhas}
 REGRAS:
 • Coerência texto↔imagem: o enunciado deve falar exatamente do que o diagrama mostra.
