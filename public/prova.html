@@ -1227,7 +1227,7 @@ RESPONDA SÓ COM ESTE JSON:
     if(root)root[1].split(';').forEach(d=>{const m=d.match(/(--[\w-]+)\s*:\s*([^;]+)/);if(m)vars[m[1].trim()]=m[2].trim();});
     for(let i=0;i<3;i++) css=css.replace(/var\(\s*(--[\w-]+)\s*(?:,[^()]*)?\)/g,(m,n)=>vars[n]||'inherit');
     const titulo=(document.getElementById('phTitle')?.textContent||'material').trim();
-    const html=`<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/1999/xhtml"><head><meta charset="utf-8"><title>${esc(titulo)}</title><style>@page{size:A4 portrait;margin:1.2cm 1.4cm}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a}${css}</style></head><body>${clone.outerHTML}</body></html>`;
+    const html=`<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/1999/xhtml"><head><meta charset="utf-8"><title>${esc(titulo)}</title><style>@page{size:A4 portrait;margin:1.2cm 1.4cm}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a}${css}\nhtml,body,.prova-doc,.doc-wrap,.preview-panel,#prova-doc{background:#ffffff !important;background-color:#ffffff !important;box-shadow:none !important}</style></head><body>${clone.outerHTML}</body></html>`;
     const blob=new Blob(['﻿'+html],{type:'application/msword'});
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);
     a.download=(titulo.replace(/[\\/:*?"<>|]+/g,'').trim().slice(0,60)||'material')+'.doc';
