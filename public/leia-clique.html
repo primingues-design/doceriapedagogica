@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Leia e Clique — Doceria Pedagógica</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:#F3EEFF;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:12px;}
+.gw{width:100%;max-width:560px;background:#FAF7FF;border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(139,92,246,.18);}
+.hdr{background:#8B5CF6;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Fredoka One',cursive;color:#fff;font-size:18px;}
+.logo span{color:#DDD6FE;}
+.pts{background:rgba(255,255,255,.22);border-radius:20px;padding:4px 13px;color:#fff;font-size:13px;font-weight:800;}
+.screen{display:none;padding:18px 16px;}
+.screen.active{display:block;}
+.home-title{font-family:'Fredoka One',cursive;font-size:24px;color:#5B21B6;text-align:center;margin-bottom:4px;}
+.home-sub{text-align:center;color:#7C3AED;font-size:13px;font-weight:800;margin-bottom:16px;}
+.mode-row{display:flex;gap:8px;margin-bottom:16px;}
+.mode-btn{flex:1;padding:10px;background:#fff;border:2.5px solid #DDD6FE;border-radius:12px;font-family:'Fredoka One',cursive;font-size:15px;color:#7C3AED;cursor:pointer;transition:all .15s;}
+.mode-btn.active{background:#8B5CF6;color:#fff;border-color:#8B5CF6;}
+.mode-hint{text-align:center;font-size:12px;color:#9CA3AF;font-weight:700;margin:-8px 0 14px;}
+.section-label{font-size:11px;font-weight:900;color:#7C3AED;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:2px;}
+.cats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px;}
+.cat{background:#fff;border:2.5px solid #DDD6FE;border-radius:14px;padding:12px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;transition:all .18s;user-select:none;}
+.cat:hover{border-color:#8B5CF6;background:#F5F3FF;transform:translateY(-2px);}
+.cat.sel{border-color:#8B5CF6;background:#F5F3FF;box-shadow:0 0 0 3px #DDD6FE;}
+.cat-em{font-size:28px;}
+.cat-lbl{font-size:12px;font-weight:800;color:#5B21B6;text-align:center;line-height:1.3;}
+.cat-sub{font-size:10px;color:#7C3AED;font-weight:700;text-align:center;}
+.cat-tag{font-size:10px;background:#8B5CF6;color:#fff;border-radius:6px;padding:1px 7px;font-weight:800;}
+.divider{height:1px;background:#DDD6FE;margin:14px 0;}
+.soon{text-align:center;font-size:12px;color:#9CA3AF;font-weight:700;margin:12px 0 4px;}
+.sbtn{display:block;width:100%;padding:13px;background:#8B5CF6;color:#fff;font-family:'Fredoka One',cursive;font-size:18px;border:none;border-radius:13px;cursor:pointer;transition:all .15s;}
+.sbtn:hover{background:#7C3AED;transform:scale(1.02);}
+.sbtn:disabled{background:#C4B5FD;cursor:not-allowed;transform:none;}
+.cbtn{flex:1;padding:11px;background:#fff;color:#8B5CF6;font-family:'Fredoka One',cursive;font-size:14px;border:2px solid #8B5CF6;border-radius:12px;cursor:pointer;}
+.cbtn:hover{background:#F5F3FF;}
+.prog-row{display:flex;align-items:center;gap:9px;margin-bottom:14px;}
+.pbar{flex:1;height:8px;background:#DDD6FE;border-radius:4px;overflow:hidden;}
+.pfill{height:100%;background:#8B5CF6;border-radius:4px;transition:width .4s;}
+.ptxt{font-size:12px;font-weight:800;color:#7C3AED;white-space:nowrap;}
+.acertos{font-size:13px;font-weight:900;color:#2E7D32;white-space:nowrap;}
+.iconbtn{background:#fff;border:2px solid #DDD6FE;border-radius:10px;font-size:16px;cursor:pointer;color:#7C3AED;padding:4px 9px;line-height:1;}
+.iconbtn:hover{border-color:#8B5CF6;background:#F5F3FF;}
+.xbtn{background:none;border:none;font-size:18px;cursor:pointer;color:#7C3AED;padding:0 2px;}
+.phrase{font-family:'Fredoka One',cursive;font-size:clamp(22px,5.5vw,30px);color:#5B21B6;text-align:center;line-height:1.25;margin:4px 0 16px;min-height:42px;}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:6px;}
+.opt{border:none;border-radius:16px;padding:18px 10px;cursor:pointer;display:flex;align-items:center;justify-content:center;min-height:118px;transition:transform .12s;}
+.opt:hover:not(:disabled){transform:translateY(-3px);}
+.opt:disabled{cursor:default;}
+.opt-img{font-size:clamp(46px,11vw,70px);line-height:1;}
+.c-lar{background:#FDEBD8;box-shadow:inset 0 0 0 3px #F59E0B;}
+.c-ver{background:#D8F2E4;box-shadow:inset 0 0 0 3px #10B981;}
+.c-ros{background:#FBEAF0;box-shadow:inset 0 0 0 3px #EC4899;}
+.c-azu{background:#DCEEFF;box-shadow:inset 0 0 0 3px #3B82F6;}
+.opt.correct{box-shadow:inset 0 0 0 4px #2E7D32,0 0 0 3px #A5D6A7;background:#E8F5E9;}
+.opt.wrong{box-shadow:inset 0 0 0 4px #C62828;background:#FFEBEE;}
+.opt.dim{opacity:.4;}
+.fb{text-align:center;font-family:'Fredoka One',cursive;font-size:19px;margin-top:12px;min-height:26px;}
+.fb.ok{color:#2E7D32;}.fb.err{color:#C62828;}
+.next-row{display:none;margin-top:12px;}
+.res{text-align:center;padding:28px 16px;}
+.rtrophy{font-size:68px;margin-bottom:10px;}
+.rtitle{font-family:'Fredoka One',cursive;font-size:26px;color:#5B21B6;margin-bottom:5px;}
+.rscore{font-size:15px;color:#7C3AED;font-weight:800;margin-bottom:6px;}
+.rbar{font-size:13px;color:#888;margin-bottom:20px;}
+.rbtns{display:flex;flex-direction:column;gap:9px;}
+
+/* ===== MODO TV — jogar com a turma (espelhar celular na TV) ===== */
+.tv-btn{position:fixed;right:16px;bottom:16px;z-index:9500;display:none;align-items:center;gap:8px;background:#5B21B6;color:#fff;border:0;border-radius:30px;padding:13px 20px;cursor:pointer;font-family:'Fredoka One',cursive;font-size:15px;box-shadow:0 6px 18px rgba(0,0,0,.25);}
+.tv-btn:hover{background:#4C1D95;}
+body.playing .tv-btn{display:flex;}
+.tv-exit{position:fixed;top:14px;right:14px;z-index:9600;display:none;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:#5B21B6;color:#fff;border:0;cursor:pointer;font-size:26px;line-height:1;box-shadow:0 4px 14px rgba(0,0,0,.3);}
+body.tv-mode .tv-exit{display:flex;}
+body.tv-mode .tv-btn{display:none;}
+.tv-hint{position:fixed;top:0;left:0;right:0;z-index:9600;display:none;text-align:center;padding:14px 16px;background:#5B21B6;color:#FFD060;font-family:'Fredoka One',cursive;font-size:16px;}
+body.tv-mode .tv-hint.show{display:block;}
+body.tv-mode{overflow:hidden;padding:0;}
+body.tv-mode .gw{max-width:none;width:100vw;min-height:100dvh;border-radius:0;box-shadow:none;display:flex;flex-direction:column;}
+body.tv-mode .hdr{display:none;}
+body.tv-mode .screen{flex:1;display:none;}
+body.tv-mode .screen.active{display:flex;flex-direction:column;justify-content:center;}
+body.tv-mode #home,body.tv-mode #result{justify-content:flex-start;}
+body.tv-mode .phrase{font-size:clamp(30px,6.5vw,68px)!important;margin:10px 0 26px;}
+body.tv-mode .opt-grid{grid-template-columns:repeat(4,1fr);gap:18px;}
+body.tv-mode .opt{min-height:clamp(150px,30vh,340px);border-radius:22px;}
+body.tv-mode .opt-img{font-size:clamp(70px,13vw,160px)!important;}
+body.tv-mode .fb{font-size:clamp(20px,3vw,30px)!important;}
+body.tv-mode .prog-row{margin-bottom:22px;}
+body.tv-mode .ptxt,body.tv-mode .acertos{font-size:18px;}
+body.tv-mode .iconbtn{font-size:20px;padding:8px 14px;}
+
+@media(max-width:380px){
+  .opt-img{font-size:54px;}
+  .opt{min-height:104px;}
+  .phrase{font-size:21px;}
+}
+</style>
+</head>
+<body>
+
+<button class="tv-btn" id="tvBtn" onclick="enterTV()" title="Jogar com a turma na TV ou projetor">🖥️ Modo TV</button>
+<button class="tv-exit" id="tvExit" onclick="exitTV()" aria-label="Sair do Modo TV">✕</button>
+<div class="tv-hint" id="tvHint">📺 Vire o celular na horizontal para preencher a TV</div>
+
+<div class="gw">
+  <div class="hdr">
+    <div class="logo">🍰 Doceria <span>Pedagógica</span></div>
+    <div class="pts" id="pts">📖 Leia e Clique</div>
+  </div>
+
+  <div class="screen active" id="home">
+    <div class="home-title">Leia e Clique 👆</div>
+    <div class="home-sub">Leia e clique na imagem certa!</div>
+
+    <div class="mode-row">
+      <button class="mode-btn active" id="mbPal" onclick="setMode('palavra',this)">🔤 Palavra</button>
+      <button class="mode-btn" id="mbFra" onclick="setMode('frase',this)">📝 Frase</button>
+    </div>
+    <div class="mode-hint" id="modeHint">Mostra uma palavra. Clique na imagem correspondente.</div>
+
+    <div class="section-label">🎒 Educação Infantil / Fund. I</div>
+    <div class="cats">
+      <div class="cat" onclick="selCat('inf_simples',this)">
+        <div class="cat-em">🐱</div>
+        <div class="cat-lbl">Sílabas Simples</div>
+        <div class="cat-sub">BOLA • GATO • PATO</div>
+        <div class="cat-tag">Nível 1</div>
+      </div>
+      <div class="cat" onclick="selCat('inf_complexas',this)">
+        <div class="cat-em">🌧️</div>
+        <div class="cat-lbl">Sílabas Complexas</div>
+        <div class="cat-sub">CHUVA • CARRO • PRATO</div>
+        <div class="cat-tag">Nível 2</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="section-label">🧑 EJA — Jovens e Adultos</div>
+    <div class="cats">
+      <div class="cat" onclick="selCat('eja_simples',this)">
+        <div class="cat-em">🏠</div>
+        <div class="cat-lbl">Palavras do Dia a Dia</div>
+        <div class="cat-sub">CASA • VOTO • SAÚDE</div>
+        <div class="cat-tag">Nível 1 EJA</div>
+      </div>
+      <div class="cat" onclick="selCat('eja_complexas',this)">
+        <div class="cat-em">💼</div>
+        <div class="cat-lbl">Trabalho e Cidadania</div>
+        <div class="cat-sub">EMPREGO • CONTRATO</div>
+        <div class="cat-tag">Nível 2 EJA</div>
+      </div>
+    </div>
+    <button class="sbtn" id="sbtn" disabled onclick="startGame()">Escolha uma categoria ☝️</button>
+    <div class="soon">✨ Em breve: criar um jogo com o seu próprio tema (IA)</div>
+  </div>
+
+  <div class="screen" id="game">
+    <div class="prog-row">
+      <div class="pbar"><div class="pfill" id="pfill"></div></div>
+      <div class="ptxt" id="ptxt">1 de 10</div>
+      <div class="acertos" id="acertos">✓ 0</div>
+      <button class="iconbtn" onclick="readPhrase()" title="Ouvir a frase">🔊</button>
+      <button class="xbtn" onclick="goHome()">✕</button>
+    </div>
+    <div class="phrase" id="phrase">...</div>
+    <div class="opt-grid" id="optGrid"></div>
+    <div class="fb" id="fb"></div>
+    <div class="next-row" id="nextRow">
+      <button class="sbtn" onclick="nextRound()">Próxima ➡️</button>
+    </div>
+  </div>
+
+  <div class="screen" id="result">
+    <div class="res">
+      <div class="rtrophy" id="rtrophy">🏆</div>
+      <div class="rtitle" id="rtitle">Parabéns!</div>
+      <div class="rscore" id="rscore"></div>
+      <div class="rbar" id="rbar"></div>
+      <div class="rbtns">
+        <button class="sbtn" onclick="playAgain()">🔄 Jogar de novo</button>
+        <button class="cbtn" style="border-radius:12px;padding:11px;font-family:'Fredoka One',cursive;font-size:14px;" onclick="goHome()">🏠 Mudar categoria</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const BANCO={
+  inf_simples:{badge:'Sílabas Simples',words:[
+    {w:'BOLA',img:'⚽',frase:'A bola é azul.'},
+    {w:'GATO',img:'🐱',frase:'O gato mia.'},
+    {w:'SAPO',img:'🐸',frase:'O sapo pula.'},
+    {w:'PATO',img:'🦆',frase:'O pato nada.'},
+    {w:'BOLO',img:'🎂',frase:'O bolo é doce.'},
+    {w:'UVAS',img:'🍇',frase:'Eu como uvas.'},
+    {w:'MALA',img:'🧳',frase:'A mala é pesada.'},
+    {w:'FACA',img:'🔪',frase:'A faca corta.'},
+    {w:'SAPATO',img:'👟',frase:'O sapato é novo.'},
+    {w:'MACACO',img:'🐒',frase:'O macaco pula.'},
+    {w:'TOMATE',img:'🍅',frase:'O tomate é vermelho.'},
+    {w:'DADO',img:'🎲',frase:'O dado é meu.'},
+    {w:'PIPA',img:'🪁',frase:'A pipa voa.'},
+    {w:'LUVA',img:'🧤',frase:'A luva é quente.'},
+    {w:'VELA',img:'🕯️',frase:'A vela acende.'},
+    {w:'CHAVE',img:'🗝️',frase:'A chave abre.'},
+  ]},
+  inf_complexas:{badge:'Sílabas Complexas',words:[
+    {w:'CHUVA',img:'🌧️',frase:'A chuva caiu.'},
+    {w:'FOLHA',img:'🍃',frase:'A folha caiu.'},
+    {w:'PRATO',img:'🍽️',frase:'O prato é fundo.'},
+    {w:'FRUTA',img:'🍓',frase:'A fruta é doce.'},
+    {w:'CARRO',img:'🚗',frase:'O carro corre.'},
+    {w:'COELHO',img:'🐰',frase:'O coelho pula.'},
+    {w:'ESPELHO',img:'🪞',frase:'O espelho reflete.'},
+    {w:'PLANTA',img:'🌱',frase:'A planta cresce.'},
+    {w:'BLUSA',img:'👕',frase:'A blusa é azul.'},
+    {w:'GALINHA',img:'🐔',frase:'A galinha botou.'},
+    {w:'GRILO',img:'🦗',frase:'O grilo canta.'},
+    {w:'NINHO',img:'🪺',frase:'O ninho tem ovo.'},
+    {w:'ESTRELA',img:'⭐',frase:'A estrela brilha.'},
+    {w:'PRESENTE',img:'🎁',frase:'O presente é meu.'},
+    {w:'FOGUETE',img:'🚀',frase:'O foguete sobe.'},
+    {w:'GUARDA-CHUVA',img:'☂️',frase:'O guarda-chuva abriu.'},
+  ]},
+  eja_simples:{badge:'Palavras do Dia a Dia',words:[
+    {w:'CASA',img:'🏠',frase:'A casa é minha.'},
+    {w:'VOTO',img:'🗳️',frase:'O voto é secreto.'},
+    {w:'SAÚDE',img:'🏥',frase:'A saúde é tudo.'},
+    {w:'TERRA',img:'🌍',frase:'A terra é nossa.'},
+    {w:'DINHEIRO',img:'💵',frase:'O dinheiro acabou.'},
+    {w:'FAMÍLIA',img:'👨‍👩‍👧',frase:'A família é unida.'},
+    {w:'MERCADO',img:'🛒',frase:'Eu vou ao mercado.'},
+    {w:'VACINA',img:'💉',frase:'A vacina protege.'},
+    {w:'ÔNIBUS',img:'🚌',frase:'O ônibus chegou.'},
+    {w:'RELÓGIO',img:'⏰',frase:'O relógio atrasou.'},
+    {w:'LIVRO',img:'📖',frase:'O livro é bom.'},
+    {w:'CANETA',img:'🖊️',frase:'A caneta escreve.'},
+    {w:'TELEFONE',img:'📞',frase:'O telefone tocou.'},
+    {w:'CHAVE',img:'🗝️',frase:'A chave é minha.'},
+    {w:'CAFÉ',img:'☕',frase:'O café está quente.'},
+    {w:'CHUVA',img:'🌧️',frase:'A chuva molhou.'},
+  ]},
+  eja_complexas:{badge:'Trabalho e Cidadania',words:[
+    {w:'EMPREGO',img:'💼',frase:'Consegui um emprego.'},
+    {w:'CONTRATO',img:'📄',frase:'Assinei o contrato.'},
+    {w:'CARTÃO',img:'💳',frase:'O cartão venceu.'},
+    {w:'TRANSPORTE',img:'🚍',frase:'O transporte lotou.'},
+    {w:'REMÉDIO',img:'💊',frase:'Tomei o remédio.'},
+    {w:'CRACHÁ',img:'🪪',frase:'Perdi o crachá.'},
+    {w:'TROCO',img:'🪙',frase:'Pedi o troco.'},
+    {w:'EXTRATO',img:'🧾',frase:'Tirei o extrato.'},
+    {w:'COMPUTADOR',img:'💻',frase:'Liguei o computador.'},
+    {w:'HOSPITAL',img:'🏥',frase:'Fui ao hospital.'},
+    {w:'DOCUMENTO',img:'📑',frase:'Levei o documento.'},
+    {w:'TRABALHO',img:'🔧',frase:'Gosto do trabalho.'},
+    {w:'ENTREGA',img:'📦',frase:'Chegou a entrega.'},
+    {w:'ENVELOPE',img:'✉️',frase:'Abri o envelope.'},
+    {w:'CALENDÁRIO',img:'📅',frase:'Olhei o calendário.'},
+    {w:'MENSAGEM',img:'💬',frase:'Recebi a mensagem.'},
+  ]}
+};
+
+const TOTAL=10;
+let catKey=null,mode='palavra',rounds=[],idx=0,acertos=0,answered=false;
+
+function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+function setMode(m,el){
+  mode=m;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('modeHint').textContent = m==='frase'
+    ? 'Mostra uma frase. Leia e clique no que ela descreve.'
+    : 'Mostra uma palavra. Clique na imagem correspondente.';
+}
+function selCat(k,el){
+  catKey=k;
+  document.querySelectorAll('.cat').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  const sb=document.getElementById('sbtn');
+  sb.disabled=false;
+  sb.textContent='▶ Jogar agora!';
+}
+function startGame(){
+  if(!catKey)return;
+  const words=BANCO[catKey].words;
+  const n=Math.min(TOTAL,words.length);
+  rounds=shuffle(words).slice(0,n).map(target=>{
+    const distr=shuffle(words.filter(w=>w.w!==target.w)).slice(0,3);
+    return {target,opts:shuffle([target,...distr])};
+  });
+  idx=0;acertos=0;
+  document.body.classList.add('playing');
+  showScreen('game');
+  renderRound();
+}
+function renderRound(){
+  answered=false;
+  const r=rounds[idx];
+  document.getElementById('phrase').textContent = mode==='frase' ? r.target.frase : r.target.w;
+  document.getElementById('ptxt').textContent=(idx+1)+' de '+rounds.length;
+  document.getElementById('pfill').style.width=(idx/rounds.length*100)+'%';
+  document.getElementById('acertos').textContent='✓ '+acertos;
+  const grid=document.getElementById('optGrid');
+  grid.innerHTML='';
+  const colors=['c-lar','c-ver','c-ros','c-azu'];
+  r.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='opt '+colors[i%4];
+    b.dataset.word=o.w;
+    b.innerHTML='<span class="opt-img">'+o.img+'</span>';
+    b.onclick=function(){choose(o,b);};
+    grid.appendChild(b);
+  });
+  document.getElementById('fb').textContent='';
+  document.getElementById('fb').className='fb';
+  document.getElementById('nextRow').style.display='none';
+}
+function choose(o,btn){
+  if(answered)return;
+  answered=true;
+  const r=rounds[idx];
+  const btns=document.querySelectorAll('.opt');
+  const fb=document.getElementById('fb');
+  if(o.w===r.target.w){
+    btn.classList.add('correct');
+    acertos++;
+    fb.textContent='✅ Muito bem!';fb.className='fb ok';
+    speak('Isso! '+r.target.w);
+  } else {
+    btn.classList.add('wrong');
+    btns.forEach(b=>{ if(b.dataset.word===r.target.w) b.classList.add('correct'); else if(b!==btn) b.classList.add('dim'); });
+    fb.textContent='❌ A resposta é '+r.target.w;fb.className='fb err';
+    speak('A resposta é '+r.target.w);
+  }
+  document.getElementById('acertos').textContent='✓ '+acertos;
+  btns.forEach(b=>b.disabled=true);
+  document.getElementById('pfill').style.width=((idx+1)/rounds.length*100)+'%';
+  document.getElementById('nextRow').style.display='block';
+}
+function nextRound(){
+  idx++;
+  if(idx>=rounds.length) showResult();
+  else renderRound();
+}
+function showResult(){
+  const total=rounds.length, pct=Math.round(acertos/total*100);
+  let trophy='🌟',title='Bom trabalho!';
+  if(pct>=90){trophy='🏆';title='Excelente!';}
+  else if(pct>=70){trophy='🥇';title='Muito bem!';}
+  else if(pct>=50){trophy='🎯';title='Continue assim!';}
+  else {trophy='💪';title='Vamos treinar mais!';}
+  document.getElementById('rtrophy').textContent=trophy;
+  document.getElementById('rtitle').textContent=title;
+  document.getElementById('rscore').textContent='Você acertou '+acertos+' de '+total+'!';
+  document.getElementById('rbar').textContent='Aproveitamento: '+pct+'%';
+  showScreen('result');
+}
+function playAgain(){ startGame(); }
+function goHome(){
+  document.body.classList.remove('playing');
+  if(document.body.classList.contains('tv-mode')) exitTV();
+  showScreen('home');
+}
+function readPhrase(){ speak(document.getElementById('phrase').textContent); }
+function speak(t){
+  if(!('speechSynthesis' in window))return;
+  try{
+    const u=new SpeechSynthesisUtterance(t);
+    u.lang='pt-BR';u.rate=0.9;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+// ── MODO TV — jogar com a turma (tela cheia + ampliação) ──
+function enterTV(){
+  document.body.classList.add('tv-mode');
+  const el=document.documentElement;
+  const req=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+  if(req){ try{ Promise.resolve(req.call(el)).catch(function(){}); }catch(e){} }
+  if(window.matchMedia&&window.matchMedia('(orientation: portrait)').matches){
+    const h=document.getElementById('tvHint');
+    h.classList.add('show');
+    setTimeout(function(){h.classList.remove('show');},5000);
+  }
+}
+function exitTV(){
+  document.body.classList.remove('tv-mode');
+  document.getElementById('tvHint').classList.remove('show');
+  const ex=document.exitFullscreen||document.webkitExitFullscreen||document.msExitFullscreen;
+  if((document.fullscreenElement||document.webkitFullscreenElement)&&ex){
+    try{ Promise.resolve(ex.call(document)).catch(function(){}); }catch(e){}
+  }
+}
+function onFsChange(){
+  if(!document.fullscreenElement&&!document.webkitFullscreenElement){
+    document.body.classList.remove('tv-mode');
+    document.getElementById('tvHint').classList.remove('show');
+  }
+}
+document.addEventListener('fullscreenchange',onFsChange);
+document.addEventListener('webkitfullscreenchange',onFsChange);
+</script>
+</body>
+</html>
