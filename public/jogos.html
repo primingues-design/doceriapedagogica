@@ -435,9 +435,69 @@
     .results-stats { grid-template-columns: 1fr 1fr; }
     .results-hero { padding: 28px 24px; }
   }
+
+  /* ===== MODO TV — jogar com a turma (espelhar celular na TV/projetor) ===== */
+  .tv-btn {
+    position: fixed; right: 16px; bottom: 16px; z-index: 9500;
+    display: none; align-items: center; gap: 8px;
+    background: #1a1410; color: #fff; border: 0; border-radius: 30px;
+    padding: 13px 20px; cursor: pointer;
+    font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 15px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  }
+  .tv-btn:hover { background: #2d241a; }
+  body.has-quiz .tv-btn { display: flex; }
+
+  .tv-exit {
+    position: fixed; top: 14px; right: 14px; z-index: 9600;
+    display: none; align-items: center; justify-content: center;
+    width: 54px; height: 54px; border-radius: 50%;
+    background: #1a1410; color: #fff; border: 0; cursor: pointer;
+    font-size: 26px; line-height: 1; box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  }
+  body.tv-mode .tv-exit { display: flex; }
+  body.tv-mode .tv-btn { display: none; }
+
+  .tv-hint {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9600;
+    display: none; text-align: center; padding: 14px 16px;
+    background: #1a1410; color: #ffd060;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 16px;
+  }
+  body.tv-mode .tv-hint.show { display: block; }
+
+  body.tv-mode { overflow: hidden; }
+  body.tv-mode .topbar, body.tv-mode .form-panel { display: none !important; }
+  body.tv-mode .main { display: block; height: auto; }
+  body.tv-mode .quiz-empty { display: none; }
+  body.tv-mode .preview-panel {
+    position: fixed; inset: 0; z-index: 9000; margin: 0; padding: 24px;
+    overflow: auto; display: flex; background: #fff8f0;
+  }
+  body.tv-mode .quiz-container { max-width: 1200px; width: 100%; margin: auto; }
+
+  /* ampliação para leitura à distância */
+  body.tv-mode .question-text { font-size: clamp(26px, 4.2vw, 46px) !important; line-height: 1.25; }
+  body.tv-mode .question-number { min-width: 44px; height: 44px; font-size: 22px; }
+  body.tv-mode .option-btn { font-size: clamp(18px, 2.6vw, 30px) !important; padding: 18px 22px; }
+  body.tv-mode .option-letter { width: 48px; height: 48px; font-size: 22px; }
+  body.tv-mode .btn-next { font-size: clamp(18px, 2.4vw, 26px) !important; padding: 16px 28px; }
+  body.tv-mode .hud-progress-label { font-size: 18px; }
+  body.tv-mode .hud-score, body.tv-mode .hud-timer { font-size: 22px; padding: 10px 16px; }
+  body.tv-mode .quiz-start-title { font-size: clamp(28px, 5vw, 52px) !important; }
+  body.tv-mode .quiz-start-sub { font-size: clamp(16px, 2.4vw, 24px) !important; }
+  body.tv-mode .btn-start { font-size: clamp(18px, 3vw, 28px) !important; padding: 18px 34px; }
+  body.tv-mode .quiz-meta-value { font-size: 34px; }
+  body.tv-mode .feedback-box { font-size: clamp(15px, 2vw, 22px) !important; }
+  body.tv-mode .results-score-big { font-size: clamp(40px, 7vw, 72px) !important; }
+  body.tv-mode .results-message { font-size: clamp(18px, 2.6vw, 28px) !important; }
 </style>
 </head>
 <body>
+
+<button class="tv-btn" id="tvBtn" onclick="enterTV()" title="Jogar com a turma na TV ou projetor">🖥️ Modo TV</button>
+<button class="tv-exit" id="tvExit" onclick="exitTV()" aria-label="Sair do Modo TV">✕</button>
+<div class="tv-hint" id="tvHint">📺 Vire o celular na horizontal para preencher a TV</div>
 
 <div class="topbar">
   <a class="topbar-logo" href="/jogos-area.html">
@@ -859,6 +919,7 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
 
     showScreen('start');
     document.getElementById('quizContainer').classList.add('show');
+    document.body.classList.add('has-quiz');
     document.getElementById('quizContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -868,6 +929,36 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
     document.getElementById('playingScreen').classList.toggle('show', name === 'playing');
     document.getElementById('resultsScreen').classList.toggle('show', name === 'results');
   }
+
+  // ── MODO TV — jogar com a turma (tela cheia + ampliação) ──
+  function enterTV() {
+    document.body.classList.add('tv-mode');
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if (req) { try { Promise.resolve(req.call(el)).catch(function(){}); } catch (e) {} }
+    if (window.matchMedia && window.matchMedia('(orientation: portrait)').matches) {
+      const h = document.getElementById('tvHint');
+      h.classList.add('show');
+      setTimeout(function(){ h.classList.remove('show'); }, 5000);
+    }
+  }
+  function exitTV() {
+    document.body.classList.remove('tv-mode');
+    document.getElementById('tvHint').classList.remove('show');
+    const ex = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+    if ((document.fullscreenElement || document.webkitFullscreenElement) && ex) {
+      try { Promise.resolve(ex.call(document)).catch(function(){}); } catch (e) {}
+    }
+  }
+  // se o usuário sair da tela cheia pelo gesto do sistema, sincroniza o modo
+  function onFsChange() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      document.body.classList.remove('tv-mode');
+      document.getElementById('tvHint').classList.remove('show');
+    }
+  }
+  document.addEventListener('fullscreenchange', onFsChange);
+  document.addEventListener('webkitfullscreenchange', onFsChange);
 
   // ── START QUIZ ──
   function startQuiz() {
