@@ -648,7 +648,8 @@
       <div class="ph-actions">
         <button class="btn-soft" id="editBtn" onclick="toggleEdit()">✏️ Editar</button>
         <button class="btn-soft" onclick="generate()">↻ Gerar novamente</button>
-        <button class="btn-soft" onclick="baixarWord()">📄 Baixar Word</button>
+        <button class="btn-soft" onclick="baixarWord()">📄 Word (editar)</button>
+        <button class="btn-soft" onclick="salvarDrive()">🗂️ Salvar no Drive</button>
         <button class="btn-pdf" id="pdfBtn" onclick="printPDF()">🖨️ Imprimir / Salvar PDF</button>
       </div>
     </div>
@@ -1217,6 +1218,12 @@ RESPONDA SÓ COM ESTE JSON:
   function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
   function fmtData(){return new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});}
   function printPDF(){ desligarEdicao(); dpPrint(); }
+  // Salvar no Google Drive = salvar um PDF (todas as imagens entram). É um destino da janela de impressão.
+  function salvarDrive(){
+    desligarEdicao();
+    alert('Na janela de impressão, em "Destino", escolha "Salvar no Google Drive".\nO PDF vai para o seu Drive com TODAS as imagens.');
+    dpPrint();
+  }
   // Exporta o material como Word (.doc): HTML compatível com Word, variáveis CSS resolvidas e imagens absolutas.
   // rasteriza uma imagem (mesma origem, incl. SVG) para PNG base64 — Word não renderiza SVG por link
   async function _imgToPng(absUrl){
