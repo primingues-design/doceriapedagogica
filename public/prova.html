@@ -625,6 +625,7 @@
     </button>
 
     <div class="error-box" id="errorBox"></div>
+    <div class="info-box">⚠️ A IA pode cometer erros (textos, imagens ou quantidades). <strong>Revise sempre</strong> antes de aplicar ou imprimir. Você pode editar o material gerado.</div>
     <div class="info-box">🖼️ Imagens por IA (até 6). Funcionam melhor para objetos e cenas; mapas/gráficos com números virão por outra via.</div>
     <div class="progress-wrap" id="progressWrap">
       <div class="prog-bar-outer"><div class="prog-bar-inner" id="progBar"></div></div>
@@ -1076,6 +1077,7 @@
 6. EDUCAÇÃO INFANTIL = LUDICIDADE EM PRIMEIRO LUGAR: na Educação Infantil, priorize o brincar, o faz-de-conta, jogos, música, rimas, exploração sensorial e desafios curtos e alegres. NADA de tarefa escolarizada ou abstrata — nessa fase o aprendizado acontece pela brincadeira, pela curiosidade e pela imagem encantadora.
 7. BNCC: alinhe à habilidade correta para o tema e o ano, e informe o(s) código(s).
 8. METALINGUAGEM PROIBIDA NO ENUNCIADO: o texto que o ALUNO lê NUNCA pode conter termos internos do seu planejamento — nada de "Bloom", "nível: aplicar", "habilidade EF...", "objetivo:", "tipo: múltipla escolha", "demanda cognitiva" etc. dentro do enunciado. Esses metadados ficam só nos campos próprios (ex.: metadados.bncc), jamais no texto da pergunta. Escreva o enunciado como uma professora fala com o aluno.
+9. ESPAÇO DE RESPOSTA: NUNCA desenhe linhas para o aluno escrever usando underscores ("______"), pontilhados ou traços no texto — o SISTEMA já cria as linhas de resposta automaticamente, na largura toda da folha. Escreva só a pergunta; não acrescente espaço de resposta no texto.
 `;
 
   // Lista as imagens curadas disponíveis para o componente (hoje: Geografia) e instrui a IA a usá-las
@@ -1216,13 +1218,36 @@ RESPONDA SÓ COM ESTE JSON:
   function fmtData(){return new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});}
   function printPDF(){ desligarEdicao(); dpPrint(); }
   // Exporta o material como Word (.doc): HTML compatível com Word, variáveis CSS resolvidas e imagens absolutas.
-  function baixarWord(){
+  // rasteriza uma imagem (mesma origem, incl. SVG) para PNG base64 — Word não renderiza SVG por link
+  async function _imgToPng(absUrl){
+    let svgText=null,vw=0,vh=0;
+    if(/\.svg(\?|$)/i.test(absUrl)){
+      try{ svgText=await (await fetch(absUrl)).text();
+        const vb=svgText.match(/viewBox="([\d.\s-]+)"/); if(vb){const p=vb[1].trim().split(/\s+/);vw=parseFloat(p[2]);vh=parseFloat(p[3]);}
+      }catch(e){ svgText=null; }
+    }
+    return await new Promise((res,rej)=>{
+      const im=new Image();
+      im.onload=()=>{ const w=vw||im.naturalWidth||600,h=vh||im.naturalHeight||400,sc=2;
+        const c=document.createElement('canvas');c.width=Math.round(w*sc);c.height=Math.round(h*sc);
+        const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(im,0,0,c.width,c.height);
+        try{res(c.toDataURL('image/png'));}catch(e){rej(e);} };
+      im.onerror=rej;
+      im.src = svgText ? ('data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svgText)) : absUrl;
+    });
+  }
+  async function baixarWord(){
     desligarEdicao();
     const docEl=document.querySelector('#prova-doc .prova-doc');
     if(!docEl){ alert('Gere um material primeiro.'); return; }
     const clone=docEl.cloneNode(true);
-    // imagens com caminho absoluto (para abrirem no Word)
-    clone.querySelectorAll('img').forEach(img=>{const s=img.getAttribute('src')||'';if(s&&!/^(https?:|data:)/.test(s))img.setAttribute('src',location.origin+(s.charAt(0)==='/'?s:'/'+s));});
+    // imagens: embute as da MESMA origem (esquemas/mapas) como PNG; externas (IA) ficam com URL absoluta
+    await Promise.all(Array.from(clone.querySelectorAll('img')).map(async img=>{
+      const s=img.getAttribute('src')||''; if(!s) return;
+      const abs=/^(https?:|data:)/.test(s)?s:location.origin+(s.charAt(0)==='/'?s:'/'+s);
+      img.setAttribute('src',abs);
+      if(abs.indexOf(location.origin)===0){ try{ img.setAttribute('src', await _imgToPng(abs)); }catch(e){} }
+    }));
     // CSS da página com as variáveis (var(--x)) resolvidas para valores reais
     let css=Array.from(document.querySelectorAll('style')).map(s=>s.textContent).join('\n');
     const vars={};const root=css.match(/:root\s*\{([^}]*)\}/);
