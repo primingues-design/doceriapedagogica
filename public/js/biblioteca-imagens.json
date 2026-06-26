@@ -774,6 +774,17 @@
         "eja"
       ],
       "colorir": false
+    },
+    "tabela_periodica": {
+      "arquivo": "/assets/quimica/tabela-periodica.png",
+      "titulo": "Tabela Periódica dos Elementos",
+      "descricao": "Tabela Periódica dos Elementos (IUPAC 2023), com grupos, períodos e cores por família.",
+      "uso_pedagogico": "Organização dos elementos por número atômico em grupos e períodos; identificação de símbolo, nome e massa atômica; famílias (metais alcalinos, alcalino-terrosos, de transição, não metais, gases nobres, semimetais, lantanídeos e actinídeos).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
     }
   }
 }
