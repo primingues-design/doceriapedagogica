@@ -303,7 +303,7 @@ function sndWrong(){ actx(); tone(240,0.16,'sawtooth',0.16,0); tone(170,0.28,'sa
 function sndWin(){ actx(); [523,659,784,1047].forEach((f,i)=>tone(f,0.25,'sine',0.2,i*0.13)); }
 
 // ── MASCOTE (robozinho que reage) ──
-const ROBO={normal:'/assets/mascote/robo-pensando.png',acerto:'/assets/mascote/robo-pensando.png',erro:'/assets/mascote/robo-triste.png'};
+const ROBO={normal:'/assets/mascote/robo-pensando.png',acerto:'/assets/mascote/robo-feliz.png',erro:'/assets/mascote/robo-triste.png'};
 function robReact(type){
   const r=document.getElementById('robo'); if(!r)return;
   r.classList.remove('acerto','erro');
@@ -408,6 +408,7 @@ function nextRound(){
 }
 function showResult(){
   sndWin();
+  const r=document.getElementById('robo'); if(r){ r.classList.remove('acerto','erro'); r.src=ROBO.acerto; }
   const total=rounds.length, pct=Math.round(acertos/total*100);
   let trophy='🌟',title='Bom trabalho!';
   if(pct>=90){trophy='🏆';title='Excelente!';}
