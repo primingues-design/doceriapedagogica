@@ -82,6 +82,16 @@ body.playing:not(.tv-mode) #game img.opt-img{height:100%;max-height:none;width:1
 body.playing:not(.tv-mode) #game .fb{flex:0 0 auto;min-height:22px;margin:8px 0 2px;}
 body.playing:not(.tv-mode) #game .next-row{flex:0 0 auto;margin-top:6px;}
 
+/* ===== MASCOTE (robozinho) ===== */
+#robo{position:fixed;left:8px;bottom:8px;width:clamp(58px,15vw,86px);height:auto;z-index:9400;pointer-events:none;display:none;filter:drop-shadow(0 3px 5px rgba(0,0,0,.25));animation:robFloat 2.6s ease-in-out infinite;}
+body.playing #robo{display:block;}
+body.tv-mode #robo{display:none;}
+@keyframes robFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+#robo.acerto{animation:robJump .6s ease;}
+@keyframes robJump{0%{transform:translateY(0) scale(1)}35%{transform:translateY(-26px) scale(1.12)}70%{transform:translateY(0) scale(1)}100%{transform:translateY(0) scale(1)}}
+#robo.erro{animation:robShake .5s ease;}
+@keyframes robShake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-5px) rotate(-5deg)}50%{transform:translateX(5px) rotate(5deg)}75%{transform:translateX(-4px) rotate(-4deg)}}
+
 /* ===== MODO TV — jogar com a turma (espelhar celular na TV) ===== */
 .tv-btn{position:fixed;right:16px;bottom:16px;z-index:9500;display:none;align-items:center;gap:8px;background:#5B21B6;color:#fff;border:0;border-radius:30px;padding:13px 20px;cursor:pointer;font-family:'Fredoka One',cursive;font-size:15px;box-shadow:0 6px 18px rgba(0,0,0,.25);}
 .tv-btn:hover{background:#4C1D95;}
@@ -116,6 +126,7 @@ body.tv-mode .iconbtn{font-size:20px;padding:8px 14px;}
 </head>
 <body>
 
+<img id="robo" src="/assets/mascote/robo-pensando.png" alt="" aria-hidden="true">
 <button class="tv-btn" id="tvBtn" onclick="enterTV()" title="Jogar com a turma na TV ou projetor">🖥️ Modo TV</button>
 <button class="tv-exit" id="tvExit" onclick="exitTV()" aria-label="Sair do Modo TV">✕</button>
 <div class="tv-hint" id="tvHint">📺 Vire o celular na horizontal para preencher a TV</div>
@@ -291,6 +302,18 @@ function sndCorrect(){ actx(); tone(660,0.12,'sine',0.2,0); tone(880,0.14,'sine'
 function sndWrong(){ actx(); tone(240,0.16,'sawtooth',0.16,0); tone(170,0.28,'sawtooth',0.16,0.13); }
 function sndWin(){ actx(); [523,659,784,1047].forEach((f,i)=>tone(f,0.25,'sine',0.2,i*0.13)); }
 
+// ── MASCOTE (robozinho que reage) ──
+const ROBO={normal:'/assets/mascote/robo-pensando.png',acerto:'/assets/mascote/robo-pensando.png',erro:'/assets/mascote/robo-triste.png'};
+function robReact(type){
+  const r=document.getElementById('robo'); if(!r)return;
+  r.classList.remove('acerto','erro');
+  void r.offsetWidth;
+  if(type==='acerto'){ r.src=ROBO.acerto; r.classList.add('acerto'); }
+  else if(type==='erro'){ r.src=ROBO.erro; r.classList.add('erro'); }
+  else { r.src=ROBO.normal; return; }
+  setTimeout(function(){ r.classList.remove('acerto','erro'); r.src=ROBO.normal; },1600);
+}
+
 function optMediaHTML(o){
   // Foto real (caminho /assets/...) ou emoji de placeholder.
   if(o.img && (o.img.charAt(0)==='/' || o.img.indexOf('assets/')>-1))
@@ -350,6 +373,7 @@ function renderRound(){
   document.getElementById('fb').textContent='';
   document.getElementById('fb').className='fb';
   document.getElementById('nextRow').style.display='none';
+  robReact('normal');
 }
 function choose(o,btn){
   if(answered)return;
@@ -361,11 +385,13 @@ function choose(o,btn){
     btn.classList.add('correct');
     acertos++;
     sndCorrect();
+    robReact('acerto');
     fb.textContent='✅ Muito bem!';fb.className='fb ok';
     speak('Isso! '+r.target.w);
   } else {
     btn.classList.add('wrong');
     sndWrong();
+    robReact('erro');
     btns.forEach(b=>{ if(b.dataset.word===r.target.w) b.classList.add('correct'); else if(b!==btn) b.classList.add('dim'); });
     fb.textContent='❌ A resposta é '+r.target.w;fb.className='fb err';
     speak('A resposta é '+r.target.w);
