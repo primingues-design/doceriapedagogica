@@ -69,15 +69,15 @@ img.opt-img{width:100%;height:clamp(74px,16vw,104px);object-fit:contain;}
 .rbar{font-size:13px;color:#888;margin-bottom:20px;}
 .rbtns{display:flex;flex-direction:column;gap:9px;}
 
-/* ===== LAYOUT APP (tela cheia, sem rolar) durante o jogo ===== */
-body.playing:not(.tv-mode){position:fixed;top:0;left:0;width:100%;height:var(--app-h,100dvh);overflow:hidden;padding:0;display:flex;align-items:stretch;justify-content:center;}
-body.playing:not(.tv-mode) .gw{height:var(--app-h,100dvh);border-radius:0;display:flex;flex-direction:column;}
+/* ===== LAYOUT APP ELASTICO — cabe na tela; se faltar espaco, rola suave (nao trava) ===== */
+body.playing:not(.tv-mode){min-height:var(--app-h,100dvh);padding:0;align-items:stretch;justify-content:center;}
+body.playing:not(.tv-mode) .gw{min-height:var(--app-h,100dvh);border-radius:0;display:flex;flex-direction:column;}
 body.playing:not(.tv-mode) .hdr{flex:0 0 auto;}
-body.playing:not(.tv-mode) #game.active{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;padding:12px 14px 14px;}
+body.playing:not(.tv-mode) #game.active{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;padding:10px 14px calc(16px + env(safe-area-inset-bottom));}
 body.playing:not(.tv-mode) #game .prog-row{flex:0 0 auto;margin-bottom:10px;}
 body.playing:not(.tv-mode) #game .phrase{flex:0 0 auto;margin:2px 0 12px;}
 body.playing:not(.tv-mode) #game .opt-grid{flex:1 1 auto;grid-template-rows:1fr 1fr;min-height:0;margin:0;}
-body.playing:not(.tv-mode) #game .opt{min-height:0;height:100%;padding:8px;}
+body.playing:not(.tv-mode) #game .opt{min-height:92px;height:100%;padding:8px;}
 body.playing:not(.tv-mode) #game img.opt-img{height:100%;max-height:none;width:100%;}
 body.playing:not(.tv-mode) #game .fb{flex:0 0 auto;min-height:22px;margin:8px 0 2px;}
 body.playing:not(.tv-mode) #game .next-row{flex:0 0 auto;margin-top:6px;}
@@ -101,8 +101,8 @@ body.tv-mode .tv-exit{display:flex;}
 body.tv-mode .tv-btn{display:none;}
 .tv-hint{position:fixed;top:0;left:0;right:0;z-index:9600;display:none;text-align:center;padding:14px 16px;background:#5B21B6;color:#FFD060;font-family:'Fredoka One',cursive;font-size:16px;}
 body.tv-mode .tv-hint.show{display:block;}
-body.tv-mode{overflow:hidden;padding:0;}
-body.tv-mode .gw{max-width:none;width:100vw;height:var(--app-h,100dvh);border-radius:0;box-shadow:none;display:flex;flex-direction:column;}
+body.tv-mode{overflow:auto;padding:0;}
+body.tv-mode .gw{max-width:none;width:100vw;min-height:var(--app-h,100dvh);border-radius:0;box-shadow:none;display:flex;flex-direction:column;}
 body.tv-mode .hdr{display:none;}
 body.tv-mode .screen{flex:1;display:none;}
 body.tv-mode .screen.active{display:flex;flex-direction:column;justify-content:center;}
