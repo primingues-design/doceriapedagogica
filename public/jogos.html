@@ -2,9 +2,14 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Quiz">
+<meta name="theme-color" content="#4C1D95">
 <title>Quiz Interativo — DoceriaPedagógica</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
     --ink: #0f0e0c;
@@ -491,10 +496,61 @@
   body.tv-mode .feedback-box { font-size: clamp(15px, 2vw, 22px) !important; }
   body.tv-mode .results-score-big { font-size: clamp(40px, 7vw, 72px) !important; }
   body.tv-mode .results-message { font-size: clamp(18px, 2.6vw, 28px) !important; }
+
+  /* ===== REPAGINACAO LUDICA (cores fortes, cards, fonte arredondada) ===== */
+  .quiz-start-title,.results-message,.btn-start,.btn-next,.option-letter,.hud-score,.hud-timer,.question-number,.quiz-meta-value{font-family:'Nunito',sans-serif!important;}
+  .hud-progress-bar{height:10px!important;}
+  .hud-progress-fill{background:#6D28D9!important;}
+  .hud-score{background:#FEF3C7!important;border:2px solid #F59E0B!important;color:#B45309!important;font-weight:900!important;border-radius:10px!important;}
+  .hud-timer{font-weight:900!important;border-radius:10px!important;border:2px solid var(--border-mid)!important;}
+  .hud-timer.urgent{background:#FEE2E2!important;border-color:#DC2626!important;color:#DC2626!important;}
+  .question-card{border-radius:12px!important;box-shadow:0 6px 20px rgba(76,29,149,.15)!important;}
+  .question-card-header{background:#4C1D95!important;}
+  .question-number{background:#fff!important;color:#4C1D95!important;border-radius:8px!important;}
+  .question-text{font-weight:800!important;}
+  .options-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;}
+  .option-btn{align-items:center!important;border:none!important;border-radius:10px!important;color:#fff!important;font-weight:800!important;font-size:15px!important;padding:16px 14px!important;transition:transform .12s,filter .12s!important;}
+  .option-btn:nth-child(1){background:#7C3AED!important;}
+  .option-btn:nth-child(2){background:#0D9488!important;}
+  .option-btn:nth-child(3){background:#DB2777!important;}
+  .option-btn:nth-child(4){background:#EA580C!important;}
+  .option-btn:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-2px);}
+  .option-letter{background:rgba(255,255,255,.25)!important;border:none!important;color:#fff!important;border-radius:6px!important;width:30px!important;height:30px!important;font-weight:900!important;}
+  .option-btn.correct{background:#16A34A!important;color:#fff!important;}
+  .option-btn.wrong{background:#DC2626!important;color:#fff!important;}
+  .option-btn.correct .option-letter,.option-btn.wrong .option-letter{background:rgba(255,255,255,.3)!important;color:#fff!important;}
+  .option-btn.dimmed{opacity:.45!important;}
+  .btn-start,.btn-next{background:#6D28D9!important;border-radius:10px!important;font-weight:900!important;}
+  .btn-start:hover,.btn-next:hover{background:#5B21B6!important;}
+
+  /* ===== LAYOUT APP ELASTICO (durante o jogo: esconde form/topbar, quiz no centro, rola se faltar) ===== */
+  body.playing:not(.tv-mode){min-height:var(--app-h,100dvh);}
+  body.playing:not(.tv-mode) .topbar,body.playing:not(.tv-mode) .form-panel{display:none!important;}
+  body.playing:not(.tv-mode) .main{display:block;min-height:0;}
+  body.playing:not(.tv-mode) .quiz-empty{display:none;}
+  body.playing:not(.tv-mode) .preview-panel{position:static;min-height:var(--app-h,100dvh);max-height:none;padding:12px 14px calc(16px + env(safe-area-inset-bottom));display:flex;align-items:flex-start;justify-content:center;overflow:visible;}
+  body.playing:not(.tv-mode) .quiz-container{max-width:560px;width:100%;margin:0 auto;}
+  .quiz-x{display:none;background:#fff;border:2px solid var(--border-mid);border-radius:10px;color:var(--text-mid);font-size:16px;font-weight:900;cursor:pointer;width:38px;height:38px;line-height:1;}
+  body.playing:not(.tv-mode) .quiz-x{display:flex;align-items:center;justify-content:center;}
+
+  /* ===== MASCOTE (robozinho) ===== */
+  #robo{position:fixed;left:6px;bottom:calc(64px + env(safe-area-inset-bottom));width:clamp(52px,13vw,72px);height:auto;z-index:9400;pointer-events:none;display:none;filter:drop-shadow(0 3px 5px rgba(0,0,0,.25));animation:robFloat 2.6s ease-in-out infinite;}
+  body.playing #robo{display:block;}
+  body.tv-mode #robo{display:none;}
+  @keyframes robFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  #robo.acerto{animation:robJump .6s ease;}
+  @keyframes robJump{0%{transform:translateY(0) scale(1)}35%{transform:translateY(-26px) scale(1.12)}70%{transform:translateY(0) scale(1)}100%{transform:translateY(0) scale(1)}}
+  #robo.erro{animation:robShake .5s ease;}
+  @keyframes robShake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-5px) rotate(-5deg)}50%{transform:translateX(5px) rotate(5deg)}75%{transform:translateX(-4px) rotate(-4deg)}}
+
+  /* safe-area nos botoes fixos */
+  .tv-btn{bottom:calc(16px + env(safe-area-inset-bottom))!important;}
+  .tv-exit{top:calc(14px + env(safe-area-inset-top))!important;}
 </style>
 </head>
 <body>
 
+<img id="robo" src="/assets/mascote/robo-pensando.png" alt="" aria-hidden="true">
 <button class="tv-btn" id="tvBtn" onclick="enterTV()" title="Jogar com a turma na TV ou projetor">🖥️ Modo TV</button>
 <button class="tv-exit" id="tvExit" onclick="exitTV()" aria-label="Sair do Modo TV">✕</button>
 <div class="tv-hint" id="tvHint">📺 Vire o celular na horizontal para preencher a TV</div>
@@ -671,6 +727,7 @@
           </div>
           <div class="hud-score" id="hudScore">🏆 0</div>
           <div class="hud-timer" id="hudTimer">⏱ —</div>
+          <button class="quiz-x" onclick="exitPlay()" aria-label="Sair do jogo">✕</button>
         </div>
 
         <div class="question-card" id="questionCard">
@@ -960,11 +1017,37 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
   document.addEventListener('fullscreenchange', onFsChange);
   document.addEventListener('webkitfullscreenchange', onFsChange);
 
+  // ── ALTURA REAL DA TELA (corrige barras do navegador no celular) ──
+  function setAppH(){ document.documentElement.style.setProperty('--app-h', window.innerHeight + 'px'); }
+  setAppH();
+  window.addEventListener('resize', setAppH);
+  window.addEventListener('orientationchange', function(){ setTimeout(setAppH,300); });
+  if(window.visualViewport){ window.visualViewport.addEventListener('resize', setAppH); }
+
+  // ── SONS (gerados no navegador, sem arquivos) ──
+  let _actx=null;
+  function actx(){ if(!_actx){ try{ _actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(_actx&&_actx.state==='suspended'){ _actx.resume(); } return _actx; }
+  function tone(freq,dur,type,vol,delay){ const c=_actx; if(!c)return; const t=c.currentTime+(delay||0); const o=c.createOscillator(),g=c.createGain(); o.type=type||'sine'; o.frequency.value=freq; g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol||0.18,t+0.012); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+dur+0.03); }
+  function sndCorrect(){ actx(); tone(660,0.12,'sine',0.2,0); tone(880,0.14,'sine',0.2,0.1); tone(1245,0.22,'sine',0.2,0.21); }
+  function sndWrong(){ actx(); tone(240,0.16,'sawtooth',0.16,0); tone(170,0.28,'sawtooth',0.16,0.13); }
+  function sndWin(){ actx(); [523,659,784,1047].forEach(function(f,i){ tone(f,0.25,'sine',0.2,i*0.13); }); }
+  function sndTick(){ actx(); tone(880,0.06,'square',0.12); }
+
+  // ── MASCOTE (robozinho que reage) ──
+  const ROBO={normal:'/assets/mascote/robo-pensando.png',acerto:'/assets/mascote/robo-feliz.png',erro:'/assets/mascote/robo-triste.png'};
+  function robReact(type){ const r=document.getElementById('robo'); if(!r)return; r.classList.remove('acerto','erro'); void r.offsetWidth; if(type==='acerto'){ r.src=ROBO.acerto; r.classList.add('acerto'); } else if(type==='erro'){ r.src=ROBO.erro; r.classList.add('erro'); } else { r.src=ROBO.normal; return; } setTimeout(function(){ r.classList.remove('acerto','erro'); r.src=ROBO.normal; },1600); }
+
+  // ── SAIR DO MODO JOGO (volta ao formulario) ──
+  function exitPlay(){ stopTimer(); if(document.body.classList.contains('tv-mode')) exitTV(); document.body.classList.remove('playing'); showScreen('start'); window.scrollTo(0,0); }
+
   // ── START QUIZ ──
   function startQuiz() {
     currentQ = 0;
     score = 0;
     userAnswers = [];
+    actx();
+    document.body.classList.add('playing');
+    setAppH();
     showScreen('playing');
     renderQuestion();
   }
@@ -1002,6 +1085,7 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
     // Feedback
     const fb = document.getElementById('feedbackBox');
     fb.classList.remove('show', 'correct', 'wrong');
+    robReact('normal');
 
     // Next button
     const btnNext = document.getElementById('btnNext');
@@ -1040,10 +1124,12 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
     const el = document.getElementById('hudTimer');
     el.textContent = `⏱ ${timeLeft}`;
     el.classList.toggle('urgent', timeLeft <= 5);
+    if (timeLeft <= 5 && timeLeft > 0) sndTick();
   }
 
   function timeoutAnswer() {
     const q = quizData.questoes[currentQ];
+    sndWrong(); robReact('erro');
     disableOptions();
     markCorrectOption(q.resposta_correta);
     userAnswers.push({ questionIndex: currentQ, chosen: null, correct: false });
@@ -1057,7 +1143,7 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
     const q = quizData.questoes[currentQ];
     const isCorrect = chosen === q.resposta_correta;
 
-    if (isCorrect) score++;
+    if (isCorrect) { score++; sndCorrect(); robReact('acerto'); } else { sndWrong(); robReact('erro'); }
     userAnswers.push({ questionIndex: currentQ, chosen, correct: isCorrect });
 
     disableOptions();
@@ -1122,6 +1208,8 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
   // ── SHOW RESULTS ──
   function showResults() {
     stopTimer();
+    sndWin();
+    { const _r=document.getElementById('robo'); if(_r){ _r.classList.remove('acerto','erro'); _r.src=ROBO.acerto; } }
     const total = quizData.questoes.length;
     const acertos = score;
     const erros = total - acertos;
