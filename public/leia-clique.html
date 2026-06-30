@@ -10,6 +10,7 @@
 <meta name="theme-color" content="#8B5CF6"/>
 <title>Leia e Clique — Doceria Pedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/css/apresentacao.css"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Nunito',sans-serif;background:#F3EEFF;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:12px;}
@@ -75,52 +76,43 @@ img.opt-img{width:100%;height:clamp(74px,16vw,104px);object-fit:contain;}
 .rbtns{display:flex;flex-direction:column;gap:9px;}
 
 /* ===== LAYOUT APP ELASTICO — cabe na tela; se faltar espaco, rola suave (nao trava) ===== */
-body.playing:not(.tv-mode){min-height:var(--app-h,100dvh);padding:0;align-items:stretch;justify-content:center;}
-body.playing:not(.tv-mode) .gw{min-height:var(--app-h,100dvh);border-radius:0;display:flex;flex-direction:column;}
-body.playing:not(.tv-mode) .hdr{flex:0 0 auto;}
-body.playing:not(.tv-mode) #game.active{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;padding:10px 14px calc(16px + env(safe-area-inset-bottom));}
-body.playing:not(.tv-mode) #game .prog-row{flex:0 0 auto;margin-bottom:10px;}
-body.playing:not(.tv-mode) #game .phrase{flex:0 0 auto;margin:2px 0 12px;}
-body.playing:not(.tv-mode) #game .opt-grid{flex:1 1 auto;grid-template-rows:1fr 1fr;min-height:0;margin:0;}
-body.playing:not(.tv-mode) #game .opt{min-height:92px;height:100%;padding:8px;}
-body.playing:not(.tv-mode) #game img.opt-img{height:100%;max-height:none;width:100%;}
-body.playing:not(.tv-mode) #game .fb{flex:0 0 auto;min-height:22px;margin:8px 0 2px;}
-body.playing:not(.tv-mode) #game .next-row{flex:0 0 auto;margin-top:6px;}
+body.playing{min-height:var(--app-h,100dvh);padding:0;align-items:stretch;justify-content:center;}
+body.playing .gw{min-height:var(--app-h,100dvh);border-radius:0;display:flex;flex-direction:column;}
+body.playing .hdr{flex:0 0 auto;}
+body.playing #game.active{flex:1 1 auto;display:flex;flex-direction:column;min-height:0;padding:10px 14px calc(16px + env(safe-area-inset-bottom));}
+body.playing #game .prog-row{flex:0 0 auto;margin-bottom:10px;}
+body.playing #game .phrase{flex:0 0 auto;margin:2px 0 12px;}
+body.playing #game .opt-grid{flex:1 1 auto;grid-template-rows:1fr 1fr;min-height:0;margin:0;}
+body.playing #game .opt{min-height:92px;height:100%;padding:8px;}
+body.playing #game img.opt-img{height:100%;max-height:none;width:100%;}
+body.playing #game .fb{flex:0 0 auto;min-height:22px;margin:8px 0 2px;}
+body.playing #game .next-row{flex:0 0 auto;margin-top:6px;}
 
 /* ===== MASCOTE (robozinho) ===== */
 #robo{position:fixed;left:6px;bottom:calc(64px + env(safe-area-inset-bottom));width:clamp(52px,13vw,74px);height:auto;z-index:9400;pointer-events:none;display:none;filter:drop-shadow(0 3px 5px rgba(0,0,0,.25));animation:robFloat 2.6s ease-in-out infinite;}
 body.playing #robo{display:block;}
-body.tv-mode #robo{display:none;}
+html.apresentando #robo{display:none!important;}
 @keyframes robFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 #robo.acerto{animation:robJump .6s ease;}
 @keyframes robJump{0%{transform:translateY(0) scale(1)}35%{transform:translateY(-26px) scale(1.12)}70%{transform:translateY(0) scale(1)}100%{transform:translateY(0) scale(1)}}
 #robo.erro{animation:robShake .5s ease;}
 @keyframes robShake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-5px) rotate(-5deg)}50%{transform:translateX(5px) rotate(5deg)}75%{transform:translateX(-4px) rotate(-4deg)}}
 
-/* ===== MODO TV — jogar com a turma (espelhar celular na TV) ===== */
-.tv-btn{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:9500;display:none;align-items:center;gap:8px;background:#5B21B6;color:#fff;border:0;border-radius:30px;padding:13px 20px;cursor:pointer;font-family:'Fredoka One',cursive;font-size:15px;box-shadow:0 6px 18px rgba(0,0,0,.25);}
-.tv-btn:hover{background:#4C1D95;}
-body.playing .tv-btn{display:flex;}
-.tv-exit{position:fixed;top:calc(14px + env(safe-area-inset-top));right:14px;z-index:9600;display:none;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:#5B21B6;color:#fff;border:0;cursor:pointer;font-size:26px;line-height:1;box-shadow:0 4px 14px rgba(0,0,0,.3);}
-body.tv-mode .tv-exit{display:flex;}
-body.tv-mode .tv-btn{display:none;}
-.tv-hint{position:fixed;top:0;left:0;right:0;z-index:9600;display:none;text-align:center;padding:14px 16px;background:#5B21B6;color:#FFD060;font-family:'Fredoka One',cursive;font-size:16px;}
-body.tv-mode .tv-hint.show{display:block;}
-body.tv-mode{overflow:auto;padding:0;}
-body.tv-mode .gw{max-width:none;width:100vw;min-height:var(--app-h,100dvh);border-radius:0;box-shadow:none;display:flex;flex-direction:column;}
-body.tv-mode .hdr{display:none;}
-body.tv-mode .screen{flex:1;display:none;}
-body.tv-mode .screen.active{display:flex;flex-direction:column;justify-content:center;}
-body.tv-mode #home,body.tv-mode #result{justify-content:flex-start;}
-body.tv-mode .phrase{font-size:clamp(30px,6.5vw,68px)!important;margin:10px 0 26px;}
-body.tv-mode .opt-grid{grid-template-columns:repeat(4,1fr);gap:18px;}
-body.tv-mode .opt{min-height:clamp(150px,30vh,340px);border-radius:22px;}
-body.tv-mode span.opt-img{font-size:clamp(70px,13vw,160px)!important;}
-body.tv-mode img.opt-img{height:clamp(110px,26vh,300px)!important;}
-body.tv-mode .fb{font-size:clamp(20px,3vw,30px)!important;}
-body.tv-mode .prog-row{margin-bottom:22px;}
-body.tv-mode .ptxt,body.tv-mode .acertos{font-size:18px;}
-body.tv-mode .iconbtn{font-size:20px;padding:8px 14px;}
+/* ===== MODO APRESENTAÇÃO — ampliação do conteúdo (palco = .gw, infra em /css/apresentacao.css) ===== */
+html.apresentando .gw .hdr{display:none!important;}
+html.apresentando .gw .screen{display:none!important;}
+html.apresentando .gw .screen.active{display:flex!important;flex-direction:column!important;flex:1 1 auto!important;min-height:0!important;justify-content:center!important;padding:3vh 4vw!important;}
+html.apresentando #home,html.apresentando #result{justify-content:flex-start!important;overflow:auto!important;}
+html.apresentando .phrase{font-size:clamp(30px,6vw,72px)!important;margin:1vh 0 3vh!important;}
+html.apresentando #game .opt-grid{grid-template-columns:repeat(4,1fr)!important;grid-template-rows:none!important;gap:2vw!important;flex:1 1 auto!important;}
+html.apresentando #game .opt{min-height:0!important;height:auto!important;border-radius:18px!important;}
+html.apresentando #game img.opt-img{height:clamp(120px,38vh,360px)!important;max-height:none!important;}
+html.apresentando span.opt-img{font-size:clamp(70px,13vw,160px)!important;}
+html.apresentando .fb{font-size:clamp(20px,3vw,32px)!important;}
+html.apresentando .prog-row{margin-bottom:2vh!important;}
+html.apresentando .ptxt,html.apresentando .acertos{font-size:clamp(16px,2vw,24px)!important;}
+html.apresentando .iconbtn{font-size:clamp(18px,2vw,24px)!important;padding:8px 14px!important;}
+html.apresentando .next-row .sbtn{font-size:clamp(18px,2.2vw,26px)!important;}
 
 @media(max-width:380px){
   .opt-img{font-size:54px;}
@@ -132,11 +124,8 @@ body.tv-mode .iconbtn{font-size:20px;padding:8px 14px;}
 <body>
 
 <img id="robo" src="/assets/mascote/robo-pensando.png" alt="" aria-hidden="true">
-<button class="tv-btn" id="tvBtn" onclick="enterTV()" title="Jogar com a turma na TV ou projetor">🖥️ Modo TV</button>
-<button class="tv-exit" id="tvExit" onclick="exitTV()" aria-label="Sair do Modo TV">✕</button>
-<div class="tv-hint" id="tvHint">📺 Vire o celular na horizontal para preencher a TV</div>
 
-<div class="gw">
+<div class="gw" data-palco>
   <div class="hdr">
     <div class="logo">🍰 Doceria <span>Pedagógica</span></div>
     <div class="pts" id="pts">📖 Leia e Clique</div>
@@ -436,7 +425,7 @@ function showResult(){
 function playAgain(){ startGame(); }
 function goHome(){
   document.body.classList.remove('playing');
-  if(document.body.classList.contains('tv-mode')) exitTV();
+  if(window.Apresentacao && Apresentacao.isActive()) Apresentacao.exit();
   showScreen('home');
 }
 function readPhrase(){ speak(document.getElementById('phrase').textContent); }
@@ -450,36 +439,11 @@ function speak(t){
   }catch(e){}
 }
 
-// ── MODO TV — jogar com a turma (tela cheia + ampliação) ──
-function enterTV(){
-  document.body.classList.add('tv-mode');
-  const el=document.documentElement;
-  const req=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
-  if(req){ try{ Promise.resolve(req.call(el)).catch(function(){}); }catch(e){} }
-  if(window.matchMedia&&window.matchMedia('(orientation: portrait)').matches){
-    const h=document.getElementById('tvHint');
-    h.classList.add('show');
-    setTimeout(function(){h.classList.remove('show');},5000);
-  }
-  setTimeout(setAppH,350);
-}
-function exitTV(){
-  document.body.classList.remove('tv-mode');
-  document.getElementById('tvHint').classList.remove('show');
-  const ex=document.exitFullscreen||document.webkitExitFullscreen||document.msExitFullscreen;
-  if((document.fullscreenElement||document.webkitFullscreenElement)&&ex){
-    try{ Promise.resolve(ex.call(document)).catch(function(){}); }catch(e){}
-  }
-}
-function onFsChange(){
-  if(!document.fullscreenElement&&!document.webkitFullscreenElement){
-    document.body.classList.remove('tv-mode');
-    document.getElementById('tvHint').classList.remove('show');
-  }
-  setTimeout(setAppH,100);
-}
-document.addEventListener('fullscreenchange',onFsChange);
-document.addEventListener('webkitfullscreenchange',onFsChange);
+// Modo Apresentação é gerenciado por /js/apresentacao.js (botões, fullscreen, ESC).
+// Recalcula a altura elástica ao entrar/sair da apresentação.
+window.addEventListener('apz:enter', setAppH);
+window.addEventListener('apz:exit', function(){ setTimeout(setAppH,100); });
 </script>
+<script src="/js/apresentacao.js"></script>
 </body>
 </html>

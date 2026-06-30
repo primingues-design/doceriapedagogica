@@ -1,0 +1,71 @@
+/* ============================================================
+   MODO APRESENTAÇÃO — módulo reutilizável (Doceria Pedagógica)
+   Overlay fullscreen profissional (Netflix/PowerPoint-like).
+   O jogo marca o elemento a apresentar com  data-palco.
+   Ativado por js/apresentacao.js (classe .apresentando no <html>).
+   ============================================================ */
+
+/* trava qualquer rolagem da página enquanto apresenta */
+html.apresentando, html.apresentando body {
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100% !important;
+}
+
+/* o PALCO vira uma camada fixa que cobre 100% da tela —
+   zera tudo que impede o preenchimento total (max-width, padding,
+   margin, border, radius, transform, zoom, box-shadow) */
+html.apresentando [data-palco] {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: var(--apz-vh, 100dvh) !important;
+  max-width: none !important;
+  max-height: none !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  transform: none !important;
+  zoom: 1 !important;
+  box-shadow: none !important;
+  z-index: 2147483000 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+/* botão ENTRAR (canto inferior direito) — criado pelo módulo */
+.apz-enter {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  z-index: 9000;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #5B21B6; color: #fff; border: 0;
+  border-radius: 999px; padding: 13px 20px;
+  font: 900 15px/1 'Nunito', system-ui, sans-serif;
+  cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.25);
+}
+.apz-enter:hover { filter: brightness(1.1); }
+html.apresentando .apz-enter { display: none !important; }
+
+/* botão SAIR (canto superior direito, discreto) */
+.apz-exit {
+  position: fixed;
+  top: calc(14px + env(safe-area-inset-top));
+  right: 14px;
+  z-index: 2147483001;
+  display: none; align-items: center; gap: 6px;
+  background: rgba(20,16,12,.55); color: #fff; border: 0;
+  border-radius: 999px; padding: 10px 16px;
+  font: 800 14px/1 'Nunito', system-ui, sans-serif;
+  cursor: pointer; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+}
+.apz-exit:hover { background: rgba(20,16,12,.8); }
+html.apresentando .apz-exit { display: inline-flex; }
