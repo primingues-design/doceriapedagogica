@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jogo da Memória — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/apresentacao.css">
 <style>
   :root {
     --ink: #0f0e0c;
@@ -456,6 +457,18 @@
     .start-meta-val { font-size: 16px; }
     .card-front-label { font-size: 9px; }
   }
+
+  /* ===== MODO APRESENTAÇÃO — ampliação (infra em /css/apresentacao.css; palco = #gameContainer) ===== */
+  html.apresentando .topbar, html.apresentando .form-panel, html.apresentando .game-empty { display: none !important; }
+  html.apresentando #gameContainer { max-width: none !important; }
+  html.apresentando .playing-screen.show { flex: 1 1 auto; display: flex !important; flex-direction: column; min-height: 0; justify-content: center; padding: 1vh 2vw; }
+  html.apresentando .card-grid { max-width: min(94vw, 150vh) !important; margin: 0 auto !important; }
+  html.apresentando .card-back { font-size: clamp(13px, 1.6vw, 26px) !important; }
+  html.apresentando .card-front-mark { font-size: clamp(24px, 3vw, 48px) !important; }
+  html.apresentando .card-front-label { font-size: clamp(10px, 1.2vw, 18px) !important; }
+  html.apresentando .hud-chip { font-size: clamp(14px, 1.8vw, 24px) !important; padding: 8px 16px !important; }
+  html.apresentando .win-title { font-size: clamp(26px, 4vw, 52px) !important; }
+  html.apresentando .win-stat-val { font-size: clamp(24px, 3vw, 42px) !important; }
 </style>
 </head>
 <body>
@@ -563,7 +576,7 @@
       <div class="game-empty-sub">Preencha o formulário ao lado e clique em <strong>Criar Jogo</strong> para gerar cartas pedagógicas prontas para usar em sala.</div>
     </div>
 
-    <div class="game-container" id="gameContainer">
+    <div class="game-container" id="gameContainer" data-palco>
 
       <!-- START SCREEN -->
       <div id="startScreen">
@@ -1037,5 +1050,6 @@ Retorne APENAS JSON válido, sem markdown, sem texto antes ou depois.`,
 </script>
 
 <script src="/js/dp-auth.js"></script>
+<script src="/js/apresentacao.js"></script>
 </body>
 </html>

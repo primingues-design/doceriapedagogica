@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trilha do Conhecimento — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/apresentacao.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root {
@@ -446,6 +447,15 @@
     .trail-space { width: 44px; height: 44px; border-radius: 10px; }
     .space-num { font-size: 10px; }
   }
+
+  /* ===== MODO APRESENTAÇÃO — ampliação (infra em /css/apresentacao.css; palco = #gameContainer) ===== */
+  html.apresentando .topbar, html.apresentando .form-panel, html.apresentando .game-empty { display: none !important; }
+  html.apresentando #gameContainer { max-width: none !important; }
+  html.apresentando .playing-screen.show { flex: 1 1 auto; display: flex !important; flex-direction: column; min-height: 0; justify-content: center; padding: 1vh 2vw; }
+  html.apresentando .board-title { font-size: clamp(24px, 3.4vw, 48px) !important; }
+  html.apresentando .trail-space { width: clamp(48px,6vw,88px) !important; height: clamp(48px,6vw,88px) !important; }
+  html.apresentando .space-num { font-size: clamp(12px, 1.5vw, 24px) !important; }
+  html.apresentando .hud-chip, html.apresentando .q-text, html.apresentando .card-q { font-size: clamp(15px, 1.9vw, 28px) !important; }
 </style>
 </head>
 <body>
@@ -552,7 +562,7 @@
       <div class="game-empty-sub">Preencha o formulário ao lado e clique em <strong>Criar Trilha</strong> para gerar um jogo de tabuleiro pedagógico pronto para a sala de aula.</div>
     </div>
 
-    <div class="game-container" id="gameContainer">
+    <div class="game-container" id="gameContainer" data-palco>
 
       <!-- SETUP SCREEN -->
       <div id="setupScreen">
@@ -1116,5 +1126,6 @@ Retorne APENAS JSON válido, sem markdown, sem texto antes ou depois.`,
 </script>
 
 <script src="/js/dp-auth.js"></script>
+<script src="/js/apresentacao.js"></script>
 </body>
 </html>
