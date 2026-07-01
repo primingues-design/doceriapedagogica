@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Inglês Interativo — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/apresentacao.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Outfit',sans-serif;background:#fff8f0;color:#1a1410;min-height:100vh;-webkit-font-smoothing:antialiased}
@@ -142,6 +143,16 @@ body{font-family:'Outfit',sans-serif;background:#fff8f0;color:#1a1410;min-height
   .btn-check{width:calc(100% - 28px);margin-left:14px;margin-right:14px}
   .result-stats{grid-template-columns:1fr 1fr 1fr}
 }
+
+/* ===== MODO APRESENTAÇÃO — tela ativa em tela cheia (infra em /css/apresentacao.css) ===== */
+html.apresentando .topbar{display:none!important;}
+html.apresentando #screen-start,html.apresentando #screen-loading,html.apresentando #screen-game,html.apresentando #screen-result{
+  position:fixed!important;inset:0!important;width:100vw!important;height:var(--apz-vh,100dvh)!important;
+  max-width:none!important;margin:0!important;z-index:2147483000!important;overflow:auto;
+}
+html.apresentando .trans-input,html.apresentando .opt-btn,html.apresentando .btn-check{font-size:clamp(18px,2.2vw,30px)!important;}
+html.apresentando .word-big,html.apresentando .q-prompt{font-size:clamp(24px,3.4vw,48px)!important;}
+html.apresentando .t-name,html.apresentando .t-name-pt{font-size:clamp(15px,1.8vw,24px)!important;}
 </style>
 </head>
 <body>
@@ -603,5 +614,6 @@ function extractJSON(raw) {
 }
 </script>
 <script src="/js/dp-auth.js"></script>
+<script src="/js/apresentacao.js"></script>
 </body>
 </html>

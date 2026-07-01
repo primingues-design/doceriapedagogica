@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Estrelas do Troco — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/apresentacao.css">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Outfit', sans-serif; background: #fff8f0; color: #1a1410; min-height: 100vh; overflow-x: hidden; }
@@ -274,6 +275,18 @@ body { font-family: 'Outfit', sans-serif; background: #fff8f0; color: #1a1410; m
   .star-shape-wrap { width:70px; height:70px; }
   .star-badge { font-size:13px; padding:4px 8px; }
 }
+
+/* ===== MODO APRESENTAÇÃO — tela ativa em tela cheia (infra em /css/apresentacao.css) ===== */
+html.apresentando .topbar { display: none !important; }
+html.apresentando .screen.active {
+  position: fixed !important; inset: 0 !important;
+  width: 100vw !important; height: var(--apz-vh, 100dvh) !important;
+  max-width: none !important; margin: 0 !important; z-index: 2147483000 !important;
+  overflow: auto; display: flex; flex-direction: column; justify-content: center;
+}
+html.apresentando .q-text { font-size: clamp(18px, 2.6vw, 34px) !important; }
+html.apresentando .star-el { width: clamp(90px, 10vw, 160px) !important; }
+html.apresentando .star-badge { font-size: clamp(15px, 1.8vw, 26px) !important; }
 </style>
 </head>
 <body>
@@ -668,5 +681,6 @@ function endGame() {
 function replayLevel()  { startGame(level); }
 function goNextLevel()  { startGame(NEXT_LVL[level]); }
 </script>
+<script src="/js/apresentacao.js"></script>
 </body>
 </html>
