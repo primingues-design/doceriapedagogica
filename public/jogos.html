@@ -10,6 +10,7 @@
 <meta name="theme-color" content="#4C1D95">
 <title>Quiz Interativo — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/apresentacao.css">
 <style>
   :root {
     --ink: #0f0e0c;
@@ -441,61 +442,24 @@
     .results-hero { padding: 28px 24px; }
   }
 
-  /* ===== MODO TV — jogar com a turma (espelhar celular na TV/projetor) ===== */
-  .tv-btn {
-    position: fixed; right: 16px; bottom: 16px; z-index: 9500;
-    display: none; align-items: center; gap: 8px;
-    background: #1a1410; color: #fff; border: 0; border-radius: 30px;
-    padding: 13px 20px; cursor: pointer;
-    font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 15px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-  }
-  .tv-btn:hover { background: #2d241a; }
-  body.has-quiz .tv-btn { display: flex; }
-
-  .tv-exit {
-    position: fixed; top: 14px; right: 14px; z-index: 9600;
-    display: none; align-items: center; justify-content: center;
-    width: 54px; height: 54px; border-radius: 50%;
-    background: #1a1410; color: #fff; border: 0; cursor: pointer;
-    font-size: 26px; line-height: 1; box-shadow: 0 4px 14px rgba(0,0,0,0.3);
-  }
-  body.tv-mode .tv-exit { display: flex; }
-  body.tv-mode .tv-btn { display: none; }
-
-  .tv-hint {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 9600;
-    display: none; text-align: center; padding: 14px 16px;
-    background: #1a1410; color: #ffd060;
-    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 16px;
-  }
-  body.tv-mode .tv-hint.show { display: block; }
-
-  body.tv-mode { overflow: hidden; }
-  body.tv-mode .topbar, body.tv-mode .form-panel { display: none !important; }
-  body.tv-mode .main { display: block; height: auto; }
-  body.tv-mode .quiz-empty { display: none; }
-  body.tv-mode .preview-panel {
-    position: fixed; inset: 0; z-index: 9000; margin: 0; padding: 24px;
-    overflow: auto; display: flex; background: #fff8f0;
-  }
-  body.tv-mode .quiz-container { max-width: 1200px; width: 100%; margin: auto; }
-
-  /* ampliação para leitura à distância */
-  body.tv-mode .question-text { font-size: clamp(26px, 4.2vw, 46px) !important; line-height: 1.25; }
-  body.tv-mode .question-number { min-width: 44px; height: 44px; font-size: 22px; }
-  body.tv-mode .option-btn { font-size: clamp(18px, 2.6vw, 30px) !important; padding: 18px 22px; }
-  body.tv-mode .option-letter { width: 48px; height: 48px; font-size: 22px; }
-  body.tv-mode .btn-next { font-size: clamp(18px, 2.4vw, 26px) !important; padding: 16px 28px; }
-  body.tv-mode .hud-progress-label { font-size: 18px; }
-  body.tv-mode .hud-score, body.tv-mode .hud-timer { font-size: 22px; padding: 10px 16px; }
-  body.tv-mode .quiz-start-title { font-size: clamp(28px, 5vw, 52px) !important; }
-  body.tv-mode .quiz-start-sub { font-size: clamp(16px, 2.4vw, 24px) !important; }
-  body.tv-mode .btn-start { font-size: clamp(18px, 3vw, 28px) !important; padding: 18px 34px; }
-  body.tv-mode .quiz-meta-value { font-size: 34px; }
-  body.tv-mode .feedback-box { font-size: clamp(15px, 2vw, 22px) !important; }
-  body.tv-mode .results-score-big { font-size: clamp(40px, 7vw, 72px) !important; }
-  body.tv-mode .results-message { font-size: clamp(18px, 2.6vw, 28px) !important; }
+  /* ===== MODO APRESENTAÇÃO — ampliação do conteúdo (infra em /css/apresentacao.css; palco = #quizContainer) ===== */
+  html.apresentando .topbar, html.apresentando .form-panel { display: none !important; }
+  html.apresentando #robo { display: none !important; }
+  html.apresentando .question-text { font-size: clamp(26px, 4.2vw, 48px) !important; line-height: 1.25; }
+  html.apresentando .question-number { min-width: 44px; height: 44px; font-size: 22px; }
+  html.apresentando .question-card-body { padding: clamp(16px,3vw,40px) !important; }
+  html.apresentando .option-btn { font-size: clamp(18px, 2.4vw, 32px) !important; padding: clamp(16px,2vw,28px) !important; }
+  html.apresentando .option-letter { width: 44px; height: 44px; font-size: 20px; }
+  html.apresentando .btn-next { font-size: clamp(18px, 2.2vw, 28px) !important; padding: 14px 30px; }
+  html.apresentando .hud-progress-label { font-size: clamp(14px,1.8vw,22px); }
+  html.apresentando .hud-score, html.apresentando .hud-timer { font-size: clamp(16px,2vw,26px) !important; padding: 10px 18px !important; }
+  html.apresentando .quiz-start-title { font-size: clamp(28px, 5vw, 56px) !important; }
+  html.apresentando .quiz-start-sub { font-size: clamp(16px, 2.4vw, 26px) !important; }
+  html.apresentando .btn-start { font-size: clamp(18px, 3vw, 30px) !important; padding: 18px 36px; }
+  html.apresentando .quiz-meta-value { font-size: clamp(24px,3vw,40px); }
+  html.apresentando .feedback-box { font-size: clamp(15px, 2vw, 24px) !important; }
+  html.apresentando .results-score-big { font-size: clamp(40px, 7vw, 80px) !important; }
+  html.apresentando .results-message { font-size: clamp(18px, 2.6vw, 30px) !important; }
 
   /* ===== REPAGINACAO LUDICA (cores fortes, cards, fonte arredondada) ===== */
   .quiz-start-title,.results-message,.btn-start,.btn-next,.option-letter,.hud-score,.hud-timer,.question-number,.quiz-meta-value{font-family:'Nunito',sans-serif!important;}
@@ -524,36 +488,28 @@
   .btn-start:hover,.btn-next:hover{background:#5B21B6!important;}
 
   /* ===== LAYOUT APP ELASTICO (durante o jogo: esconde form/topbar, quiz no centro, rola se faltar) ===== */
-  body.playing:not(.tv-mode){min-height:var(--app-h,100dvh);}
-  body.playing:not(.tv-mode) .topbar,body.playing:not(.tv-mode) .form-panel{display:none!important;}
-  body.playing:not(.tv-mode) .main{display:block;min-height:0;}
-  body.playing:not(.tv-mode) .quiz-empty{display:none;}
-  body.playing:not(.tv-mode) .preview-panel{position:static;min-height:var(--app-h,100dvh);max-height:none;padding:12px 14px calc(16px + env(safe-area-inset-bottom));display:flex;align-items:flex-start;justify-content:center;overflow:visible;}
-  body.playing:not(.tv-mode) .quiz-container{max-width:560px;width:100%;margin:0 auto;}
+  body.playing{min-height:var(--app-h,100dvh);}
+  body.playing .topbar,body.playing .form-panel{display:none!important;}
+  body.playing .main{display:block;min-height:0;}
+  body.playing .quiz-empty{display:none;}
+  body.playing .preview-panel{position:static;min-height:var(--app-h,100dvh);max-height:none;padding:12px 14px calc(16px + env(safe-area-inset-bottom));display:flex;align-items:flex-start;justify-content:center;overflow:visible;}
+  body.playing .quiz-container{max-width:560px;width:100%;margin:0 auto;}
   .quiz-x{display:none;background:#fff;border:2px solid var(--border-mid);border-radius:10px;color:var(--text-mid);font-size:16px;font-weight:900;cursor:pointer;width:38px;height:38px;line-height:1;}
-  body.playing:not(.tv-mode) .quiz-x{display:flex;align-items:center;justify-content:center;}
+  body.playing .quiz-x{display:flex;align-items:center;justify-content:center;}
 
   /* ===== MASCOTE (robozinho) ===== */
   #robo{position:fixed;left:6px;bottom:calc(64px + env(safe-area-inset-bottom));width:clamp(52px,13vw,72px);height:auto;z-index:9400;pointer-events:none;display:none;filter:drop-shadow(0 3px 5px rgba(0,0,0,.25));animation:robFloat 2.6s ease-in-out infinite;}
   body.playing #robo{display:block;}
-  body.tv-mode #robo{display:none;}
   @keyframes robFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
   #robo.acerto{animation:robJump .6s ease;}
   @keyframes robJump{0%{transform:translateY(0) scale(1)}35%{transform:translateY(-26px) scale(1.12)}70%{transform:translateY(0) scale(1)}100%{transform:translateY(0) scale(1)}}
   #robo.erro{animation:robShake .5s ease;}
   @keyframes robShake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-5px) rotate(-5deg)}50%{transform:translateX(5px) rotate(5deg)}75%{transform:translateX(-4px) rotate(-4deg)}}
-
-  /* safe-area nos botoes fixos */
-  .tv-btn{bottom:calc(16px + env(safe-area-inset-bottom))!important;}
-  .tv-exit{top:calc(14px + env(safe-area-inset-top))!important;}
 </style>
 </head>
 <body>
 
 <img id="robo" src="/assets/mascote/robo-pensando.png" alt="" aria-hidden="true">
-<button class="tv-btn" id="tvBtn" onclick="enterTV()" title="Jogar com a turma na TV ou projetor">🖥️ Modo TV</button>
-<button class="tv-exit" id="tvExit" onclick="exitTV()" aria-label="Sair do Modo TV">✕</button>
-<div class="tv-hint" id="tvHint">📺 Vire o celular na horizontal para preencher a TV</div>
 
 <div class="topbar">
   <a class="topbar-logo" href="/jogos-area.html">
@@ -678,7 +634,7 @@
       <div class="quiz-empty-sub">Preencha o formulário ao lado e clique em <strong>Gerar Quiz</strong> para criar um jogo interativo pronto para usar em sala de aula.</div>
     </div>
 
-    <div class="quiz-container" id="quizContainer">
+    <div class="quiz-container" id="quizContainer" data-palco>
 
       <!-- START SCREEN -->
       <div id="startScreen">
@@ -987,35 +943,9 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
     document.getElementById('resultsScreen').classList.toggle('show', name === 'results');
   }
 
-  // ── MODO TV — jogar com a turma (tela cheia + ampliação) ──
-  function enterTV() {
-    document.body.classList.add('tv-mode');
-    const el = document.documentElement;
-    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
-    if (req) { try { Promise.resolve(req.call(el)).catch(function(){}); } catch (e) {} }
-    if (window.matchMedia && window.matchMedia('(orientation: portrait)').matches) {
-      const h = document.getElementById('tvHint');
-      h.classList.add('show');
-      setTimeout(function(){ h.classList.remove('show'); }, 5000);
-    }
-  }
-  function exitTV() {
-    document.body.classList.remove('tv-mode');
-    document.getElementById('tvHint').classList.remove('show');
-    const ex = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
-    if ((document.fullscreenElement || document.webkitFullscreenElement) && ex) {
-      try { Promise.resolve(ex.call(document)).catch(function(){}); } catch (e) {}
-    }
-  }
-  // se o usuário sair da tela cheia pelo gesto do sistema, sincroniza o modo
-  function onFsChange() {
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-      document.body.classList.remove('tv-mode');
-      document.getElementById('tvHint').classList.remove('show');
-    }
-  }
-  document.addEventListener('fullscreenchange', onFsChange);
-  document.addEventListener('webkitfullscreenchange', onFsChange);
+  // Modo Apresentação (tela cheia) é gerenciado por /js/apresentacao.js.
+  window.addEventListener('apz:enter', setAppH);
+  window.addEventListener('apz:exit', function(){ setTimeout(setAppH,100); });
 
   // ── ALTURA REAL DA TELA (corrige barras do navegador no celular) ──
   function setAppH(){ document.documentElement.style.setProperty('--app-h', window.innerHeight + 'px'); }
@@ -1038,7 +968,7 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
   function robReact(type){ const r=document.getElementById('robo'); if(!r)return; r.classList.remove('acerto','erro'); void r.offsetWidth; if(type==='acerto'){ r.src=ROBO.acerto; r.classList.add('acerto'); } else if(type==='erro'){ r.src=ROBO.erro; r.classList.add('erro'); } else { r.src=ROBO.normal; return; } setTimeout(function(){ r.classList.remove('acerto','erro'); r.src=ROBO.normal; },1600); }
 
   // ── SAIR DO MODO JOGO (volta ao formulario) ──
-  function exitPlay(){ stopTimer(); if(document.body.classList.contains('tv-mode')) exitTV(); document.body.classList.remove('playing'); showScreen('start'); window.scrollTo(0,0); }
+  function exitPlay(){ stopTimer(); if(window.Apresentacao && Apresentacao.isActive()) Apresentacao.exit(); document.body.classList.remove('playing'); showScreen('start'); window.scrollTo(0,0); }
 
   // ── START QUIZ ──
   function startQuiz() {
@@ -1279,5 +1209,6 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
 </script>
 
 <script src="/js/dp-auth.js"></script>
+<script src="/js/apresentacao.js"></script>
 </body>
 </html>
