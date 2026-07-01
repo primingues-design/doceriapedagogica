@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Letras Móveis — Doceria Pedagógica</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/apresentacao.css" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -265,11 +266,24 @@
       .slot, .tile { width: 36px; height: 44px; font-size: 18px; }
       .wimg { font-size: 64px; }
     }
+  /* ===== MODO APRESENTAÇÃO — ampliação (infra em /css/apresentacao.css) ===== */
+  html.apresentando .gw{max-width:none!important;background:#FAF7FF!important;}
+  html.apresentando .hdr{display:none!important;}
+  html.apresentando .screen{padding:2vh 4vw!important;}
+  html.apresentando .screen.active{flex:1 1 auto!important;display:flex!important;flex-direction:column!important;justify-content:center!important;min-height:0!important;}
+  html.apresentando .home-title{font-size:clamp(30px,5vw,60px)!important;}
+  html.apresentando .home-sub{font-size:clamp(15px,2.2vw,26px)!important;}
+  html.apresentando .wimg{font-size:clamp(100px,24vh,280px)!important;}
+  html.apresentando .whint{font-size:clamp(14px,2vw,24px)!important;}
+  html.apresentando .wbadge{font-size:clamp(14px,2vw,24px)!important;}
+  html.apresentando #slots > *,html.apresentando #pool > *{font-size:clamp(22px,3.4vw,48px)!important;}
+  html.apresentando .cbtn,html.apresentando .vbtn,html.apresentando .sbtn{font-size:clamp(16px,2vw,26px)!important;}
+  html.apresentando .fb{font-size:clamp(18px,2.6vw,32px)!important;}
   </style>
 </head>
 <body>
 
-<div class="gw">
+<div class="gw" data-palco>
   <div class="hdr">
     <div class="logo">🍰 Doceria <span>Pedagógica</span></div>
     <div class="pts" id="pts">⭐ 0 pts</div>
@@ -615,5 +629,6 @@
   /* ── INIT ── */
   buildHome();
 </script>
+<script src="/js/apresentacao.js"></script>
 </body>
 </html>

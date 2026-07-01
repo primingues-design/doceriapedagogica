@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Ditado Visual — Doceria Pedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/css/apresentacao.css"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Nunito',sans-serif;background:#F3EEFF;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:12px;}
@@ -75,10 +76,27 @@ body{font-family:'Nunito',sans-serif;background:#F3EEFF;min-height:100vh;display
   .aletter{width:33px;height:41px;font-size:17px;}
   .wimg{font-size:68px;}
 }
+
+/* ===== MODO APRESENTAÇÃO — ampliação (infra em /css/apresentacao.css) ===== */
+html.apresentando .gw{max-width:none!important;background:#FAF7FF!important;}
+html.apresentando .hdr{display:none!important;}
+html.apresentando .screen{padding:2vh 4vw!important;}
+html.apresentando .screen.active{flex:1 1 auto!important;display:flex!important;flex-direction:column!important;justify-content:center!important;min-height:0!important;}
+html.apresentando .home-title{font-size:clamp(30px,5vw,60px)!important;}
+html.apresentando .home-sub{font-size:clamp(15px,2.2vw,26px)!important;margin-bottom:3vh!important;}
+html.apresentando .cat-em{font-size:clamp(30px,4vw,56px)!important;}
+html.apresentando .cat-lbl{font-size:clamp(13px,1.6vw,22px)!important;}
+html.apresentando .wimg{font-size:clamp(100px,26vh,300px)!important;}
+html.apresentando .wimg.eja{font-size:clamp(80px,20vh,240px)!important;}
+html.apresentando .whint{font-size:clamp(13px,1.8vw,22px)!important;}
+html.apresentando .aletter{width:clamp(42px,5vw,72px)!important;height:clamp(50px,6vw,86px)!important;font-size:clamp(22px,3vw,40px)!important;}
+html.apresentando .key{min-width:clamp(34px,3.6vw,58px)!important;height:clamp(40px,5vh,62px)!important;font-size:clamp(16px,1.8vw,26px)!important;}
+html.apresentando .vbtn,html.apresentando .cbtn,html.apresentando .sbtn{font-size:clamp(16px,2vw,26px)!important;}
+html.apresentando .fb{font-size:clamp(18px,2.6vw,32px)!important;}
 </style>
 </head>
 <body>
-<div class="gw">
+<div class="gw" data-palco>
   <div class="hdr">
     <div class="logo">🍰 Doceria <span>Pedagógica</span></div>
     <div class="pts" id="pts">⭐ 0 pts</div>
@@ -296,5 +314,6 @@ function showResult(){
 function playAgain(){startGame();}
 function goHome(){showScreen('home');}
 </script>
+<script src="/js/apresentacao.js"></script>
 </body>
 </html>
