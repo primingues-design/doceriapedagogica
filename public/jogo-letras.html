@@ -266,7 +266,19 @@
       .slot, .tile { width: 36px; height: 44px; font-size: 18px; }
       .wimg { font-size: 64px; }
     }
+  /* foto real (Flux) no lugar do emoji */
+  .wphoto{width:auto;max-width:230px;max-height:158px;object-fit:contain;border-radius:12px;background:#fff;}
+  /* linha de botões secundários (pular / ver resposta) */
+  .gbtns2{display:flex;gap:8px;margin-top:8px;}
+  .tbtn{flex:1;padding:9px;background:#fff;color:#7C3AED;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;border:2px solid #DDD6FE;border-radius:11px;cursor:pointer;transition:all .15s;}
+  .tbtn:hover{border-color:#8B5CF6;background:#F5F3FF;}
+  .tbtn.reveal{color:#0086a8;border-color:#bfe6f0;}
+  .tbtn.reveal:hover{background:#e6f6fb;border-color:#7fd0e4;}
+  .slot.reveal{border-color:#0086a8;background:#e6f6fb;color:#046b86;}
+
   /* ===== MODO APRESENTAÇÃO — ampliação (infra em /css/apresentacao.css) ===== */
+  html.apresentando .wphoto{max-width:min(56vw,540px)!important;max-height:40vh!important;}
+  html.apresentando .tbtn{font-size:clamp(14px,1.6vw,22px)!important;}
   html.apresentando .gw{max-width:none!important;background:#FAF7FF!important;}
   html.apresentando .hdr{display:none!important;}
   html.apresentando .screen{padding:2vh 4vw!important;}
@@ -315,6 +327,10 @@
       <button class="cbtn" onclick="clearSlots()">🔄 Limpar</button>
       <button class="vbtn" onclick="checkAnswer()">✅ Verificar</button>
     </div>
+    <div class="gbtns2">
+      <button class="tbtn reveal" onclick="revealWord()">👁️ Ver resposta</button>
+      <button class="tbtn" onclick="skipWord()">⏭️ Pular</button>
+    </div>
     <div class="fb" id="fb"></div>
   </div>
 
@@ -339,80 +355,87 @@
      img do emoji pela URL da foto.
      Ex: img: 'https://seu-site.com/fotos/manha.jpg'
   ────────────────────────────────────────────── */
+  // P() = caminho da foto real (Flux) já existente em /assets/leitura/
+  const P = slug => `/assets/leitura/${slug}.png`;
   const CATS = {
     nh: {
       label: 'Dígrafo NH', emoji: '🌸', tag: 'NH',
       words: [
-        { w: 'MANHA',   img: '🌅' },
-        { w: 'LINHA',   img: '🧵' },
-        { w: 'BANHO',   img: '🛁' },
-        { w: 'PINHA',   img: '🌲' },
-        { w: 'VINHO',   img: '🍷' },
+        { w: 'NINHO',   img: P('ninho')   },
+        { w: 'GALINHA', img: P('galinha') },
+        { w: 'LINHA',   img: P('linha')   },
+        { w: 'BANHO',   img: P('banho')   },
+        { w: 'PINHA',   img: P('pinha')   },
+        { w: 'VINHO',   img: P('vinho')   },
+        { w: 'FARINHA', img: P('farinha') },
+        { w: 'MANHA',   img: P('manha')   },
+        { w: 'RAINHA',  img: P('rainha')  },
         { w: 'SONHO',   img: '💭' },
-        { w: 'RAINHA',  img: '👑' },
-        { w: 'NINHO',   img: '🪺' },
-        { w: 'GALINHA', img: '🐔' },
-        { w: 'FARINHA', img: '🌾' },
       ]
     },
     lh: {
       label: 'Dígrafo LH', emoji: '🍃', tag: 'LH',
       words: [
-        { w: 'FOLHA',   img: '🍃' },
-        { w: 'OLHO',    img: '👁️' },
-        { w: 'ILHA',    img: '🏝️' },
-        { w: 'PALHA',   img: '🌾' },
-        { w: 'BOLHA',   img: '🫧' },
-        { w: 'GALHO',   img: '🌿' },
-        { w: 'VELHO',   img: '👴' },
-        { w: 'MULHER',  img: '👩' },
-        { w: 'COELHO',  img: '🐰' },
-        { w: 'ESPELHO', img: '🪞' },
+        { w: 'FOLHA',   img: P('folha')   },
+        { w: 'COELHO',  img: P('coelho')  },
+        { w: 'ESPELHO', img: P('espelho') },
+        { w: 'OLHO',    img: P('olho')    },
+        { w: 'ILHA',    img: P('ilha')    },
+        { w: 'PALHA',   img: P('palha')   },
+        { w: 'BOLHA',   img: P('bolha')   },
+        { w: 'GALHO',   img: P('galho')   },
+        { w: 'VELHO',   img: P('velho')   },
+        { w: 'MULHER',  img: P('mulher')  },
       ]
     },
     ch: {
       label: 'Dígrafo CH', emoji: '🌧️', tag: 'CH',
       words: [
-        { w: 'CHUVA',   img: '🌧️' },
-        { w: 'CHAVE',   img: '🗝️' },
-        { w: 'FICHA',   img: '📋' },
-        { w: 'BICHO',   img: '🐛' },
-        { w: 'BUCHA',   img: '🧽' },
+        { w: 'CHUVA',   img: P('chuva')   },
+        { w: 'CHAVE',   img: P('chave')   },
+        { w: 'CRACHA',  img: P('cracha')  },
+        { w: 'FICHA',   img: P('ficha')   },
+        { w: 'BICHO',   img: P('bicho')   },
+        { w: 'BUCHA',   img: P('bucha')   },
+        { w: 'MACHADO', img: P('machado') },
+        { w: 'ROCHA',   img: P('rocha')   },
+        { w: 'CHOCO',   img: P('choco')   },
         { w: 'CHEIRO',  img: '👃' },
-        { w: 'MACHADO', img: '🪓' },
-        { w: 'ROCHA',   img: '🪨' },
-        { w: 'LEITE',   img: '🥛' },
-        { w: 'CHOCO',   img: '🍫' },
       ]
     },
     rrss: {
       label: 'RR e SS', emoji: '🚗', tag: 'RR/SS',
       words: [
-        { w: 'CARRO',  img: '🚗' },
-        { w: 'MASSA',  img: '🍝' },
-        { w: 'OSSO',   img: '🦴' },
-        { w: 'ARROZ',  img: '🍚' },
-        { w: 'PASSO',  img: '👣' },
-        { w: 'TERRA',  img: '🌍' },
-        { w: 'FERRO',  img: '⚙️' },
-        { w: 'PESSOA', img: '🧑' },
-        { w: 'ASSADO', img: '🥩' },
+        { w: 'CARRO',  img: P('carro')  },
+        { w: 'TERRA',  img: P('terra')  },
+        { w: 'MASSA',  img: P('massa')  },
+        { w: 'OSSO',   img: P('osso')   },
+        { w: 'ARROZ',  img: P('arroz')  },
+        { w: 'PASSO',  img: P('passo')  },
+        { w: 'FERRO',  img: P('ferro')  },
+        { w: 'PESSOA', img: P('pessoa') },
+        { w: 'ASSADO', img: P('assado') },
         { w: 'GROSSO', img: '📏' },
       ]
     },
     cons: {
       label: 'Encontros Consonantais', emoji: '🍓', tag: 'Cons.',
       words: [
-        { w: 'PRATO',  img: '🍽️' },
-        { w: 'FRUTA',  img: '🍓' },
-        { w: 'PLANTA', img: '🌱' },
-        { w: 'BLUSA',  img: '👕' },
-        { w: 'GRILO',  img: '🦗' },
-        { w: 'FLAUTA', img: '🎵' },
-        { w: 'TRONCO', img: '🪵' },
-        { w: 'BRACO',  img: '💪' },
-        { w: 'CLASSE', img: '🏫' },
-        { w: 'FRANGO', img: '🍗' },
+        { w: 'PRATO',      img: P('prato')      },
+        { w: 'FRUTA',      img: P('fruta')      },
+        { w: 'PLANTA',     img: P('planta')     },
+        { w: 'BLUSA',      img: P('blusa')      },
+        { w: 'GRILO',      img: P('grilo')      },
+        { w: 'LIVRO',      img: P('livro')      },
+        { w: 'ESTRELA',    img: P('estrela')    },
+        { w: 'PRESENTE',   img: P('presente')   },
+        { w: 'TROCO',      img: P('troco')      },
+        { w: 'TRANSPORTE', img: P('transporte') },
+        { w: 'CONTRATO',   img: P('contrato')   },
+        { w: 'FLAUTA',     img: P('flauta')     },
+        { w: 'TRONCO',     img: P('tronco')     },
+        { w: 'BRACO',      img: P('braco')      },
+        { w: 'FRANGO',     img: P('frango')     },
       ]
     }
   };
@@ -476,7 +499,9 @@
   function loadQ() {
     const q = curWords[curIdx];
     slotLetters = new Array(q.w.length).fill('');
-    document.getElementById('wimg').textContent   = q.img;
+    const imgEl = document.getElementById('wimg');
+    const isPhoto = typeof q.img === 'string' && q.img.startsWith('/assets/');
+    imgEl.innerHTML = isPhoto ? `<img src="${q.img}" alt="" class="wphoto">` : q.img;
     document.getElementById('wbadge').textContent = CATS[selCat].tag;
     document.getElementById('whint').textContent  = 'Monte a palavra com as letras:';
     document.getElementById('fb').textContent     = '';
@@ -591,6 +616,21 @@
       setTimeout(clearSlots, 1300);
     }
   }
+
+  function revealWord() {
+    const q = curWords[curIdx];
+    const slots = document.getElementById('slots').children;
+    for (let i = 0; i < q.w.length; i++) {
+      slotLetters[i] = q.w[i];
+      slots[i].textContent = q.w[i];
+      slots[i].className = 'slot reveal';
+    }
+    document.querySelectorAll('#pool .tile').forEach(t => t.classList.add('used'));
+    showFb('👀 A resposta é: ' + q.w, false);
+    setTimeout(nextQ, 1900);
+  }
+
+  function skipWord() { nextQ(); }
 
   function nextQ() {
     curIdx++;

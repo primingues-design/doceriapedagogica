@@ -77,7 +77,21 @@ body{font-family:'Nunito',sans-serif;background:#F3EEFF;min-height:100vh;display
   .wimg{font-size:68px;}
 }
 
+/* foto real (Flux) no lugar do emoji */
+.wphoto{width:auto;max-width:240px;max-height:172px;object-fit:contain;border-radius:12px;background:#fff;}
+.wphoto.eja{max-height:154px;}
+/* linha de botões secundários (pular / ver resposta) */
+.gbtns2{display:flex;gap:8px;margin-top:8px;}
+.tbtn{flex:1;padding:9px;background:#fff;color:#7C3AED;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;border:2px solid #DDD6FE;border-radius:11px;cursor:pointer;transition:all .15s;}
+.tbtn:hover{border-color:#8B5CF6;background:#F5F3FF;}
+.tbtn.reveal{color:#0086a8;border-color:#bfe6f0;}
+.tbtn.reveal:hover{background:#e6f6fb;border-color:#7fd0e4;}
+.aletter.reveal{border-color:#0086a8;background:#e6f6fb;color:#046b86;}
+
 /* ===== MODO APRESENTAÇÃO — ampliação (infra em /css/apresentacao.css) ===== */
+html.apresentando .wphoto{max-width:min(58vw,560px)!important;max-height:42vh!important;}
+html.apresentando .wphoto.eja{max-height:40vh!important;}
+html.apresentando .tbtn{font-size:clamp(14px,1.6vw,22px)!important;}
 html.apresentando .gw{max-width:none!important;background:#FAF7FF!important;}
 html.apresentando .hdr{display:none!important;}
 html.apresentando .screen{padding:2vh 4vw!important;}
@@ -126,13 +140,13 @@ html.apresentando .fb{font-size:clamp(18px,2.6vw,32px)!important;}
       <div class="cat" onclick="selCat('eja_simples',this)">
         <div class="cat-em">🔧</div>
         <div class="cat-lbl">Sílabas Simples</div>
-        <div class="cat-sub">VOTO • SALÁRIO • RENDA</div>
+        <div class="cat-sub">VOTO • SAÚDE • FAMÍLIA</div>
         <div class="cat-tag">Nível 1 EJA</div>
       </div>
       <div class="cat" onclick="selCat('eja_complexas',this)">
         <div class="cat-em">🏥</div>
         <div class="cat-lbl">Sílabas Complexas</div>
-        <div class="cat-sub">TRABALHO • CHEQUE • PRATO</div>
+        <div class="cat-sub">CONTRATO • ÔNIBUS • EMPREGO</div>
         <div class="cat-tag">Nível 2 EJA</div>
       </div>
     </div>
@@ -158,6 +172,10 @@ html.apresentando .fb{font-size:clamp(18px,2.6vw,32px)!important;}
       <button class="cbtn" onclick="clearAnswer()">🔄 Limpar</button>
       <button class="vbtn" onclick="checkAnswer()">✅ Verificar</button>
     </div>
+    <div class="gbtns2">
+      <button class="tbtn reveal" onclick="revealWord()">👁️ Ver resposta</button>
+      <button class="tbtn" onclick="skipWord()">⏭️ Pular</button>
+    </div>
     <div class="fb" id="fb"></div>
   </div>
 
@@ -176,30 +194,33 @@ html.apresentando .fb{font-size:clamp(18px,2.6vw,32px)!important;}
 </div>
 
 <script>
+// P() = caminho da foto real (Flux) já existente em /assets/leitura/
+const P = slug => `/assets/leitura/${slug}.png`;
 const BANCO={
   inf_simples:{badge:'Sílabas Simples',words:[
-    {w:'BOLA',img:'⚽'},{w:'GATO',img:'🐱'},{w:'SAPO',img:'🐸'},{w:'PATO',img:'🦆'},
-    {w:'BOLO',img:'🎂'},{w:'FADA',img:'🧚'},{w:'LOBO',img:'🐺'},{w:'UVAS',img:'🍇'},
-    {w:'MALA',img:'🧳'},{w:'SOFA',img:'🛋️'},{w:'FACA',img:'🔪'},{w:'MESA',img:'🪑'},
-    {w:'SAPATO',img:'👟'},{w:'BONECA',img:'🪆'},{w:'MACACO',img:'🐒'},{w:'TOMATE',img:'🍅'},
+    {w:'BOLA',img:P('bola')},{w:'GATO',img:P('gato')},{w:'SAPO',img:P('sapo')},{w:'PATO',img:P('pato')},
+    {w:'BOLO',img:P('bolo')},{w:'UVAS',img:P('uvas')},{w:'MALA',img:P('mala')},{w:'FACA',img:P('faca')},
+    {w:'CASA',img:P('casa')},{w:'DADO',img:P('dado')},{w:'VELA',img:P('vela')},{w:'LUVA',img:P('luva')},
+    {w:'PIPA',img:P('pipa')},{w:'CAFE',img:P('cafe')},{w:'SAPATO',img:P('sapato')},{w:'MACACO',img:P('macaco')},
+    {w:'TOMATE',img:P('tomate')},{w:'CANETA',img:P('caneta')},
   ]},
   inf_complexas:{badge:'Sílabas Complexas',words:[
-    {w:'CHUVA',img:'🌧️'},{w:'FOLHA',img:'🍃'},{w:'PRATO',img:'🍽️'},{w:'CHAVE',img:'🗝️'},
-    {w:'FRUTA',img:'🍓'},{w:'OLHO',img:'👁️'},{w:'GALHO',img:'🌿'},{w:'CARRO',img:'🚗'},
-    {w:'COELHO',img:'🐰'},{w:'ESPELHO',img:'🪞'},{w:'PLANTA',img:'🌱'},{w:'SONHO',img:'💭'},
-    {w:'BLUSA',img:'👕'},{w:'GALINHA',img:'🐔'},{w:'GRILO',img:'🦗'},{w:'NINHO',img:'🪺'},
+    {w:'CHUVA',img:P('chuva')},{w:'FOLHA',img:P('folha')},{w:'PRATO',img:P('prato')},{w:'CHAVE',img:P('chave')},
+    {w:'FRUTA',img:P('fruta')},{w:'CARRO',img:P('carro')},{w:'COELHO',img:P('coelho')},{w:'ESPELHO',img:P('espelho')},
+    {w:'PLANTA',img:P('planta')},{w:'BLUSA',img:P('blusa')},{w:'GALINHA',img:P('galinha')},{w:'GRILO',img:P('grilo')},
+    {w:'NINHO',img:P('ninho')},{w:'LIVRO',img:P('livro')},{w:'ESTRELA',img:P('estrela')},{w:'FOGUETE',img:P('foguete')},
+    {w:'PRESENTE',img:P('presente')},
   ]},
   eja_simples:{badge:'EJA — Nível 1',words:[
-    {w:'VOTO',img:'🗳️'},{w:'RENDA',img:'💵'},{w:'SAUDE',img:'🏥'},{w:'POVO',img:'🧑‍🤝‍🧑'},
-    {w:'TERRA',img:'🌍'},{w:'CASA',img:'🏠'},{w:'LUTA',img:'✊'},{w:'FAMILIA',img:'👨‍👩‍👧'},
-    {w:'SEGURO',img:'🛡️'},{w:'SALARIO',img:'💰'},{w:'DIREITO',img:'⚖️'},{w:'MULHER',img:'👩'},
-    {w:'TRABALHO',img:'🔧'},{w:'MERCADO',img:'🛒'},{w:'MORADIA',img:'🏘️'},{w:'VACINA',img:'💉'},
+    {w:'VOTO',img:P('voto')},{w:'SAUDE',img:P('saude')},{w:'TERRA',img:P('terra')},{w:'CASA',img:P('casa')},
+    {w:'FAMILIA',img:P('familia')},{w:'MERCADO',img:P('mercado')},{w:'VACINA',img:P('vacina')},{w:'RELOGIO',img:P('relogio')},
+    {w:'TELEFONE',img:P('telefone')},{w:'REMEDIO',img:P('remedio')},{w:'DINHEIRO',img:P('dinheiro')},{w:'CARTAO',img:P('cartao')},
   ]},
   eja_complexas:{badge:'EJA — Nível 2',words:[
-    {w:'CHEQUE',img:'🧾'},{w:'CONTRATO',img:'📄'},{w:'EMPREGO',img:'💼'},{w:'GREVE',img:'✊'},
-    {w:'PLANO',img:'📋'},{w:'ONIBUS',img:'🚌'},{w:'CRACHA',img:'🪪'},{w:'TROCO',img:'🪙'},
-    {w:'PRESSAO',img:'🩺'},{w:'PROBLEMA',img:'❗'},{w:'CREDITO',img:'💳'},{w:'EXTRATO',img:'🖨️'},
-    {w:'TRANSPORTE',img:'🚍'},{w:'TRABALHAR',img:'⚒️'},{w:'ALUGUEL',img:'🏠'},{w:'SALARIO',img:'💵'},
+    {w:'CONTRATO',img:P('contrato')},{w:'EMPREGO',img:P('emprego')},{w:'ONIBUS',img:P('onibus')},{w:'CRACHA',img:P('cracha')},
+    {w:'TROCO',img:P('troco')},{w:'EXTRATO',img:P('extrato')},{w:'TRANSPORTE',img:P('transporte')},{w:'TRABALHO',img:P('trabalho')},
+    {w:'DOCUMENTO',img:P('documento')},{w:'ENVELOPE',img:P('envelope')},{w:'MENSAGEM',img:P('mensagem')},{w:'ENTREGA',img:P('entrega')},
+    {w:'COMPUTADOR',img:P('computador')},{w:'HOSPITAL',img:P('hospital')},
   ]}
 };
 
@@ -226,8 +247,11 @@ function loadQ(){
   const q=curWords[curIdx];typed=[];hintUsed=false;
   const isEja=selCatKey.startsWith('eja');
   const imgEl=document.getElementById('wimg');
-  imgEl.textContent=q.img;
-  imgEl.className='wimg'+(isEja?' eja':'');
+  const isPhoto=typeof q.img==='string' && q.img.startsWith('/assets/');
+  imgEl.innerHTML=isPhoto
+    ? `<img src="${q.img}" alt="" class="wphoto${isEja?' eja':''}">`
+    : q.img;
+  imgEl.className='wimg'+(isEja&&!isPhoto?' eja':'');
   document.getElementById('wbadge').textContent=BANCO[selCatKey].badge;
   document.getElementById('fb').textContent='';
   document.getElementById('fb').className='fb';
@@ -297,6 +321,21 @@ function checkAnswer(){
   }else{
     erros.push(q.w);showFb('Quase! Tente de novo 💪',false);setTimeout(clearAnswer,1300);
   }
+}
+function revealWord(){
+  const q=curWords[curIdx];
+  typed=q.w.split('');
+  renderAnswer();
+  const row=document.getElementById('answer-row').children;
+  for(let i=0;i<q.w.length;i++){row[i].classList.remove('filled','cursor');row[i].classList.add('reveal');}
+  if(!erros.includes(q.w))erros.push(q.w);
+  showFb('👀 A resposta é: '+q.w,false);
+  setTimeout(nextQ,1900);
+}
+function skipWord(){
+  const q=curWords[curIdx];
+  if(!erros.includes(q.w))erros.push(q.w);
+  nextQ();
 }
 function nextQ(){curIdx++;if(curIdx>=TOTAL)showResult();else loadQ();}
 function updProg(){document.getElementById('pfill').style.width=(curIdx/TOTAL*100)+'%';document.getElementById('ptxt').textContent=`${curIdx+1} / ${TOTAL}`;}

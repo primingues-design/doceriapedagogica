@@ -210,10 +210,26 @@ input:checked + .toggle-slider::before{transform:translateX(18px)}
 
 /* ===== MODO APRESENTAÇÃO — ampliação (infra em /css/apresentacao.css; palco = #gameContainer) ===== */
 html.apresentando .topbar, html.apresentando .form-panel, html.apresentando .game-empty { display: none !important; }
-html.apresentando #gameContainer { max-width: none !important; }
-html.apresentando .game-hud { font-size: clamp(15px,1.9vw,26px) !important; }
-html.apresentando .ws-cell, html.apresentando .cw-cell { font-size: clamp(16px,2.2vw,34px) !important; }
-html.apresentando .ws-word, html.apresentando .cw-clue { font-size: clamp(14px,1.7vw,24px) !important; }
+html.apresentando #gameContainer { max-width: none !important; padding: 0 !important; }
+html.apresentando #wsGame, html.apresentando #cwGame { width: 100%; }
+/* grade + lista centralizadas no palco */
+html.apresentando .ws-container, html.apresentando .cw-container { justify-content: center; align-items: center; gap: clamp(14px,2vw,40px); }
+html.apresentando .ws-grid-wrap { flex: 0 0 auto; }
+html.apresentando .cw-grid-area { flex: 0 0 auto; }
+html.apresentando .game-hud { justify-content: center; font-size: clamp(15px,1.8vw,26px) !important; margin-bottom: clamp(8px,1.4vh,20px) !important; }
+/* célula segue o tamanho --cell calculado pelo fitGrid (apresentacao.js) */
+html.apresentando .ws-cell { font-size: calc(var(--cell, 34px) * 0.52) !important; border-radius: calc(var(--cell,34px) * 0.14) !important; }
+html.apresentando .cw-cell { width: 100% !important; height: 100% !important; }
+html.apresentando .cw-input { font-size: calc(var(--cell, 34px) * 0.5) !important; }
+html.apresentando .cw-num { font-size: calc(var(--cell, 34px) * 0.24) !important; }
+/* listas de palavras / dicas maiores e roláveis */
+html.apresentando .ws-sidebar { width: clamp(180px, 20vw, 280px); }
+html.apresentando .ws-words-title { font-size: clamp(12px,1.2vw,18px) !important; }
+html.apresentando .ws-word-item { font-size: clamp(14px,1.5vw,22px) !important; }
+html.apresentando .ws-word-item .clue-tip { font-size: clamp(11px,1.1vw,16px) !important; }
+html.apresentando .cw-clues-panel { max-height: calc(var(--apz-vh, 100vh) - 96px) !important; }
+html.apresentando .clue-item { font-size: clamp(14px,1.5vw,22px) !important; }
+html.apresentando .clue-emoji { font-size: clamp(20px,2vw,30px) !important; }
 </style>
 </head>
 <body>
@@ -662,6 +678,8 @@ function renderWSGrid(size) {
   const grid = document.getElementById('wsGrid');
   grid.style.gridTemplateColumns = `repeat(${size},1fr)`;
   grid.style.maxWidth = size<=12 ? '400px' : size<=15 ? '480px' : '560px';
+  grid.dataset.cols = size;
+  grid.dataset.mw = grid.style.maxWidth;
   grid.innerHTML = '';
 
   for (let r=0;r<wsGridData.length;r++) {
@@ -1206,5 +1224,52 @@ if (_urlModo === 'cruz') setMode('cruz');
 </script>
 <script src="/js/dp-auth.js"></script>
 <script src="/js/apresentacao.js"></script>
+<script>
+/* Encaixe da grade no Modo Apresentação (caça-palavras e cruzadinha) */
+(function () {
+  if (!window.Apresentacao) return;
+  function visible(id) { var el = document.getElementById(id); return el && el.style.display !== 'none'; }
+  Apresentacao.onFit(function (on) {
+    var wsGrid = document.getElementById('wsGrid');
+    var cwGrid = document.getElementById('cwGrid');
+
+    // ── CAÇA-PALAVRAS ──
+    if (wsGrid && visible('wsGame')) {
+      if (on) {
+        var wHud = document.getElementById('wsHud');
+        wsGrid.style.maxWidth = 'none';
+        Apresentacao.fitGrid(wsGrid, +wsGrid.dataset.cols || 0, {
+          gap: 3, min: 38,
+          reserveTop: (wHud ? wHud.offsetHeight : 0) + 24,
+          reserveSide: Math.min(300, window.innerWidth * 0.22)
+        });
+      } else {
+        wsGrid.style.gridTemplateColumns = 'repeat(' + (wsGrid.dataset.cols || 10) + ',1fr)';
+        wsGrid.style.width = ''; wsGrid.style.margin = '';
+        wsGrid.style.maxWidth = wsGrid.dataset.mw || '';
+        wsGrid.style.removeProperty('--cell');
+      }
+    }
+
+    // ── CRUZADINHA ──
+    if (cwGrid && visible('cwGame') && typeof cwCols !== 'undefined' && cwCols) {
+      var rows = (typeof cwGridData !== 'undefined' && cwGridData) ? cwGridData.length : 0;
+      if (on) {
+        var cHud = document.getElementById('cwHud');
+        Apresentacao.fitGrid(cwGrid, cwCols, {
+          gap: 0, min: 30, setRows: true, rows: rows,
+          reserveTop: (cHud ? cHud.offsetHeight : 0) + 24,
+          reserveSide: Math.min(380, window.innerWidth * 0.28)
+        });
+      } else {
+        cwGrid.style.gridTemplateColumns = 'repeat(' + cwCols + ',36px)';
+        cwGrid.style.gridTemplateRows = 'repeat(' + rows + ',36px)';
+        cwGrid.style.width = ''; cwGrid.style.margin = '';
+        cwGrid.style.removeProperty('--cell');
+      }
+    }
+  });
+})();
+</script>
 </body>
 </html>

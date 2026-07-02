@@ -10,10 +10,50 @@
    ============================================================ */
 (function () {
   var ativo = false;
+  var fitCbs = [];
+
+  // executa os callbacks de "encaixe" (ajuste de tamanho dos jogos)
+  function runFit() {
+    for (var i = 0; i < fitCbs.length; i++) {
+      try { fitCbs[i](ativo); } catch (e) {}
+    }
+  }
 
   // mede a altura REAL da tela (corrige barras de navegador no celular)
   function recalc() {
     document.documentElement.style.setProperty('--apz-vh', window.innerHeight + 'px');
+    runFit();
+  }
+
+  /* Ajusta um GRID quadrado (caça-palavras, cruzadinha, memória, trilha...)
+     para caber inteiro na tela cheia, centralizado.
+     grid  = elemento .grid  |  cols = nº de colunas
+     opts.reserveTop = altura reservada no topo (HUD) em px
+     opts.gap, opts.min, opts.max, opts.padW, opts.padH */
+  function fitGrid(grid, cols, opts) {
+    opts = opts || {};
+    if (!grid || !ativo || !cols) return;
+    var n = opts.count || grid.children.length;
+    if (!n) return;
+    var rows = opts.rows || Math.ceil(n / cols);
+    var cs = getComputedStyle(grid);
+    var gap = parseFloat(cs.rowGap || cs.gap) || opts.gap || 6;
+    var reserveTop = opts.reserveTop || 0;
+    var padW = opts.padW != null ? opts.padW : 0.04;
+    var padH = opts.padH != null ? opts.padH : 0.06;
+    var availW = window.innerWidth * (1 - padW) - (opts.reserveSide || 0);
+    var availH = window.innerHeight * (1 - padH) - reserveTop;
+    var cell = Math.floor(Math.min(
+      (availW - (cols - 1) * gap) / cols,
+      (availH - (rows - 1) * gap) / rows
+    ));
+    cell = Math.max(opts.min || 42, Math.min(opts.max || 300, cell));
+    grid.style.gridTemplateColumns = 'repeat(' + cols + ',' + cell + 'px)';
+    if (opts.setRows) grid.style.gridTemplateRows = 'repeat(' + rows + ',' + cell + 'px)';
+    grid.style.width = 'max-content';
+    grid.style.margin = '0 auto';
+    grid.style.setProperty('--cell', cell + 'px');
+    return cell;
   }
   function fsEl() {
     return document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement || null;
@@ -96,6 +136,14 @@
     exit: exit,
     toggle: toggle,
     isActive: function () { return ativo; },
+    // registra um callback chamado ao entrar/sair/redimensionar a apresentação.
+    // recebe (ativo:boolean). Se já estiver apresentando, roda na hora.
+    onFit: function (cb) {
+      if (typeof cb === 'function') { fitCbs.push(cb); try { cb(ativo); } catch (e) {} }
+    },
+    // reajusta agora (usar quando o jogo trocar de tela/render dentro da apresentação)
+    refit: function () { runFit(); },
+    fitGrid: fitGrid,
     showButton: function (v) {
       var b = window.__apzEnterBtn;
       if (b) b.style.display = v ? 'inline-flex' : 'none';
