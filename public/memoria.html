@@ -1088,7 +1088,7 @@ Retorne APENAS JSON válido, sem markdown, sem texto antes ou depois.`,
     var availW = window.innerWidth * 0.96;
     var availH = window.innerHeight * 0.94 - reserveTop;
     var cols = bestCols(n, availW, availH, gap);
-    Apresentacao.fitGrid(grid, cols, { gap: gap, reserveTop: reserveTop, min: 64, max: 240 });
+    Apresentacao.fitGrid(grid, cols, { gap: gap, reserveTop: reserveTop, min: 40, max: 240 });
   });
 })();
 </script>

@@ -89,13 +89,16 @@ body{font-family:'Nunito',sans-serif;background:#F3EEFF;min-height:100vh;display
 .aletter.reveal{border-color:#0086a8;background:#e6f6fb;color:#046b86;}
 
 /* ===== MODO APRESENTAÇÃO — ampliação (infra em /css/apresentacao.css) ===== */
-html.apresentando .wphoto{max-width:min(58vw,560px)!important;max-height:42vh!important;}
-html.apresentando .wphoto.eja{max-height:40vh!important;}
+html.apresentando .wphoto{max-width:min(44vw,420px)!important;max-height:26vh!important;}
+html.apresentando .wphoto.eja{max-height:24vh!important;}
 html.apresentando .tbtn{font-size:clamp(14px,1.6vw,22px)!important;}
-html.apresentando .gw{max-width:none!important;background:#FAF7FF!important;}
+html.apresentando .qbox{padding:10px!important;gap:4px!important;}
+/* rolagem de segurança: se o conteúdo passar da tela, dá pra rolar e alcançar os botões */
+html.apresentando .gw{max-width:none!important;background:#FAF7FF!important;overflow-y:auto!important;}
 html.apresentando .hdr{display:none!important;}
 html.apresentando .screen{padding:2vh 4vw!important;}
-html.apresentando .screen.active{flex:1 1 auto!important;display:flex!important;flex-direction:column!important;justify-content:center!important;min-height:0!important;}
+html.apresentando .screen.active{flex:1 1 auto!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;min-height:0!important;}
+html.apresentando #home.screen.active{justify-content:center!important;}
 html.apresentando .home-title{font-size:clamp(30px,5vw,60px)!important;}
 html.apresentando .home-sub{font-size:clamp(15px,2.2vw,26px)!important;margin-bottom:3vh!important;}
 html.apresentando .cat-em{font-size:clamp(30px,4vw,56px)!important;}

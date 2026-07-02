@@ -1238,8 +1238,9 @@ if (_urlModo === 'cruz') setMode('cruz');
       if (on) {
         var wHud = document.getElementById('wsHud');
         wsGrid.style.maxWidth = 'none';
-        Apresentacao.fitGrid(wsGrid, +wsGrid.dataset.cols || 0, {
-          gap: 3, min: 38,
+        var wsCols = +wsGrid.dataset.cols || Math.round(Math.sqrt(wsGrid.children.length)) || 0;
+        Apresentacao.fitGrid(wsGrid, wsCols, {
+          gap: 3, min: 20,
           reserveTop: (wHud ? wHud.offsetHeight : 0) + 24,
           reserveSide: Math.min(300, window.innerWidth * 0.22)
         });
@@ -1257,7 +1258,7 @@ if (_urlModo === 'cruz') setMode('cruz');
       if (on) {
         var cHud = document.getElementById('cwHud');
         Apresentacao.fitGrid(cwGrid, cwCols, {
-          gap: 0, min: 30, setRows: true, rows: rows,
+          gap: 0, min: 18, setRows: true, rows: rows,
           reserveTop: (cHud ? cHud.offsetHeight : 0) + 24,
           reserveSide: Math.min(380, window.innerWidth * 0.28)
         });

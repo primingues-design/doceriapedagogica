@@ -41,18 +41,38 @@
     var reserveTop = opts.reserveTop || 0;
     var padW = opts.padW != null ? opts.padW : 0.04;
     var padH = opts.padH != null ? opts.padH : 0.06;
+    var min = opts.min || 18, max = opts.max || 300;
     var availW = window.innerWidth * (1 - padW) - (opts.reserveSide || 0);
     var availH = window.innerHeight * (1 - padH) - reserveTop;
+
+    function apply(cell) {
+      grid.style.gridTemplateColumns = 'repeat(' + cols + ',' + cell + 'px)';
+      if (opts.setRows) grid.style.gridTemplateRows = 'repeat(' + rows + ',' + cell + 'px)';
+      grid.style.width = 'max-content';
+      grid.style.margin = '0 auto';
+      grid.style.setProperty('--cell', cell + 'px');
+    }
+
+    // estimativa inicial
     var cell = Math.floor(Math.min(
       (availW - (cols - 1) * gap) / cols,
       (availH - (rows - 1) * gap) / rows
     ));
-    cell = Math.max(opts.min || 42, Math.min(opts.max || 300, cell));
-    grid.style.gridTemplateColumns = 'repeat(' + cols + ',' + cell + 'px)';
-    if (opts.setRows) grid.style.gridTemplateRows = 'repeat(' + rows + ',' + cell + 'px)';
-    grid.style.width = 'max-content';
-    grid.style.margin = '0 auto';
-    grid.style.setProperty('--cell', cell + 'px');
+    cell = Math.max(min, Math.min(max, cell));
+    apply(cell);
+
+    // CORREÇÃO por medição REAL: encolhe até caber de verdade
+    // (cobre erros de estimativa: altura do HUD, bordas, fontes, quebras)
+    for (var it = 0; it < 5; it++) {
+      var r = grid.getBoundingClientRect();
+      if (!r.width || !r.height) break;
+      var factor = Math.min(availW / r.width, availH / r.height);
+      if (factor >= 0.995) break;            // já cabe
+      var next = Math.max(min, Math.floor(cell * factor));
+      if (next >= cell) break;               // não dá pra encolher mais
+      cell = next;
+      apply(cell);
+    }
     return cell;
   }
   function fsEl() {
