@@ -222,11 +222,11 @@ html.apresentando .ws-cell { font-size: calc(var(--cell, 34px) * 0.52) !importan
 html.apresentando .cw-cell { width: 100% !important; height: 100% !important; }
 html.apresentando .cw-input { font-size: calc(var(--cell, 34px) * 0.5) !important; }
 html.apresentando .cw-num { font-size: calc(var(--cell, 34px) * 0.24) !important; }
-/* listas de palavras / dicas maiores e roláveis */
-html.apresentando .ws-sidebar { width: clamp(180px, 20vw, 280px); }
-html.apresentando .ws-words-title { font-size: clamp(12px,1.2vw,18px) !important; }
-html.apresentando .ws-word-item { font-size: clamp(14px,1.5vw,22px) !important; }
-html.apresentando .ws-word-item .clue-tip { font-size: clamp(11px,1.1vw,16px) !important; }
+/* lista de palavras / dicas COMPACTA (grade tem prioridade e fica maior) */
+html.apresentando .ws-sidebar { width: clamp(150px, 16vw, 230px); align-self: center; max-height: calc(var(--apz-vh, 100vh) - 40px); overflow-y: auto; }
+html.apresentando .ws-words-title { font-size: clamp(11px,1vw,15px) !important; margin-bottom: 6px !important; }
+html.apresentando .ws-word-item { font-size: clamp(12px,1.15vw,17px) !important; padding: 5px 9px !important; margin-bottom: 3px !important; line-height: 1.2; }
+html.apresentando .ws-word-item .clue-tip { font-size: clamp(10px,0.9vw,13px) !important; margin-top: 0 !important; }
 html.apresentando .cw-clues-panel { max-height: calc(var(--apz-vh, 100vh) - 96px) !important; }
 html.apresentando .clue-item { font-size: clamp(14px,1.5vw,22px) !important; }
 html.apresentando .clue-emoji { font-size: clamp(20px,2vw,30px) !important; }
@@ -1062,7 +1062,20 @@ function cwOnCellClick(r,c) {
   cwSelectWord(chosenWord,r,c);
 }
 
-function cwOnFocus(r,c){ cwOnCellClick(r,c); }
+function cwOnFocus(r,c){
+  // Se a célula focada já faz parte da palavra ativa (ex.: avanço automático
+  // ao digitar, ou cruzamento), NÃO troca de palavra/direção — apenas move a
+  // célula ativa. Assim a escrita segue sempre na linha/coluna correta, sem o
+  // aluno precisar clicar no quadradinho certo.
+  if(cwActiveWordIdx>=0){
+    const pl=cwPlacements[cwActiveWordIdx];
+    for(let i=0;i<pl.word.length;i++){
+      const pr=pl.r-cwMinR+(pl.dir==='V'?i:0), pc=pl.c-cwMinC+(pl.dir==='H'?i:0);
+      if(pr===r&&pc===c){ cwActiveCell={r,c}; return; }
+    }
+  }
+  cwOnCellClick(r,c);
+}
 
 function cwSelectWordByIdx(idx){
   const pl=cwPlacements[idx];
@@ -1242,7 +1255,7 @@ if (_urlModo === 'cruz') setMode('cruz');
         Apresentacao.fitGrid(wsGrid, wsCols, {
           gap: 3, min: 20,
           reserveTop: (wHud ? wHud.offsetHeight : 0) + 24,
-          reserveSide: Math.min(300, window.innerWidth * 0.22)
+          reserveSide: Math.min(250, window.innerWidth * 0.19)
         });
       } else {
         wsGrid.style.gridTemplateColumns = 'repeat(' + (wsGrid.dataset.cols || 10) + ',1fr)';
