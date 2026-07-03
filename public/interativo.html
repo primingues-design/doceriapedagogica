@@ -212,8 +212,10 @@ input:checked + .toggle-slider::before{transform:translateX(18px)}
 html.apresentando .topbar, html.apresentando .form-panel, html.apresentando .game-empty { display: none !important; }
 html.apresentando #gameContainer { max-width: none !important; padding: 0 !important; }
 html.apresentando #wsGame, html.apresentando #cwGame { width: 100%; }
-/* grade + lista centralizadas no palco */
-html.apresentando .ws-container, html.apresentando .cw-container { justify-content: center; align-items: center; gap: clamp(14px,2vw,40px); }
+/* CAÇA-PALAVRAS: grade encostada à esquerda, dicas (2 colunas) à direita — usa toda a largura */
+html.apresentando .ws-container { justify-content: space-between !important; align-items: flex-start !important; gap: clamp(16px,2.5vw,48px); width: 100%; padding: 0 clamp(16px,3vw,56px); }
+/* CRUZADINHA: continua centralizada */
+html.apresentando .cw-container { justify-content: center; align-items: center; gap: clamp(14px,2vw,40px); }
 html.apresentando .ws-grid-wrap { flex: 0 0 auto; }
 html.apresentando .cw-grid-area { flex: 0 0 auto; }
 html.apresentando .game-hud { justify-content: center; font-size: clamp(15px,1.8vw,26px) !important; margin-bottom: clamp(8px,1.4vh,20px) !important; }
@@ -222,11 +224,12 @@ html.apresentando .ws-cell { font-size: calc(var(--cell, 34px) * 0.52) !importan
 html.apresentando .cw-cell { width: 100% !important; height: 100% !important; }
 html.apresentando .cw-input { font-size: calc(var(--cell, 34px) * 0.5) !important; }
 html.apresentando .cw-num { font-size: calc(var(--cell, 34px) * 0.24) !important; }
-/* lista de palavras / dicas COMPACTA (grade tem prioridade e fica maior) */
-html.apresentando .ws-sidebar { width: clamp(150px, 16vw, 230px); align-self: center; max-height: calc(var(--apz-vh, 100vh) - 40px); overflow-y: auto; }
+/* lista de palavras/dicas em 2 COLUNAS, ocupando o lado direito */
+html.apresentando .ws-sidebar { width: clamp(340px, 44vw, 680px); align-self: flex-start; max-height: calc(var(--apz-vh, 100vh) - 40px); overflow-y: auto; flex: 0 0 auto; }
+html.apresentando #wsWordList { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; align-content: start; }
 html.apresentando .ws-words-title { font-size: clamp(11px,1vw,15px) !important; margin-bottom: 6px !important; }
-html.apresentando .ws-word-item { font-size: clamp(12px,1.15vw,17px) !important; padding: 5px 9px !important; margin-bottom: 3px !important; line-height: 1.2; }
-html.apresentando .ws-word-item .clue-tip { font-size: clamp(10px,0.9vw,13px) !important; margin-top: 0 !important; }
+html.apresentando .ws-word-item { font-size: clamp(12px,1.1vw,17px) !important; padding: 6px 10px !important; margin-bottom: 0 !important; line-height: 1.2; }
+html.apresentando .ws-word-item .clue-tip { font-size: clamp(10px,0.9vw,13px) !important; margin-top: 1px !important; }
 html.apresentando .cw-clues-panel { max-height: calc(var(--apz-vh, 100vh) - 96px) !important; }
 html.apresentando .clue-item { font-size: clamp(14px,1.5vw,22px) !important; }
 html.apresentando .clue-emoji { font-size: clamp(20px,2vw,30px) !important; }
@@ -1255,7 +1258,7 @@ if (_urlModo === 'cruz') setMode('cruz');
         Apresentacao.fitGrid(wsGrid, wsCols, {
           gap: 3, min: 20,
           reserveTop: (wHud ? wHud.offsetHeight : 0) + 24,
-          reserveSide: Math.min(250, window.innerWidth * 0.19)
+          reserveSide: Math.min(680, window.innerWidth * 0.5)
         });
       } else {
         wsGrid.style.gridTemplateColumns = 'repeat(' + (wsGrid.dataset.cols || 10) + ',1fr)';
