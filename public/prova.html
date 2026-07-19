@@ -1085,10 +1085,11 @@
   // em vez de gerar mapas/figuras factuais pela IA de imagem (que erra geografia).
   function blocoBiblioteca(componente){
     const isGeo=/Geografia/i.test(componente||'');
-    const isCie=/Ci[eê]ncias/i.test(componente||'');
+    const isCie=/Ci[eê]ncias|Biologia/i.test(componente||'');
     const isFis=/F[ií]sica/i.test(componente||'');
     const isQui=/Qu[ií]mica/i.test(componente||'');
-    const cat=isGeo?'geografia':isCie?'ciencias':isFis?'fisica':isQui?'quimica':null;
+    const isHis=/Hist[oó]ria/i.test(componente||'');
+    const cat=isGeo?'geografia':isCie?'ciencias':isFis?'fisica':isQui?'quimica':isHis?'historia':null;
     if(!cat) return '';
     const lib=(BIBLIOTECA&&BIBLIOTECA[cat])||{};
     const linhas=Object.entries(lib).map(([k,a])=>`  • "${k}" → ${a.titulo}. Quando usar: ${a.uso_pedagogico} (público: ${(a.publico||[]).join('/')||'todos'}).`).join('\n');
@@ -1101,6 +1102,17 @@ REGRAS:
 • Use "api_image_prompt" (IA de imagem) SOMENTE para cenas genéricas NÃO factuais (crianças num experimento, hábitos de higiene, alimentação saudável, paisagem). NUNCA para diagramas científicos.
 • Cada item usa OU "asset_key" OU "api_image_prompt", nunca os dois.
 • Se um diagrama vale para a atividade toda, coloque-o em "conteudo_principal.asset_key".
+• Listas de alternativas/itens para preencher ou relacionar: cada opção em sua própria linha (separe com \\n).\n`;
+    if(isHis) return `\n════ DECISÃO DE IMAGEM EM HISTÓRIA (REGRA OBRIGATÓRIA) ════
+Linhas do tempo, períodos históricos, pirâmides sociais e datas PRECISAM estar corretos — a IA de imagem erra (inventa datas, escreve em inglês, troca a ordem dos períodos). Quando o item envolver um destes temas, deixe "api_image_prompt" VAZIO e use "asset_key" com a chave certa:
+${linhas}
+REGRAS:
+• Coerência texto↔imagem: o enunciado deve falar exatamente do que o esquema mostra e usar as MESMAS datas dele.
+• Esquemas EM BRANCO (linha_do_tempo, arvore_genealogica, passado_presente_futuro) servem para o aluno PREENCHER: o enunciado deve mandar escrever/desenhar neles.
+• Use "api_image_prompt" (IA de imagem) SOMENTE para cenas genéricas NÃO factuais (crianças brincando, uma família reunida, o bairro). NUNCA para linhas do tempo, datas, mapas históricos, retratos de personagens ou monumentos reais.
+• Cada item usa OU "asset_key" OU "api_image_prompt", nunca os dois.
+• Se um esquema vale para a atividade toda, coloque-o em "conteudo_principal.asset_key".
+• Linguagem: use "pessoas escravizadas" (nunca "escravos") e trate povos indígenas e africanos como protagonistas, não como cenário.
 • Listas de alternativas/itens para preencher ou relacionar: cada opção em sua própria linha (separe com \\n).\n`;
     return `\n════ DECISÃO DE IMAGEM EM GEOGRAFIA (REGRA OBRIGATÓRIA) ════
 Você tem DUAS fontes de imagem e precisa escolher a certa para cada item:

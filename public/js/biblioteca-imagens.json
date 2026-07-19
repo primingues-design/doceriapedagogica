@@ -786,5 +786,120 @@
       ],
       "colorir": false
     }
+  },
+  "historia": {
+    "linha_do_tempo": {
+      "arquivo": "/assets/historia/linha-do-tempo.svg",
+      "titulo": "Linha do tempo em branco (para preencher)",
+      "descricao": "Linha do tempo horizontal com seta, 5 caixas vazias para o acontecimento e uma linha para a data embaixo de cada marco.",
+      "uso_pedagogico": "Aluno organiza acontecimentos em ordem cronológica. Serve para QUALQUER tema (vida do aluno, história do bairro, fatos históricos). Peça no enunciado que ele escreva o fato na caixa e a data na linha.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "periodos_historia": {
+      "arquivo": "/assets/historia/periodos-historia.svg",
+      "titulo": "Períodos da História e seus marcos",
+      "descricao": "Faixa dividida em Pré-História, Idade Antiga, Idade Média, Idade Moderna e Idade Contemporânea, com os marcos: escrita (4000 a.C.), queda de Roma (476), queda de Constantinopla (1453) e Revolução Francesa (1789).",
+      "uso_pedagogico": "Ensinar a divisão tradicional da História e o que separa cada período. Bom para questões de ordenar períodos ou identificar o marco divisor.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "linha_do_tempo_brasil": {
+      "arquivo": "/assets/historia/linha-do-tempo-brasil.svg",
+      "titulo": "Linha do tempo do Brasil",
+      "descricao": "Faixa com os grandes períodos: Povos originários (antes de 1500), Brasil Colônia (1500-1822), Brasil Império (1822-1889) e Brasil República (1889-hoje), com os marcos de 1500, 1822 e 1889.",
+      "uso_pedagogico": "Situar o aluno nos grandes períodos da história brasileira e relacionar datas a acontecimentos (chegada dos portugueses, Independência, Proclamação da República).",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "fontes_historicas": {
+      "arquivo": "/assets/historia/fontes-historicas.svg",
+      "titulo": "Tipos de fontes históricas",
+      "descricao": "Quatro cartões: fontes escritas (cartas, jornais, leis), orais (entrevistas, relatos, canções), materiais (objetos, roupas, ruínas) e iconográficas (fotografias, pinturas, mapas).",
+      "uso_pedagogico": "Ensinar como o historiador conhece o passado. Ótimo para classificar exemplos em cada tipo de fonte.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "arvore_genealogica": {
+      "arquivo": "/assets/historia/arvore-genealogica.svg",
+      "titulo": "Árvore genealógica em branco (para preencher)",
+      "descricao": "Árvore com 4 caixas vazias para avós, 2 para mãe/pai e 1 destacada para o aluno, ligadas por linhas.",
+      "uso_pedagogico": "Noção de tempo, gerações e história de família nos anos iniciais e na EJA. O aluno escreve os nomes. Atenção: aceite arranjos familiares diversos, não exija pai e mãe.",
+      "publico": [
+        "fund1",
+        "eja"
+      ],
+      "colorir": true
+    },
+    "passado_presente_futuro": {
+      "arquivo": "/assets/historia/passado-presente-futuro.svg",
+      "titulo": "Passado, presente e futuro",
+      "descricao": "Três quadros lado a lado (passado, presente, futuro) com espaço em branco para desenhar ou escrever, e uma seta indicando o sentido do tempo.",
+      "uso_pedagogico": "Construir a noção de tempo nos anos iniciais. O aluno desenha ou escreve um fato em cada quadro.",
+      "publico": [
+        "fund1",
+        "eja"
+      ],
+      "colorir": true
+    },
+    "medidas_de_tempo": {
+      "arquivo": "/assets/historia/medidas-de-tempo.svg",
+      "titulo": "Década, século e milênio",
+      "descricao": "Barras comparando 1 década (10 anos), 1 século (100 anos) e 1 milênio (1000 anos), com exemplos de como descobrir o século de um ano.",
+      "uso_pedagogico": "Ensinar as unidades de medida do tempo histórico e a conversão ano para século (1500 = século XVI).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "sociedade_feudal": {
+      "arquivo": "/assets/historia/sociedade-feudal.svg",
+      "titulo": "Pirâmide da sociedade feudal",
+      "descricao": "Pirâmide em três níveis: Rei no topo; Clero e Nobreza (senhores feudais) no meio; Servos e camponeses na base, com anotações do papel de cada grupo.",
+      "uso_pedagogico": "Mostrar a hierarquia da Idade Média e a relação entre posição social, posse da terra e poder.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "sociedade_colonial": {
+      "arquivo": "/assets/historia/sociedade-colonial.svg",
+      "titulo": "Pirâmide da sociedade do Brasil Colônia",
+      "descricao": "Pirâmide em três níveis: senhores de engenho e grandes proprietários no topo; homens livres pobres no meio; pessoas escravizadas (africanas e indígenas) na base.",
+      "uso_pedagogico": "Discutir desigualdade e trabalho no Brasil Colônia. Use sempre \"pessoas escravizadas\" (e não \"escravos\"), destacando que a escravidão foi imposta.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "revolucoes_industriais": {
+      "arquivo": "/assets/historia/revolucoes-industriais.svg",
+      "titulo": "As Revoluções Industriais",
+      "descricao": "Quatro etapas em ordem: 1a (1760, vapor e carvão), 2a (1870, eletricidade, aço e linha de montagem), 3a (1950, eletrônica e automação) e 4a (século XXI, internet, robótica e inteligência artificial).",
+      "uso_pedagogico": "Comparar as fases da industrialização e relacionar cada uma às suas tecnologias e mudanças no trabalho.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    }
   }
 }
