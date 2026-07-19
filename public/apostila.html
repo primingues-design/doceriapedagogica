@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador de Atividade — DoceriaPedagógica</title>
+<title>Texto &amp; Compreensão — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -207,6 +207,11 @@
     .ap-body-sm { padding: 14px 32px !important; }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   }
+
+  /* Passo a passo conversacional: cada resposta revela o próximo passo */
+  .step { display: none; }
+  .step.show { display: block; animation: stepIn .25s ease; }
+  @keyframes stepIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 </style>
 </head>
 <body>
@@ -217,7 +222,7 @@
     DoceriaPedagógica
   </a>
   <div class="topbar-nav">
-    <a class="topbar-link active" href="apostila.html">📄 Atividade</a>
+    <a class="topbar-link active" href="apostila.html">📖 Texto &amp; Compreensão</a>
     <a class="topbar-link" href="/conta.html">← Painel</a>
   </div>
 </div>
@@ -225,15 +230,12 @@
 <div class="main">
   <div class="form-panel">
 
+    <!-- PASSO 1 — sempre visível -->
     <div class="form-section">
-      <div class="form-section-title">Conteúdo</div>
+      <div class="form-section-title">1 · Para quem é o texto?</div>
       <div class="field">
-        <label class="field-label">Tema <span class="req">*</span></label>
-        <input type="text" id="tema" placeholder="Ex: Sistema Solar e Planetas" />
-      </div>
-      <div class="field">
-        <label class="field-label">Nível / público <span class="req">*</span></label>
-        <select id="nivel">
+        <label class="field-label">Série / nível <span class="req">*</span></label>
+        <select id="nivel" onchange="updateFlow()">
           <option value="">Selecione...</option>
           <option value="Educação Infantil (4-5 anos)">Educação Infantil</option>
           <option value="Fundamental I — Anos Iniciais (1º ao 5º ano)">Fundamental I (1º–5º)</option>
@@ -247,61 +249,101 @@
           <option value="Espanhol — Básico">Espanhol Básico</option>
         </select>
       </div>
+    </div>
+
+    <!-- PASSO 2 -->
+    <div class="form-section step" id="step-disc">
+      <div class="form-section-title">2 · Qual disciplina?</div>
       <div class="field">
-        <label class="field-label">Disciplina / área</label>
-        <input type="text" id="disciplina" placeholder="Ex: Ciências, Português, Matemática..." />
+        <label class="field-label">Disciplina / área <span class="req">*</span></label>
+        <input type="text" id="disciplina" list="discList" placeholder="Ex: Matemática, História, Geografia..." oninput="updateFlow()" />
+        <datalist id="discList">
+          <option value="Língua Portuguesa"></option><option value="Matemática"></option>
+          <option value="Ciências"></option><option value="História"></option>
+          <option value="Geografia"></option><option value="Arte"></option>
+          <option value="Educação Física"></option><option value="Ensino Religioso"></option>
+          <option value="Física"></option><option value="Química"></option>
+          <option value="Biologia"></option><option value="Inglês"></option>
+        </datalist>
       </div>
+    </div>
+
+    <!-- PASSO 3 -->
+    <div class="form-section step" id="step-tema">
+      <div class="form-section-title">3 · Qual o tema / assunto?</div>
+      <div class="field">
+        <label class="field-label">Tema <span class="req">*</span></label>
+        <input type="text" id="tema" placeholder="Ex: Frações, Revolução Industrial, Relevo..." oninput="updateFlow()" />
+      </div>
+    </div>
+
+    <!-- PASSO 4 -->
+    <div class="form-section step" id="step-tipo">
+      <div class="form-section-title">4 · Que tipo de texto?</div>
+      <div class="pill-group" id="tipoTextoPills" data-single="1">
+        <div class="pill" data-val="Explicativo">📘 Explicativo</div>
+        <div class="pill" data-val="Definição de conceito">🔎 Definição de conceito</div>
+        <div class="pill" data-val="Resumo de revisão">📝 Resumo de revisão</div>
+        <div class="pill" data-val="Situação do cotidiano">🧩 Situação do cotidiano</div>
+      </div>
+    </div>
+
+    <!-- PASSO 5 -->
+    <div class="form-section step" id="step-tam">
+      <div class="form-section-title">5 · Tamanho do texto</div>
+      <div class="pill-group" id="tamanhoPills" data-single="1">
+        <div class="pill" data-val="Curto">Curto</div>
+        <div class="pill" data-val="Médio">Médio</div>
+        <div class="pill" data-val="Longo">Longo</div>
+      </div>
+    </div>
+
+    <!-- PASSO 6 -->
+    <div class="form-section step" id="step-niveis">
+      <div class="form-section-title">6 · Perguntas de interpretação</div>
+      <div class="pill-group" id="niveisPills">
+        <div class="pill active" data-val="Localizar">🔍 Localizar</div>
+        <div class="pill active" data-val="Inferir">🧠 Inferir</div>
+        <div class="pill active" data-val="Refletir">💬 Refletir</div>
+      </div>
+      <div class="lg-hint" style="margin-top:8px">Localizar = a resposta está no texto · Inferir = concluir a partir do texto · Refletir = relacionar com a vida</div>
+    </div>
+
+    <!-- PASSO 7 — finalizar -->
+    <div class="step" id="step-final">
+      <div class="form-section">
+        <div class="form-section-title">7 · Para finalizar</div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">📝 Produção de texto</div><div class="toggle-sub">Proposta de escrita ao final</div></div>
+          <button class="toggle" id="togProducao" onclick="toggleBtn(this)"></button>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">📖 Glossário</div><div class="toggle-sub">Palavras difíceis explicadas</div></div>
+          <button class="toggle" id="togGlossario" onclick="toggleBtn(this)"></button>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-label">✅ Gabarito do professor</div><div class="toggle-sub">Respostas esperadas em folha separada</div></div>
+          <button class="toggle on" id="togGabarito" onclick="toggleBtn(this)"></button>
+        </div>
+      </div>
+
       <div class="field">
         <label class="field-label">Objetivo de aprendizagem</label>
-        <textarea id="objetivo" placeholder="Ex: Identificar os planetas do sistema solar..."></textarea>
+        <textarea id="objetivo" placeholder="Opcional — ex: Compreender o conceito de fração..."></textarea>
       </div>
-    </div>
 
-    <div class="form-section">
-      <div class="form-section-title">Atividades incluídas</div>
-      <div class="pill-group" id="tiposPills">
-        <div class="pill active" data-val="Interpretação de texto">📖 Interpretação</div>
-        <div class="pill active" data-val="Questões abertas">✍️ Abertas</div>
-        <div class="pill active" data-val="Múltipla escolha">☑️ Múltipla escolha</div>
-        <div class="pill active" data-val="Complete as frases">✏️ Complete</div>
-        <div class="pill active" data-val="Produção escrita">📝 Produção escrita</div>
-        <div class="pill" data-val="Verdadeiro ou Falso">✅ V ou F</div>
+      <div class="field">
+        <label class="field-label">Obs. adicionais</label>
+        <input type="text" id="obs" placeholder="Ex: Linguagem adulta, exemplos do cotidiano..." />
       </div>
-    </div>
 
-    <div class="form-section">
-      <div class="form-section-title">Seções extras</div>
-      <div>
-        <div class="toggle-row">
-          <div><div class="toggle-label">🧠 Mapa mental</div><div class="toggle-sub">Organização visual do conteúdo</div></div>
-          <button class="toggle on" id="togMapa" onclick="toggleBtn(this)"></button>
-        </div>
-        <div class="toggle-row">
-          <div><div class="toggle-label">💡 Caixa de destaque</div><div class="toggle-sub">Conceito ou dado importante</div></div>
-          <button class="toggle on" id="togDestaque" onclick="toggleBtn(this)"></button>
-        </div>
-        <div class="toggle-row">
-          <div><div class="toggle-label">📋 Plano de aula junto</div><div class="toggle-sub">Orientações e BNCC</div></div>
-          <button class="toggle" id="togPlano" onclick="toggleBtn(this)"></button>
-        </div>
-        <div class="toggle-row">
-          <div><div class="toggle-label">🎵 Música pedagógica</div><div class="toggle-sub">Rap, cordel ou paródia do tema</div></div>
-          <button class="toggle" id="togMusica" onclick="toggleBtn(this)"></button>
-        </div>
+      <div class="lg-wrap">
+        <label class="lg-row">
+          <input type="checkbox" id="letraGrande" onchange="onLetraGrandeChange()">
+          <span>🔡 Letra Grande</span>
+        </label>
+        <div class="lg-hint">Recomendado para EJA e Educação Infantil</div>
       </div>
-    </div>
-
-    <div class="field">
-      <label class="field-label">Obs. adicionais</label>
-      <input type="text" id="obs" placeholder="Ex: Linguagem adulta, exemplos do cotidiano..." />
-    </div>
-
-    <div class="lg-wrap">
-      <label class="lg-row">
-        <input type="checkbox" id="letraGrande" onchange="onLetraGrandeChange()">
-        <span>🔡 Letra Grande</span>
-      </label>
-      <div class="lg-hint">Recomendado para EJA e Educação Infantil</div>
     </div>
 
     <hr class="divider">
@@ -309,19 +351,19 @@
     <button class="generate-btn" id="genBtn" onclick="generate()">
       <span class="gicon">✦</span>
       <div class="spin"></div>
-      Gerar Atividade
+      Gerar Texto
     </button>
 
     <div class="error-box" id="errorBox"></div>
     <div class="progress-wrap" id="progressWrap">
       <div class="prog-bar-outer"><div class="prog-bar-inner" id="progBar"></div></div>
       <div class="prog-steps">
-        <div class="prog-step" id="ps1"><div class="prog-dot">1</div><span>Estruturando conteúdo pedagógico...</span></div>
-        <div class="prog-step" id="ps2"><div class="prog-dot">2</div><span>Criando texto introdutório...</span></div>
-        <div class="prog-step" id="ps3"><div class="prog-dot">3</div><span>Gerando atividades variadas...</span></div>
-        <div class="prog-step" id="ps4"><div class="prog-dot">4</div><span>Montando mapa mental...</span></div>
-        <div class="prog-step" id="ps5"><div class="prog-dot">5</div><span>Diagramando layout profissional...</span></div>
-        <div class="prog-step" id="ps6"><div class="prog-dot">6</div><span>Finalizando atividade...</span></div>
+        <div class="prog-step" id="ps1"><div class="prog-dot">1</div><span>Entendendo o tema e a série...</span></div>
+        <div class="prog-step" id="ps2"><div class="prog-dot">2</div><span>Escrevendo o texto de leitura...</span></div>
+        <div class="prog-step" id="ps3"><div class="prog-dot">3</div><span>Criando perguntas de interpretação...</span></div>
+        <div class="prog-step" id="ps4"><div class="prog-dot">4</div><span>Relacionando a habilidade da BNCC...</span></div>
+        <div class="prog-step" id="ps5"><div class="prog-dot">5</div><span>Montando o gabarito...</span></div>
+        <div class="prog-step" id="ps6"><div class="prog-dot">6</div><span>Diagramando o material...</span></div>
       </div>
     </div>
   </div>
@@ -329,7 +371,7 @@
   <div class="preview-panel">
     <div class="preview-header" id="prevHeader">
       <div>
-        <div class="ph-title" id="phTitle">Atividade gerada</div>
+        <div class="ph-title" id="phTitle">Material gerado</div>
         <div class="ph-meta" id="phMeta"></div>
       </div>
       <div class="ph-actions">
@@ -340,8 +382,8 @@
     </div>
     <div class="preview-empty" id="prevEmpty">
       <div class="preview-empty-icon">📄</div>
-      <div class="preview-empty-title">Sua atividade aparece aqui</div>
-      <div class="preview-empty-sub">Configure ao lado e clique em <strong>Gerar Atividade</strong> — texto, atividades e fechamento prontos em segundos.</div>
+      <div class="preview-empty-title">Seu texto aparece aqui</div>
+      <div class="preview-empty-sub">Responda as perguntas ao lado — texto, interpretação e gabarito prontos em segundos.</div>
     </div>
     <div class="doc-wrap" id="docWrap">
       <div id="apostila-doc"></div>
@@ -351,9 +393,40 @@
 
 <script>
   function toggleBtn(el){el.classList.toggle('on')}
-  document.querySelectorAll('#tiposPills .pill').forEach(p=>p.addEventListener('click',()=>p.classList.toggle('active')));
   function isOn(id){return document.getElementById(id).classList.contains('on')}
-  function getTypes(){return[...document.querySelectorAll('#tiposPills .pill.active')].map(p=>p.dataset.val).join(', ')}
+
+  // Pills: grupos com data-single="1" funcionam como escolha única; os demais, múltipla.
+  document.querySelectorAll('.pill-group .pill').forEach(p=>p.addEventListener('click',()=>{
+    const grupo=p.parentElement;
+    if(grupo.dataset.single==='1'){
+      grupo.querySelectorAll('.pill').forEach(o=>o.classList.remove('active'));
+      p.classList.add('active');
+    } else {
+      p.classList.toggle('active');
+    }
+    updateFlow();
+  }));
+  function pillSel(id){const p=document.querySelector('#'+id+' .pill.active');return p?p.dataset.val:'';}
+  function pillMulti(id){return[...document.querySelectorAll('#'+id+' .pill.active')].map(p=>p.dataset.val);}
+  function val(id){return (document.getElementById(id).value||'').trim();}
+
+  // Passo a passo conversacional: cada resposta revela a próxima pergunta.
+  function updateFlow(){
+    const show=(id,on)=>document.getElementById(id).classList.toggle('show',!!on);
+    const temNivel = !!val('nivel');
+    const temDisc  = temNivel && !!val('disciplina');
+    const temTema  = temDisc  && !!val('tema');
+    const temTipo  = temTema  && !!pillSel('tipoTextoPills');
+    const temTam   = temTipo  && !!pillSel('tamanhoPills');
+    const temNiveis= temTam   && pillMulti('niveisPills').length>0;
+    show('step-disc',  temNivel);
+    show('step-tema',  temDisc);
+    show('step-tipo',  temTema);
+    show('step-tam',   temTipo);
+    show('step-niveis',temTam);
+    show('step-final', temNiveis);
+    document.getElementById('genBtn').style.display = temNiveis?'':'none';
+  }
 
   function onLetraGrandeChange(){
     document.body.classList.toggle('letra-grande',document.getElementById('letraGrande').checked);
@@ -380,16 +453,23 @@
   const STEPS_DELAY=[0,700,1200,1800,2400,3000];
 
   async function generate(){
-    const tema=document.getElementById('tema').value.trim();
-    const nivel=document.getElementById('nivel').value;
-    const disciplina=document.getElementById('disciplina').value.trim();
-    const objetivo=document.getElementById('objetivo').value.trim();
-    const obs=document.getElementById('obs').value.trim();
-    const tipos=getTypes();
+    const cfg={
+      nivel: val('nivel'), disciplina: val('disciplina'), tema: val('tema'),
+      tipoTexto: pillSel('tipoTextoPills'), tamanho: pillSel('tamanhoPills'),
+      niveis: pillMulti('niveisPills'),
+      producao: isOn('togProducao'), glossario: isOn('togGlossario'), gabarito: isOn('togGabarito'),
+      objetivo: val('objetivo'), obs: val('obs')
+    };
+    const tema=cfg.tema, nivel=cfg.nivel, disciplina=cfg.disciplina;
     const errBox=document.getElementById('errorBox');
     errBox.classList.remove('show');
-    if(!tema){errBox.textContent='Preencha o tema da atividade.';errBox.classList.add('show');document.getElementById('tema').focus();return;}
-    if(!nivel){errBox.textContent='Selecione o nível / público-alvo.';errBox.classList.add('show');document.getElementById('nivel').focus();return;}
+    const faltou=(msg,id)=>{errBox.textContent=msg;errBox.classList.add('show');document.getElementById(id).focus();};
+    if(!cfg.nivel){faltou('Selecione a série / nível.','nivel');return;}
+    if(!cfg.disciplina){faltou('Informe a disciplina.','disciplina');return;}
+    if(!cfg.tema){faltou('Informe o tema / assunto.','tema');return;}
+    if(!cfg.tipoTexto){errBox.textContent='Escolha o tipo de texto.';errBox.classList.add('show');return;}
+    if(!cfg.tamanho){errBox.textContent='Escolha o tamanho do texto.';errBox.classList.add('show');return;}
+    if(!cfg.niveis.length){errBox.textContent='Escolha ao menos um nível de interpretação.';errBox.classList.add('show');return;}
     const btn=document.getElementById('genBtn');
     btn.disabled=true;btn.classList.add('loading');
     document.getElementById('progressWrap').classList.add('show');
@@ -397,12 +477,7 @@
     document.getElementById('prevHeader').classList.remove('show');
     document.getElementById('docWrap').classList.remove('show');
     STEPS_DELAY.forEach((d,i)=>setTimeout(()=>setStep(i+1),d));
-    const extras=[];
-    if(isOn('togMapa')) extras.push('mapa_mental');
-    if(isOn('togDestaque')) extras.push('destaque');
-    if(isOn('togPlano')) extras.push('plano_de_aula');
-    if(isOn('togMusica')) extras.push('musica_pedagogica');
-    const prompt=buildPrompt(tema,nivel,disciplina,objetivo,obs,tipos,extras);
+    const prompt=buildPrompt(cfg);
     try{
       const res=await fetch('/api/claude',{
         method:'POST',headers:{'Content-Type':'application/json'},
@@ -429,7 +504,7 @@ REGRAS: Retorne SOMENTE JSON válido começando com { e terminando com }. Sem ma
       catch(e){throw new Error('Formato inesperado. Tente novamente.');}
       document.getElementById('progBar').style.width='100%';
       await delay(300);
-      renderApostila(parsed,tema,nivel,disciplina);
+      renderApostila(parsed,cfg);
       if(typeof dpSalvar==='function') dpSalvar('apostila',tema,nivel,parsed.titulo||tema,'#docWrap');
     }catch(err){
       errBox.textContent='Erro: '+(err.message||'Tente novamente.');
@@ -443,60 +518,79 @@ REGRAS: Retorne SOMENTE JSON válido começando com { e terminando com }. Sem ma
     }
   }
 
-  function buildPrompt(tema,nivel,disciplina,objetivo,obs,tipos,extras){
-    const semTipos = !tipos;
-    const comIntro = !semTipos;
-    const comFechamento = !semTipos;
+  function buildPrompt(c){
+    const TAM={
+      'Curto':'3 a 4 parágrafos curtos (aprox. 150–220 palavras no total)',
+      'Médio':'5 a 6 parágrafos (aprox. 300–400 palavras no total)',
+      'Longo':'7 a 9 parágrafos (aprox. 500–650 palavras no total)'
+    }[c.tamanho]||'5 a 6 parágrafos';
 
-    const tiposBloco = semTipos
-      ? `TIPOS DE ATIVIDADE: nenhum tipo pré-definido selecionado pelo professor.
-INSTRUÇÃO ESPECIAL: gere APENAS o que as OBSERVAÇÕES solicitam. Não invente introdução, não invente fechamento, não invente atividades extras. Siga o pedido à risca.`
-      : `TIPOS DE ATIVIDADE (gere SOMENTE estes, nada mais): ${tipos}`;
+    const TIPO={
+      'Explicativo':'Texto EXPLICATIVO/DIDÁTICO: apresenta e explica o tema com clareza, do mais simples ao mais complexo, com exemplos concretos.',
+      'Definição de conceito':'Texto de DEFINIÇÃO DE CONCEITO: define o conceito com precisão, explica seus elementos, dá exemplos e contraexemplos do cotidiano. Ideal para conceitos de matemática, ciências, geografia.',
+      'Resumo de revisão':'Texto de RESUMO PARA REVISÃO: sintetiza os pontos essenciais do tema de forma enxuta e organizada, como material de estudo antes da prova.',
+      'Situação do cotidiano':'Texto de SITUAÇÃO DO COTIDIANO: apresenta uma situação real e concreta do dia a dia que envolve o tema, mostrando o conteúdo aplicado à vida prática.'
+    }[c.tipoTexto]||'';
 
-    const numAtividades = semTipos
-      ? 'Quantidade exata conforme as OBSERVAÇÕES solicitam. Se pedir 6, gere 6. Se pedir 10, gere 10.'
-      : '5 a 7 atividades variadas';
+    const NIV={
+      'Localizar':'LOCALIZAR (a resposta está explícita no texto — o aluno localiza a informação)',
+      'Inferir':'INFERIR (a resposta exige concluir/deduzir a partir do texto, não está escrita literalmente)',
+      'Refletir':'REFLETIR (a resposta exige opinião, relação com a vida do aluno ou posicionamento crítico)'
+    };
+    const niveisBloco=c.niveis.map(n=>'- '+NIV[n]).join('\n');
+    const qtd=c.niveis.length>=3?'2 perguntas de CADA nível escolhido':'3 perguntas de CADA nível escolhido';
 
-    const religiosoBloco = /religios/i.test(disciplina||'')
-      ? `\nENSINO RELIGIOSO (BNCC, NÃO CONFESSIONAL): nunca faça proselitismo nem favoreça uma única religião; aborde a diversidade religiosa E visões não religiosas com respeito, como fenômeno cultural. Foque em respeito às diferenças, alteridade, convivência e valores. Linguagem inclusiva a todas as crianças, com ou sem fé.`
+    const religiosoBloco = /religios/i.test(c.disciplina||'')
+      ? `\nENSINO RELIGIOSO (BNCC, NÃO CONFESSIONAL): nunca faça proselitismo nem favoreça uma única religião; aborde a diversidade religiosa E visões não religiosas com respeito, como fenômeno cultural. Foque em respeito às diferenças, alteridade e convivência.`
       : '';
 
-    return `Crie uma atividade pedagógica.
-TEMA: ${tema}
-NÍVEL: ${nivel}
-${disciplina?'DISCIPLINA: '+disciplina:''}${religiosoBloco}
-${objetivo?'OBJETIVO: '+objetivo:''}
-${obs?'OBSERVAÇÕES (siga à risca): '+obs:''}
-${tiposBloco}
-SEÇÕES EXTRAS: ${extras.join(', ')||'nenhuma'}
-NÚMERO DE ATIVIDADES: ${numAtividades}
+    return `Crie um material de LEITURA E COMPREENSÃO.
 
-REGRAS OBRIGATÓRIAS:
-- Gere SOMENTE os tipos de atividade listados. PROIBIDO gerar outros tipos.
-- Se as OBSERVAÇÕES pedirem número específico de perguntas/questões, respeite EXATAMENTE.
-- ${comIntro?'Escreva introdução e fechamento com conteúdo REAL sobre o tema. PROIBIDO escrever placeholders como "texto aqui" ou "escreva aqui".':'introducao_titulo, introducao_texto, fechamento_titulo e fechamento_texto devem ser null.'}
+SÉRIE / NÍVEL: ${c.nivel}
+DISCIPLINA: ${c.disciplina}${religiosoBloco}
+TEMA: ${c.tema}
+${c.objetivo?'OBJETIVO DE APRENDIZAGEM: '+c.objetivo:''}
+${c.obs?'OBSERVAÇÕES DO PROFESSOR (siga à risca): '+c.obs:''}
+
+TIPO DE TEXTO: ${TIPO}
+TAMANHO: ${TAM}
+
+REGRAS DO TEXTO (a parte mais importante):
+- O texto deve ser REAL, correto e completo sobre "${c.tema}" — nada de placeholders.
+- Linguagem e vocabulário ajustados a ${c.nivel}.
+- Este material NÃO é só de Português: funciona para qualquer disciplina. Se a disciplina for Matemática, Ciências, Geografia ou História, o texto deve ensinar o CONTEÚDO dessa área (conceitos, processos, fatos) — e as perguntas devem cobrar a compreensão desse conteúdo.
+- Parágrafos separados por quebra de linha (\\n).
+- Sem títulos internos, sem listas com marcadores dentro do texto.
+
+PERGUNTAS DE INTERPRETAÇÃO — gere ${qtd}, nos níveis:
+${niveisBloco}
+- Toda pergunta deve ser RESPONDÍVEL a partir do texto que você escreveu.
+- Perguntas abertas (dissertativas). PROIBIDO múltipla escolha, completar lacunas ou verdadeiro/falso.
+- Cada pergunta traz o campo "nivel" com exatamente um destes valores: "Localizar", "Inferir" ou "Refletir".
+
+BNCC (OBRIGATÓRIO): informe o(s) código(s) de habilidade da BNCC realmente pertinentes a ${c.disciplina} em ${c.nivel} para este tema (ex: EF15LP03, EF06MA07). Escreva o código E a descrição resumida da habilidade. Se o nível não tiver código BNCC (ex: Ensino Médio de idiomas), use "—" no código e descreva a habilidade trabalhada.
 
 Retorne SOMENTE JSON válido:
 {
-  "titulo": "título criativo sobre ${tema}",
-  "subtitulo": "subtítulo complementar",
-  "nivel": "${nivel}",
-  "disciplina": "${disciplina||tema}",
-  "introducao_titulo": ${comIntro?`"título criativo para introdução sobre ${tema}"`:'null'},
-  "introducao_texto": ${comIntro?`"escreva 3 parágrafos reais e completos contextualizando ${tema} para ${nivel}"`:'null'},
-  "destaque": ${extras.includes('destaque')?'{"titulo":"Sabia que...","texto":"fato marcante e real sobre o tema"}':'null'},
-  "mapa_mental": ${(extras.includes('mapa_mental')&&comIntro)?'{"centro":"palavra central","ramos":["ramo1","ramo2","ramo3","ramo4","ramo5"]}':'null'},
-  "atividades": [
-    {"numero":1,"tipo":"tipo da atividade","enunciado":"instrução para o aluno","tipo_resposta":"linhas","linhas":4,"opcoes":null,"itens_vf":null,"cruzadinha":null}
+  "titulo": "título envolvente sobre ${c.tema}",
+  "subtitulo": "subtítulo curto complementar",
+  "nivel": "${c.nivel}",
+  "disciplina": "${c.disciplina}",
+  "bncc": [{"codigo":"EF00XX00","habilidade":"descrição resumida da habilidade"}],
+  "texto_titulo": "título do texto de leitura",
+  "texto": "o texto completo, parágrafos separados por \\n",
+  "perguntas": [
+    {"numero":1,"nivel":"Localizar","pergunta":"pergunta clara para o aluno","linhas":3,"resposta_esperada":"resposta modelo para o professor"}
   ],
-  "fechamento_titulo": ${comFechamento?`"título para o fechamento sobre ${tema}"`:'null'},
-  "fechamento_texto": ${comFechamento?`"escreva 2 parágrafos reais de reflexão e encerramento sobre ${tema}"`:'null'},
-  "musica": ${extras.includes('musica_pedagogica')?'{"tipo":"rap/cordel","letra":"letra completa e real sobre o tema"}':'null'},
-  "orientacao_professor": "dica prática real de aplicação em sala",
-  "palavras_chave": ["palavra1","palavra2","palavra3"]
+  "producao": ${c.producao?`{"titulo":"título da proposta","comando":"proposta de produção de texto ligada ao tema, com orientação clara do que escrever"}`:'null'},
+  "glossario": ${c.glossario?`[{"termo":"palavra do texto","significado":"explicação simples e curta"}]`:'null'},
+  "orientacao_professor": "dica prática e real de como aplicar este material em sala"
 }
 
-REGRAS FINAIS: Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) texto"]. VF: tipo_resposta="vf", itens_vf=["frase1","frase2","frase3","frase4"]. Produção escrita: tipo_resposta="caixa". NUNCA coloque instruções de formato no enunciado. NUNCA escreva placeholders como "texto aqui", "escreva aqui" ou similares.`;
+REGRAS FINAIS:
+- "resposta_esperada" SEMPRE preenchida (é o gabarito do professor), mesmo nas perguntas de refletir (nesse caso, descreva o que se espera da reflexão).
+- "linhas" = quantas linhas de resposta o aluno precisa (2 a 6, conforme a pergunta).
+- NUNCA escreva placeholders como "texto aqui" ou "escreva aqui".`;
   }
 
   function cleanEnunciado(text){
@@ -511,94 +605,111 @@ REGRAS FINAIS: Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) t
            t.includes('escreva 3')||t.includes('escreva 2 parágrafos');
   }
 
-  function renderApostila(d,tema,nivel,disciplina){
+  function renderApostila(d,c){
     const date=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
     const docEl=document.getElementById('apostila-doc');
-    let pages=[];
+    const nivel=d.nivel||c.nivel, disciplina=d.disciplina||c.disciplina, tema=c.tema;
+    const pages=[];
+    const foot=(txt)=>`<div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>${txt}</span><span></span></div>`;
+    const badge=(t)=>`<span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:4px 12px;font-size:11px;">${t}</span>`;
 
-    // cabeçalho
+    // ── BNCC (sempre presente) ──
+    const bnccArr=Array.isArray(d.bncc)?d.bncc:(d.bncc?[d.bncc]:[]);
+    const bnccHtml=bnccArr.length?`
+      <div style="margin-top:12px;border:1.5px solid var(--border-mid);border-left:4px solid var(--gold);border-radius:8px;padding:9px 14px;background:var(--warm);">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;">BNCC</div>
+        ${bnccArr.map(b=>`<div style="font-size:11.5px;color:var(--text-mid);line-height:1.5;"><strong>${b.codigo||'—'}</strong> — ${b.habilidade||''}</div>`).join('')}
+      </div>`:'';
+
+    // ── PÁGINA 1: capa + texto de leitura ──
+    const parags=(d.texto||'').split('\n').filter(p=>p.trim());
     pages.push(`
       <div class="ap-page">
         <div class="ap-cover-header" style="border-top:5px solid var(--gold);border-bottom:1px solid var(--border);padding:22px 40px 18px;background:white;">
-          <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">DoceriaPedagógica — Atividade</div>
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">DoceriaPedagógica — Leitura e Compreensão</div>
           <div class="ap-cover-title" style="font-family:'Playfair Display',serif;font-size:26px;font-weight:900;line-height:1.2;color:var(--text);margin-bottom:6px;">${d.titulo||tema}</div>
           ${d.subtitulo?`<div style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">${d.subtitulo}</div>`:''}
           <div class="ap-cover-badges" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
-            <span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:4px 12px;font-size:11px;">📚 ${d.nivel||nivel}</span>
-            <span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:4px 12px;font-size:11px;">📋 ${d.disciplina||disciplina||tema}</span>
-            <span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:6px;padding:4px 12px;font-size:11px;">📅 ${date}</span>
+            ${badge('📚 '+nivel)}${badge('📋 '+disciplina)}${badge('📄 '+(c.tipoTexto||''))}${badge('📅 '+date)}
           </div>
           <div style="border:1.5px solid var(--border-mid);border-radius:8px;padding:8px 14px;display:flex;gap:32px;font-size:13px;color:var(--text-mid);">
             <span>Nome: _______________________________________</span>
             <span>Turma: _______________</span>
           </div>
+          ${bnccHtml}
         </div>
+        <div class="ap-body">
+          <div class="ap-section">
+            <div class="ap-section-label">Texto para leitura</div>
+            <div class="ap-section-title">${d.texto_titulo||d.titulo||tema}</div>
+            ${parags.map(p=>`<p class="ap-text">${p.trim()}</p>`).join('')}
+          </div>
+        </div>
+        ${foot(`${d.titulo||tema} • ${nivel}`)}
       </div>`);
 
-    // introdução — só renderiza se a IA gerou conteúdo
-    let destaqueHtml='';
-    if(d.destaque) destaqueHtml=`<div class="ap-destaque"><div class="ap-destaque-label">💡 ${d.destaque.titulo||'Destaque'}</div><div class="ap-destaque-text">${d.destaque.texto||''}</div></div>`;
-    let mapaHtml='';
-    if(d.mapa_mental){
-      const ramos=(d.mapa_mental.ramos||[]).map(r=>`<div class="ap-mapa-item">${r}</div>`).join('');
-      mapaHtml=`<div class="ap-section"><div class="ap-section-label">Mapa Mental</div><div class="ap-mapa"><div class="ap-mapa-center">${d.mapa_mental.centro||d.titulo}</div><div class="ap-mapa-grid">${ramos}</div></div></div>`;
-    }
-    if(d.introducao_texto && !isPlaceholder(d.introducao_texto)){
-      const paragsIntro=d.introducao_texto.split('\n').filter(p=>p.trim());
-      pages.push(`
-        <div class="ap-page">
-          <div class="ap-body">
-            <div class="ap-section">
-              <div class="ap-section-label">Introdução</div>
-              <div class="ap-section-title">${d.introducao_titulo||'Vamos começar'}</div>
-              ${paragsIntro.map(p=>`<p class="ap-text">${p.trim()}</p>`).join('')}
-              ${destaqueHtml}
-            </div>
-            ${mapaHtml}
+    // ── PERGUNTAS DE INTERPRETAÇÃO (por nível) ──
+    const COR={'Localizar':'#2d6e6e','Inferir':'#c8963e','Refletir':'#7c3aed'};
+    const perguntas=d.perguntas||[];
+    if(perguntas.length){
+      const qHtml=perguntas.map((q,i)=>{
+        const n=Math.min(Math.max(q.linhas||3,2),6);
+        const cor=COR[q.nivel]||'var(--text-muted)';
+        return `<div class="ap-activity">
+          <div class="ap-activity-header">
+            <div class="ap-activity-num">${q.numero||i+1}</div>
+            <div class="ap-activity-type" style="color:${cor};border-color:${cor}">${q.nivel||'Compreensão'}</div>
           </div>
-          <div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>${d.titulo||tema} • ${d.nivel||nivel}</span><span>Pág. 2</span></div>
-        </div>`);
-    }
-
-    // atividades — todas em um bloco só; o print quebra páginas naturalmente entre questões
-    const ativs=d.atividades||[];
-    if(ativs.length){
-      const ativsHtml=ativs.map((at,i)=>{
-        const enunciado=cleanEnunciado(at.enunciado).replace(/\n/g,'<br>');
-        let resHtml='';
-        if(at.tipo_resposta==='caixa') resHtml=`<div class="ap-answer-box"></div>`;
-        else if(at.tipo_resposta==='opcoes'&&at.opcoes?.length) resHtml=`<div class="ap-opcoes">${at.opcoes.map((op,oi)=>`<div class="ap-opcao"><div class="ap-opcao-bubble">${String.fromCharCode(65+oi)}</div><span>${op.replace(/^[A-Da-d]\)\s*/,'')}</span></div>`).join('')}</div>`;
-        else if(at.tipo_resposta==='vf'&&at.itens_vf?.length) resHtml=`<div style="margin-top:10px;">${at.itens_vf.map(frase=>`<div class="ap-vf-item"><div class="ap-vf-bubble"><div class="ap-vf-box">V</div><div class="ap-vf-box">F</div></div><span>${frase}</span></div>`).join('')}</div>`;
-        else if(at.tipo_resposta==='cruzadinha'&&at.cruzadinha) resHtml=renderCruzadinha(at.cruzadinha);
-        else{const n=Math.max(at.linhas||3,3);resHtml=`<div class="ap-answer-lines">${Array(n).fill('<div class="ap-answer-line"></div>').join('')}</div>`;}
-        return `<div class="ap-activity"><div class="ap-activity-header"><div class="ap-activity-num">${at.numero||i+1}</div><div class="ap-activity-type">${at.tipo||'Atividade'}</div></div><div class="ap-activity-q">${enunciado}</div>${resHtml}</div>`;
+          <div class="ap-activity-q">${(q.pergunta||'').replace(/\n/g,'<br>')}</div>
+          <div class="ap-answer-lines">${Array(n).fill('<div class="ap-answer-line"></div>').join('')}</div>
+        </div>`;
       }).join('');
-      pages.push(`<div class="ap-page"><div class="ap-body"><div class="ap-section"><div class="ap-section-label">Atividades</div>${ativsHtml}</div></div><div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>${d.titulo||tema} • ${d.nivel||nivel}</span><span></span></div></div>`);
+      pages.push(`<div class="ap-page"><div class="ap-body"><div class="ap-section"><div class="ap-section-label">Compreensão do texto</div>${qHtml}</div></div>${foot(`${d.titulo||tema} • ${nivel}`)}</div>`);
     }
 
-    // música
-    if(d.musica){
-      const versos=(d.musica.letra||'').split('\n').filter(v=>v.trim());
-      pages.push(`<div class="ap-page"><div class="ap-body"><div class="ap-section"><div class="ap-section-label">🎵 ${d.musica.tipo||'Música pedagógica'}</div><div class="ap-section-title">Aprendendo com música</div><div style="background:var(--gold-pale);border-radius:10px;padding:24px 28px;border-left:4px solid var(--gold);">${versos.map(v=>`<p style="font-size:14px;line-height:2;color:var(--text-mid);">${v}</p>`).join('')}</div></div></div><div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>${d.titulo||tema}</span><span>Pág. ${pages.length+1}</span></div></div>`);
+    // ── PRODUÇÃO DE TEXTO (opcional) ──
+    if(d.producao&&d.producao.comando){
+      pages.push(`<div class="ap-page"><div class="ap-body"><div class="ap-section">
+        <div class="ap-section-label">Produção de texto</div>
+        <div class="ap-section-title">${d.producao.titulo||'Agora é a sua vez de escrever'}</div>
+        <p class="ap-text">${d.producao.comando}</p>
+        <div class="ap-answer-lines">${Array(14).fill('<div class="ap-answer-line"></div>').join('')}</div>
+      </div></div>${foot(`${d.titulo||tema} • Produção de texto`)}</div>`);
     }
 
-    // fechamento — só renderiza se a IA gerou conteúdo
-    let orientHtml='';
-    if(d.orientacao_professor) orientHtml=`<div class="ap-orientacao"><div class="ap-orientacao-label">💡 ${isOn('togPlano')?'Plano de aula & orientações':'Orientação ao professor'}</div><div class="ap-orientacao-text">${d.orientacao_professor}</div></div>`;
-    if(d.fechamento_texto && !isPlaceholder(d.fechamento_texto)){
-      const paragsFech=d.fechamento_texto.split('\n').filter(p=>p.trim());
-      pages.push(`<div class="ap-page"><div class="ap-fechamento"><div class="ap-fechamento-label">Fechamento</div><div class="ap-fechamento-title">${d.fechamento_titulo||'Para refletir'}</div>${paragsFech.map(p=>`<p class="ap-fechamento-text">${p.trim()}</p>`).join('')}</div><div class="ap-body-sm">${orientHtml}${d.palavras_chave?.length?`<div style="margin-top:16px;"><div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Palavras-chave</div><div style="display:flex;flex-wrap:wrap;gap:7px;">${d.palavras_chave.map(p=>`<span style="background:var(--warm);border:1px solid var(--border-mid);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text-muted);">${p}</span>`).join('')}</div></div>`:''}</div><div class="ap-page-footer"><span class="ap-footer-logo">DoceriaPedagógica</span><span>Material gerado por IA • ${date}</span><span>Pág. ${pages.length+1}</span></div></div>`);
-    } else if(orientHtml){
-      // sem fechamento mas tem orientação ao professor — adiciona na última página de atividades
-      const lastPage=document.querySelector('#apostila-doc .ap-page:last-child .ap-body');
-      if(lastPage) lastPage.insertAdjacentHTML('beforeend', orientHtml);
+    // ── GLOSSÁRIO (opcional) ──
+    if(Array.isArray(d.glossario)&&d.glossario.length){
+      const gl=d.glossario.map(g=>`<div style="margin-bottom:9px;font-size:13px;line-height:1.55;"><strong>${g.termo}:</strong> <span style="color:var(--text-mid)">${g.significado}</span></div>`).join('');
+      pages.push(`<div class="ap-page"><div class="ap-body"><div class="ap-section"><div class="ap-section-label">Glossário</div><div class="ap-section-title">Palavras do texto</div>${gl}</div></div>${foot(`${d.titulo||tema} • Glossário`)}</div>`);
+    }
+
+    // ── GABARITO DO PROFESSOR (folha separada) ──
+    if(c.gabarito&&perguntas.length){
+      const gab=perguntas.map((q,i)=>`<div class="ap-activity" style="break-inside:avoid">
+        <div class="ap-activity-header">
+          <div class="ap-activity-num">${q.numero||i+1}</div>
+          <div class="ap-activity-type" style="color:${COR[q.nivel]||'var(--text-muted)'}">${q.nivel||''}</div>
+        </div>
+        <div class="ap-activity-q" style="font-weight:600">${q.pergunta||''}</div>
+        <div style="margin-top:6px;background:var(--green-pale,#eaf5ee);border-left:3px solid #2d7d4e;border-radius:6px;padding:8px 12px;font-size:13px;line-height:1.55;color:var(--text-mid)">
+          <strong style="color:#2d7d4e">Resposta esperada:</strong> ${q.resposta_esperada||'—'}
+        </div>
+      </div>`).join('');
+      const orient=d.orientacao_professor?`<div class="ap-orientacao"><div class="ap-orientacao-label">💡 Orientação ao professor</div><div class="ap-orientacao-text">${d.orientacao_professor}</div></div>`:'';
+      pages.push(`<div class="ap-page"><div class="ap-body"><div class="ap-section">
+        <div class="ap-section-label">Uso do professor</div>
+        <div class="ap-section-title">Gabarito — ${d.titulo||tema}</div>
+        ${bnccHtml}
+        <div style="margin-top:14px">${gab}</div>
+        ${orient}
+      </div></div>${foot('Gabarito • uso do professor')}</div>`);
     }
 
     docEl.innerHTML=pages.join('');
     const total=pages.length;
     document.getElementById('pagesCount').textContent=total;
     document.getElementById('phTitle').textContent=d.titulo||tema;
-    document.getElementById('phMeta').textContent=`${d.nivel||nivel} • ${d.disciplina||disciplina||tema} • ${date} • ${total} páginas`;
+    document.getElementById('phMeta').textContent=`${nivel} • ${disciplina} • ${date} • ${total} páginas`;
     document.getElementById('docWrap').classList.add('show');
     document.getElementById('prevHeader').classList.add('show');
     document.getElementById('pagesPill').classList.add('show');
@@ -606,34 +717,10 @@ REGRAS FINAIS: Múltipla escolha: opcoes=["A) texto","B) texto","C) texto","D) t
     document.getElementById('docWrap').scrollIntoView({behavior:'smooth',block:'start'});
   }
 
-  function renderCruzadinha(cruz){
-    if(!cruz||!cruz.palavras?.length) return '';
-    const size=Math.min(Math.max(cruz.grade_size||10,8),14);
-    const grid=Array.from({length:size},()=>Array(size).fill(null));
-    const nums={};
-    cruz.palavras.forEach((p,idx)=>{
-      const word=(p.palavra||'').toUpperCase().replace(/\s/g,'');
-      const r=Math.max((p.linha_inicio||1)-1,0),c=Math.max((p.coluna_inicio||1)-1,0);
-      const dir=(p.direcao||'H').toUpperCase();
-      const key=`${r},${c}`;
-      if(!nums[key]) nums[key]=idx+1;
-      for(let i=0;i<word.length;i++){
-        const row=dir==='H'?r:r+i,col=dir==='H'?c+i:c;
-        if(row<size&&col<size) grid[row][col]=word[i];
-      }
-    });
-    let cells='';
-    for(let r=0;r<size;r++) for(let c=0;c<size;c++){
-      const num=nums[`${r},${c}`];
-      cells+=grid[r][c]!==null?`<div class="cruzadinha-cell">${num?`<span class="cruzadinha-cell-num">${num}</span>`:''}</div>`:`<div class="cruzadinha-cell black"></div>`;
-    }
-    const horiz=cruz.palavras.filter(p=>(p.direcao||'H').toUpperCase()==='H');
-    const vert=cruz.palavras.filter(p=>(p.direcao||'H').toUpperCase()==='V');
-    const dica=(list,label,cor)=>list.length?`<div><div class="cruzadinha-dica-titulo" style="color:${cor}">${label}</div>${list.map(p=>{const n=cruz.palavras.indexOf(p)+1;return`<div class="cruzadinha-dica-item"><strong>${n}.</strong> ${p.dica||p.palavra}</div>`;}).join('')}</div>`:'';
-    return`<div class="cruzadinha-wrap"><div class="cruzadinha-grid" style="grid-template-columns:repeat(${size},26px);">${cells}</div><div class="cruzadinha-dicas">${dica(horiz,'→ Horizontal','#c8963e')}${dica(vert,'↓ Vertical','#2d6e6e')}</div></div>`;
-  }
-
   function printPDF(){ dpPrint(); }
+
+  // Início: só o passo 1 aparece; o botão Gerar só surge no fim do fluxo.
+  updateFlow();
 
   function delay(ms){return new Promise(r=>setTimeout(r,ms));}
 
