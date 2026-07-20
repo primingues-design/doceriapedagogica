@@ -900,6 +900,52 @@
         "eja"
       ],
       "colorir": false
+    },
+    "piramides_egito": {
+      "arquivo": "/assets/historia/piramides-egito.jpg",
+      "titulo": "Pirâmides de Gizé e a Esfinge (Egito Antigo)",
+      "descricao": "Imagem ilustrativa das três pirâmides de Gizé no deserto, com a Grande Esfinge em primeiro plano.",
+      "uso_pedagogico": "Estudar o Egito Antigo: as pirâmides como túmulos dos faraós, a engenharia da época, a vida às margens do rio Nilo e a organização social egípcia. Boa para despertar a curiosidade no início da aula.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "partenon": {
+      "arquivo": "/assets/historia/partenon.jpg",
+      "titulo": "Partenon, na Acrópole de Atenas (Grécia Antiga)",
+      "descricao": "Imagem ilustrativa do templo do Partenon, com suas colunas dóricas caneladas, construído na Acrópole de Atenas.",
+      "uso_pedagogico": "Estudar a Grécia Antiga: a democracia ateniense, a arquitetura com colunas e o legado grego. Serve também para observar elementos da construção (colunas, frontão, escadaria).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "coliseu": {
+      "arquivo": "/assets/historia/coliseu.jpg",
+      "titulo": "Coliseu de Roma (Roma Antiga)",
+      "descricao": "Imagem ilustrativa do Coliseu, anfiteatro romano com arcos em vários níveis, construído no século I.",
+      "uso_pedagogico": "Estudar Roma Antiga: o Império Romano, a engenharia dos arcos, os espetáculos públicos e o uso do entretenimento pelo poder. Bom para comparar com a arquitetura grega.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "machu_picchu": {
+      "arquivo": "/assets/historia/machu-picchu.jpg",
+      "titulo": "Machu Picchu (civilização inca, Peru)",
+      "descricao": "Imagem ilustrativa da cidade inca de Machu Picchu, com construções de pedra e terraços agrícolas nas montanhas dos Andes.",
+      "uso_pedagogico": "Estudar os povos originários da América antes da colonização europeia: os incas, a agricultura em terraços e a engenharia em pedra. Importante para mostrar que já existiam civilizações complexas nas Américas.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
     }
   }
 }
