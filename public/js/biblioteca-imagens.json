@@ -115,6 +115,73 @@
         "eja"
       ],
       "colorir": false
+    },
+    "tipos_relevo": {
+      "arquivo": "/assets/geografia/tipos-relevo.svg",
+      "titulo": "Tipos de relevo (montanha, planalto, planície, depressão)",
+      "descricao": "Perfil da paisagem mostrando os quatro tipos de relevo lado a lado, com o nível do mar como referência: montanha (alta e íngreme), planalto (alto e plano), planície (baixa e plana) e depressão (mais baixa que o entorno).",
+      "uso_pedagogico": "Ensinar e comparar as formas de relevo. Bom para identificar cada tipo e associar à sua característica.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "zonas_termicas": {
+      "arquivo": "/assets/geografia/zonas-termicas.svg",
+      "titulo": "Zonas térmicas da Terra",
+      "descricao": "Globo com as faixas de clima definidas pela latitude: zona tropical (entre os trópicos), duas zonas temperadas e duas zonas polares, com Equador, trópicos de Câncer e Capricórnio e os círculos polares marcados.",
+      "uso_pedagogico": "Relacionar latitude e clima. Explicar por que perto do Equador é quente e perto dos polos é frio; localizar o Brasil (majoritariamente na zona tropical).",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "escala_legenda": {
+      "arquivo": "/assets/geografia/escala-legenda.svg",
+      "titulo": "Escala e legenda de um mapa",
+      "descricao": "Exemplo de escala gráfica (barra em km), escala numérica (1:5.000.000, 1 cm = 50 km) e uma legenda com símbolos de capital, cidade, rio, rodovia e vegetação.",
+      "uso_pedagogico": "Alfabetização cartográfica: ensinar a ler escala e legenda para interpretar mapas. Bom para exercícios de conversão de distância.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "setores_economia": {
+      "arquivo": "/assets/geografia/setores-economia.svg",
+      "titulo": "Setores da economia (primário, secundário, terciário)",
+      "descricao": "Três cartões em sequência: setor primário (retira da natureza: agricultura, pecuária, pesca, extração), secundário (transforma a matéria-prima: indústrias, fábricas) e terciário (vende e presta serviços: comércio, escola, hospital, transporte).",
+      "uso_pedagogico": "Classificar atividades econômicas nos três setores e entender a cadeia da produção. Ótimo para exemplos do cotidiano e do EJA.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "piramide_etaria": {
+      "arquivo": "/assets/geografia/piramide-etaria.svg",
+      "titulo": "Pirâmide etária (como ler)",
+      "descricao": "Gráfico de pirâmide etária dividido por faixas de idade e por sexo (homens à esquerda, mulheres à direita), com dicas: base larga = muitos jovens; topo estreito = poucos idosos.",
+      "uso_pedagogico": "Interpretar a estrutura da população por idade e sexo. Comparar países jovens e envelhecidos e discutir o envelhecimento da população.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "fusos_horarios": {
+      "arquivo": "/assets/geografia/fusos-horarios.svg",
+      "titulo": "Fusos horários",
+      "descricao": "Faixas horárias com o Meridiano de Greenwich (0°) no centro, marcações de horas de -6h a +5h e a posição de Brasília (-3h). Explica que a cada 15° de longitude a hora muda 1 hora (Leste soma, Oeste diminui).",
+      "uso_pedagogico": "Entender por que a hora muda de lugar para lugar e calcular diferenças de horário simples. Localizar o Brasil em relação a Greenwich.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
     }
   },
   "ciencias": {
