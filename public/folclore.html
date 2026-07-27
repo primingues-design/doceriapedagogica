@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Especial Folclore Brasileiro — Doceria Pedagógica</title>
+<meta name="description" content="Atividades prontas sobre o Folclore Brasileiro, por tema: Saci, Curupira, Iara, Boto, personagens das lendas, danças e festas populares, brincadeiras e cantigas, parlendas e adivinhas, produção de texto, bingo, cruzadinha e caça-palavras. Doceria Pedagógica.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0f0e0c; --cream:#faf7f2; --warm:#f5f0e8;
+    --gold:#c8963e; --gold-pale:#fdf3e3; --coral:#d95f3b; --coral-pale:#fdeee9;
+    --text:#1a1917; --text-mid:#4a4845; --text-muted:#8a8785;
+    --border:rgba(15,14,12,0.1); --border-mid:rgba(15,14,12,0.18);
+    --cp-green:#009739; --cp-yellow:#ffcc29; --cp-blue:#002776; --cp-green-pale:#e6f5ec; --cp-yellow-pale:#fff6da;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Outfit',sans-serif;background:var(--warm);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+  .topbar{background:var(--ink);padding:14px 28px;display:flex;align-items:center;justify-content:space-between}
+  .topbar-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--cream);display:flex;align-items:center;gap:10px;text-decoration:none}
+  .topbar-logo-mark{width:28px;height:28px;background:var(--cp-green);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .topbar-nav{display:flex;align-items:center;gap:10px}
+  .topbar-link{font-size:13px;color:rgba(250,247,242,0.55);text-decoration:none;padding:6px 12px;border-radius:6px}
+  .topbar-link:hover{color:var(--cream);background:rgba(255,255,255,0.06)}
+  .topbar-cta{background:var(--cp-green);color:#fff;font-weight:600}
+  .topbar-cta:hover{background:#007a2e;color:#fff}
+
+  /* ───── HUB ───── */
+  .hub{max-width:1180px;margin:0 auto;padding:26px 22px 60px}
+  .hub-hero{background:linear-gradient(135deg,#013a17,#0b7a3a);border-radius:18px;padding:26px 30px;color:#fff;position:relative;overflow:hidden;margin-bottom:26px}
+  .hub-hero::after{content:'🎭';position:absolute;right:-8px;bottom:-20px;font-size:130px;opacity:.12}
+  .hub-hero .tag{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cp-yellow);margin-bottom:6px}
+  .hub-hero h1{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;line-height:1.15;margin-bottom:8px}
+  .hub-hero p{font-size:14px;color:rgba(255,255,255,.85);max-width:680px;line-height:1.5}
+  .hub-note{font-size:12.5px;color:var(--text-muted);margin:0 4px 18px;line-height:1.5}
+  .hub-note b{color:var(--text-mid)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px}
+  .card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column}
+  .card:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(0,0,0,.12)}
+  .card-thumb{height:260px;overflow:hidden;position:relative;background:#fff;border-bottom:1px solid var(--border)}
+  .card-thumb-inner{width:740px;transform:scale(.315);transform-origin:top left;pointer-events:none}
+  .card-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 70%,rgba(255,255,255,.0) 100%)}
+  .card-foot{padding:12px 14px;display:flex;align-items:center;gap:10px}
+  .card-ico{font-size:22px;flex-shrink:0}
+  .card-tt{font-size:14px;font-weight:700;color:var(--text);line-height:1.25}
+  .card-open{margin-left:auto;font-size:11px;font-weight:700;color:var(--cp-green);white-space:nowrap;flex-shrink:0}
+
+  /* ───── DETAIL ───── */
+  .detail{display:none;min-height:calc(100vh - 56px)}
+  .detail.show{display:block}
+  .detail-bar{position:sticky;top:0;z-index:30;background:var(--cream);border-bottom:1px solid var(--border);padding:12px 22px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .db-back{background:#fff;border:1.5px solid var(--border-mid);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--text-mid)}
+  .db-back:hover{background:var(--warm)}
+  .db-title{font-family:'Playfair Display',serif;font-weight:700;font-size:16px;margin-right:auto}
+  .db-pills{display:flex;gap:5px;align-items:center}
+  .db-pill{padding:5px 11px;border-radius:16px;border:1.5px solid var(--border-mid);background:#fff;font-size:12px;cursor:pointer;font-family:inherit;color:var(--text-muted);user-select:none}
+  .db-pill.active{border-color:var(--cp-green);background:var(--cp-green-pale);color:#0b7a3a;font-weight:600}
+  .db-btn{border:none;border-radius:8px;padding:9px 15px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px}
+  .db-edit{background:#fff;border:1.5px solid var(--border-mid);color:var(--text-mid)}
+  .db-edit:hover{background:var(--warm)}
+  .db-edit.active{background:var(--cp-green);color:#fff;border-color:var(--cp-green)}
+  .db-ia{background:var(--cp-blue);color:#fff}
+  .db-ia:hover{background:#021d57}
+  .db-ia .spin{width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite;display:none}
+  .db-ia.loading .spin{display:inline-block}.db-ia.loading .t{display:none}
+  @keyframes rot{to{transform:rotate(360deg)}}
+  .db-print{background:var(--ink);color:var(--cream)}
+  .db-print:hover{background:#2a2926}
+  .db-cost{font-size:11px;color:var(--text-muted)}
+  .detail-scroll{padding:24px;overflow-y:auto}
+  .errbar{display:none;max-width:780px;margin:0 auto 14px;background:var(--coral-pale);border:1px solid rgba(217,95,59,.3);border-radius:8px;padding:11px 14px;font-size:12.5px;color:var(--coral)}
+  .errbar.show{display:block}
+
+  /* ───── DOCUMENTO ───── */
+  #docArea{max-width:780px;margin:0 auto}
+  #docArea.editing{outline:2px dashed var(--cp-green);outline-offset:10px;border-radius:6px}
+  .cp-sheet{background:#fff;border-radius:12px;box-shadow:0 6px 32px rgba(0,0,0,.08);margin-bottom:16px;overflow:hidden}
+  .cp-sheet-body{padding:30px 40px}
+  .cp-stripe{height:8px;display:flex}.cp-stripe span{flex:1}
+  .cp-stripe span:nth-child(1){background:var(--cp-green)}.cp-stripe span:nth-child(2){background:var(--cp-yellow)}.cp-stripe span:nth-child(3){background:var(--cp-blue)}
+  .cp-dochead{border-bottom:1px solid var(--border)}
+  .cp-dh-body{padding:18px 40px 14px}
+  .cp-dh-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cp-green);margin-bottom:6px}
+  .cp-dh-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--ink);line-height:1.15}
+  .cp-dh-sub{font-size:13px;color:var(--text-muted);margin-top:4px}
+  .cp-namebar{border:1.5px solid #ccc;border-radius:8px;margin-top:14px;padding:9px 14px;display:flex;flex-wrap:wrap;gap:20px;font-size:13px;color:#000}
+
+  .cp-section-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cp-green);margin:4px 0 8px;display:flex;align-items:center;gap:10px}
+  .cp-section-label::after{content:'';flex:1;height:1px;background:var(--cp-green-pale)}
+  .cp-h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:10px}
+  .cp-text{font-size:14px;line-height:1.85;color:#000;margin-bottom:10px}
+
+  .cp-img{width:100%;display:block;border-radius:12px;object-fit:cover;border:1px solid var(--border);background:#eef6fb}
+  .cp-img.hero{height:215px}.cp-img.band{height:150px}.cp-img.scene{height:270px}
+  .cp-figcap{font-size:11px;color:var(--text-muted);text-align:center;margin-top:6px;font-style:italic}
+  .cp-imgrow{display:flex;gap:16px;align-items:flex-start}.cp-imgrow .txt{flex:1}.cp-imgrow .pic{width:235px;flex-shrink:0}
+
+  .cp-card{background:var(--cp-green-pale);border-left:4px solid var(--cp-green);border-radius:0 8px 8px 0;padding:13px 16px;margin:14px 0}
+  .cp-card.yellow{background:var(--cp-yellow-pale);border-left-color:var(--cp-yellow)}
+  .cp-card-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0b7a3a;margin-bottom:4px}
+  .cp-card.yellow .cp-card-label{color:#b58900}
+  .cp-card-text{font-size:13px;line-height:1.6;color:var(--text-mid)}
+
+  .cp-qblock{break-inside:avoid;page-break-inside:avoid;margin-bottom:10px}
+  .cp-q{font-size:14px;font-weight:600;line-height:1.55;color:#000;margin:12px 0 6px;display:flex;gap:8px}
+  .cp-q .qn{color:var(--cp-green);font-weight:800;flex-shrink:0}
+  .cp-ans-lines{display:flex;flex-direction:column;margin:6px 0 4px}
+  .cp-ans-line{border-bottom:1.5px dotted #666;min-height:30px}
+  .cp-write-box{border:1.5px solid var(--border-mid);border-radius:10px;margin-top:10px;background:linear-gradient(transparent 29px,#e6e6e6 29px,transparent 30px);background-size:100% 31px}
+  .cp-mc{margin:4px 0 6px}
+  .cp-mc-opt{display:flex;align-items:flex-start;gap:9px;font-size:14px;color:#000;padding:3px 0}
+  .cp-mc-bubble{width:23px;height:23px;border-radius:50%;border:1.5px solid #555;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#333;flex-shrink:0}
+  .cp-vf{display:flex;align-items:center;gap:12px;font-size:14px;color:#000;padding:7px 0;border-bottom:1px dotted #ccc}
+  .cp-vf-boxes{display:flex;gap:5px;flex-shrink:0}
+  .cp-vf-box{width:25px;height:25px;border:1.5px solid #555;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#555}
+
+  /* campeões */
+  .cp-champs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+  .cp-champ{border:1.5px solid var(--border-mid);border-radius:9px;padding:6px 9px;text-align:center;min-width:70px;background:#fff}
+  .cp-champ.bra{border-color:var(--cp-yellow);background:#fffbe9}
+  .cp-champ-year{font-size:11px;font-weight:700;color:var(--text-muted)}
+  .cp-champ-country{font-size:12px;font-weight:600;color:var(--text);margin-top:2px}
+  .cp-titles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:4px}
+  .cp-title-row{display:flex;align-items:center;justify-content:space-between;background:var(--warm);border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:13px}
+  .cp-title-row b{color:var(--cp-green)}
+
+  /* mapa */
+  .cp-map-wrap{border:1.5px solid var(--border);border-radius:12px;overflow:hidden;background:#eaf3fb;margin:6px 0}
+  .cp-map-wrap svg{display:block;width:100%;height:auto}
+
+  /* relacione */
+  .cp-relacione{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:8px;align-items:start;break-inside:avoid;page-break-inside:avoid}
+  .cp-rel-col{display:flex;flex-direction:column;gap:12px}
+  .cp-rel-item{display:flex;align-items:center;gap:10px;border:1.5px solid var(--border-mid);border-radius:10px;padding:8px 10px;background:#fff;min-height:54px}
+  .cp-rel-item .num{width:24px;height:24px;border-radius:50%;background:var(--cp-green);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cp-rel-item .let{width:24px;height:24px;border-radius:6px;border:1.5px solid var(--cp-blue);color:var(--cp-blue);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cp-rel-flag{width:78px;height:52px;border:1px solid rgba(0,0,0,.15);border-radius:5px;overflow:hidden;flex-shrink:0}.cp-rel-flag svg{width:100%;height:100%;display:block}
+  .cp-rel-name{font-size:15px;font-weight:600;color:#000}
+  .cp-rel-dot{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--text-muted);margin-left:auto;flex-shrink:0}
+  .cp-rel-frame{width:64px;height:78px;flex-shrink:0;border:1.5px dashed var(--border-mid);border-radius:8px;background:repeating-linear-gradient(45deg,#f4f4f4,#f4f4f4 7px,#fafafa 7px,#fafafa 14px);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#b8b8b8;font-size:9px;text-align:center;gap:2px}
+
+  /* matemática */
+  .cp-scoreboard{display:flex;align-items:center;justify-content:center;gap:14px;background:linear-gradient(135deg,var(--cp-green),#0b7a3a);color:#fff;border-radius:12px;padding:12px 18px;margin:6px 0 14px;font-family:'Playfair Display',serif}
+  .cp-sb-team{font-size:14px;font-weight:700}.cp-sb-score{font-size:26px;font-weight:900;background:rgba(255,255,255,.18);border-radius:8px;padding:2px 14px}
+  .cp-table{width:100%;border-collapse:collapse;margin:8px 0 12px;font-size:13px}
+  .cp-table th,.cp-table td{border:1px solid var(--border-mid);padding:7px 10px;text-align:center}
+  .cp-table th{background:var(--cp-green-pale);color:#0b7a3a;font-weight:700}
+  .cp-chart{border:1.5px solid var(--border);border-radius:12px;padding:14px;background:#fcfcfa;margin:8px 0}
+  .cp-chart svg{display:block;width:100%;height:auto;max-width:540px;margin:0 auto}
+  .cp-activity{margin-bottom:14px;padding:14px 16px;border-radius:10px;border:1.5px solid var(--border);border-left:5px solid var(--cp-green);background:#fff;break-inside:avoid;page-break-inside:avoid}
+  .cp-activity-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .cp-activity-num{width:25px;height:25px;border-radius:50%;background:var(--cp-yellow);color:#7a5a00;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cp-activity-q{font-size:14px;font-weight:500;line-height:1.55;color:#000}
+
+  /* cultura icons */
+  .cp-culture-icons{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin:10px 0}
+  .cp-culture-icons figure{margin:0;text-align:center}
+
+  /* frases */
+  .cp-sent-row{display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--border);padding:14px 0;break-inside:avoid;page-break-inside:avoid}
+  .cp-sent-row:last-child{border-bottom:none}
+  .cp-sent-ico{width:120px;height:88px;flex-shrink:0;border:1.5px solid var(--border-mid);border-radius:10px;overflow:hidden}
+  .cp-sent-ico img{width:100%;height:100%;object-fit:cover}
+  .cp-sent-lines{flex:1;display:flex;flex-direction:column;gap:16px}
+
+  /* bingo */
+  .cp-bingo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:8px 0}
+  .cp-bingo-card{border:2px solid var(--cp-green);border-radius:12px;padding:8px;background:var(--cp-green-pale);break-inside:avoid;page-break-inside:avoid}
+  .cp-bingo-card-tt{font-size:10px;font-weight:700;text-align:center;color:#0b7a3a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+  .cp-bingo-cells{display:grid;gap:5px}
+  .cp-bingo-cell{background:#fff;border:1px solid var(--border-mid);border-radius:7px;padding:4px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:64px}
+  .cp-bingo-cell img{width:100%;height:38px;object-fit:cover;border-radius:4px}
+  .cp-bingo-cell .fl{width:46px;height:30px;border:1px solid rgba(0,0,0,.15);border-radius:3px;overflow:hidden}.cp-bingo-cell .fl svg{width:100%;height:100%;display:block}
+  .cp-bingo-word{font-size:9.5px;font-weight:700;color:#000;line-height:1.1}
+  .cp-call{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .cp-chip{border:1.5px solid var(--cp-blue);color:var(--cp-blue);border-radius:20px;padding:4px 11px;font-size:12px;font-weight:600}
+
+  /* caça / cruzadinha */
+  .cp-ws-wrap,.cp-cw-wrap{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;margin-top:8px;break-inside:avoid;page-break-inside:avoid}
+  .cp-ws-grid{display:inline-grid;gap:2px;background:#fff;padding:4px;border:1.5px solid var(--border-mid);border-radius:8px}
+  .cp-ws-cell{display:flex;align-items:center;justify-content:center;font-weight:700;color:#000;border:1px solid rgba(0,0,0,.07);border-radius:2px}
+  .cp-bank-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cp-green);margin-bottom:8px}
+  .cp-bank{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px}
+  .cp-bank div{font-size:13px;font-weight:600;padding:3px 0;border-bottom:1px solid var(--border)}
+  .cp-cw-grid{display:grid;gap:2px}
+  .cp-cw-cell{background:#fff;border:1.5px solid #444;border-radius:3px;position:relative}
+  .cp-cw-cell.blank{background:transparent;border:none}
+  .cp-cw-num{position:absolute;top:0;left:1px;font-size:8px;font-weight:700;color:var(--cp-green);line-height:1}
+  .cp-cw-clues{flex:1;min-width:190px}
+  .cp-cw-ct{font-size:11px;font-weight:700;color:var(--cp-blue);margin:6px 0 5px;text-transform:uppercase;letter-spacing:.05em}
+  .cp-cw-cl{font-size:12.5px;color:#000;margin-bottom:5px;line-height:1.4;display:flex;gap:6px}.cp-cw-cl b{color:var(--cp-green);flex-shrink:0}
+
+  .cp-draw-box{border:2px dashed var(--cp-green);border-radius:14px;height:340px;margin:12px 0;display:flex;align-items:flex-end;justify-content:center;color:#aaccb5;font-size:13px;padding:10px;background:var(--cp-green-pale)}
+
+  .cp-footer{background:var(--warm);border-top:1px solid var(--border);padding:11px 40px;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--text-muted)}
+  .cp-footer-logo{font-family:'Playfair Display',serif;font-weight:700;color:var(--cp-green)}
+
+  @media screen and (max-width:760px){
+    .cp-imgrow{flex-direction:column}.cp-imgrow .pic{width:100%}
+    .detail-scroll{padding:14px}
+    .cp-bingo-grid{grid-template-columns:1fr}
+  }
+
+  /* ═══ IMPRESSÃO — modelo alfabetização: fluxo contínuo, só blocos atômicos não racham ═══ */
+  @media print{
+    @page{size:A4 portrait;margin:11mm 13mm}
+    html,body{background:#fff!important}
+    .topbar,.hub,.detail-bar,.errbar{display:none!important}
+    .detail{display:block!important}
+    .detail-scroll{padding:0!important;overflow:visible!important}
+    #docArea{max-width:none!important;margin:0!important}
+    #docArea.editing{outline:none!important}
+    .cp-sheet{border-radius:0!important;box-shadow:none!important;margin:0!important;overflow:visible!important;break-inside:auto!important;page-break-inside:auto!important}
+    .cp-sheet-body{padding:6px 0 10px!important}
+    .cp-dh-body{padding:8px 0 10px!important}.cp-namebar{margin-top:10px!important}
+    .cp-footer{padding:8px 0!important}
+    .cp-qblock,.cp-activity,.cp-rel-item,.cp-relacione,.cp-vf,.cp-mc,.cp-sent-row,
+    .cp-champ,.cp-map-wrap,.cp-write-box,.cp-draw-box,.cp-imgrow,.cp-scoreboard,
+    .cp-table,.cp-chart,figure,img,.cp-bingo-card,.cp-cw-wrap,.cp-ws-wrap,.cp-card{
+      break-inside:avoid!important;page-break-inside:avoid!important}
+    .cp-section-label,.cp-h2,.cp-dh-title{break-after:avoid!important;page-break-after:avoid!important}
+    *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="/"><div class="topbar-logo-mark">🎭</div>DoceriaPedagógica</a>
+  <div class="topbar-nav">
+    <a class="topbar-link" href="/conta.html">← Painel</a>
+    <a class="topbar-link topbar-cta" href="/conta.html" id="loginLink">Entrar / Criar conta</a>
+  </div>
+</div>
+
+<!-- ───── HUB ───── -->
+<div class="hub" id="hubView">
+  <div class="hub-hero">
+    <div class="tag">🎭 Especial Sazonal</div>
+    <h1>Folclore Brasileiro — atividades prontas por tema</h1>
+    <p>Saci, Curupira, Iara, lendas, danças e brincadeiras. Cada tema é uma atividade pronta em PDF. Clique para abrir, imprimir ou personalizar com a IA.</p>
+  </div>
+  <div class="hub-note">📄 <b>Abrir e imprimir o exemplo pronto é grátis</b> (só precisa entrar na conta). ✨ <b>Personalizar com a IA</b> (mudar o nível de dificuldade) custa <b>1 crédito</b> por atividade. Você também pode <b>editar o texto</b> antes de imprimir.</div>
+  <div class="grid" id="themeGrid"></div>
+</div>
+
+<!-- ───── DETALHE ───── -->
+<div class="detail" id="detailView">
+  <div class="detail-bar">
+    <button class="db-back" onclick="closeTheme()">← Temas</button>
+    <span class="db-title" id="dbTitle"></span>
+    <span class="db-pills" id="dbPills"></span>
+    <button class="db-btn db-edit" id="btnEdit" onclick="toggleEdit()">✏️ Editar</button>
+    <button class="db-btn db-ia" id="btnIA" onclick="personalize()"><span class="spin"></span><span class="t">✨ Personalizar</span></button>
+    <button class="db-btn db-print" onclick="printDoc()">🖨️ Imprimir / PDF</button>
+  </div>
+  <div class="detail-scroll">
+    <div class="errbar" id="errBar"></div>
+    <div id="docArea"></div>
+  </div>
+</div>
+
+<script>
+const DATE=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+const SUPA_KEY='sb-atkwvwhwbkerezdmipxw-auth-token';
+function isLoggedIn(){try{const s=JSON.parse(localStorage.getItem(SUPA_KEY));return s&&(s.expires_at||0)>Date.now()/1000&&!!s.access_token;}catch{return false;}}
+
+/* ───── IMAGENS (ilustrações do folclore, geradas por IA e curadas) ───── */
+const IMG={
+  saci:'/folclore/saci.png', curupira:'/folclore/curupira.png', iara:'/folclore/iara.png', boto:'/folclore/boto.png',
+  cuca:'/folclore/cuca.png', boitata:'/folclore/boitata.png', roda:'/folclore/brincadeira-roda.png',
+  festa:'/folclore/festa-junina.png', capoeira:'/folclore/capoeira.png', floresta:'/folclore/floresta-noite.png',
+  bumba:'/folclore/bumba-boi.png'
+};
+
+/* ───── DADOS DO FOLCLORE ───── */
+const PERSONAGENS=[
+  ['Saci-Pererê',"Menino de uma perna só, com gorro vermelho e cachimbo, que adora fazer travessuras."],
+  ['Curupira',"Protetor das florestas; tem os pés virados para trás para enganar os caçadores."],
+  ['Iara',"A mãe-d'água: uma sereia que encanta quem ouve o seu canto perto do rio."],
+  ['Boto cor-de-rosa',"Golfinho dos rios da Amazônia que, nas lendas, viraria um moço bonito nas festas."],
+  ['Cuca',"Personagem em forma de jacaré das histórias para fazer as crianças dormirem."],
+  ['Boitatá',"Cobra de fogo que protege os campos e as matas de quem ateia fogo."],
+  ['Mula sem cabeça',"Personagem lendário que galopa soltando fogo no lugar da cabeça."]
+];
+const DANCAS=[
+  ['Frevo',"Dança agitada do Carnaval de Pernambuco, feita com sombrinhas coloridas."],
+  ['Bumba meu boi',"Festa popular com um boi enfeitado; muito forte no Maranhão e no Norte."],
+  ['Quadrilha',"Dança em pares típica das festas juninas, com o “casamento caipira”."],
+  ['Capoeira',"Luta-dança de origem africana, ao som do berimbau; nasceu na Bahia."],
+  ['Carimbó',"Dança de roda do Pará, dançada ao som de tambores."],
+  ['Maracatu',"Cortejo com tambores e personagens, tradição de Pernambuco."]
+];
+const WS_POOL=['SACI','CURUPIRA','IARA','BOTO','CUCA','BOITATA','LENDA','FOLCLORE','CANTIGA','PARLENDA','ADIVINHA','QUADRILHA','CAPOEIRA','FOGUEIRA','FREVO','MULA'];
+const CW_POOL=[['SACI','Menino de uma perna só e gorro vermelho'],['IARA',"A sereia mãe-d'água dos rios"],['CURUPIRA','Protetor da floresta com os pés virados'],['BOTO','Golfinho cor-de-rosa da Amazônia'],['CUCA','Personagem com cara de jacaré das histórias de ninar'],['BOITATA','Cobra de fogo que protege os campos'],['FREVO','Dança do carnaval de Pernambuco'],['QUADRILHA','Dança das festas juninas'],['CAPOEIRA','Luta-dança de origem africana'],['FOGUEIRA','Acesa nas noites de festa junina'],['LENDA','História popular contada de geração em geração'],['FOLCLORE','Conjunto de lendas, danças e costumes de um povo'],['CANTIGA','Musiquinha cantada nas brincadeiras de roda'],['PARLENDA','Versinho com rima usado para brincar']];
+
+/* ───── HELPERS ───── */
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function lines(n){let h='';for(let i=0;i<n;i++)h+='<div class="cp-ans-line"></div>';return `<div class="cp-ans-lines">${h}</div>`;}
+function diss(num,text,n){return `<div class="cp-qblock"><div class="cp-q"><span class="qn">${num}</span><span>${text}</span></div>${lines(n||3)}</div>`;}
+function mcQ(num,p,ops){return `<div class="cp-qblock"><div class="cp-q"><span class="qn">${num}</span><span>${p}</span></div><div class="cp-mc">${ops.map((o,i)=>`<div class="cp-mc-opt"><span class="cp-mc-bubble">${String.fromCharCode(65+i)}</span><span>${o}</span></div>`).join('')}</div></div>`;}
+function vfList(items){return `<div class="cp-qblock">${items.map(t=>`<div class="cp-vf"><span class="cp-vf-boxes"><span class="cp-vf-box">V</span><span class="cp-vf-box">F</span></span><span>${t}</span></div>`).join('')}</div>`;}
+function img(src,cls,cap){return `<figure style="margin:0"><img class="cp-img ${cls||''}" src="${src}" alt="">${cap?`<figcaption class="cp-figcap">${cap}</figcaption>`:''}</figure>`;}
+function head(theme,title,sub){return `<div class="cp-stripe"><span></span><span></span><span></span></div><div class="cp-dochead"><div class="cp-dh-body"><div class="cp-dh-label">DoceriaPedagógica · ${theme.label}</div><div class="cp-dh-title">${title}</div>${sub?`<div class="cp-dh-sub">${sub}</div>`:''}<div class="cp-namebar"><span>Nome: ______________________________</span><span>Turma: ________</span><span>Data: ___/___/___</span></div></div></div>`;}
+function foot(label){return `<div class="cp-footer"><span class="cp-footer-logo">DoceriaPedagógica 🎭</span><span>${label}</span><span>${DATE}</span></div>`;}
+function sheet(inner,label){return `<div class="cp-sheet">${inner}${foot(label)}</div>`;}
+
+/* relacione */
+function relFlags(){const nomes=['Brasil',...shuffle(Object.keys(FLAGS).filter(n=>n!=='Brasil')).slice(0,5)];const esq=shuffle(nomes),dir=shuffle(nomes);
+  const L=esq.map((n,i)=>`<div class="cp-rel-item"><span class="num">${i+1}</span><div class="cp-rel-flag">${FLAGS[n]}</div><span class="cp-rel-dot"></span></div>`).join('');
+  const R=dir.map((n,i)=>`<div class="cp-rel-item"><span class="cp-rel-dot" style="margin-left:0;margin-right:auto;order:-1"></span><span class="cp-rel-name">${n}</span><span class="let">${String.fromCharCode(65+i)}</span></div>`).join('');
+  return `<div class="cp-relacione"><div class="cp-rel-col">${L}</div><div class="cp-rel-col">${R}</div></div>`;}
+function relPlayers(){const sel=shuffle(CRAQUES),dir=shuffle(sel);
+  const L=sel.map((c,i)=>`<div class="cp-rel-item"><span class="num">${i+1}</span><div class="cp-rel-frame">📷<span>cole a<br>foto</span></div><span style="font-size:11px;color:var(--text-muted)">${c[1]}</span><span class="cp-rel-dot"></span></div>`).join('');
+  const R=dir.map((c,i)=>`<div class="cp-rel-item"><span class="cp-rel-dot" style="margin-left:0;margin-right:auto;order:-1"></span><span class="cp-rel-name">${c[0]}</span><span class="let">${String.fromCharCode(65+i)}</span></div>`).join('');
+  return `<div class="cp-relacione"><div class="cp-rel-col">${L}</div><div class="cp-rel-col">${R}</div></div>`;}
+function relCultura(pares){const dir=shuffle(pares);
+  const L=pares.map((p,i)=>`<div class="cp-rel-item"><span class="num">${i+1}</span><span class="cp-rel-name">${p[0]}</span><span class="cp-rel-dot"></span></div>`).join('');
+  const R=dir.map((p,i)=>`<div class="cp-rel-item"><span class="cp-rel-dot" style="margin-left:0;margin-right:auto;order:-1"></span><span class="cp-rel-name" style="font-weight:500">${p[1]}</span><span class="let">${String.fromCharCode(65+i)}</span></div>`).join('');
+  return `<div class="cp-relacione"><div class="cp-rel-col">${L}</div><div class="cp-rel-col">${R}</div></div>`;}
+
+/* mapa-múndi (contorno p/ colorir) */
+function mapaSVG(){return `<svg viewBox="0 0 820 440" role="img" aria-label="Mapa-múndi para colorir"><rect width="820" height="440" fill="#eaf3fb"/><g fill="#fff" stroke="#0b7a3a" stroke-width="2.5" stroke-linejoin="round"><path d="M60 70 Q120 46 190 58 Q236 66 250 92 Q258 110 236 120 L250 132 Q246 150 224 150 Q214 166 196 156 Q176 176 150 160 Q116 168 92 144 Q66 120 62 92 Q56 78 60 70 Z"/><path d="M210 196 Q244 186 256 212 Q266 240 250 280 Q238 320 214 344 Q198 360 188 342 Q176 306 184 262 Q188 224 196 206 Q200 198 210 196 Z"/><path d="M392 84 Q424 70 456 80 Q474 92 466 110 Q478 120 462 132 Q446 140 430 130 Q412 138 400 124 Q386 110 392 96 Z"/><path d="M400 152 Q438 142 472 156 Q486 188 468 232 Q452 272 432 296 Q418 312 408 294 Q394 262 392 224 Q392 178 400 152 Z"/><path d="M474 80 Q560 56 668 72 Q740 84 748 108 Q752 128 716 134 Q690 140 678 152 Q660 168 632 156 Q592 168 552 152 Q510 144 494 122 Q476 104 474 88 Z"/><path d="M648 300 Q694 286 736 304 Q752 322 726 338 Q694 350 660 344 Q640 332 644 314 Z"/><path d="M120 396 Q400 380 700 396 Q706 414 120 414 Z"/></g><g font-family="Outfit,sans-serif" font-weight="700" text-anchor="middle" fill="#0b7a3a"><text x="150" y="112" font-size="13">América</text><text x="150" y="128" font-size="13">do Norte</text><text x="220" y="270" font-size="13">América</text><text x="220" y="286" font-size="13">do Sul</text><text x="430" y="108" font-size="13">Europa</text><text x="432" y="228" font-size="14">África</text><text x="610" y="118" font-size="15">Ásia</text><text x="692" y="322" font-size="12">Oceania</text><text x="410" y="410" font-size="11" fill="#5a8a9a">Antártida</text></g></svg>`;}
+
+/* gráfico de barras (SVG, números corretos) */
+function barChart(data){const W=540,H=290,pb=46,bw=64,max=Math.max(...data.map(d=>d[1]));const n=data.length;const gap=(W-pb-20-bw*n)/(n);
+  let bars='';data.forEach((d,i)=>{const h=(d[1]/max)*(H-pb-30);const x=pb+gap/2+i*(bw+gap);const y=H-pb-h;bars+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" rx="4" fill="${d[2]}"/><text x="${x+bw/2}" y="${y-6}" font-size="16" font-weight="800" text-anchor="middle" fill="#222">${d[1]}</text><text x="${x+bw/2}" y="${H-pb+18}" font-size="12" font-weight="600" text-anchor="middle" fill="#444">${d[0]}</text>`;});
+  let yl='';for(let v=0;v<=max;v+=Math.max(1,Math.ceil(max/5))){const y=H-pb-(v/max)*(H-pb-30);yl+=`<line x1="${pb}" y1="${y}" x2="${W-10}" y2="${y}" stroke="#e3e3e0" stroke-width="1"/><text x="${pb-8}" y="${y+4}" font-size="11" text-anchor="end" fill="#999">${v}</text>`;}
+  return `<div class="cp-chart"><svg viewBox="0 0 ${W} ${H}">${yl}<line x1="${pb}" y1="20" x2="${pb}" y2="${H-pb}" stroke="#999" stroke-width="1.5"/><line x1="${pb}" y1="${H-pb}" x2="${W-10}" y2="${H-pb}" stroke="#999" stroke-width="1.5"/>${bars}</svg></div>`;}
+
+/* caça-palavras */
+function norm(s){return (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().replace(/[^A-Z]/g,'');}
+function placeWords(words,size,diff,force){const dirs={easy:[[0,1],[1,0]],medium:[[0,1],[1,0],[1,1],[1,-1]],hard:[[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]]}[diff]||[[0,1],[1,0]];const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ';const g=Array.from({length:size},()=>Array(size).fill(null));let placed=0;
+  for(const w of words){let done=false;for(let t=0;t<600&&!done;t++){const [dr,dc]=dirs[Math.floor(Math.random()*dirs.length)];const mnR=dr<0?w.length-1:0,mxR=dr>0?size-w.length:size-1,mnC=dc<0?w.length-1:0,mxC=dc>0?size-w.length:size-1;if(mxR<mnR||mxC<mnC)continue;const r=mnR+Math.floor(Math.random()*(mxR-mnR+1)),c=mnC+Math.floor(Math.random()*(mxC-mnC+1));let ok=true;for(let i=0;i<w.length;i++){const nr=r+dr*i,nc=c+dc*i;if(nr<0||nr>=size||nc<0||nc>=size||(g[nr][nc]!==null&&g[nr][nc]!==w[i])){ok=false;break;}}if(ok){for(let i=0;i<w.length;i++)g[r+dr*i][c+dc*i]=w[i];placed++;done=true;}}}
+  if(!force&&placed<words.length)return null;
+  for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(g[r][c]===null)g[r][c]=A[Math.floor(Math.random()*26)];return g;}
+// garante que TODAS as palavras entrem (cresce a grade se preciso)
+function buildWS(words,dir){let size=wsSize(words);for(let a=0;a<10;a++){const g=placeWords(words,size,dir);if(g)return{g,size};size++;}for(let a=0;a<6;a++){const g=placeWords(words,size,'easy');if(g)return{g,size};size++;}return{g:placeWords(words,size,'easy',true),size};}
+function wsSize(words){const longest=Math.max(...words.map(w=>w.length));const sum=words.reduce((a,w)=>a+w.length,0);let s=Math.max(longest+1,Math.ceil(Math.sqrt(sum*1.9)));return Math.min(Math.max(s,12),15);}
+function wsHtml(g,size){const cell=Math.max(24,Math.min(36,Math.floor(700/size)));const f=Math.round(cell*0.55);let h='';for(let r=0;r<size;r++)for(let c=0;c<size;c++)h+=`<div class="cp-ws-cell" style="width:${cell}px;height:${cell}px;font-size:${f}px">${g[r][c]}</div>`;return `<div class="cp-ws-grid" style="grid-template-columns:repeat(${size},${cell}px)">${h}</div>`;}
+
+/* cruzadinha */
+function buildCrossword(words){const sorted=[...words].sort((a,b)=>b.t.length-a.t.length).slice(0,16);const S=21;const g=Array.from({length:S},()=>Array(S).fill(null));const pl=[];let num=1;const f=sorted[0];if(!f)return{gd:[[null]],pl:[],mnR:0,mnC:0,cols:1};
+  const sc=Math.floor((S-f.t.length)/2),sr=Math.floor(S/2);for(let i=0;i<f.t.length;i++)g[sr][sc+i]=f.t[i];pl.push({w:f.t,d:f.d,r:sr,c:sc,dir:'H',num:num++});
+  for(let wi=1;wi<sorted.length;wi++){const{t:w,d}=sorted[wi];let best=null,bs=-1;for(const p of pl)for(let pi=0;pi<p.w.length;pi++)for(let wj=0;wj<w.length;wj++){if(p.w[pi]!==w[wj])continue;const nd=p.dir==='H'?'V':'H';let r,c;if(nd==='V'){r=p.r-wj;c=p.c+pi;}else{r=p.r+pi;c=p.c-wj;}if(r<1||c<1||r+(nd==='V'?w.length:1)>=S-1||c+(nd==='H'?w.length:1)>=S-1)continue;let fit=true,cr=0;for(let li=0;li<w.length;li++){const lr=nd==='V'?r+li:r,lc=nd==='H'?c+li:c,ex=g[lr][lc];if(ex!==null&&ex!==w[li]){fit=false;break;}if(ex===w[li])cr++;if(ex===null){if(nd==='H'){if(li>0&&(g[lr-1]?.[lc]!==null||g[lr+1]?.[lc]!==null)){fit=false;break;}}else{if(li>0&&(g[lr]?.[lc-1]!==null||g[lr]?.[lc+1]!==null)){fit=false;break;}}}}if(fit){if(nd==='H'&&(g[r][c-1]!==null||g[r][c+w.length]!==null))fit=false;else if(nd==='V'&&(g[r-1]?.[c]!=null||g[r+w.length]?.[c]!=null))fit=false;}if(fit&&cr>bs){bs=cr;best={w,d,r,c,dir:nd,num};}}if(best){for(let li=0;li<best.w.length;li++)g[best.dir==='V'?best.r+li:best.r][best.dir==='H'?best.c+li:best.c]=best.w[li];pl.push(best);num++;}}
+  let mnR=S,mxR=0,mnC=S,mxC=0;for(let r=0;r<S;r++)for(let c=0;c<S;c++)if(g[r][c]){mnR=Math.min(mnR,r);mxR=Math.max(mxR,r);mnC=Math.min(mnC,c);mxC=Math.max(mxC,c);}mnR=Math.max(0,mnR-1);mxR=Math.min(S-1,mxR+1);mnC=Math.max(0,mnC-1);mxC=Math.min(S-1,mxC+1);const cols=mxC-mnC+1;const gd=[];for(let r=mnR;r<=mxR;r++){const row=[];for(let c=mnC;c<=mxC;c++)row.push(g[r][c]);gd.push(row);}return{gd,pl,mnR,mnC,cols};}
+function cwHtml(words){const cw=buildCrossword(words);const cell=Math.max(20,Math.min(32,Math.floor(470/cw.cols)));const nm={};cw.pl.forEach(p=>{nm[`${p.r-cw.mnR},${p.c-cw.mnC}`]=p.num;});let cells='';for(let r=0;r<cw.gd.length;r++)for(let c=0;c<cw.gd[r].length;c++){const v=cw.gd[r][c],n=nm[`${r},${c}`];cells+= v===null?'<div class="cp-cw-cell blank"></div>':`<div class="cp-cw-cell">${n?`<span class="cp-cw-num">${n}</span>`:''}</div>`;}
+  const grid=`<div class="cp-cw-grid" style="grid-template-columns:repeat(${cw.cols},${cell}px);grid-template-rows:repeat(${cw.gd.length},${cell}px)">${cells}</div>`;
+  const H=cw.pl.filter(p=>p.dir==='H').sort((a,b)=>a.num-b.num),V=cw.pl.filter(p=>p.dir==='V').sort((a,b)=>a.num-b.num);
+  const cl=(l,t)=>l.length?`<div class="cp-cw-ct">${t}</div>${l.map(p=>`<div class="cp-cw-cl"><b>${p.num}.</b><span>${p.d}</span></div>`).join('')}`:'';
+  return `<div class="cp-cw-wrap"><div>${grid}</div><div class="cp-cw-clues">${cl(H,'Horizontais →')}${cl(V,'Verticais ↓')}</div></div>`;}
+
+/* bingo — pool com ilustrações do folclore + emojis; cartelas variadas */
+const BINGO_POOL=[['SACI',IMG.saci,'img'],['CURUPIRA',IMG.curupira,'img'],['IARA',IMG.iara,'img'],['BOTO',IMG.boto,'img'],['CUCA',IMG.cuca,'img'],['BOITATÁ',IMG.boitata,'img'],['CAPOEIRA',IMG.capoeira,'img'],['BUMBA MEU BOI',IMG.bumba,'img'],['FOGUEIRA','🔥','e'],['LUA','🌙','e'],['VIOLA','🪕','e'],['PIÃO','🌀','e'],['PIPA','🪁','e'],['FLORESTA','🌳','e'],['TAMBOR','🥁','e'],['ESTRELA','⭐','e']];
+function bingoCell(it){const inner=it[2]==='img'?`<img src="${it[1]}" alt="">`:`<div class="fl" style="font-size:30px;height:38px;display:flex;align-items:center;justify-content:center">${it[1]}</div>`;return `<div class="cp-bingo-cell">${inner}<span class="cp-bingo-word">${it[0]}</span></div>`;}
+function bingoCard(n,size){const k=size*size;const pick=shuffle(BINGO_POOL).slice(0,k);return `<div class="cp-bingo-card"><div class="cp-bingo-card-tt">Cartela ${n}</div><div class="cp-bingo-cells" style="grid-template-columns:repeat(${size},1fr)">${pick.map(bingoCell).join('')}</div></div>`;}
+function bingoDoc(size){let cards='';for(let i=1;i<=4;i++)cards+=bingoCard(i,size);const call=BINGO_POOL.map(it=>`<span class="cp-chip">${it[0]}</span>`).join('');
+  return `<p class="cp-text">O professor sorteia as palavras da lista de chamada. Quem completar uma linha (ou a cartela toda) grita <b>BINGO!</b> Cada aluno recebe uma cartela diferente.</p><div class="cp-bingo-grid">${cards}</div><div class="cp-bank-title" style="margin-top:12px">Lista de chamada (professor):</div><div class="cp-call">${call}</div>`;}
+
+/* ════════════════ TEMAS ════════════════ */
+/* renderiza uma folha de LENDA (texto + curiosidade + perguntas) */
+function lendaSheet(t,d,src,cap){
+  const body=head(t,d.titulo)+'<div class="cp-sheet-body">'+img(src,'hero',cap)
+    +'<div class="cp-section-label">Leia o texto</div>'+d.texto.map(p=>`<p class="cp-text">${p}</p>`).join('')
+    +`<div class="cp-card"><div class="cp-card-label">💡 Você sabia?</div><div class="cp-card-text">${d.curiosidade}</div></div>`
+    +'<div class="cp-section-label">Agora responda</div>'+d.mc.map((q,i)=>mcQ(i+1,q.p,q.o)).join('')
+    +'<div class="cp-section-label">Verdadeiro ou Falso</div>'+vfList(d.vf)
+    +'<div class="cp-section-label">Pense e escreva</div>'+diss('✏️',d.diss,3)
+    +'</div>';
+  return [sheet(body,t.label)];
+}
+const THEMES=[
+{ id:'saci', icon:'🎩', title:'A lenda do Saci', label:'Lenda', ia:true,
+  ex:{titulo:'Saci-Pererê',
+    texto:['O Saci-Pererê é um dos personagens mais conhecidos do folclore brasileiro. Ele é um menino esperto e brincalhão que tem uma perna só e usa um gorro vermelho mágico na cabeça.','Contam as histórias que o Saci vive dentro dos redemoinhos de vento. Ele adora fazer travessuras: esconde objetos, assusta os animais, azeda o leite e embaraça a crina dos cavalos.','Quem quiser pegar um Saci precisa capturar o seu gorro vermelho, pois é dele que vem toda a sua magia. O Dia do Saci é comemorado em 31 de outubro, para valorizar as lendas do nosso país.'],
+    curiosidade:'O Saci tem esse nome por causa de um passarinho chamado saci, cujo canto lembra um assobio parecido com o do personagem!',
+    mc:[{p:'Quantas pernas tem o Saci?',o:['Uma','Duas','Três']},{p:'Onde está a magia do Saci?',o:['Nos pés','No gorro vermelho','No cachimbo']},{p:'O que o Saci mais gosta de fazer?',o:['Estudar','Fazer travessuras','Dormir']}],
+    vf:['O Saci vive dentro dos redemoinhos de vento.','O Saci é um personagem triste e quietinho.'],
+    diss:'Se você encontrasse um Saci, qual travessura pediria para ele NÃO fazer? Explique o porquê.'},
+  build(d){return lendaSheet(THEMES[0],d,IMG.saci,'O Saci-Pererê vive nos redemoinhos de vento.');},
+  prompt(n,dif){return `Tema: a lenda do SACI-PERERÊ (folclore brasileiro), turma ${n}, nível ${dif}. Ajuste o texto e as perguntas ao nível. Retorne SOMENTE JSON: {"titulo":"Saci-Pererê","texto":["p1","p2","p3"],"curiosidade":"fato verdadeiro","mc":[{"p":"pergunta","o":["op1","op2","op3"]} x3],"vf":["afirmacao1","afirmacao2"],"diss":"pergunta para escrever"}. Fatos corretos do folclore, sem placeholders.`;} },
+
+{ id:'curupira', icon:'🌳', title:'O Curupira', label:'Lenda', ia:true,
+  ex:{titulo:'Curupira, o protetor da floresta',
+    texto:['O Curupira é o protetor das florestas no folclore brasileiro. Ele tem o corpo de criança, cabelos cor de fogo e uma marca muito especial: os pés são virados para trás.','Os pés virados servem para enganar os caçadores. Quem segue as pegadas do Curupira achando que ele foi para a frente, na verdade caminha para o lado contrário e acaba se perdendo no mato.','O Curupira protege as árvores e os animais e assusta quem caça sem necessidade ou destrói a natureza. Por isso, muita gente diz que ele é o primeiro guardião do meio ambiente das nossas histórias.'],
+    curiosidade:'A lenda do Curupira é muito antiga: os povos indígenas já a contavam muito antes de o Brasil existir com esse nome.',
+    mc:[{p:'O que o Curupira tem de diferente?',o:['As mãos grandes','Os pés virados para trás','As orelhas pontudas']},{p:'O que o Curupira protege?',o:['As cidades','As florestas e os animais','Os navios']},{p:'Para que servem os pés virados?',o:['Para correr mais rápido','Para enganar os caçadores','Para nadar']}],
+    vf:['O Curupira protege quem destrói a natureza.','A lenda do Curupira vem dos povos indígenas.'],
+    diss:'Por que podemos dizer que o Curupira ensina a cuidar da natureza? Escreva a sua opinião.'},
+  build(d){return lendaSheet(THEMES[1],d,IMG.curupira,'O Curupira protege as matas e os animais.');},
+  prompt(n,dif){return `Tema: a lenda do CURUPIRA (folclore brasileiro), turma ${n}, nível ${dif}. Ajuste ao nível. Retorne SOMENTE JSON: {"titulo":"...","texto":["p1","p2","p3"],"curiosidade":"fato verdadeiro","mc":[{"p":"...","o":["..","..",".."]} x3],"vf":["af1","af2"],"diss":"pergunta para escrever"}. Fatos corretos, valorize o cuidado com a natureza e os povos indígenas. Sem placeholders.`;} },
+
+{ id:'iara', icon:'🌊', title:'A Iara', label:'Lenda', ia:true,
+  ex:{titulo:"Iara, a mãe-d'água",
+    texto:["A Iara é conhecida como a mãe-d'água. Nas lendas, ela é uma linda sereia que vive nos rios do Brasil, com longos cabelos e uma voz encantadora.",'Dizem que, ao entardecer, a Iara canta às margens do rio. Quem escuta o seu canto fica encantado e é atraído para as águas. Por isso, os mais antigos usavam a lenda para avisar as crianças a terem cuidado perto dos rios.','A história da Iara nasceu da mistura das culturas indígena, africana e europeia. Ela mostra como o Brasil juntou várias tradições para criar as suas próprias lendas.'],
+    curiosidade:'Em versões mais antigas, antes de virar sereia, a Iara era uma corajosa guerreira indígena.',
+    mc:[{p:'Onde vive a Iara?',o:['No mar aberto','Nos rios','Nas montanhas']},{p:'O que encanta quem ouve a Iara?',o:['Sua dança','Seu canto','Sua comida']},{p:'A Iara também é chamada de:',o:["mãe-d'água",'rainha do gelo','fada das flores']}],
+    vf:['A lenda da Iara serve de aviso para ter cuidado perto dos rios.','A Iara vive no alto das árvores.'],
+    diss:'Qual aviso importante a lenda da Iara passava para as crianças? Escreva.'},
+  build(d){return lendaSheet(THEMES[2],d,IMG.iara,'A Iara encanta quem ouve o seu canto no rio.');},
+  prompt(n,dif){return `Tema: a lenda da IARA, a mãe-d'água (folclore brasileiro), turma ${n}, nível ${dif}. Ajuste ao nível. Retorne SOMENTE JSON: {"titulo":"...","texto":["p1","p2","p3"],"curiosidade":"fato verdadeiro","mc":[{"p":"...","o":["..","..",".."]} x3],"vf":["af1","af2"],"diss":"pergunta para escrever"}. Fatos corretos, sem placeholders.`;} },
+
+{ id:'boto', icon:'🐬', title:'O Boto cor-de-rosa', label:'Lenda', ia:true,
+  ex:{titulo:'O boto cor-de-rosa',
+    texto:['O boto cor-de-rosa é um golfinho de água doce que vive nos rios da Amazônia. Além de ser um animal de verdade, ele é personagem de uma famosa lenda do Norte do Brasil.','Conta a lenda que, nas noites de festa, o boto se transformaria em um rapaz bonito, bem vestido e de chapéu. Ele iria às festas para conversar e dançar e, antes de o Sol nascer, voltaria para o rio.','O boto é muito importante para a região amazônica. Hoje ele também nos lembra da necessidade de proteger os rios e os animais que vivem neles.'],
+    curiosidade:'O boto cor-de-rosa é o maior golfinho de rio do mundo e existe de verdade na Amazônia!',
+    mc:[{p:'Onde vive o boto cor-de-rosa?',o:['No oceano','Nos rios da Amazônia','Nos lagos gelados']},{p:'Na lenda, o boto se transformaria em:',o:['um peixe','um rapaz bonito','um pássaro']},{p:'O boto é um tipo de:',o:['golfinho','tubarão','baleia']}],
+    vf:['O boto cor-de-rosa existe de verdade na natureza.','A lenda do boto é do Sul do Brasil.'],
+    diss:'O que a lenda do boto pode nos ensinar sobre cuidar dos rios? Escreva.'},
+  build(d){return lendaSheet(THEMES[3],d,IMG.boto,'O boto cor-de-rosa vive nos rios da Amazônia.');},
+  prompt(n,dif){return `Tema: a lenda do BOTO COR-DE-ROSA (folclore do Norte do Brasil), turma ${n}, nível ${dif}. Ajuste ao nível. Retorne SOMENTE JSON: {"titulo":"...","texto":["p1","p2","p3"],"curiosidade":"fato verdadeiro","mc":[{"p":"...","o":["..","..",".."]} x3],"vf":["af1","af2"],"diss":"pergunta para escrever"}. Fatos corretos, sem placeholders.`;} },
+
+{ id:'personagens', icon:'🎭', title:'Personagens do folclore', label:'Relacionar', ia:false,
+  build(){const t=THEMES[4];
+    const gal=[[IMG.saci,'Saci'],[IMG.curupira,'Curupira'],[IMG.iara,'Iara'],[IMG.boto,'Boto'],[IMG.cuca,'Cuca'],[IMG.boitata,'Boitatá']];
+    const galHtml='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:6px 0 16px">'+gal.map(g=>`<figure style="margin:0;text-align:center"><img src="${g[0]}" alt="" style="width:100%;height:120px;object-fit:cover;border-radius:10px;border:1px solid var(--border)"><figcaption style="font-size:12.5px;font-weight:700;margin-top:5px;color:#000">${g[1]}</figcaption></figure>`).join('')+'</div>';
+    const body=head(t,'Os personagens do folclore brasileiro')+'<div class="cp-sheet-body"><p class="cp-text">O folclore brasileiro tem muitos personagens famosos. Observe as ilustrações e conheça cada um deles:</p>'+galHtml+'<div class="cp-section-label">Relacione</div><p class="cp-text">Ligue cada personagem à sua descrição, escrevendo a letra correta:</p>'+relCultura(PERSONAGENS.slice(0,6))+'</div>';
+    return [sheet(body,t.label)];} },
+
+{ id:'dancas', icon:'💃', title:'Danças e festas populares', label:'Relacionar', ia:false,
+  build(){const t=THEMES[5];
+    const body=head(t,'Danças e festas populares do Brasil')+'<div class="cp-sheet-body">'+img(IMG.festa,'hero','As festas juninas fazem parte do nosso folclore.')+'<p class="cp-text">O Brasil é cheio de danças e festas populares que fazem parte do folclore. Cada região tem as suas! Conheça algumas delas e depois relacione.</p><div class="cp-section-label">Relacione</div><p class="cp-text">Ligue cada dança ou festa à sua descrição, escrevendo a letra correta:</p>'+relCultura(DANCAS)+'</div>';
+    return [sheet(body,t.label)];} },
+
+{ id:'brincadeiras', icon:'🎵', title:'Brincadeiras e cantigas', label:'Leitura', ia:true,
+  ex:{titulo:'Brincadeiras e cantigas de roda',
+    texto:['As cantigas de roda são musiquinhas antigas que passam de criança para criança há muitos anos. Ao cantar, todos ficam de mãos dadas formando uma roda e brincam juntos.','Você com certeza conhece algumas: "Ciranda, cirandinha", "A canoa virou", "Escravos de Jó" e "Terezinha de Jesus" são exemplos que fazem parte do nosso folclore.','Além das cantigas, existem muitas brincadeiras tradicionais, como amarelinha, pião, pipa, cabra-cega e queimada. Elas atravessaram gerações e continuam divertindo a criançada.'],
+    curiosidade:'Muitas cantigas de roda vieram de Portugal e da África e foram mudando aqui no Brasil, ganhando o nosso jeito.',
+    mc:[{p:'Como as crianças ficam para brincar de roda?',o:['Sentadas em fila','De mãos dadas em círculo','Cada uma em um canto']},{p:'Qual destas é uma cantiga de roda?',o:['Ciranda, cirandinha','Parabéns pra você','Hino Nacional']},{p:'As cantigas de roda são:',o:['músicas novas da TV','musiquinhas antigas do folclore','propagandas']}],
+    vf:['As cantigas de roda passam de geração em geração.','Amarelinha e pião são brincadeiras tradicionais.'],
+    diss:'Qual é a sua brincadeira ou cantiga preferida? Conte como se brinca.'},
+  build(d){return lendaSheet(THEMES[6],d,IMG.roda,'Brincar de roda de mãos dadas é uma tradição do folclore.');},
+  prompt(n,dif){return `Tema: BRINCADEIRAS e CANTIGAS de roda do folclore brasileiro, turma ${n}, nível ${dif}. Ajuste ao nível. Retorne SOMENTE JSON: {"titulo":"...","texto":["p1","p2","p3"],"curiosidade":"fato verdadeiro","mc":[{"p":"...","o":["..","..",".."]} x3],"vf":["af1","af2"],"diss":"pergunta para escrever"}. Cite cantigas e brincadeiras reais e conhecidas. Sem placeholders.`;} },
+
+{ id:'parlendas', icon:'🔤', title:'Parlendas e adivinhas', label:'Linguagem', ia:false,
+  build(){const t=THEMES[7];
+    const parlenda='Um, dois, feijão com arroz;<br>três, quatro, feijão no prato;<br>cinco, seis, falar inglês;<br>sete, oito, comer biscoito;<br>nove, dez, comer pastéis!';
+    const adiv=[['O que é, o que é? Tem dentes, mas não morde.','o pente'],['O que é, o que é? Cai em pé e corre deitado.','a chuva'],['O que é, o que é? Quanto mais se tira, maior fica.','o buraco'],['O que é, o que é? Tem coroa, mas não é rei; tem espinhos, mas não é peixe.','o abacaxi']];
+    const advHtml=adiv.map((a,i)=>`<div class="cp-qblock"><div class="cp-q"><span class="qn">${i+1}</span><span>${a[0]}</span></div>${lines(1)}</div>`).join('');
+    const gab='<div class="cp-card" style="margin-top:8px"><div class="cp-card-label">🔑 Respostas (professor)</div><div class="cp-card-text">'+adiv.map((a,i)=>`${i+1}) ${a[1]}`).join(' &nbsp;•&nbsp; ')+'</div></div>';
+    const body=head(t,'Parlendas e adivinhas')+'<div class="cp-sheet-body"><p class="cp-text">As <b>parlendas</b> são versinhos com rima, usados para brincar, contar ou escolher quem começa a brincadeira. Leia esta parlenda bem conhecida:</p>'+`<div class="cp-card yellow"><div class="cp-card-text" style="font-size:15px;line-height:2">${parlenda}</div></div>`+'<div class="cp-section-label">Adivinhas do folclore</div><p class="cp-text">Leia cada adivinha e escreva a resposta na linha:</p>'+advHtml+'<div class="cp-section-label">Sua vez</div>'+diss('✏️','Crie a sua própria adivinha (escreva a resposta bem pequena embaixo):',3)+gab+'</div>';
+    return [sheet(body,t.label)];} },
+
+{ id:'producao', icon:'✍️', title:'Crie a sua lenda', label:'Produção de texto', ia:false,
+  build(){const t=THEMES[8];
+    const body=head(t,'Invente a sua própria lenda')+'<div class="cp-sheet-body">'+img(IMG.floresta,'scene','Toda lenda começa com um bom mistério...')+'<p class="cp-text">Agora é a sua vez de ser o contador de histórias! Invente uma <b>nova lenda do folclore</b>. Pense em um personagem: como ele é? Onde ele vive? Que poder ou mistério ele guarda? Escreva a sua lenda em pelo menos 8 linhas.</p>'+diss('•','O nome do meu personagem é:',1)+diss('•','Ele vive em:',1)+'<div class="cp-section-label">A minha lenda</div><div class="cp-write-box" style="height:250px"></div></div>';
+    return [sheet(body,t.label)];} },
+
+{ id:'caca', icon:'🔎', title:'Caça-palavras do folclore', label:'Desafio', ia:false, level:'medium',
+  build(d){const t=THEMES[9];const lv=(d&&d.level)||'medium';const M={easy:{n:12,dir:'easy',l:'Fácil'},medium:{n:14,dir:'medium',l:'Médio'},hard:{n:16,dir:'hard',l:'Difícil'}}[lv];
+    const bank=WS_POOL.slice(0,M.n);const ws=buildWS(bank,M.dir);const g=ws.g,size=ws.size;
+    const body=head(t,'Caça-palavras do folclore',`${M.l} · ${M.n} palavras`)+`<div class="cp-sheet-body"><p class="cp-text">Encontre no quadro as palavras do folclore brasileiro. Use o banco de palavras:</p><div class="cp-ws-wrap"><div>${wsHtml(g,size)}</div><div style="flex:1;min-width:170px"><div class="cp-bank-title">Banco de palavras:</div><div class="cp-bank">${bank.map(w=>`<div>${w}</div>`).join('')}</div></div></div></div>`;
+    return [sheet(body,t.label)];} },
+
+{ id:'cruzadinha', icon:'🧩', title:'Cruzadinha do folclore', label:'Desafio', ia:false, shuffle:true,
+  build(d){const t=THEMES[10];const count=(d&&d.count)||12;const words=CW_POOL.slice(0,count).map(w=>({t:norm(w[0]),d:w[1]}));const cw=cwHtml(words);const body=head(t,'Cruzadinha do folclore')+`<div class="cp-sheet-body"><p class="cp-text">Leia as dicas e complete a cruzadinha com as palavras do folclore:</p>${cw}</div>`;return [sheet(body,t.label)];} },
+
+{ id:'bingo', icon:'🎲', title:'Bingo do folclore', label:'Jogo · Bingo', ia:false, size:3,
+  build(d){const t=THEMES[11];const size=(d&&d.size)||3;const body=head(t,'Bingo do folclore')+`<div class="cp-sheet-body">${bingoDoc(size)}</div>`;return [sheet(body,t.label)];} }
+];
+
+/* ════════════════ HUB ════════════════ */
+const state={};  // por tema: {data, dif, size}
+function themeData(t){ if(!state[t.id]) state[t.id]={data:t.ex?JSON.parse(JSON.stringify(t.ex)):null,dif:'adequado ao ano'}; return state[t.id]; }
+
+function renderHub(){
+  const grid=document.getElementById('themeGrid');
+  grid.innerHTML=THEMES.map((t,idx)=>{
+    const st=themeData(t);
+    const first=t.build(st.data)[0];
+    return `<div class="card" onclick="openTheme(${idx})">
+      <div class="card-thumb"><div class="card-thumb-inner">${first}</div></div>
+      <div class="card-foot"><span class="card-ico">${t.icon}</span><span class="card-tt">${t.title}</span><span class="card-open">abrir →</span></div>
+    </div>`;
+  }).join('');
+}
+
+let curIdx=-1;
+function renderDoc(){
+  const t=THEMES[curIdx], st=themeData(t);
+  const sheets=t.build(st.data);
+  document.getElementById('docArea').innerHTML=sheets.join('');
+}
+function openTheme(idx){
+  curIdx=idx;const t=THEMES[idx];
+  document.getElementById('dbTitle').textContent=t.title;
+  // pills + botão IA conforme o tema
+  const pills=document.getElementById('dbPills'),btnIA=document.getElementById('btnIA');
+  pills.innerHTML='';
+  if(t.ia){
+    ['fácil','adequado ao ano','desafiador'].forEach(v=>{const b=document.createElement('span');b.className='db-pill'+(v===themeData(t).dif?' active':'');b.textContent=v==='fácil'?'Fácil':v==='desafiador'?'Difícil':'Médio';b.onclick=()=>{themeData(t).dif=v;pills.querySelectorAll('.db-pill').forEach(x=>x.classList.remove('active'));b.classList.add('active');};pills.appendChild(b);});
+    btnIA.style.display='';btnIA.querySelector('.t').textContent='✨ Personalizar (1 crédito)';
+  } else if(t.id==='caca'){
+    [['easy','Fácil (12)'],['medium','Médio (14)'],['hard','Difícil (16)']].forEach(v=>{const cur=themeData(t).data?.level||t.level;const b=document.createElement('span');b.className='db-pill'+(cur===v[0]?' active':'');b.textContent=v[1];b.onclick=()=>{themeData(t).data={level:v[0]};pills.querySelectorAll('.db-pill').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderDoc();};pills.appendChild(b);});
+    btnIA.style.display='none';
+  } else if(t.id==='cruzadinha'){
+    [12,14,16].forEach(v=>{const cur=(themeData(t).data&&themeData(t).data.count)||14;const b=document.createElement('span');b.className='db-pill'+(cur===v?' active':'');b.textContent=v+' palavras';b.onclick=()=>{themeData(t).data={count:v};pills.querySelectorAll('.db-pill').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderDoc();};pills.appendChild(b);});
+    btnIA.style.display='';btnIA.querySelector('.t').textContent='↻ Outra versão';btnIA.classList.remove('db-ia');
+  } else if(t.id==='bingo'){
+    [[3,'3×3'],[4,'4×4']].forEach(v=>{const b=document.createElement('span');b.className='db-pill'+(((themeData(t).data?.size)||t.size)===v[0]?' active':'');b.textContent=v[1];b.onclick=()=>{themeData(t).data={size:v[0]};pills.querySelectorAll('.db-pill').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderDoc();};pills.appendChild(b);});
+    btnIA.style.display='';btnIA.querySelector('.t').textContent='↻ Novas cartelas';btnIA.classList.remove('db-ia');
+  } else if(t.shuffle){
+    btnIA.style.display='';btnIA.querySelector('.t').textContent='↻ Outra versão';btnIA.classList.remove('db-ia');
+  } else { btnIA.style.display='none'; }
+  if(t.ia){btnIA.classList.add('db-ia');}
+  renderDoc();
+  document.getElementById('hubView').style.display='none';
+  document.getElementById('detailView').classList.add('show');
+  document.getElementById('errBar').classList.remove('show');
+  desligarEdit();
+  window.scrollTo(0,0);
+}
+function closeTheme(){
+  document.getElementById('detailView').classList.remove('show');
+  document.getElementById('hubView').style.display='';
+  renderHub();   // atualiza thumbs (caça/bingo podem ter mudado)
+}
+
+/* editar */
+function toggleEdit(){const a=document.getElementById('docArea'),b=document.getElementById('btnEdit');const on=a.getAttribute('contenteditable')==='true';a.setAttribute('contenteditable',on?'false':'true');a.classList.toggle('editing',!on);b.classList.toggle('active',!on);b.textContent=on?'✏️ Editar':'✓ Concluir';if(!on)a.focus();}
+function desligarEdit(){const a=document.getElementById('docArea'),b=document.getElementById('btnEdit');a.setAttribute('contenteditable','false');a.classList.remove('editing');b.classList.remove('active');b.textContent='✏️ Editar';}
+
+/* personalizar / nova versão */
+function showErr(html){const e=document.getElementById('errBar');e.innerHTML=html;e.classList.add('show');}
+async function personalize(){
+  const t=THEMES[curIdx];
+  document.getElementById('errBar').classList.remove('show');
+  // temas sem IA: reshuffle grátis
+  if(!t.ia){ renderDoc(); return; }
+  if(!isLoggedIn()){ showErr('🔒 Entre na sua conta (grátis) para personalizar. Levando você ao painel...'); setTimeout(()=>location.href='/conta.html',1500); return; }
+  const btn=document.getElementById('btnIA');btn.classList.add('loading');btn.disabled=true;
+  try{
+    const res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:2000,creditCost:1,
+        system:'Você é especialista em educação básica brasileira. Gere conteúdo sobre o folclore brasileiro (lendas, personagens, danças, brincadeiras). Retorne SOMENTE JSON válido começando com { e terminando com }. Sem markdown. Conteúdo culturalmente correto e respeitoso, valorizando as raízes indígenas, africanas e populares. Atenção à concordância de gênero.',
+        messages:[{role:'user',content:t.prompt('do Ensino Fundamental',themeData(t).dif)}]})});
+    if(res.status===402){showErr('⚠️ Seus créditos acabaram. <a href="/conta.html">Ver planos →</a>');return;}
+    if(res.status===401){showErr('🔒 Sua sessão expirou. <a href="/conta.html">Entre novamente →</a>');return;}
+    if(!res.ok)throw new Error('Erro '+res.status);
+    const data=await res.json();
+    const parsed=extractJSON(data.content?.[0]?.text||'');
+    state[t.id].data=Object.assign(JSON.parse(JSON.stringify(t.ex)),parsed);
+    renderDoc();
+  }catch(e){showErr('Não consegui personalizar agora: '+(e.message||'tente de novo')+'. O exemplo continua disponível.');}
+  finally{btn.classList.remove('loading');btn.disabled=false;}
+}
+
+function printDoc(){
+  if(!isLoggedIn()){ showErr('🔒 Para imprimir/baixar o PDF, entre na sua conta (é grátis). Levando você ao painel...'); setTimeout(()=>location.href='/conta.html',1600); return; }
+  if(typeof dpSalvar==='function'){const t=THEMES[curIdx];dpSalvar('folclore',t.title,'',t.title,'#docArea');}
+  if(typeof dpPrint==='function')dpPrint(); else window.print();
+}
+
+function extractJSON(raw){let c=(raw||'').replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();const s=c.indexOf('{'),e=c.lastIndexOf('}');if(s!==-1&&e>s)c=c.slice(s,e+1);return JSON.parse(c);}
+
+(function init(){ if(isLoggedIn())document.getElementById('loginLink').textContent='Meu painel'; renderHub(); })();
+</script>
+<script src="/js/dp-print.js"></script>
+<script src="/js/dp-auth.js"></script>
+<script src="/js/dp-salvar.js"></script>
+</body>
+</html>
