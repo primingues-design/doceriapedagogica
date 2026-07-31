@@ -15,6 +15,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: "https://doceriapedagogica.com/jogos-area.html",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: "https://doceriapedagogica.com/folclore.html",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
       url: "https://doceriapedagogica.com/politica-de-privacidade",
       lastModified: new Date(),
       changeFrequency: "yearly",

@@ -371,7 +371,9 @@ export default function Home() {
               ✉ doceriapedagogica@gmail.com
             </a>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center flex-wrap justify-center gap-4">
+            <a href="/jogos-area.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Jogos grátis</a>
+            <a href="/folclore.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Especial Folclore</a>
             <Link href="/pricing" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Planos</Link>
             <Link href="/conta.html" className="text-sm text-[#C8742A] font-semibold hover:underline whitespace-nowrap">Entrar na plataforma →</Link>
           </div>
