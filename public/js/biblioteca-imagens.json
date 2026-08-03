@@ -182,6 +182,62 @@
         "eja"
       ],
       "colorir": false
+    },
+    "continentes_oceanos": {
+      "arquivo": "/assets/geografia/continentes-oceanos.jpg",
+      "titulo": "Mapa-múndi: continentes e oceanos",
+      "descricao": "Planisfério (projeção de Robinson) com os continentes destacados por cores diferentes e os oceanos, com a rede de coordenadas (paralelos e meridianos).",
+      "uso_pedagogico": "Localizar e nomear os continentes e os oceanos; introduzir a leitura de mapas e a rede de coordenadas. Base para muitas atividades de Geografia.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "mundi_fisico": {
+      "arquivo": "/assets/geografia/mundi-fisico.jpg",
+      "titulo": "Planisfério físico (relevo)",
+      "descricao": "Mapa-múndi físico com o relevo por cores (verdes nas planícies, marrons nas montanhas) e os oceanos, com nomes de oceanos, cadeias e feições.",
+      "uso_pedagogico": "Estudar o relevo mundial, as grandes cadeias de montanhas, planícies e a diferença entre continentes e oceanos.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "planisferio_politico": {
+      "arquivo": "/assets/geografia/planisferio-politico.jpg",
+      "titulo": "Planisfério político (países)",
+      "descricao": "Mapa-múndi político mostrando a divisão dos países por cores, com um detalhe ampliado da Europa. Projeção de Robinson.",
+      "uso_pedagogico": "Localizar países e fronteiras, trabalhar divisão política do mundo e leitura de mapas políticos. Fonte: IBGE.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "placas_tectonicas": {
+      "arquivo": "/assets/geografia/placas-tectonicas.jpg",
+      "titulo": "Placas tectônicas",
+      "descricao": "Mapa das principais placas tectônicas da Terra (Sul-Americana, Africana, do Pacífico, de Nazca, Norte-Americana, Euro-Asiática, Indiana, Antártica etc.), com os limites entre elas em destaque.",
+      "uso_pedagogico": "Explicar a estrutura da crosta terrestre, o movimento das placas, terremotos e vulcões. Localizar o Brasil no interior da Placa Sul-Americana.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
+    },
+    "linhas_imaginarias": {
+      "arquivo": "/assets/geografia/linhas-imaginarias.jpg",
+      "titulo": "Linhas imaginárias da Terra",
+      "descricao": "Dois planisférios mostrando as principais linhas imaginárias: Equador, Trópico de Câncer, Trópico de Capricórnio, Círculo Polar Ártico, Círculo Polar Antártico e o Meridiano de Greenwich.",
+      "uso_pedagogico": "Ensinar as linhas imaginárias, a divisão em hemisférios e a relação entre latitude e zonas térmicas.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false
     }
   },
   "ciencias": {
