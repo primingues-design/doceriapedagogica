@@ -187,7 +187,7 @@
       "arquivo": "/assets/geografia/continentes-oceanos.jpg",
       "titulo": "Mapa-múndi: continentes e oceanos",
       "descricao": "Planisfério (projeção de Robinson) com os continentes destacados por cores diferentes e os oceanos, com a rede de coordenadas (paralelos e meridianos).",
-      "uso_pedagogico": "Localizar e nomear os continentes e os oceanos; introduzir a leitura de mapas e a rede de coordenadas. Base para muitas atividades de Geografia.",
+      "uso_pedagogico": "Use quando o foco são os CONTINENTES e OCEANOS: localizar/nomear continentes e oceanos, introduzir a leitura de mapas e a rede de coordenadas. NÃO use para 'mapa-múndi' genérico nem para PAÍSES/divisão política — nesses casos use 'planisferio_politico' (o mapa-múndi com o NOME dos países).",
       "publico": [
         "fund1",
         "fund2",
@@ -208,9 +208,9 @@
     },
     "planisferio_politico": {
       "arquivo": "/assets/geografia/planisferio-politico.jpg",
-      "titulo": "Planisfério político (países)",
-      "descricao": "Mapa-múndi político mostrando a divisão dos países por cores, com um detalhe ampliado da Europa. Projeção de Robinson.",
-      "uso_pedagogico": "Localizar países e fronteiras, trabalhar divisão política do mundo e leitura de mapas políticos. Fonte: IBGE.",
+      "titulo": "Planisfério político — mapa-múndi com o NOME dos países",
+      "descricao": "Mapa-múndi político com o NOME de cada país e a divisão por cores, com um detalhe ampliado da Europa. Projeção de Robinson. Fonte: IBGE.",
+      "uso_pedagogico": "ESTE é o mapa-múndi PADRÃO. Use sempre que pedirem 'mapa-múndi', 'mapa do mundo', 'mapa mundial', 'países do mundo', 'localize/observe um país', fronteiras ou divisão política do mundo — ele tem os nomes dos países. Só prefira 'continentes_oceanos' se o foco for EXCLUSIVAMENTE continentes e oceanos (sem países).",
       "publico": [
         "fund2",
         "eja"
