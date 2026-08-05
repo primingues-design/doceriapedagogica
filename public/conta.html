@@ -858,8 +858,19 @@
 
     <div class="auth-right">
       <div class="auth-box">
-        <div class="auth-box-title">Bem-vinda de volta 👋</div>
-        <div class="auth-box-sub">Entre na sua conta para acessar seus materiais</div>
+        <div class="auth-box-title">Bem-vinda! 👋</div>
+        <div class="auth-box-sub">Comece grátis ou entre na sua conta</div>
+
+        <!-- ✨ Comece grátis — só o e-mail (Fase 1: destravar a venda) -->
+        <div style="background:var(--gold-pale,#fdf3e3);border:1.5px solid var(--gold);border-radius:12px;padding:16px;margin-bottom:18px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;color:var(--text);">✨ Comece grátis agora</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">Digite seu e-mail e ganhe <strong>10 materiais grátis</strong>. Sem cartão, sem senha.</div>
+          <div class="msg-error" id="quick-error"></div>
+          <input type="email" class="form-input" id="quick-email" placeholder="seuemail@escola.com" style="margin-bottom:8px;" onkeydown="if(event.key==='Enter')entrarSoComEmail()" />
+          <button class="btn-main" id="btn-quick" style="width:100%;" onclick="entrarSoComEmail()">Começar grátis →</button>
+        </div>
+
+        <div class="auth-divider">já tenho conta</div>
 
         <div class="msg-error" id="login-error"></div>
 
@@ -877,7 +888,7 @@
           <a style="font-size:12px;color:var(--gold);cursor:pointer;text-decoration:none;">Esqueci minha senha</a>
         </div>
 
-        <button class="btn-main" onclick="doLogin()">Entrar na plataforma →</button>
+        <button class="btn-main" id="btn-login-main" onclick="doLogin()">Entrar na plataforma →</button>
 
         <div class="auth-divider">ou</div>
 
@@ -1730,7 +1741,7 @@
     const email = document.getElementById('login-email').value.trim();
     const pass  = document.getElementById('login-pass').value;
     const err   = document.getElementById('login-error');
-    const btn   = document.querySelector('#screen-login .btn-main');
+    const btn   = document.getElementById('btn-login-main');
 
     if (!email || !pass) { showErr(err, 'Preencha e-mail e senha.'); return; }
 
@@ -1813,6 +1824,56 @@
       showErr(err, 'Erro ao criar conta. Tente novamente.');
     } finally {
       btn.textContent = 'Criar conta grátis →'; btn.disabled = false;
+    }
+  }
+
+  // ── CADASTRO INSTANTÂNEO SÓ COM E-MAIL (Fase 1) ──
+  // Cria a conta com uma senha forte gerada nos bastidores; a professora não digita senha.
+  // Instantâneo quando a "Confirmação de e-mail" está DESLIGADA no Supabase;
+  // se estiver ligada, degrada para um link de acesso enviado por e-mail.
+  async function entrarSoComEmail() {
+    const email = document.getElementById('quick-email').value.trim();
+    const err   = document.getElementById('quick-error');
+    const btn   = document.getElementById('btn-quick');
+    if (!email || !email.includes('@')) { showErr(err, 'Digite um e-mail válido.'); return; }
+    err.style.color = ''; err.classList.remove('show');
+    btn.textContent = 'Começando...'; btn.disabled = true;
+    try {
+      const senha = 'Dp-' + (crypto?.randomUUID ? crypto.randomUUID() : (Date.now() + 'x' + Math.random().toString(36).slice(2)));
+      const { data, error } = await sb.auth.signUp({
+        email, password: senha,
+        options: { data: { nome: email.split('@')[0], nivel: '' } }
+      });
+
+      if (error) {
+        const m = (error.message || '').toLowerCase();
+        if (m.includes('already') || m.includes('registered') || m.includes('exists')) {
+          showErr(err, 'Você já tem conta com esse e-mail. Entre com sua senha abaixo.');
+          document.getElementById('login-email').value = email;
+        } else {
+          showErr(err, error.message || 'Não foi possível começar. Tente novamente.');
+        }
+        return;
+      }
+
+      // Confirmação de e-mail LIGADA → não vem sessão na hora
+      if (data.user && !data.session) {
+        err.style.color = 'var(--teal)';
+        showErr(err, '✅ Enviamos um link de acesso para seu e-mail. Clique nele para entrar.');
+        return;
+      }
+
+      // Instantâneo (confirmação desligada) → entra direto no painel
+      err.classList.remove('show');
+      try { await loadProfile(data.user); } catch (_) {
+        currentUser = { id: data.user.id, nome: email.split('@')[0], email: data.user.email, nivel: 'EJA', credits: 10, plan: 'Free', totalMaterials: 0, totalPdfs: 0 };
+      }
+      showDashboard();
+
+    } catch (e) {
+      showErr(err, 'Erro de conexão. Verifique sua internet e tente novamente.');
+    } finally {
+      btn.textContent = 'Começar grátis →'; btn.disabled = false;
     }
   }
 
