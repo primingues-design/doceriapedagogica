@@ -59,8 +59,22 @@ export async function POST(request: NextRequest) {
       `/profiles?id=eq.${userId}&select=plan,credits,credits_reset_at,created_at,is_creator`
     );
     const profiles = await profileRes.json();
-    const profile = profiles?.[0];
-    if (!profile) return NextResponse.json({ error: 'Perfil não encontrado' }, { status: 404 });
+    let profile = profiles?.[0];
+    if (!profile) {
+      // Perfil ainda não existe (cadastro novo pelo portão, ou trigger que não rodou / RLS
+      // que bloqueou o insert no cliente). Cria aqui com a service role (ignora RLS) e segue
+      // como Free / 10 créditos. Não quebra mais a geração de quem acabou de se cadastrar.
+      const nome = (email && email.split('@')[0]) || 'Professor(a)';
+      await supaFetch('/profiles', {
+        method: 'POST',
+        headers: { Prefer: 'return=minimal' },
+        body: JSON.stringify({ id: userId, nome, nivel: '', plan: 'Free', credits: 10, credits_reset_at: new Date().toISOString() }),
+      }).catch(() => {});
+      const reRes = await supaFetch(`/profiles?id=eq.${userId}&select=plan,credits,credits_reset_at,created_at,is_creator`);
+      const reArr = await reRes.json().catch(() => []);
+      profile = reArr?.[0];
+      if (!profile) return NextResponse.json({ error: 'Perfil não encontrado' }, { status: 404 });
+    }
 
     if (profile.is_creator) {
       isCreator = true;
