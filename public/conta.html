@@ -885,7 +885,7 @@
         </div>
 
         <div style="text-align:right;margin-bottom:8px;">
-          <a style="font-size:12px;color:var(--gold);cursor:pointer;text-decoration:none;">Esqueci minha senha</a>
+          <a onclick="recuperarAcesso()" style="font-size:12px;color:var(--gold);cursor:pointer;text-decoration:none;">Esqueci minha senha / entrar por link</a>
         </div>
 
         <button class="btn-main" id="btn-login-main" onclick="doLogin()">Entrar na plataforma →</button>
@@ -1895,6 +1895,29 @@
       showErr(err, 'Erro de conexão. Verifique sua internet e tente novamente.');
     } finally {
       btn.textContent = 'Começar grátis →'; btn.disabled = false;
+    }
+  }
+
+  // Recuperar acesso de quem volta: como o cadastro é só-e-mail (senha gerada
+  // nos bastidores), o caminho certo é um LINK DE ACESSO no e-mail (magic link).
+  async function recuperarAcesso() {
+    const email = document.getElementById('login-email').value.trim();
+    const err   = document.getElementById('login-error');
+    if (!email || !email.includes('@')) {
+      err.style.color = '';
+      showErr(err, 'Digite seu e-mail no campo acima e clique de novo em "Esqueci minha senha".');
+      document.getElementById('login-email').focus();
+      return;
+    }
+    err.style.color = ''; err.classList.remove('show');
+    try {
+      const redirect = location.origin + '/auth/callback.html';
+      const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: redirect } });
+      if (error) { showErr(err, error.message || 'Não foi possível enviar o link. Tente novamente.'); return; }
+      err.style.color = 'var(--teal)';
+      showErr(err, '✅ Enviamos um link de acesso para ' + email + '. Abra seu e-mail e clique para entrar — sem precisar de senha.');
+    } catch (e) {
+      showErr(err, 'Erro de conexão. Verifique sua internet e tente novamente.');
     }
   }
 

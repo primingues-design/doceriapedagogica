@@ -166,4 +166,9 @@
     if (needsGate) return gateThenRetry(input, init);
     return _fetch(input, init);
   };
+
+  // Exposto para páginas que precisam do portão fora do fetch de IA
+  // (ex.: download de atividade pronta atrás de cadastro). Resolve com o
+  // access_token da sessão criada, ou null se cancelar/confirmar por e-mail.
+  window.dpEmailGate = showEmailGate;
 })();

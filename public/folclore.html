@@ -244,6 +244,43 @@
     <p>Saci, Curupira, Iara, lendas, danças e brincadeiras. Cada tema é uma atividade pronta em PDF. Clique para abrir, imprimir ou personalizar com a IA.</p>
   </div>
   <div class="hub-note">📄 <b>Abrir e imprimir o exemplo pronto é grátis</b> (só precisa entrar na conta). ✨ <b>Personalizar com a IA</b> (mudar o nível de dificuldade) custa <b>1 crédito</b> por atividade. Você também pode <b>editar o texto</b> antes de imprimir.</div>
+
+  <!-- ATIVIDADE PRONTA (PDF anexado) — conteúdo aberto p/ Google, download atrás do cadastro -->
+  <section style="background:#fff;border:1px solid var(--border);border-left:5px solid var(--gold);border-radius:14px;padding:22px 24px;margin:4px 0 22px;box-shadow:0 6px 24px rgba(0,0,0,.06);">
+    <div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">📄 Atividade pronta para imprimir</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;color:var(--ink);line-height:1.15;margin:0 0 6px;">Ditados Populares do Brasil — Leitura, Conversa e Interpretação (EJA)</h2>
+    <p style="font-size:14px;color:var(--text-mid,#4a4845);line-height:1.6;margin:0 0 16px;max-width:640px;">
+      16 ditados populares brasileiros para os alunos <b>lerem, conversarem sobre o sentido e registrarem suas ideias</b>. Feita para a <b>EJA</b> e turmas de alfabetização — trabalha oralidade, interpretação e cultura popular. 4 páginas, pronta para imprimir.
+    </p>
+
+    <div style="background:var(--gold-pale);border:1px solid rgba(200,150,62,.25);border-radius:12px;padding:16px 18px;margin-bottom:16px;">
+      <div style="font-size:12px;font-weight:700;color:var(--ink);margin-bottom:10px;">Os 16 ditados desta atividade:</div>
+      <ol style="margin:0;padding-left:20px;columns:2;column-gap:28px;font-size:13.5px;color:var(--text-mid,#4a4845);line-height:1.7;">
+        <li>Água mole em pedra dura, tanto bate até que fura.</li>
+        <li>De grão em grão, a galinha enche o papo.</li>
+        <li>Quem espera sempre alcança.</li>
+        <li>A união faz a força.</li>
+        <li>Mais vale um pássaro na mão do que dois voando.</li>
+        <li>Quem não arrisca, não petisca.</li>
+        <li>Nem tudo que reluz é ouro.</li>
+        <li>As aparências enganam.</li>
+        <li>Antes tarde do que nunca.</li>
+        <li>Quem semeia vento colhe tempestade.</li>
+        <li>Cada macaco no seu galho.</li>
+        <li>Roupa suja se lava em casa.</li>
+        <li>O barato sai caro.</li>
+        <li>Casa de ferreiro, espeto de pau.</li>
+        <li>Quem tem boca vai a Roma.</li>
+        <li>Uma mão lava a outra.</li>
+      </ol>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;">
+      <button onclick="baixarDitados()" style="background:#007a2e;color:#fff;border:none;border-radius:10px;padding:13px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">⬇ Baixar PDF para imprimir</button>
+      <span style="font-size:12.5px;color:var(--text-muted,#8a8785);">Grátis — você só cria a conta com o e-mail.</span>
+    </div>
+  </section>
+
   <div class="grid" id="themeGrid"></div>
 </div>
 
@@ -267,6 +304,17 @@
 const DATE=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
 const SUPA_KEY='sb-atkwvwhwbkerezdmipxw-auth-token';
 function isLoggedIn(){try{const s=JSON.parse(localStorage.getItem(SUPA_KEY));return s&&(s.expires_at||0)>Date.now()/1000&&!!s.access_token;}catch{return false;}}
+
+/* Atividade pronta (PDF): aberto p/ ver, download pede cadastro (só e-mail) */
+const DITADOS_PDF='/atividades/ditados-populares-eja.pdf';
+function baixarDitados(){
+  if(isLoggedIn()){ window.open(DITADOS_PDF,'_blank'); return; }
+  if(typeof window.dpEmailGate==='function'){
+    window.dpEmailGate().then(function(tok){ if(tok||isLoggedIn()) window.open(DITADOS_PDF,'_blank'); });
+  } else {
+    window.location.href='/conta.html';
+  }
+}
 
 /* ───── IMAGENS (ilustrações do folclore, geradas por IA e curadas) ───── */
 const IMG={
