@@ -1,9 +1,44 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const SUPABASE_KEY = 'sb-atkwvwhwbkerezdmipxw-auth-token'
+
+/* Campo de e-mail que já inicia o cadastro grátis no /conta.html */
+function EmailStart({ variant = 'hero' }: { variant?: 'hero' | 'cta' }) {
+  const [email, setEmail] = useState('')
+
+  const go = (e: React.FormEvent) => {
+    e.preventDefault()
+    const v = email.trim()
+    window.location.href = v.includes('@')
+      ? '/conta.html?start=' + encodeURIComponent(v)
+      : '/conta.html'
+  }
+
+  return (
+    <form
+      onSubmit={go}
+      className={`flex flex-col sm:flex-row gap-3 ${variant === 'hero' ? 'max-w-md mx-auto md:mx-0' : 'max-w-md mx-auto'}`}
+    >
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="seuemail@escola.com"
+        aria-label="Seu e-mail"
+        className="flex-1 bg-white border border-[#C8742A]/25 rounded-full px-5 py-3.5 text-[#3D1F0D] placeholder-[#8A7060]/60 text-base outline-none focus:border-[#C8742A] focus:ring-2 focus:ring-[#C8742A]/20 transition"
+      />
+      <button
+        type="submit"
+        className="bg-[#C8742A] text-white px-7 py-3.5 rounded-full font-semibold text-base hover:bg-[#6B3A1F] transition whitespace-nowrap shadow-sm"
+      >
+        Comece por aqui →
+      </button>
+    </form>
+  )
+}
 
 export default function Home() {
   useEffect(() => {
@@ -32,48 +67,46 @@ export default function Home() {
         </div>
         <div className="flex items-center gap-3 sm:gap-6">
           <Link href="#ferramentas" className="hidden sm:block text-sm text-[#6B3A1F] hover:text-[#C8742A]">Ferramentas</Link>
-          <Link href="/pricing" className="hidden sm:block text-sm text-[#6B3A1F] hover:text-[#C8742A]">Planos</Link>
+          <Link href="/pricing" className="hidden sm:block text-sm text-[#6B3A1F] hover:text-[#C8742A]">Preços</Link>
+          <Link href="/conta.html" className="text-sm font-medium text-[#6B3A1F] hover:text-[#C8742A]">Entrar</Link>
           <Link href="/conta.html" className="bg-[#C8742A] text-white px-4 sm:px-5 py-2 rounded-full text-sm font-semibold hover:bg-[#6B3A1F] transition whitespace-nowrap">
-            <span className="sm:hidden">Entrar</span>
-            <span className="hidden sm:inline">Começar grátis</span>
+            <span className="sm:hidden">Acessar</span>
+            <span className="hidden sm:inline">Comece por aqui</span>
           </Link>
         </div>
       </nav>
 
       {/* ── HERO ── */}
-      <section className="pt-32 pb-16 px-4 sm:px-8 max-w-5xl mx-auto">
-        <div className="flex flex-col md:flex-row items-center gap-10">
+      <section className="pt-32 sm:pt-36 pb-16 px-4 sm:px-8 max-w-6xl mx-auto">
+        <div className="flex flex-col md:flex-row items-center gap-10 lg:gap-16">
 
           {/* Texto */}
           <div className="flex-1 text-center md:text-left">
             <div className="inline-flex items-center gap-2 bg-[#C8742A]/10 border border-[#C8742A]/20 text-[#C8742A] px-4 py-1.5 rounded-full text-xs font-bold mb-6">
               ✨ IA especialmente para professores brasileiros
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold text-[#3D1F0D] leading-tight mb-6">
-              Prepare aulas <span className="text-[#C8742A] italic">incríveis</span><br />em minutos, não em horas
+            <h1 className="text-[2.5rem] leading-[1.05] sm:text-6xl lg:text-7xl font-extrabold text-[#3D1F0D] tracking-tight mb-6">
+              Prepare aulas <span className="text-[#C8742A] italic">incríveis</span> em minutos, não em horas
             </h1>
-            <p className="text-lg text-[#8A7060] max-w-xl mb-4">
+            <p className="text-lg sm:text-xl text-[#8A7060] max-w-xl mx-auto md:mx-0 mb-8 leading-relaxed">
               Gere atividades, planos de aula, jogos e materiais pedagógicos{' '}
               <strong className="text-[#3D1F0D]">alinhados à BNCC</strong> — prontos para imprimir ou usar em sala.
             </p>
-            <p className="text-sm text-[#8A7060]/80 mb-10">
-              Sem editar template. Sem perder horas no Canva. Só informar o tema e baixar.
+
+            {/* Entrada grátis — vitrine */}
+            <EmailStart variant="hero" />
+            <p className="text-sm text-[#8A7060] mt-4 flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-1">
+              <span className="flex items-center gap-1.5"><span className="text-[#C8742A]">✓</span> Jogos e atividades grátis</span>
+              <span className="flex items-center gap-1.5"><span className="text-[#C8742A]">✓</span> Sem cartão</span>
+              <span className="flex items-center gap-1.5"><span className="text-[#C8742A]">✓</span> Comece só com o e-mail</span>
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-              <Link href="/conta.html" className="bg-[#C8742A] text-white px-8 py-4 rounded-full font-semibold hover:bg-[#6B3A1F] transition text-lg text-center">
-                🎯 Começar de graça
-              </Link>
-              <Link href="#como-funciona" className="border-2 border-[#3D1F0D]/20 text-[#3D1F0D] px-8 py-4 rounded-full font-medium hover:border-[#C8742A] hover:text-[#C8742A] transition text-lg text-center">
-                Como funciona →
-              </Link>
-            </div>
           </div>
 
           {/* Mockup de atividade gerada — lado direito */}
-          <div className="flex-1 w-full max-w-sm md:max-w-none">
-            <div className="bg-white rounded-2xl shadow-xl border border-[#C8742A]/10 p-6 text-left relative">
+          <div className="flex-1 w-full max-w-md md:max-w-none">
+            <div className="bg-white rounded-2xl shadow-2xl border border-[#C8742A]/10 p-6 text-left relative">
               {/* Badge "gerado agora" */}
-              <div className="absolute -top-3 right-4 bg-[#C8742A] text-white text-[10px] font-bold px-3 py-1 rounded-full">
+              <div className="absolute -top-3 right-4 bg-[#C8742A] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow">
                 ✦ Gerado em 18 segundos
               </div>
               {/* Cabeçalho do material */}
@@ -125,48 +158,48 @@ export default function Home() {
         </div>
 
         {/* STATS */}
-        <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-16 mt-14 pt-10 border-t border-[#C8742A]/10">
+        <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-16 mt-16 pt-12 border-t border-[#C8742A]/10">
           <div className="text-center">
-            <div className="text-3xl font-bold text-[#C8742A]">+12</div>
-            <div className="text-sm text-[#8A7060]">ferramentas pedagógicas</div>
+            <div className="text-4xl sm:text-5xl font-extrabold text-[#C8742A]">+12</div>
+            <div className="text-sm text-[#8A7060] mt-1">ferramentas pedagógicas</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-[#C8742A]">30 seg</div>
-            <div className="text-sm text-[#8A7060]">para gerar um material completo</div>
+            <div className="text-4xl sm:text-5xl font-extrabold text-[#C8742A]">30 seg</div>
+            <div className="text-sm text-[#8A7060] mt-1">para gerar um material completo</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-[#C8742A]">100%</div>
-            <div className="text-sm text-[#8A7060]">pronto para imprimir ou projetar</div>
+            <div className="text-4xl sm:text-5xl font-extrabold text-[#C8742A]">100%</div>
+            <div className="text-sm text-[#8A7060] mt-1">pronto para imprimir ou projetar</div>
           </div>
         </div>
       </section>
 
       {/* ── ESPECIAL SAZONAL ──
-          🔁 SLOT REUTILIZÁVEL: troque tema/links aqui a cada temporada
-             (Copa → Festa Junina → Folclore → Natal...). Hoje: Copa do Mundo.
+          🔁 SLOT REUTILIZÁVEL: troque tema/links/cor aqui a cada temporada
+             (Folclore → Festa Junina → Natal...). Hoje: Folclore Brasileiro.
       */}
       <section className="px-4 sm:px-8 pb-4">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <a
-            href="/copa.html"
+            href="/folclore.html"
             className="block rounded-3xl overflow-hidden shadow-xl relative group"
-            style={{ background: 'linear-gradient(135deg,#013a17,#0b7a3a)' }}
+            style={{ background: 'linear-gradient(135deg,#3b0f63,#8b2fb0)' }}
           >
-            <div className="absolute right-4 -bottom-6 text-[120px] opacity-15 select-none leading-none">⚽</div>
-            <div className="relative p-7 sm:p-9 flex flex-col sm:flex-row sm:items-center gap-5">
+            <div className="absolute right-4 -bottom-8 text-[130px] opacity-15 select-none leading-none">🎭</div>
+            <div className="relative p-7 sm:p-10 flex flex-col sm:flex-row sm:items-center gap-5">
               <div className="flex-1">
                 <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#ffcc29] mb-2">
-                  ⚽ Especial Sazonal · Novo
+                  🎭 Especial Sazonal · Novo
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight mb-2">
-                  Atividades sobre a Copa do Mundo
+                  Atividades sobre o Folclore Brasileiro
                 </h2>
                 <p className="text-white/80 text-sm sm:text-base max-w-xl">
-                  História, campeões, mapa-múndi, bandeiras e situações-problema com placares e figurinhas.
-                  Veja o <strong className="text-white">exemplo pronto</strong> — ajuste o ano e gere a sua versão.
+                  Saci, Curupira, Iara, lendas, danças, parlendas e adivinhas — com texto, curiosidades e jogos.
+                  Veja o <strong className="text-white">exemplo pronto</strong> e gere a sua versão.
                 </p>
               </div>
-              <span className="bg-white text-[#0b7a3a] px-6 py-3 rounded-full font-semibold text-sm whitespace-nowrap self-start sm:self-auto group-hover:bg-[#ffcc29] transition">
+              <span className="bg-white text-[#6b21a8] px-6 py-3 rounded-full font-semibold text-sm whitespace-nowrap self-start sm:self-auto group-hover:bg-[#ffcc29] group-hover:text-[#3b0f63] transition">
                 Ver e gerar →
               </span>
             </div>
@@ -175,11 +208,11 @@ export default function Home() {
       </section>
 
       {/* ── FERRAMENTAS ── */}
-      <section id="ferramentas" className="py-20 px-4 sm:px-8 bg-[#FDF6ED]">
-        <div className="max-w-5xl mx-auto">
+      <section id="ferramentas" className="py-24 px-4 sm:px-8 bg-[#FDF6ED]">
+        <div className="max-w-6xl mx-auto">
           <div className="text-[#C8742A] text-xs font-bold uppercase tracking-widest mb-3">Ferramentas de IA</div>
-          <h2 className="text-4xl font-bold text-[#3D1F0D] mb-4">Tudo que você precisa, num só lugar</h2>
-          <p className="text-[#8A7060] mb-10">
+          <h2 className="text-4xl sm:text-5xl font-bold text-[#3D1F0D] mb-4 tracking-tight">Tudo que você precisa, num só lugar</h2>
+          <p className="text-[#8A7060] text-lg mb-12 max-w-2xl">
             Criadas para a realidade das professoras brasileiras. Alinhadas à BNCC. Sem precisar saber de tecnologia.
           </p>
 
@@ -236,14 +269,14 @@ export default function Home() {
                 badge: 'Gratuito',
               },
             ].map(({ icon, title, desc, badge }) => (
-              <div key={title} className="rounded-2xl bg-white p-6 border border-[#C8742A]/10 shadow-sm relative">
+              <div key={title} className="rounded-2xl bg-white p-6 border border-[#C8742A]/10 shadow-sm relative transition hover:-translate-y-1 hover:shadow-md">
                 {badge && (
                   <span className="absolute top-4 right-4 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#C8742A]/10 text-[#C8742A]">
                     {badge}
                   </span>
                 )}
-                <div className="text-2xl mb-3">{icon}</div>
-                <h3 className="text-base font-semibold text-[#3D1F0D] mb-1">{title}</h3>
+                <div className="text-3xl mb-3">{icon}</div>
+                <h3 className="text-lg font-semibold text-[#3D1F0D] mb-1">{title}</h3>
                 <p className="text-[#8A7060] text-sm leading-relaxed">{desc}</p>
               </div>
             ))}
@@ -252,14 +285,14 @@ export default function Home() {
       </section>
 
       {/* ── COMO FUNCIONA ── */}
-      <section id="como-funciona" className="py-20 px-4 sm:px-8">
-        <div className="max-w-5xl mx-auto text-center">
+      <section id="como-funciona" className="py-24 px-4 sm:px-8">
+        <div className="max-w-6xl mx-auto text-center">
           <div className="text-[#C8742A] text-xs font-bold uppercase tracking-widest mb-3">Como funciona</div>
-          <h2 className="text-4xl font-bold text-[#3D1F0D] mb-4">3 passos e o material está pronto</h2>
-          <p className="text-[#8A7060] mb-14 max-w-xl mx-auto">
+          <h2 className="text-4xl sm:text-5xl font-bold text-[#3D1F0D] mb-4 tracking-tight">3 passos e o material está pronto</h2>
+          <p className="text-[#8A7060] text-lg mb-16 max-w-xl mx-auto">
             Sem editar template, sem dominar design. Você informa o tema — a Doceria entrega.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
               {
                 n: '1',
@@ -278,9 +311,9 @@ export default function Home() {
               },
             ].map(({ n, title, desc }) => (
               <div key={n} className="flex flex-col items-center">
-                <div className="w-14 h-14 rounded-full bg-[#C8742A] text-white flex items-center justify-center text-xl font-bold mb-4">{n}</div>
-                <h3 className="text-lg font-semibold text-[#3D1F0D] mb-2">{title}</h3>
-                <p className="text-[#8A7060] text-sm">{desc}</p>
+                <div className="w-16 h-16 rounded-full bg-[#C8742A] text-white flex items-center justify-center text-2xl font-bold mb-5 shadow-md">{n}</div>
+                <h3 className="text-xl font-semibold text-[#3D1F0D] mb-2">{title}</h3>
+                <p className="text-[#8A7060]">{desc}</p>
               </div>
             ))}
           </div>
@@ -291,11 +324,11 @@ export default function Home() {
           ⚠️  Substitua o conteúdo abaixo por depoimentos reais das professoras.
               Basta pedir autorização e trocar nome, cargo e texto.
       */}
-      <section className="py-20 px-4 sm:px-8 bg-[#FDF6ED]">
-        <div className="max-w-5xl mx-auto">
+      <section className="py-24 px-4 sm:px-8 bg-[#FDF6ED]">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-[#C8742A] text-xs font-bold uppercase tracking-widest mb-3">Quem já usa</div>
-            <h2 className="text-3xl font-bold text-[#3D1F0D]">Professoras que ganharam tempo — e alunos que aprenderam mais</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#3D1F0D] tracking-tight">Professoras que ganharam tempo — e alunos que aprenderam mais</h2>
           </div>
           {/* ⚠️ Adicione mais cards aqui quando tiver novos depoimentos reais */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
@@ -330,37 +363,25 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CTA PLANOS ── */}
-      <section className="py-20 px-4 sm:px-8">
+      {/* ── CTA FINAL (grátis como vitrine) ── */}
+      <section className="py-24 px-4 sm:px-8">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="text-[#C8742A] text-xs font-bold uppercase tracking-widest mb-3">Planos</div>
-          <h2 className="text-4xl font-bold text-[#3D1F0D] mb-4">Comece hoje mesmo</h2>
-          <p className="text-[#8A7060] mb-4 text-lg">
-            Grátis para começar. R$19,90/mês para quem usa todo dia.
+          <div className="text-[#C8742A] text-xs font-bold uppercase tracking-widest mb-3">Comece agora</div>
+          <h2 className="text-4xl sm:text-5xl font-bold text-[#3D1F0D] mb-4 tracking-tight">Entre e explore à vontade</h2>
+          <p className="text-[#8A7060] mb-8 text-lg">
+            Muita coisa é aberta — <strong className="text-[#3D1F0D]">jogos</strong>, especial sazonal e atividades avulsas. Crie sua conta em segundos e, para gerar com IA, ganhe <strong className="text-[#3D1F0D]">10 gerações grátis</strong>. Depois, só créditos avulsos que não expiram — sem assinatura.
           </p>
-          <p className="text-sm text-[#8A7060]/70 mb-10">
-            Sem cartão de crédito para criar sua conta. Cancele quando quiser.
+          <EmailStart variant="cta" />
+          <p className="text-sm text-[#8A7060]/80 mt-5">
+            Só o e-mail para começar.{' '}
+            <Link href="/pricing" className="text-[#C8742A] font-semibold hover:underline">Ver preços →</Link>
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/conta.html"
-              className="inline-flex items-center justify-center gap-2 bg-[#C8742A] text-white px-8 py-4 rounded-full font-semibold hover:bg-[#6B3A1F] transition text-lg"
-            >
-              🎯 Criar conta grátis
-            </Link>
-            <Link
-              href="/pricing"
-              className="inline-flex items-center justify-center gap-2 border-2 border-[#3D1F0D]/20 text-[#3D1F0D] px-8 py-4 rounded-full font-medium hover:border-[#C8742A] hover:text-[#C8742A] transition text-lg"
-            >
-              Ver todos os planos →
-            </Link>
-          </div>
         </div>
       </section>
 
       {/* ── FOOTER ── */}
       <footer className="py-10 px-4 sm:px-8 border-t border-[#C8742A]/10">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 font-bold text-[#3D1F0D]">
             <div className="w-7 h-7 bg-[#C8742A] rounded-lg flex items-center justify-center text-white text-xs flex-shrink-0">🍰</div>
             Doceria Pedagógica
@@ -374,7 +395,7 @@ export default function Home() {
           <div className="flex items-center flex-wrap justify-center gap-4">
             <a href="/jogos-area.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Jogos grátis</a>
             <a href="/folclore.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Especial Folclore</a>
-            <Link href="/pricing" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Planos</Link>
+            <Link href="/pricing" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Preços</Link>
             <Link href="/conta.html" className="text-sm text-[#C8742A] font-semibold hover:underline whitespace-nowrap">Entrar na plataforma →</Link>
           </div>
         </div>

@@ -1295,13 +1295,62 @@
       <div class="dash-topbar">
         <div>
           <div class="dash-page-title">Planos e Créditos</div>
-          <div class="dash-page-sub">Escolha o melhor plano para você ou compre créditos extras</div>
+          <div class="dash-page-sub">Compre créditos avulsos e pague só pelo que usar — sem assinatura. Ou assine um plano mensal.</div>
         </div>
       </div>
 
       <div class="dash-body">
 
-        <!-- PLANS -->
+        <!-- CREDIT PACKS (herói) -->
+        <div class="credits-section" style="margin-top:0;">
+          <div class="credits-section-title">Compre créditos avulsos</div>
+          <div class="credits-section-sub">Pague uma vez e use quando quiser — <strong>não é assinatura</strong> e os créditos <strong>nunca expiram</strong>.</div>
+
+          <div class="packs-grid">
+            <div class="pack-card" onclick="openPayment('10 Créditos','R$ 9,90','pack_10')">
+              <div class="pack-credits">10</div>
+              <div class="pack-label">créditos</div>
+              <div class="pack-price">R$ 9,90</div>
+              <div class="pack-per">R$ 0,99 por crédito</div>
+              <button class="btn-pack">Comprar</button>
+            </div>
+            <div class="pack-card best" onclick="openPayment('30 Créditos','R$ 24,90','pack_30')">
+              <div class="pack-best">Melhor valor</div>
+              <div class="pack-credits">30</div>
+              <div class="pack-label">créditos</div>
+              <div class="pack-price">R$ 24,90</div>
+              <div class="pack-per">R$ 0,83 por crédito</div>
+              <button class="btn-pack">Comprar</button>
+            </div>
+            <div class="pack-card" onclick="openPayment('60 Créditos','R$ 44,90','pack_60')">
+              <div class="pack-credits">60</div>
+              <div class="pack-label">créditos</div>
+              <div class="pack-price">R$ 44,90</div>
+              <div class="pack-per">R$ 0,75 por crédito</div>
+              <button class="btn-pack">Comprar</button>
+            </div>
+            <div class="pack-card" onclick="openPayment('120 Créditos','R$ 79,90','pack_120')">
+              <div class="pack-credits">120</div>
+              <div class="pack-label">créditos</div>
+              <div class="pack-price">R$ 79,90</div>
+              <div class="pack-per">R$ 0,67 por crédito</div>
+              <button class="btn-pack">Comprar</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;background:var(--teal-pale);border:1px solid rgba(45,110,110,0.2);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px;">
+          <span style="font-size:20px;">🔒</span>
+          <div style="font-size:13px;color:var(--teal);line-height:1.6;">
+            <strong>Pagamento 100% seguro via Mercado Pago.</strong> PIX com confirmação instantânea, cartão de crédito e boleto. Seus dados são criptografados e protegidos.
+          </div>
+        </div>
+
+        <!-- PLANOS MENSAIS (secundário) -->
+        <div class="credits-section" style="margin-top:44px;">
+          <div class="credits-section-title">Prefere no automático? Planos mensais</div>
+          <div class="credits-section-sub">Para quem cria materiais toda semana e quer os créditos renovando sozinhos. Cancele quando quiser.</div>
+        </div>
         <div class="plans-grid">
           <div class="plan-card" id="plan-card-free">
             <div class="plan-badge current-badge" id="plan-badge-free">Seu plano atual</div>
@@ -1356,51 +1405,6 @@
               <li class="plan-feature"><span class="plan-check">✓</span>Suporte prioritário</li>
             </ul>
             <button class="btn-plan btn-plan-outline" id="btn-escola" onclick="window.location.href='mailto:doceriapedagogica@gmail.com?subject=Plano Escola'">🏫 Falar com a equipe</button>
-          </div>
-        </div>
-
-        <!-- CREDIT PACKS -->
-        <div class="credits-section">
-          <div class="credits-section-title">Comprar créditos extras</div>
-          <div class="credits-section-sub">Sem assinatura. Créditos não expiram. Use quando precisar.</div>
-
-          <div class="packs-grid">
-            <div class="pack-card" onclick="openPayment('10 Créditos','R$ 9,90','pack_10')">
-              <div class="pack-credits">10</div>
-              <div class="pack-label">créditos</div>
-              <div class="pack-price">R$ 9,90</div>
-              <div class="pack-per">R$ 0,99 por crédito</div>
-              <button class="btn-pack">Comprar</button>
-            </div>
-            <div class="pack-card best" onclick="openPayment('30 Créditos','R$ 24,90','pack_30')">
-              <div class="pack-best">Melhor valor</div>
-              <div class="pack-credits">30</div>
-              <div class="pack-label">créditos</div>
-              <div class="pack-price">R$ 24,90</div>
-              <div class="pack-per">R$ 0,83 por crédito</div>
-              <button class="btn-pack">Comprar</button>
-            </div>
-            <div class="pack-card" onclick="openPayment('60 Créditos','R$ 44,90','pack_60')">
-              <div class="pack-credits">60</div>
-              <div class="pack-label">créditos</div>
-              <div class="pack-price">R$ 44,90</div>
-              <div class="pack-per">R$ 0,75 por crédito</div>
-              <button class="btn-pack">Comprar</button>
-            </div>
-            <div class="pack-card" onclick="openPayment('120 Créditos','R$ 79,90','pack_120')">
-              <div class="pack-credits">120</div>
-              <div class="pack-label">créditos</div>
-              <div class="pack-price">R$ 79,90</div>
-              <div class="pack-per">R$ 0,67 por crédito</div>
-              <button class="btn-pack">Comprar</button>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top:20px;background:var(--teal-pale);border:1px solid rgba(45,110,110,0.2);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px;">
-          <span style="font-size:20px;">🔒</span>
-          <div style="font-size:13px;color:var(--teal);line-height:1.6;">
-            <strong>Pagamento 100% seguro via Mercado Pago.</strong> PIX com confirmação instantânea, cartão de crédito e boleto. Seus dados são criptografados e protegidos.
           </div>
         </div>
 
@@ -1684,6 +1688,23 @@
     if (id === 'screen-history') loadHistory('history-full-list', 50);
     // Atualiza créditos ao navegar para dashboard ou planos
     if (id === 'screen-dashboard' || id === 'screen-plans') refreshCredits();
+    // Vindo da landing (?start=email) → já dispara o cadastro grátis
+    if (id === 'screen-login') maybeQuickStart();
+  }
+
+  // Auto-início do cadastro quando a landing manda o e-mail em ?start=
+  let _quickStarted = false;
+  function maybeQuickStart() {
+    if (_quickStarted) return;
+    try {
+      const em = (new URLSearchParams(location.search).get('start') || '').trim();
+      if (em && em.includes('@')) {
+        _quickStarted = true;
+        const inp = document.getElementById('quick-email');
+        if (inp) inp.value = em;
+        entrarSoComEmail();
+      }
+    } catch (_) {}
   }
 
   function showDashboard() {
