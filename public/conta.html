@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Acesso — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="/js/dp-analytics.js"></script>
 <style>
   :root {
     --ink: #0f0e0c;
@@ -1889,6 +1890,7 @@
       try { await loadProfile(data.user); } catch (_) {
         currentUser = { id: data.user.id, nome: email.split('@')[0], email: data.user.email, nivel: 'EJA', credits: 10, plan: 'Free', totalMaterials: 0, totalPdfs: 0 };
       }
+      if (window.dpTrack) window.dpTrack('sign_up', { method: 'quick_email' });
       showDashboard();
 
     } catch (e) {
@@ -2118,6 +2120,7 @@
   // ── PAYMENT — Mercado Pago Checkout ──
   async function doCheckout(productId, btnEl) {
     if (!currentUser) { showScreen('screen-login'); return; }
+    if (window.dpTrack) window.dpTrack('checkout_iniciado', { item: productId });
     const origText = btnEl.textContent;
     btnEl.disabled = true;
     btnEl.textContent = '⏳ Aguarde...';

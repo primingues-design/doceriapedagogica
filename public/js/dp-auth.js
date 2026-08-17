@@ -1,6 +1,14 @@
 (function () {
   const SUPA_KEY = 'sb-atkwvwhwbkerezdmipxw-auth-token';
 
+  // Garante o analytics compartilhado (GA + Clarity + dpTrack) nas páginas de
+  // ferramenta, que não passam pelo layout do Next.
+  if (!window.dpTrack) {
+    var _an = document.createElement('script');
+    _an.src = '/js/dp-analytics.js';
+    (document.head || document.documentElement).appendChild(_an);
+  }
+
   function getToken() {
     try {
       const raw = localStorage.getItem(SUPA_KEY);
@@ -81,6 +89,7 @@
         '<div style="font-size:11px;color:#8a8785;text-align:center;margin-top:8px;">Já tem conta? <a href="/conta.html" style="color:#c8963e;font-weight:600;text-decoration:none;">Entrar</a></div>';
       overlay.appendChild(card);
       document.body.appendChild(overlay);
+      if (window.dpTrack) window.dpTrack('gate_shown');
 
       var emailEl = card.querySelector('#dp-gate-email');
       var msgEl   = card.querySelector('#dp-gate-msg');
@@ -115,6 +124,7 @@
           }
           if (res.data && res.data.session && res.data.session.access_token) {
             var tok = res.data.session.access_token, uid = res.data.user && res.data.user.id;
+            if (window.dpTrack) window.dpTrack('sign_up', { method: 'gate' });
             var done = function () { finish(tok); };
             // garante o perfil (normalmente um trigger cria; isto é um seguro). Segue mesmo se falhar (duplicado).
             if (uid) { sbRef.from('profiles').insert({ id: uid, nome: email.split('@')[0], nivel: '' }).then(done, done); }
@@ -149,6 +159,19 @@
       return _fetch(input, withAuth(init, token));
     });
   }
+  // Funil: marca "material_gerado" quando uma geração via /api/claude dá certo.
+  // Fica aqui porque é o ponto único por onde TODAS as ferramentas passam.
+  function trackGen(url) {
+    return function (res) {
+      try {
+        if (res && res.ok && typeof url === 'string' && url.indexOf('/api/claude') >= 0 && window.dpTrack) {
+          window.dpTrack('material_gerado');
+        }
+      } catch (e) {}
+      return res;
+    };
+  }
+
   window.fetch = function (input, init) {
     const url = typeof input === 'string' ? input
       : input instanceof Request ? input.url : '';
@@ -161,9 +184,9 @@
       return _fetch(input, withAuth(init, token)).then(function (res) {
         if (res.status === 401 && needsGate) return gateThenRetry(input, init); // token expirou → reentra
         return res;
-      });
+      }).then(trackGen(url));
     }
-    if (needsGate) return gateThenRetry(input, init);
+    if (needsGate) return gateThenRetry(input, init).then(trackGen(url));
     return _fetch(input, init);
   };
 

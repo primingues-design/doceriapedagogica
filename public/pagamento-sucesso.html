@@ -69,6 +69,7 @@ h1 {
   <a class="btn" href="conta.html">🏠 Ir para o Painel</a>
   <p class="footer-note">Você também receberá um e-mail de confirmação do Mercado Pago.</p>
 </div>
+<script src="/js/dp-analytics.js"></script>
 <script>
 const params = new URLSearchParams(location.search);
 const ref = params.get('external_reference') || '';
@@ -86,6 +87,10 @@ const NAMES = {
 const [name, sub] = NAMES[productId] || ['Plano ativado', 'Obrigada por assinar!'];
 document.getElementById('planName').textContent = name;
 document.getElementById('planSub').textContent  = sub;
+
+// Funil: compra concluída
+const VALUES = { plan_pro_mensal:19.90, plan_escola:179.90, pack_10:9.90, pack_30:24.90, pack_60:44.90, pack_120:79.90 };
+if (window.dpTrack) window.dpTrack('purchase', { item: productId || 'desconhecido', value: VALUES[productId] || 0, currency: 'BRL' });
 </script>
 </body>
 </html>

@@ -308,6 +308,7 @@ function isLoggedIn(){try{const s=JSON.parse(localStorage.getItem(SUPA_KEY));ret
 /* Atividade pronta (PDF): aberto p/ ver, download pede cadastro (só e-mail) */
 const DITADOS_PDF='/atividades/ditados-populares-eja.pdf';
 function baixarDitados(){
+  if(window.dpTrack) window.dpTrack('download_atividade',{item:'ditados_populares_eja'});
   if(isLoggedIn()){ window.open(DITADOS_PDF,'_blank'); return; }
   if(typeof window.dpEmailGate==='function'){
     window.dpEmailGate().then(function(tok){ if(tok||isLoggedIn()) window.open(DITADOS_PDF,'_blank'); });
