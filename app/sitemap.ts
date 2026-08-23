@@ -27,6 +27,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     {
+      url: "https://doceriapedagogica.com/eja.html",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
       url: "https://doceriapedagogica.com/politica-de-privacidade",
       lastModified: new Date(),
       changeFrequency: "yearly",
