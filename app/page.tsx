@@ -208,6 +208,34 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── ÁREAS ABERTAS (explore sem cadastro) ── */}
+      <section className="px-4 sm:px-8 pt-6 pb-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-5">
+            <div className="text-[#C8742A] text-xs font-bold uppercase tracking-widest mb-1">Explore de graça</div>
+            <p className="text-[#8A7060] text-sm">Conheça a Doceria sem compromisso. O e-mail só é pedido na hora de baixar.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a href="/jogos-area.html" className="group flex items-center gap-4 rounded-2xl bg-white border border-[#C8742A]/15 p-5 shadow-sm hover:-translate-y-0.5 hover:shadow-md transition">
+              <div className="text-3xl flex-shrink-0">🎮</div>
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-[#3D1F0D]">Jogos para alunos</div>
+                <div className="text-sm text-[#8A7060]">Quiz, memória, trilha e caça-palavras — grátis, na TV ou no celular.</div>
+              </div>
+              <span className="text-[#C8742A] flex-shrink-0 group-hover:translate-x-0.5 transition">→</span>
+            </a>
+            <a href="/eja.html" className="group flex items-center gap-4 rounded-2xl bg-white border border-[#C8742A]/15 p-5 shadow-sm hover:-translate-y-0.5 hover:shadow-md transition">
+              <div className="text-3xl flex-shrink-0">📚</div>
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-[#3D1F0D]">Atividades para EJA</div>
+                <div className="text-sm text-[#8A7060]">Prontas para imprimir — simples, mas nunca infantilizadas.</div>
+              </div>
+              <span className="text-[#C8742A] flex-shrink-0 group-hover:translate-x-0.5 transition">→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* ── FERRAMENTAS ── */}
       <section id="ferramentas" className="py-24 px-4 sm:px-8 bg-[#FDF6ED]">
         <div className="max-w-6xl mx-auto">
