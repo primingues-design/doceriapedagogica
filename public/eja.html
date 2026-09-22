@@ -59,7 +59,20 @@
   .btn-dl:hover{background:var(--brown)}
   .btn-extra{background:#fff;color:var(--brown);border:1.5px solid var(--border);border-radius:10px;padding:11px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:border-color .15s,color .15s}
   .btn-extra:hover{border-color:var(--gold);color:var(--gold)}
+  .btn-previa{background:#fff;color:var(--brown);border:1.5px solid var(--border);border-radius:10px;padding:11px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:border-color .15s,color .15s}
+  .btn-previa:hover{border-color:var(--gold);color:var(--gold)}
   .dl-note{font-size:12px;color:var(--muted)}
+
+  .previa-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(15,14,12,.6);align-items:center;justify-content:center;padding:14px}
+  .previa-overlay.show{display:flex}
+  .previa-box{background:#fff;border-radius:14px;max-width:820px;width:100%;height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.45)}
+  .previa-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .previa-title{font-size:13px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .previa-actions{display:flex;align-items:center;gap:14px;flex-shrink:0}
+  .previa-open{font-size:12.5px;color:var(--gold);font-weight:600;text-decoration:none;white-space:nowrap}
+  .previa-close{background:none;border:none;font-size:24px;line-height:1;cursor:pointer;color:var(--muted)}
+  .previa-frame{flex:1;width:100%;border:none;background:#f3f0ea}
+  .previa-foot{padding:10px 16px;border-top:1px solid var(--border);text-align:center}
 
   .cta-band{max-width:900px;margin:0 auto 60px;padding:0 20px}
   .cta-inner{background:var(--warm);border:1px solid var(--border);border-radius:14px;padding:20px 24px;text-align:center;font-size:14px;color:var(--brown)}
@@ -96,6 +109,23 @@
 <footer>
   Doceria Pedagógica · <a href="/">Início</a> · <a href="/folclore.html">Especial Folclore</a> · <a href="/conta.html">Entrar na plataforma →</a>
 </footer>
+
+<!-- Visualizador de prévia (mostra o PDF sem baixar) -->
+<div class="previa-overlay" id="previa-overlay" onclick="if(event.target===this)fecharPrevia()">
+  <div class="previa-box">
+    <div class="previa-head">
+      <div class="previa-title" id="previa-title">Prévia da atividade</div>
+      <div class="previa-actions">
+        <a class="previa-open" id="previa-open" href="#" target="_blank" rel="noopener">Abrir em nova aba ↗</a>
+        <button class="previa-close" onclick="fecharPrevia()" aria-label="Fechar">×</button>
+      </div>
+    </div>
+    <iframe class="previa-frame" id="previa-frame" title="Prévia da atividade"></iframe>
+    <div class="previa-foot">
+      <button class="btn-dl" onclick="baixarDaPrevia()">⬇ Baixar PDF para imprimir</button>
+    </div>
+  </div>
+</div>
 
 <script>
   const SUPA_KEY='sb-atkwvwhwbkerezdmipxw-auth-token';
@@ -221,9 +251,10 @@
           <div class="preview"><ol>${a.preview.map(p=>`<li>${esc(p)}</li>`).join('')}</ol></div>
         </details>` : ''}
         <div class="actions">
+          <button class="btn-previa" onclick="verPrevia('${a.slug}','${a.evento}','${esc(a.titulo)}')">👁 Ver prévia</button>
           <button class="btn-dl" onclick="baixar('${a.slug}','${a.evento}')">⬇ Baixar PDF para imprimir</button>
           ${a.extra ? `<button class="btn-extra" onclick="baixar('${a.extra.slug}','${a.evento}_sugestao')">${esc(a.extra.label)}</button>` : ''}
-          <span class="dl-note">Grátis — só com o e-mail.</span>
+          <span class="dl-note">Prévia livre; baixar pede só o e-mail.</span>
         </div>
       </article>
     `).join('');
@@ -239,6 +270,25 @@
       window.location.href='/conta.html';
     }
   }
+
+  let _previaSlug=null, _previaEvento=null;
+  function verPrevia(slug, evento, titulo){
+    _previaSlug=slug; _previaEvento=evento;
+    if(window.dpTrack) window.dpTrack('ver_previa',{item:evento||slug});
+    const pdf='/atividades/'+slug+'.pdf';
+    document.getElementById('previa-frame').src=pdf+'#toolbar=0&navpanes=0&view=FitH';
+    document.getElementById('previa-open').href=pdf;
+    document.getElementById('previa-title').textContent=titulo||'Prévia da atividade';
+    document.getElementById('previa-overlay').classList.add('show');
+    document.body.style.overflow='hidden';
+  }
+  function fecharPrevia(){
+    document.getElementById('previa-overlay').classList.remove('show');
+    document.getElementById('previa-frame').src='';
+    document.body.style.overflow='';
+  }
+  function baixarDaPrevia(){ if(_previaSlug) baixar(_previaSlug,_previaEvento); }
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') fecharPrevia(); });
 
   if(isLoggedIn()) document.getElementById('loginLink').textContent='Meu painel';
   render();
