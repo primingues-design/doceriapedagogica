@@ -33,6 +33,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: "https://doceriapedagogica.com/eleicoes.html",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
       url: "https://doceriapedagogica.com/politica-de-privacidade",
       lastModified: new Date(),
       changeFrequency: "yearly",

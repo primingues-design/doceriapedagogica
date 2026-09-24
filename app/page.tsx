@@ -176,32 +176,31 @@ export default function Home() {
       </section>
 
       {/* ── ESPECIAL SAZONAL ──
-          🔁 SLOT REUTILIZÁVEL: troque tema/links/cor aqui a cada temporada
-             (Folclore → Festa Junina → Natal...). Hoje: Folclore Brasileiro.
+          🔁 SLOT REUTILIZÁVEL: troque tema/links/cor aqui a cada temporada.
+             Hoje: Eleições 2026 (cidadania, não-partidário → /eleicoes.html).
       */}
       <section className="px-4 sm:px-8 pb-4">
         <div className="max-w-6xl mx-auto">
           <a
-            href="/folclore.html"
+            href="/eleicoes.html"
             className="block rounded-3xl overflow-hidden shadow-xl relative group"
-            style={{ background: 'linear-gradient(135deg,#3b0f63,#8b2fb0)' }}
+            style={{ background: 'linear-gradient(135deg,#0b2a5b,#1e5fae)' }}
           >
-            <div className="absolute right-4 -bottom-8 text-[130px] opacity-15 select-none leading-none">🎭</div>
+            <div className="absolute right-4 -bottom-8 text-[130px] opacity-15 select-none leading-none">🗳️</div>
             <div className="relative p-7 sm:p-10 flex flex-col sm:flex-row sm:items-center gap-5">
               <div className="flex-1">
                 <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#ffcc29] mb-2">
-                  🎭 Especial Sazonal · Novo
+                  🗳️ Especial · Eleições 2026
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight mb-2">
-                  Atividades sobre o Folclore Brasileiro
+                  Atividades sobre Eleições e Cidadania
                 </h2>
                 <p className="text-white/80 text-sm sm:text-base max-w-xl">
-                  Saci, Curupira, Iara, lendas, danças, parlendas e adivinhas — com texto, curiosidades e jogos.
-                  Veja o <strong className="text-white">exemplo pronto</strong> e gere a sua versão.
+                  Democracia, voto e o que são esquerda e direita — de forma <strong className="text-white">não-partidária</strong>. Esquemas, caça-palavras e perguntas para refletir, prontos para imprimir.
                 </p>
               </div>
-              <span className="bg-white text-[#6b21a8] px-6 py-3 rounded-full font-semibold text-sm whitespace-nowrap self-start sm:self-auto group-hover:bg-[#ffcc29] group-hover:text-[#3b0f63] transition">
-                Ver e gerar →
+              <span className="bg-white text-[#0b2a5b] px-6 py-3 rounded-full font-semibold text-sm whitespace-nowrap self-start sm:self-auto group-hover:bg-[#ffcc29] transition">
+                Ver atividades →
               </span>
             </div>
           </a>
@@ -424,7 +423,7 @@ export default function Home() {
           <div className="flex items-center flex-wrap justify-center gap-4">
             <a href="/jogos-area.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Jogos grátis</a>
             <a href="/eja.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Atividades EJA</a>
-            <a href="/folclore.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Especial Folclore</a>
+            <a href="/eleicoes.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Eleições 2026</a>
             <Link href="/pricing" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Preços</Link>
             <Link href="/conta.html" className="text-sm text-[#C8742A] font-semibold hover:underline whitespace-nowrap">Entrar na plataforma →</Link>
           </div>
