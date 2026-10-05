@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://doceriapedagogica.com"),
   title: {
     default: "Doceria Pedagógica — Atividades e Planos de Aula com IA",
     template: "%s | Doceria Pedagógica",
@@ -42,12 +43,15 @@ export const metadata: Metadata = {
     siteName: "Doceria Pedagógica",
     locale: "pt_BR",
     type: "website",
+    // imagem que aparece ao compartilhar o link (WhatsApp, Facebook…)
+    images: [{ url: "/og/doceria.jpg", width: 1200, height: 630, alt: "Doceria Pedagógica — materiais prontos para imprimir" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Doceria Pedagógica — Atividades com IA para Professores",
     description:
       "Planos de aula, atividades e jogos pedagógicos prontos em segundos.",
+    images: ["/og/doceria.jpg"],
   },
   verification: {
     google: "FqfYkNg6Cv9BtVUeRa9YRylylOHduILeGaI2WWSTEQg",
