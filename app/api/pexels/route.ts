@@ -1,22 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// Decodifica o payload do JWT (apenas para confirmar que há um usuário logado).
-function decodeJwt(token: string): { sub?: string } | null {
-  try {
-    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-  } catch {
-    return null;
-  }
-}
+import { tokenFrom, verifyUser } from '@/lib/verifyUser';
 
 export async function GET(request: NextRequest) {
   const key = process.env.PEXELS_API_KEY;
   if (!key) return NextResponse.json({ error: 'PEXELS_API_KEY não configurada' }, { status: 500 });
 
   // Gate simples: só usuários logados (evita abuso da cota do Pexels).
-  const authHeader = request.headers.get('authorization') || '';
-  const token = authHeader.replace(/^Bearer\s+/i, '');
-  if (!token || !decodeJwt(token)?.sub) {
+  if (!(await verifyUser(tokenFrom(request.headers.get('authorization'))))) {
     return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
   }
 

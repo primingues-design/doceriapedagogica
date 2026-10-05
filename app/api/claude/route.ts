@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { tokenFrom, verifyUser } from '@/lib/verifyUser';
 
 const SUPA_URL = process.env.SUPABASE_URL || 'https://atkwvwhwbkerezdmipxw.supabase.co';
 const SUPA_KEY = () => process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -7,14 +8,6 @@ const SUPA_KEY = () => process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 // Padrão com os e-mails da fundadora; pode somar outros via env CREATOR_EMAILS (separados por vírgula).
 const CREATOR_EMAILS = (process.env.CREATOR_EMAILS || 'professorapriscila2006@gmail.com,primingues@gmail.com,crissmuniz@gmail.com')
   .toLowerCase().split(',').map((s) => s.trim()).filter(Boolean);
-
-function decodeJwt(token: string): { sub?: string; email?: string } | null {
-  try {
-    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-  } catch {
-    return null;
-  }
-}
 
 async function supaFetch(path: string, options: RequestInit = {}) {
   const key = SUPA_KEY();
@@ -33,15 +26,14 @@ export async function POST(request: NextRequest) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return NextResponse.json({ error: 'ANTHROPIC_API_KEY não configurada' }, { status: 500 });
 
-  const authHeader = request.headers.get('authorization') || '';
-  const token = authHeader.replace(/^Bearer\s+/i, '');
+  const token = tokenFrom(request.headers.get('authorization'));
   if (!token) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
 
-  const decoded = decodeJwt(token);
-  const userId = decoded?.sub;
-  if (!userId) return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
-
-  const email = (decoded?.email || '').toLowerCase();
+  // Token conferido no Supabase (assinatura + validade) — id/e-mail vêm do servidor, não do token.
+  const user = await verifyUser(token);
+  if (!user) return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
+  const userId = user.id;
+  const email = user.email;
   let isCreator = CREATOR_EMAILS.includes(email);
 
   const body = await request.json();

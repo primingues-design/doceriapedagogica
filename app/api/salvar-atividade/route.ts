@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { tokenFrom, verifyUser } from '@/lib/verifyUser';
 
 const SUPA_URL = process.env.SUPABASE_URL || 'https://atkwvwhwbkerezdmipxw.supabase.co';
 const SUPA_KEY = () => process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
-function decodeJwt(token: string): { sub?: string } | null {
-  try {
-    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-  } catch {
-    return null;
-  }
-}
 
 async function supaFetch(path: string, options: RequestInit = {}) {
   const key = SUPA_KEY();
@@ -25,13 +19,12 @@ async function supaFetch(path: string, options: RequestInit = {}) {
 }
 
 export async function POST(request: NextRequest) {
-  const authHeader = request.headers.get('authorization') || '';
-  const token = authHeader.replace(/^Bearer\s+/i, '');
+  const token = tokenFrom(request.headers.get('authorization'));
   if (!token) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
 
-  const decoded = decodeJwt(token);
-  const userId = decoded?.sub;
-  if (!userId) return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
+  const user = await verifyUser(token);
+  if (!user) return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
+  const userId = user.id;
 
   if (!SUPA_KEY()) return NextResponse.json({ error: 'Servidor não configurado' }, { status: 500 });
 

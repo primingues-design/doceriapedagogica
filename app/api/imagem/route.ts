@@ -1,13 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// Confirma apenas que há um usuário logado (gate contra abuso da cota).
-function decodeJwt(token: string): { sub?: string } | null {
-  try {
-    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-  } catch {
-    return null;
-  }
-}
+import { tokenFrom, verifyUser } from '@/lib/verifyUser';
 
 // Tamanhos aceitos pelo fal.ai (Flux)
 const SIZES = new Set([
@@ -19,9 +11,8 @@ export async function POST(request: NextRequest) {
   const key = process.env.FAL_KEY;
   if (!key) return NextResponse.json({ url: null, error: 'FAL_KEY não configurada' }, { status: 500 });
 
-  const authHeader = request.headers.get('authorization') || '';
-  const token = authHeader.replace(/^Bearer\s+/i, '');
-  if (!token || !decodeJwt(token)?.sub) {
+  // Só usuários logados de verdade (token conferido no Supabase) — evita abuso da cota.
+  if (!(await verifyUser(tokenFrom(request.headers.get('authorization'))))) {
     return NextResponse.json({ url: null, error: 'Não autenticado' }, { status: 401 });
   }
 
