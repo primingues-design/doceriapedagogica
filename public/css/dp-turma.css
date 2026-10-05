@@ -1,0 +1,35 @@
+/* Personagens da turma (ver /js/dp-turma.js) */
+.char{display:block;overflow:visible}
+.char .m{display:none}
+.char[data-mood="idle"] .m-smile,.char:not([data-mood]) .m-smile{display:block}
+.char[data-mood="happy"] .m-open{display:block}
+.char[data-mood="wow"] .m-o{display:block}
+.char[data-mood="think"] .m-flat{display:block}
+.char[data-mood="sad"] .m-sad{display:block}
+.char.talk-b .m{display:none !important}
+.char.talk-b .m-talk{display:block !important}
+.char .lid{transform-box:fill-box;transform-origin:50% 0;transform:scaleY(0);animation:blink 4.6s infinite;animation-delay:var(--bd,0s)}
+@keyframes blink{0%,93%,100%{transform:scaleY(0)}95.5%{transform:scaleY(1)}}
+.char .pupil{transition:transform .5s;transform:translate(var(--lx,0px),var(--ly,0px))}
+.char .c-head{transform-box:fill-box;transform-origin:50% 90%;animation:bob 3.4s ease-in-out infinite;animation-delay:var(--bd,0s)}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(1.2deg)}}
+.char .c-body{transform-box:fill-box;transform-origin:50% 100%;animation:breathe 3.4s ease-in-out infinite;animation-delay:var(--bd,0s)}
+@keyframes breathe{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.015)}}
+.char .brows{transition:transform .3s}
+.char[data-mood="happy"] .brows{transform:translateY(-3px)}
+.char[data-mood="wow"] .brows{transform:translateY(-6px)}
+.char[data-mood="think"] .brow-l{transform:translateY(-4px) rotate(-8deg);transform-box:fill-box;transform-origin:center}
+.char[data-mood="sad"] .brow-l{transform:rotate(14deg);transform-box:fill-box;transform-origin:center}
+.char[data-mood="sad"] .brow-r{transform:rotate(-14deg);transform-box:fill-box;transform-origin:center}
+.char .arm{transform-box:fill-box;transition:transform .35s cubic-bezier(.3,1.5,.5,1)}
+.char .arm-l{transform-origin:85% 10%}
+.char .arm-r{transform-origin:15% 10%}
+.char.cele .arm-l{transform:rotate(130deg)}
+.char.cele .arm-r{transform:rotate(-130deg)}
+.char.cele{animation:jump .6s cubic-bezier(.3,1.4,.5,1) 2}
+@keyframes jump{0%,100%{transform:translateY(0)}40%{transform:translateY(-16px)}}
+.char.wave .arm-r{animation:wave .5s ease-in-out 4 alternate}
+@keyframes wave{from{transform:rotate(-120deg)}to{transform:rotate(-150deg)}}
+.char.shake{animation:shake .45s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
