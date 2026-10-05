@@ -183,7 +183,11 @@
   .previa-actions{display:flex;align-items:center;gap:14px;flex-shrink:0}
   .previa-open{font-size:12.5px;color:var(--gold);font-weight:600;text-decoration:none;white-space:nowrap}
   .previa-close{background:none;border:none;font-size:24px;line-height:1;cursor:pointer;color:var(--muted)}
-  .previa-frame{flex:1;width:100%;border:none;background:#f3f0ea}
+  .previa-frame{flex:1;width:100%;background:#f3f0ea;overflow:auto;padding:12px;text-align:center}
+  .previa-frame img{max-width:100%;height:auto;box-shadow:0 4px 18px rgba(0,0,0,.12);background:#fff}
+  .thumb{display:block;width:100%;border:1px solid var(--border);border-radius:10px;overflow:hidden;padding:0;margin-bottom:14px;cursor:zoom-in;background:#fff;aspect-ratio:3/2.2}
+  .thumb img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform .2s}
+  .thumb:hover img{transform:scale(1.03)}
   .previa-foot{padding:10px 16px;border-top:1px solid var(--border);text-align:center}
 
   .ia-band{margin:40px 0 0;background:linear-gradient(135deg,#1f4f4f,#2d6e6e);border-radius:18px;padding:26px 28px;color:#fff;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
@@ -291,7 +295,7 @@
         <button class="previa-close" onclick="fecharPrevia()" aria-label="Fechar">×</button>
       </div>
     </div>
-    <iframe class="previa-frame" id="previa-frame" title="Prévia da atividade"></iframe>
+    <div class="previa-frame"><img id="previa-img" alt=""></div>
     <div class="previa-foot"><button class="btn-dl" onclick="baixarDaPrevia()">⬇ Baixar PDF para imprimir</button></div>
   </div>
 </div>
@@ -687,13 +691,42 @@
 
   /* ══════════ ATIVIDADES PRONTAS (PDF) ══════════
      Para adicionar: coloque o PDF em /public/atividades/<slug>.pdf e acrescente um objeto aqui. */
-  const ATIVIDADES=[];
+  const ATIVIDADES=[
+    {slug:'mat-adicao-subtracao-parte1',nivel:'1º ao 5º ano',tema:'Adição e subtração',titulo:'Adição e Subtração — Parte 1',
+     descricao:'Cálculo mental, estratégias de decomposição, arme e efetue sem reagrupamento, estimativa e problemas do dia a dia. Questões 1 a 5.',
+     preview:['Cálculo mental: 10 + 5, 45 + 10, 100 − 50, 72 − 20…','Estratégias de cálculo por decomposição: 28 + 15 e 54 − 12','Arme e efetue (sem reagrupamento) com quadro de dezenas e unidades','Estime e depois calcule: 48 + 31, 76 − 28, 125 + 67, 302 − 189','Problemas: figurinhas da Júlia e livros da biblioteca']},
+    {slug:'mat-adicao-subtracao-parte2',nivel:'1º ao 5º ano',tema:'Adição e subtração',titulo:'Adição e Subtração — Parte 2',
+     descricao:'Arme e efetue com reagrupamento (centena, dezena e unidade), parcelas que faltam, qual operação usar e desafios. Questões 6 a 10.',
+     preview:['Arme e efetue com reagrupamento: 37 + 28, 136 + 287, 153 − 76, 402 − 185','Complete as parcelas: □ + 15 = 32, 125 + □ = 200…','Descubra o número que falta e desafio: três jeitos de somar 50','Qual operação devo usar? Situações com carrinhos, alunos, lápis e balas','Desafios: "Pensei em um número, somei 25 e obtive 70…"']},
+    {slug:'mat-dinheiro-parte1',nivel:'1º ao 5º ano',tema:'Dinheiro',titulo:'Dinheiro e Educação Financeira — Nosso dinheiro',
+     descricao:'Conheça as cédulas e moedas do Sistema Monetário Brasileiro e escreva o valor em reais de cada quantia. Questões 1 e 2.',
+     preview:['Nosso dinheiro: cédulas de 2, 5, 10, 20, 50 e 100 reais e moedas de 1 real, 50, 25, 10 e 5 centavos','Qual é o valor? Some cédulas e moedas e escreva o total em reais']},
+    {slug:'mat-dinheiro-parte3',nivel:'1º ao 5º ano',tema:'Dinheiro',titulo:'Dinheiro e Educação Financeira — Compras, troco e preços',
+     descricao:'Lista de materiais escolares com preços, cálculo de troco e comparação de preços de brinquedos. Questões 6 a 8.',
+     preview:['Compras: lápis R$ 2,00, caderno R$ 6,00, borracha R$ 1,50, cola R$ 4,50…','Troco: picolé de R$ 4,00 pago com R$ 10,00, bola de R$ 28,00 paga com R$ 50,00…','Comparando preços: carrinho, boneca, jogo e bicicleta']},
+    {slug:'mat-dinheiro-parte4',nivel:'1º ao 5º ano',tema:'Dinheiro',titulo:'Dinheiro e Educação Financeira — Orçamento e escolhas',
+     descricao:'Situações do cotidiano, orçamento de um passeio escolar, escolhas inteligentes e um desafio de compras com R$ 100,00. Questões 9 a 12.',
+     preview:['Situações do cotidiano: troco de uma compra e quanto falta para o carrinho','Orçamento do passeio: lanche, suco e transporte — vai sobrar ou faltar?','Escolhas inteligentes: qual lanche é mais econômico?','Desafio: escolha 3 itens com R$ 100,00 e calcule o total']},
+    {slug:'mat-geometria-parte1',nivel:'1º ao 5º ano',tema:'Geometria',titulo:'Geometria — Formas, sólidos e localização',
+     descricao:'Nomes das formas planas e dos sólidos geométricos, lados e vértices, eixo de simetria e localização em malha. Questões 1 a 4.',
+     preview:['Formas planas: círculo, quadrado, triângulo, retângulo, losango, hexágono','Sólidos geométricos: cubo, cilindro, cone, esfera, paralelepípedo, pirâmide','Lados, vértices e simetria: o pentágono','Localização e trajetos no mapa quadriculado']},
+    {slug:'mat-geometria-parte2',nivel:'1º ao 5º ano',tema:'Geometria',titulo:'Geometria — Simetria, trajetos e introdução à área',
+     descricao:'Complete figuras simétricas, localize objetos na malha, descreva trajetos e calcule áreas contando quadradinhos. Questões 4 a 12.',
+     preview:['Simetria: desenhe a outra metade da figura','Localização na malha (colunas A–E, linhas 1–4)','Trajetos no mapa: casa, escola, praça e mercado','Introdução à área e área por contagem de quadradinhos','Comparando áreas e formando figuras com a mesma área','Situações-problema de perímetro e área: tapete e terreno']},
+    {slug:'mat-medidas-tempo-capacidade',nivel:'1º ao 5º ano',tema:'Medidas',titulo:'Medidas — Capacidade, tempo e calendário',
+     descricao:'Compare e converta litros e mililitros, leia as horas no relógio, complete as relações de tempo e use o calendário. Questões 7 a 12.',
+     preview:['Compare as capacidades: 500 mL e 1 L, 2 L e 1500 mL…','Converta as medidas: 1 L = ___ mL, 2500 mL = ___ L','Tempo: leia as horas nos relógios de ponteiro','Complete: 1 hora tem ___ minutos, 1 dia tem ___ horas','Leia e responda: duração da aula e minutos de estudo','Calendário de março: dias da semana e domingos']},
+    {slug:'mat-problemas-matematicos',nivel:'1º ao 5º ano',tema:'Resolução de problemas',titulo:'Problemas Matemáticos — Leia, pense, resolva e explique',
+     descricao:'Cinco situações-problema do cotidiano em que o aluno identifica as informações importantes, escolhe a operação, resolve e explica o raciocínio.',
+     preview:['Na papelaria: 3 cadernos de R$ 12,00 e 2 canetas de R$ 4,00','Na feira: 48 maçãs, 27 vendidas e mais 15 colocadas','Na escola: 24 alunos em grupos de 6','No cinema: 8 fileiras de 12 poltronas e 56 vendidas','No ônibus: 45 passageiros, 18 desceram e 12 subiram']}
+  ];
 
   function renderProntas(){
     if(!ATIVIDADES.length) return;
     document.getElementById('prontas').style.display='';
     document.getElementById('cards').innerHTML=ATIVIDADES.map(a=>`
       <article class="card">
+        <button class="thumb" data-previa="${esc(a.slug)}" aria-label="Ver prévia de ${esc(a.titulo)}"><img src="/atividades/previa/${esc(a.slug)}-mini.jpg" alt="Prévia: ${esc(a.titulo)}" loading="lazy" width="520" height="736"></button>
         <div class="badges"><span class="badge">${esc(a.nivel)}</span><span class="badge b2">${esc(a.tema)}</span></div>
         <h3>${esc(a.titulo)}</h3>
         <p class="desc">${esc(a.descricao)}</p>
@@ -722,13 +755,15 @@
     _previa=slug;const a=ativ(slug);
     if(window.dpTrack) window.dpTrack('ver_previa',{item:slug});
     const pdf='/atividades/'+slug+'.pdf';
-    document.getElementById('previa-frame').src=pdf+'#toolbar=0&navpanes=0&view=FitH';
+    // prévia em imagem (leve e funciona bem no celular); o PDF fica no "Abrir em nova aba"
+    document.getElementById('previa-img').src='/atividades/previa/'+slug+'.jpg';
+    document.getElementById('previa-img').alt='Prévia: '+(a.titulo||'');
     document.getElementById('previa-open').href=pdf;
     document.getElementById('previa-title').textContent=a.titulo||'Prévia da atividade';
     document.getElementById('previa-overlay').classList.add('show');
     document.body.style.overflow='hidden';
   }
-  function fecharPrevia(){document.getElementById('previa-overlay').classList.remove('show');document.getElementById('previa-frame').src='';document.body.style.overflow='';}
+  function fecharPrevia(){document.getElementById('previa-overlay').classList.remove('show');document.getElementById('previa-img').removeAttribute('src');document.body.style.overflow='';}
   function baixarDaPrevia(){if(_previa)baixar(_previa);}
   document.addEventListener('keydown',e=>{if(e.key==='Escape')fecharPrevia();});
 
