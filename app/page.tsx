@@ -235,7 +235,7 @@ export default function Home() {
               <div className="text-3xl flex-shrink-0">➗</div>
               <div className="flex-1 min-w-0">
                 <div className="font-semibold text-[#3D1F0D]">Central de Matemática</div>
-                <div className="text-sm text-[#8A7060]">Gere folhas de contas, frações, área e equações — com gabarito.</div>
+                <div className="text-sm text-[#8A7060]">Contas, frações, dinheiro, área e equações com gabarito — grátis por tempo limitado.</div>
               </div>
               <span className="text-[#C8742A] flex-shrink-0 group-hover:translate-x-0.5 transition">→</span>
             </a>
