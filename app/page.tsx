@@ -214,7 +214,7 @@ export default function Home() {
             <div className="text-[#C8742A] text-xs font-bold uppercase tracking-widest mb-1">Explore de graça</div>
             <p className="text-[#8A7060] text-sm">Conheça a Doceria sem compromisso. O e-mail só é pedido na hora de baixar.</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <a href="/jogos-area.html" className="group flex items-center gap-4 rounded-2xl bg-white border border-[#C8742A]/15 p-5 shadow-sm hover:-translate-y-0.5 hover:shadow-md transition">
               <div className="text-3xl flex-shrink-0">🎮</div>
               <div className="flex-1 min-w-0">
@@ -228,6 +228,14 @@ export default function Home() {
               <div className="flex-1 min-w-0">
                 <div className="font-semibold text-[#3D1F0D]">Atividades para EJA</div>
                 <div className="text-sm text-[#8A7060]">Prontas para imprimir — simples, mas nunca infantilizadas.</div>
+              </div>
+              <span className="text-[#C8742A] flex-shrink-0 group-hover:translate-x-0.5 transition">→</span>
+            </a>
+            <a href="/matematica.html" className="group flex items-center gap-4 rounded-2xl bg-white border border-[#C8742A]/15 p-5 shadow-sm hover:-translate-y-0.5 hover:shadow-md transition">
+              <div className="text-3xl flex-shrink-0">➗</div>
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-[#3D1F0D]">Central de Matemática</div>
+                <div className="text-sm text-[#8A7060]">Gere folhas de contas, frações, área e equações — com gabarito.</div>
               </div>
               <span className="text-[#C8742A] flex-shrink-0 group-hover:translate-x-0.5 transition">→</span>
             </a>
@@ -423,6 +431,7 @@ export default function Home() {
           <div className="flex items-center flex-wrap justify-center gap-4">
             <a href="/jogos-area.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Jogos grátis</a>
             <a href="/eja.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Atividades EJA</a>
+            <a href="/matematica.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Matemática</a>
             <a href="/eleicoes.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Eleições 2026</a>
             <Link href="/pricing" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Preços</Link>
             <Link href="/conta.html" className="text-sm text-[#C8742A] font-semibold hover:underline whitespace-nowrap">Entrar na plataforma →</Link>

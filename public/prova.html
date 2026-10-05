@@ -1903,6 +1903,11 @@ RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
 
   // estado inicial
   onTextoChange();
+  // Link direto da Central de Matemática: prova.html?componente=matematica
+  if(/^matem/i.test(new URLSearchParams(location.search).get('componente')||'')){
+    document.getElementById('a_componente').value='Matemática';
+    onComponenteChange();
+  }
 </script>
 <script src="/js/dp-print.js"></script>
 <script src="/js/dp-auth.js"></script>

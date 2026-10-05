@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atividades de matemática para imprimir — geradores grátis | Doceria Pedagógica</title>
+<meta name="description" content="Central de Matemática: gere folhas de operações, frações, área e perímetro e equações do 1º grau para imprimir, com gabarito. Escolha o nível e clique em gerar outra — grátis.">
+<link rel="canonical" href="https://doceriapedagogica.com/matematica.html">
+<meta property="og:title" content="Atividades de matemática para imprimir — geradores grátis">
+<meta property="og:description" content="Folhas de operações, frações, área e perímetro e equações com gabarito. Escolha o nível, gere e imprima.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://doceriapedagogica.com/matematica.html">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#3D1F0D; --cream:#FFFAF5; --warm:#FDF6ED;
+    --gold:#C8742A; --brown:#6B3A1F; --muted:#8A7060;
+    --teal:#2d6e6e; --teal-pale:#e8f4f4;
+    --green:#2d7d4e; --coral:#d95f3b;
+    --border:rgba(200,116,42,.15);
+    --paper-ink:#1a1917; --paper-muted:#6b6966; --paper-line:#b9b5ae;
+    --fill:#f6c27a;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Outfit',sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh}
+
+  .topbar{background:var(--warm);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:18px;color:var(--ink);text-decoration:none}
+  .logo-mark{width:28px;height:28px;background:var(--gold);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .logo span{color:var(--gold)}
+  .top-links{display:flex;align-items:center;gap:14px;font-size:14px}
+  .top-links a{color:var(--brown);text-decoration:none}
+  .top-cta{background:var(--gold);color:#fff !important;padding:8px 16px;border-radius:99px;font-weight:600}
+  @media(max-width:520px){ .top-links .hide-sm{display:none} }
+
+  .hero{max-width:960px;margin:0 auto;padding:44px 20px 20px;text-align:center}
+  .eyebrow{display:inline-block;background:var(--teal-pale);color:var(--teal);border:1px solid rgba(45,110,110,.2);padding:5px 14px;border-radius:99px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:14px}
+  .hero h1{font-size:36px;line-height:1.15;letter-spacing:-.5px;margin-bottom:14px}
+  .hero p{font-size:16px;color:var(--muted);line-height:1.6;max-width:660px;margin:0 auto}
+  .hero-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:18px}
+  .hero-chips span{font-size:12.5px;font-weight:600;color:var(--brown);background:#fff;border:1px solid var(--border);padding:5px 12px;border-radius:99px}
+  @media(max-width:720px){ .hero h1{font-size:28px} }
+
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+  .sec-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;margin:34px 0 6px}
+  .sec-sub{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.55}
+
+  /* abas dos geradores */
+  .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+  @media(max-width:760px){ .tabs{grid-template-columns:1fr 1fr} }
+  .tab{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:14px 14px 12px;text-align:left;cursor:pointer;font-family:inherit;color:var(--ink);transition:border-color .15s,box-shadow .15s,transform .15s}
+  .tab:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.05)}
+  .tab.active{border-color:var(--teal);box-shadow:0 0 0 3px rgba(45,110,110,.12)}
+  .tab-ico{font-size:22px;margin-bottom:4px}
+  .tab-name{font-weight:700;font-size:15px}
+  .tab-desc{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4}
+
+  .gen{display:grid;grid-template-columns:290px 1fr;gap:22px;align-items:start}
+  @media(max-width:900px){ .gen{grid-template-columns:1fr} }
+  .panel{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px;position:sticky;top:76px}
+  @media(max-width:900px){ .panel{position:static} }
+  .lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:2px 0 7px;display:block}
+  .pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .pill{padding:7px 12px;border:1.5px solid rgba(61,31,13,.16);border-radius:99px;font-size:12.5px;font-weight:500;cursor:pointer;background:#fff;user-select:none;font-family:inherit;color:var(--ink);line-height:1.2}
+  .pill small{display:block;font-size:10.5px;color:var(--muted);font-weight:500}
+  .pill.active{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:700}
+  .pill.active small{color:rgba(255,255,255,.8)}
+  .pill.dif.active[data-v="facil"]{background:var(--green);border-color:var(--green)}
+  .pill.dif.active[data-v="medio"]{background:var(--gold);border-color:var(--gold)}
+  .pill.dif.active[data-v="dificil"]{background:var(--coral);border-color:var(--coral)}
+  .chk{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:4px}
+  .chk input{width:16px;height:16px;accent-color:var(--teal)}
+  .chk-hint{font-size:11.5px;color:var(--muted);margin:0 0 16px 24px}
+  .btn{width:100%;border:none;border-radius:10px;padding:13px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s}
+  .btn:hover{opacity:.9}
+  .btn-new{background:var(--teal);color:#fff;margin-bottom:8px}
+  .btn-print{background:var(--gold);color:#fff}
+  .print-note{font-size:11.5px;color:var(--muted);text-align:center;margin-top:8px;line-height:1.45}
+
+  /* ── folha (A4 na tela) ── */
+  .paper{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;box-shadow:0 10px 30px rgba(0,0,0,.07);padding:34px 38px;color:var(--paper-ink);font-family:'Outfit',sans-serif}
+  @media(max-width:600px){ .paper{padding:20px 16px} }
+  .sh-head{border-top:5px solid var(--teal);border-bottom:1px solid #e6e1d8;padding:14px 0 12px;margin-bottom:22px}
+  .sh-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--paper-muted);margin-bottom:5px}
+  .sh-title{font-family:'Playfair Display',serif;font-size:23px;font-weight:900;margin-bottom:3px}
+  .sh-meta{font-size:11.5px;color:var(--paper-muted)}
+  .sh-name{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px 26px;font-size:12px;color:var(--paper-muted)}
+  .sh-instr{font-size:13.5px;margin:-8px 0 18px;color:var(--paper-ink)}
+  .sh-foot{margin-top:24px;padding-top:9px;border-top:1px solid #e6e1d8;display:flex;justify-content:space-between;font-size:10px;color:var(--paper-muted)}
+  .sh-foot b{font-family:'Playfair Display',serif;color:var(--gold)}
+
+  .qgrid{display:grid;gap:16px 16px}
+  .q{border:1px solid #ddd8cf;border-radius:9px;padding:12px 14px;break-inside:avoid;page-break-inside:avoid}
+  .qn{font-size:10.5px;font-weight:700;color:var(--paper-muted);letter-spacing:.05em;margin-bottom:6px}
+  .qtxt{font-size:15px;line-height:1.5}
+  .ans{border-bottom:1.5px solid var(--paper-line);height:30px}
+  .ans-lbl{display:flex;align-items:flex-end;gap:8px;font-size:13.5px;margin-top:8px}
+  .ans-lbl .ans{flex:1;height:22px}
+  .calc{font-size:11px;color:var(--paper-muted);margin-top:8px}
+  .calc-space{height:64px}
+
+  /* operações (conta armada) */
+  .op{display:flex;flex-direction:column;align-items:flex-end;padding-top:14px}
+  .op-row{display:flex;justify-content:flex-end;align-items:center;gap:6px;width:100%}
+  .op-sign{font-size:22px;font-weight:700;color:var(--teal);min-width:22px;text-align:center}
+  .op-num{font-family:'Courier New',monospace;font-size:26px;font-weight:700;letter-spacing:2px}
+  .op-bar{width:100%;border-top:2.5px solid var(--paper-ink);margin:5px 0 4px}
+  .op-resto{font-size:11px;color:var(--paper-muted);align-self:flex-start}
+
+  /* frações */
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.05;margin:0 3px;font-weight:600}
+  .fr>span:last-child{border-top:2px solid currentColor;padding:0 3px;min-width:16px;text-align:center}
+  .fr>span:first-child{padding:0 3px}
+  .fr .box{display:inline-block;width:26px;height:24px;border:1.5px solid var(--paper-ink);border-radius:3px;margin:1px 0}
+  .fr>span .box{vertical-align:middle}
+  .cmp-box{display:inline-block;width:36px;height:30px;border:1.5px solid var(--paper-ink);border-radius:50%;vertical-align:middle;margin:0 10px}
+  .fig{display:flex;justify-content:center;margin:4px 0 6px}
+  .row-c{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;font-size:17px;min-height:56px}
+  .blank{display:inline-block;min-width:70px;border-bottom:1.5px solid var(--paper-line);height:26px;vertical-align:bottom}
+
+  /* área */
+  .area-q{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+  .area-q .fig{flex:0 0 auto;margin:0;flex-direction:column;align-items:center}
+  .q{min-width:0}
+  .q svg{max-width:100%;height:auto}
+  .area-q .area-ans{flex:1;min-width:170px}
+  @media(max-width:600px){ .area-q{flex-direction:column;align-items:stretch} }
+
+  /* equações */
+  .eq{font-size:20px;font-weight:600;text-align:center;padding:6px 0 4px;font-family:'Outfit',sans-serif;letter-spacing:.5px}
+  .lines{margin-top:6px}
+  .lines div{border-bottom:1px solid #d8d3ca;height:26px}
+
+  /* gabarito */
+  .gaba{margin-top:34px;padding-top:28px;border-top:2px dashed #d8d3ca}
+  .gaba-tag{display:inline-block;font-size:11px;font-weight:700;color:var(--coral);background:rgba(217,95,59,.08);border-radius:99px;padding:3px 10px;margin-bottom:10px}
+  .gaba-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:900;color:var(--coral)}
+  .gaba-sub{font-size:11px;color:var(--paper-muted);margin-bottom:12px}
+  .gaba-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:4px 22px}
+  .gaba-item{font-size:13px;padding:6px 0;border-bottom:1px solid #eee9e0;display:flex;gap:6px;align-items:center}
+  .gaba-n{font-weight:700;color:var(--paper-muted);min-width:22px}
+  @media(max-width:600px){ .gaba-grid{grid-template-columns:1fr} }
+
+  /* letra grande (EJA / Ed. Infantil) */
+  body.letra-grande .qtxt{font-size:18px}
+  body.letra-grande .op-num{font-size:32px;letter-spacing:3px}
+  body.letra-grande .op-sign{font-size:28px}
+  body.letra-grande .eq{font-size:24px}
+  body.letra-grande .row-c{font-size:21px}
+  body.letra-grande .sh-title{font-size:27px}
+  body.letra-grande .sh-name,body.letra-grande .ans-lbl{font-size:15px}
+  body.letra-grande .gaba-item{font-size:14.5px}
+
+  /* atividades prontas (PDF) */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:720px){ .cards{grid-template-columns:1fr} }
+  .card{background:#fff;border:1px solid var(--border);border-left:5px solid var(--teal);border-radius:14px;padding:20px 22px;box-shadow:0 6px 24px rgba(0,0,0,.05);display:flex;flex-direction:column}
+  .badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--teal-pale);color:var(--teal)}
+  .badge.b2{background:rgba(200,116,42,.1);color:var(--gold)}
+  .card h3{font-family:'Playfair Display',serif;font-size:19px;font-weight:900;line-height:1.2;margin-bottom:8px}
+  .card .desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:14px;flex:1}
+  details{background:var(--warm);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden}
+  summary{cursor:pointer;padding:11px 14px;font-size:13px;font-weight:600;color:var(--brown);list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:'  ▾';color:var(--gold)}
+  details[open] summary::after{content:'  ▴'}
+  .preview{padding:0 16px 14px}
+  .preview ol{margin:0;padding-left:20px;font-size:13px;color:var(--brown);line-height:1.7}
+  .actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+  .btn-dl{background:var(--gold);color:#fff;border:none;border-radius:10px;padding:12px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+  .btn-dl:hover{background:var(--brown)}
+  .btn-sec{background:#fff;color:var(--brown);border:1.5px solid var(--border);border-radius:10px;padding:11px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+  .btn-sec:hover{border-color:var(--gold);color:var(--gold)}
+  .dl-note{font-size:12px;color:var(--muted)}
+
+  .previa-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(15,14,12,.6);align-items:center;justify-content:center;padding:14px}
+  .previa-overlay.show{display:flex}
+  .previa-box{background:#fff;border-radius:14px;max-width:820px;width:100%;height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.45)}
+  .previa-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .previa-title{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .previa-actions{display:flex;align-items:center;gap:14px;flex-shrink:0}
+  .previa-open{font-size:12.5px;color:var(--gold);font-weight:600;text-decoration:none;white-space:nowrap}
+  .previa-close{background:none;border:none;font-size:24px;line-height:1;cursor:pointer;color:var(--muted)}
+  .previa-frame{flex:1;width:100%;border:none;background:#f3f0ea}
+  .previa-foot{padding:10px 16px;border-top:1px solid var(--border);text-align:center}
+
+  .ia-band{margin:40px 0 0;background:linear-gradient(135deg,#1f4f4f,#2d6e6e);border-radius:18px;padding:26px 28px;color:#fff;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .ia-band h2{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:6px}
+  .ia-band p{font-size:14px;color:rgba(255,255,255,.82);line-height:1.55;max-width:600px}
+  .ia-band a{margin-left:auto;background:#fff;color:var(--teal);font-weight:700;text-decoration:none;padding:12px 20px;border-radius:99px;font-size:14px;white-space:nowrap}
+
+  .faq{margin:10px 0 60px}
+  .faq details{background:#fff}
+  .faq .ans-txt{padding:0 16px 14px;font-size:14px;color:var(--brown);line-height:1.65}
+
+  footer{border-top:1px solid var(--border);padding:24px 20px;text-align:center;font-size:13px;color:var(--muted)}
+  footer a{color:var(--gold);text-decoration:none}
+
+  /* ═══ IMPRESSÃO: só a folha (aluno) + gabarito em página separada ═══ */
+  @media print{
+    @page{size:A4 portrait;margin:10mm 12mm}
+    body{background:#fff !important}
+    .no-print,.topbar,.hero,.tabs,.panel,.sec-title,.sec-sub,#prontas,.ia-band,.faq,footer,.previa-overlay{display:none !important}
+    .wrap{max-width:none;padding:0}
+    .gen{display:block}
+    .paper{border:none;box-shadow:none;border-radius:0;padding:0}
+    .gaba{break-before:page;page-break-before:always;margin-top:0;padding-top:0;border-top:none}
+    .gaba-tag{display:none}
+    .qgrid{grid-template-columns:var(--cols-print) !important}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="logo" href="/"><span class="logo-mark">🍰</span>Doceria <span>Pedagógica</span></a>
+  <div class="top-links">
+    <a class="hide-sm" href="/jogos-area.html">Jogos</a>
+    <a class="hide-sm" href="/eja.html">EJA</a>
+    <a class="top-cta" href="/conta.html" id="loginLink">Entrar</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">➗ Central de Matemática</div>
+  <h1>Atividades de matemática para imprimir</h1>
+  <p>Escolha o assunto e o nível, clique em <strong>gerar outra</strong> quantas vezes quiser — os números mudam na hora. Cada folha sai pronta para o aluno, com <strong>gabarito do professor</strong> em página separada.</p>
+  <div class="hero-chips"><span>Grátis</span><span>Com gabarito</span><span>Fácil, médio e difícil</span><span>Letra grande para EJA</span></div>
+</div>
+
+<div class="wrap">
+  <h2 class="sec-title">Geradores de folhas</h2>
+  <p class="sec-sub">Do 1º ano ao 9º ano e EJA. A folha aparece aqui embaixo; para imprimir, pedimos só o seu e-mail (sem custo, não gasta crédito).</p>
+
+  <div class="tabs" id="tabs">
+    <button class="tab" data-g="operacoes"><div class="tab-ico">🧮</div><div class="tab-name">Operações</div><div class="tab-desc">Contas armadas de + − × ÷</div></button>
+    <button class="tab" data-g="fracoes"><div class="tab-ico">🍕</div><div class="tab-name">Frações</div><div class="tab-desc">Identificar, comparar, somar, equivalentes</div></button>
+    <button class="tab" data-g="area"><div class="tab-ico">📐</div><div class="tab-name">Área e perímetro</div><div class="tab-desc">Malha quadriculada e figuras com medidas</div></button>
+    <button class="tab" data-g="equacoes"><div class="tab-ico">⚖️</div><div class="tab-name">Equações do 1º grau</div><div class="tab-desc">Do x + 3 = 10 aos parênteses</div></button>
+  </div>
+
+  <div class="gen">
+    <div class="panel no-print">
+      <div id="opts"></div>
+      <label class="chk"><input type="checkbox" id="letraGrande"> 🔡 Letra grande</label>
+      <div class="chk-hint">Recomendado para EJA e anos iniciais</div>
+      <button class="btn btn-new" onclick="gerar()">🔄 Gerar outra folha</button>
+      <button class="btn btn-print" onclick="imprimir()">🖨️ Imprimir folha + gabarito</button>
+      <div class="print-note">Imprimir pede só o e-mail. Para salvar em PDF, escolha "Salvar como PDF" na janela de impressão.</div>
+    </div>
+    <div class="paper" id="paper"></div>
+  </div>
+
+  <section id="prontas" style="display:none">
+    <h2 class="sec-title">Atividades prontas</h2>
+    <p class="sec-sub">Atividades de matemática preparadas com cuidado. Veja a prévia e baixe o PDF para imprimir.</p>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <div class="ia-band">
+    <div>
+      <h2>Quer uma atividade com o seu tema?</h2>
+      <p>Problemas com dinheiro, situações do dia a dia da turma, geometria com cena… A IA da Doceria monta uma atividade de matemática completa, com gabarito, no seu tema e nível.</p>
+    </div>
+    <a href="/prova.html?componente=matematica">✨ Gerar com IA →</a>
+  </div>
+
+  <section class="faq">
+    <h2 class="sec-title">Perguntas frequentes</h2>
+    <details><summary>As atividades de matemática são grátis?</summary><div class="ans-txt">Sim. Os geradores de folhas (operações, frações, área e perímetro, equações) são gratuitos: você gera quantas folhas quiser. Para imprimir, pedimos só o seu e-mail — não é assinatura e não gasta crédito.</div></details>
+    <details><summary>Vem com gabarito?</summary><div class="ans-txt">Vem. Toda folha imprime com o gabarito do professor numa página separada, para você corrigir rápido e entregar ao aluno só a folha de atividades.</div></details>
+    <details><summary>Para qual ano serve cada nível?</summary><div class="ans-txt">Cada gerador mostra a turma indicada em cada nível. Em geral: o nível fácil atende os anos iniciais, o médio o meio do fundamental e o difícil os anos finais. Ajuste à sua turma — você conhece seus alunos melhor que ninguém.</div></details>
+    <details><summary>Serve para EJA?</summary><div class="ans-txt">Serve. Marque "Letra grande" para deixar os números e enunciados maiores e mais fáceis de ler. As folhas não usam desenhos infantis, então funcionam bem com jovens e adultos.</div></details>
+    <details><summary>Posso gerar a mesma folha com outros números?</summary><div class="ans-txt">Pode. É só clicar em "Gerar outra folha": o modelo continua o mesmo e os números mudam. Ótimo para recuperação, lição de casa ou para cada fileira receber uma versão diferente.</div></details>
+  </section>
+</div>
+
+<footer>
+  Doceria Pedagógica · <a href="/">Início</a> · <a href="/eja.html">Atividades EJA</a> · <a href="/jogos-area.html">Jogos</a> · <a href="/conta.html">Entrar na plataforma →</a>
+</footer>
+
+<div class="previa-overlay" id="previa-overlay" onclick="if(event.target===this)fecharPrevia()">
+  <div class="previa-box">
+    <div class="previa-head">
+      <div class="previa-title" id="previa-title">Prévia da atividade</div>
+      <div class="previa-actions">
+        <a class="previa-open" id="previa-open" href="#" target="_blank" rel="noopener">Abrir em nova aba ↗</a>
+        <button class="previa-close" onclick="fecharPrevia()" aria-label="Fechar">×</button>
+      </div>
+    </div>
+    <iframe class="previa-frame" id="previa-frame" title="Prévia da atividade"></iframe>
+    <div class="previa-foot"><button class="btn-dl" onclick="baixarDaPrevia()">⬇ Baixar PDF para imprimir</button></div>
+  </div>
+</div>
+
+<script>
+  const SUPA_KEY='sb-atkwvwhwbkerezdmipxw-auth-token';
+  function isLoggedIn(){try{const s=JSON.parse(localStorage.getItem(SUPA_KEY));return s&&(s.expires_at||0)>Date.now()/1000&&!!s.access_token;}catch{return false;}}
+  function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+  /* ══════════ utilidades ══════════ */
+  const rand=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+  const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
+  const gcd=(a,b)=>{a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a||1;};
+  const lcm=(a,b)=>a/gcd(a,b)*b;
+  const simp=(n,d)=>{const g=gcd(n,d);return[n/g,d/g];};
+  const MINUS='−';
+  function fr(n,d){return `<span class="fr"><span>${n}</span><span>${d}</span></span>`;}
+  function frRes(n,d){ // resultado simplificado (inteiro quando der)
+    const [a,b]=simp(n,d);
+    if(b===1) return String(a);
+    const s=fr(a,b);
+    return (a!==n)? `${fr(n,d)} = ${s}` : s;
+  }
+  const BOX='<span class="box"></span>';
+  function lines(n){return `<div class="lines">${'<div></div>'.repeat(n)}</div>`;}
+  // evita repetir a mesma questão na folha
+  function unicos(qtd,fn){const out=[],seen=new Set();let t=0;while(out.length<qtd&&t<qtd*40){t++;const q=fn(out.length);if(seen.has(q.key))continue;seen.add(q.key);out.push(q);}return out;}
+
+  /* ══════════ desenhos (SVG) ══════════ */
+  const STK='#3d3a36', FILL='#f6c27a';
+  function pizza(d,pint,r=38){
+    const c=r+3, sz=2*c; let s=`<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}">`;
+    if(d===1){s+=`<circle cx="${c}" cy="${c}" r="${r}" fill="${pint?FILL:'#fff'}" stroke="${STK}" stroke-width="1.6"/>`;return s+'</svg>';}
+    for(let i=0;i<d;i++){
+      const a1=(-90+i*360/d)*Math.PI/180, a2=(-90+(i+1)*360/d)*Math.PI/180;
+      const x1=c+r*Math.cos(a1),y1=c+r*Math.sin(a1),x2=c+r*Math.cos(a2),y2=c+r*Math.sin(a2);
+      s+=`<path d="M${c},${c} L${x1.toFixed(2)},${y1.toFixed(2)} A${r},${r} 0 ${360/d>180?1:0} 1 ${x2.toFixed(2)},${y2.toFixed(2)} Z" fill="${i<pint?FILL:'#fff'}" stroke="${STK}" stroke-width="1.6"/>`;
+    }
+    return s+'</svg>';
+  }
+  function barra(d,pint,w=180,h=34){
+    const cw=w/d; let s=`<svg width="${w+4}" height="${h+4}" viewBox="0 0 ${w+4} ${h+4}">`;
+    for(let i=0;i<d;i++) s+=`<rect x="${2+i*cw}" y="2" width="${cw}" height="${h}" fill="${i<pint?FILL:'#fff'}" stroke="${STK}" stroke-width="1.6"/>`;
+    return s+'</svg>';
+  }
+  function figuraFracao(d,pint){return (d<=8 && Math.random()<0.55)? pizza(d,pint) : barra(d,pint);}
+
+  /* ══════════ GERADOR 1 — OPERAÇÕES ══════════ */
+  function genAdicao(dif){
+    let a,b;
+    if(dif==='facil'){do{a=rand(1,18);b=rand(1,18);}while((a%10)+(b%10)>=10||a+b>25);}
+    else if(dif==='medio'){do{a=rand(12,89);b=rand(12,89);}while((a%10)+(b%10)<10);}
+    else{a=rand(101,999);b=rand(101,999);}
+    return{a,b,res:a+b,sign:'+',op:'adicao'};
+  }
+  function genSubtracao(dif){
+    let a,b;
+    if(dif==='facil'){do{a=rand(5,25);b=rand(1,a-1);}while((a%10)<(b%10));}
+    else if(dif==='medio'){do{a=rand(21,99);b=rand(10,a-5);}while((a%10)>=(b%10));}
+    else{do{a=rand(201,999);b=rand(100,a-10);}while((a%10)>=(b%10)||(Math.floor(a/10)%10)>=(Math.floor(b/10)%10));}
+    return{a,b,res:a-b,sign:MINUS,op:'subtracao'};
+  }
+  function genMultiplicacao(dif){
+    let a,b;
+    if(dif==='facil'){a=rand(2,10);b=rand(2,10);}
+    else if(dif==='medio'){do{a=rand(12,99);b=rand(3,9);}while(a*b<20);}
+    else{a=rand(12,199);b=rand(11,25);}
+    return{a,b,res:a*b,sign:'×',op:'multiplicacao'};
+  }
+  function genDivisao(dif){
+    let dv,q,r=0;
+    if(dif==='facil'){dv=rand(2,10);q=rand(2,10);}
+    else if(dif==='medio'){dv=rand(3,12);q=rand(11,30);}
+    else{dv=rand(11,20);q=rand(10,40);r=rand(1,dv-1);}
+    return{a:dv*q+r,b:dv,res:q,resto:r,sign:'÷',op:'divisao'};
+  }
+  const OPS={adicao:genAdicao,subtracao:genSubtracao,multiplicacao:genMultiplicacao,divisao:genDivisao};
+  const OP_NOME={adicao:'Adição',subtracao:'Subtração',multiplicacao:'Multiplicação',divisao:'Divisão',mista:'Operações mistas'};
+
+  /* ══════════ GERADOR 2 — FRAÇÕES ══════════ */
+  const FR_TIPOS={identificar:'Que fração está pintada?',pintar:'Pinte a fração indicada',comparar:'Compare as frações',operar:'Some e subtraia',equivalentes:'Frações equivalentes'};
+  function genFracao(tipo,dif){
+    if(tipo==='identificar'||tipo==='pintar'){
+      const d= dif==='facil'? rand(2,6) : dif==='medio'? rand(3,8) : rand(5,12);
+      const n=rand(1,d-1);
+      if(tipo==='identificar') return{key:'i'+n+'/'+d,tipo,html:`<div class="fig">${figuraFracao(d,n)}</div><div class="ans-lbl">Fração pintada: <span class="ans"></span></div>`,gab:fr(n,d)};
+      return{key:'p'+n+'/'+d,tipo,html:`<div class="row-c">Pinte ${fr(n,d)}</div><div class="fig">${figuraFracao(d,0)}</div>`,gab:`pintar ${n} de ${d} partes`};
+    }
+    if(tipo==='comparar'){
+      let n1,d1,n2,d2,modo= dif==='facil'?'den':dif==='medio'?pick(['den','num']):'dif';
+      if(modo==='den'){d1=d2=rand(3,10);do{n1=rand(1,d1-1);n2=rand(1,d1-1);}while(n1===n2);}
+      else if(modo==='num'){n1=n2=rand(1,4);do{d1=rand(n1+1,10);d2=rand(n1+1,10);}while(d1===d2);}
+      else{do{d1=rand(2,12);d2=rand(2,12);n1=rand(1,d1-1);n2=rand(1,d2-1);}while(d1===d2);}
+      const v=n1*d2-n2*d1, s=v>0?'&gt;':v<0?'&lt;':'=';
+      return{key:'c'+n1+'/'+d1+'-'+n2+'/'+d2,tipo,html:`<div class="row-c">${fr(n1,d1)}<span class="cmp-box"></span>${fr(n2,d2)}</div>`,gab:`${fr(n1,d1)} <b>${s}</b> ${fr(n2,d2)}`};
+    }
+    if(tipo==='operar'){
+      let n1,d1,n2,d2,soma=Math.random()<0.6;
+      if(dif==='facil'){soma=true;d1=d2=rand(3,10);n1=rand(1,d1-2);n2=rand(1,d1-n1);}
+      else if(dif==='medio'){d1=d2=rand(3,12);n1=rand(1,d1-1);n2=rand(1,d1-1);if(!soma&&n2>n1)[n1,n2]=[n2,n1];if(!soma&&n1===n2)n1++;}
+      else{do{d1=rand(2,8);d2=rand(2,8);}while(d1===d2);n1=rand(1,d1-1);n2=rand(1,d2-1);if(!soma&&n1*d2<n2*d1){[n1,n2]=[n2,n1];[d1,d2]=[d2,d1];}}
+      const m=lcm(d1,d2), rn= soma? n1*(m/d1)+n2*(m/d2) : n1*(m/d1)-n2*(m/d2);
+      const sg=soma?'+':MINUS;
+      return{key:'o'+n1+'/'+d1+sg+n2+'/'+d2,tipo,html:`<div class="row-c">${fr(n1,d1)} ${sg} ${fr(n2,d2)} = <span class="blank"></span></div>${dif==='dificil'?'<div class="calc">Cálculo:</div><div class="calc-space"></div>':''}`,gab:`${fr(n1,d1)} ${sg} ${fr(n2,d2)} = ${rn===0?'0':frRes(rn,m)}`};
+    }
+    // equivalentes
+    if(dif==='dificil'){ // simplificar
+      let n,d,k;do{d=rand(2,9);n=rand(1,d-1);}while(gcd(n,d)!==1);k=rand(2,6);
+      return{key:'s'+n*k+'/'+d*k,tipo,html:`<div class="row-c">Simplifique: ${fr(n*k,d*k)} = <span class="blank"></span></div>`,gab:`${fr(n*k,d*k)} = ${fr(n,d)}`};
+    }
+    let n,d;do{d=rand(2,dif==='facil'?6:9);n=rand(1,d-1);}while(gcd(n,d)!==1);
+    const k=rand(2,dif==='facil'?3:5), faltaDen= dif==='medio'&&Math.random()<0.5;
+    const dir= faltaDen? fr(n*k,BOX) : fr(BOX,d*k);
+    return{key:'e'+n+'/'+d+'k'+k+faltaDen,tipo,html:`<div class="row-c">${fr(n,d)} = ${dir}</div>`,gab:`${fr(n,d)} = ${fr(n*k,d*k)}`};
+  }
+
+  /* ══════════ GERADOR 3 — ÁREA E PERÍMETRO ══════════ */
+  const AFILL='#cfe6e6', ASTK='#2d6e6e';
+  function svgMalha(pts,cols,rows,cell=17){
+    const w=cols*cell+2,h=rows*cell+2;let s=`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`;
+    for(let x=0;x<=cols;x++) s+=`<line x1="${1+x*cell}" y1="1" x2="${1+x*cell}" y2="${h-1}" stroke="#cfcac2" stroke-width="1"/>`;
+    for(let y=0;y<=rows;y++) s+=`<line x1="1" y1="${1+y*cell}" x2="${w-1}" y2="${1+y*cell}" stroke="#cfcac2" stroke-width="1"/>`;
+    s+=`<polygon points="${pts.map(p=>(1+p[0]*cell)+','+(1+p[1]*cell)).join(' ')}" fill="${AFILL}" fill-opacity=".85" stroke="${ASTK}" stroke-width="2.2"/>`;
+    return s+'</svg>';
+  }
+  // polígono com rótulos de medida nos lados: labels = [{x,y,t,anchor}]
+  function svgFig(pts,labels,W,H){
+    const pad=46,w=W+pad*2,h=H+pad*2;let s=`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`;
+    s+=`<polygon points="${pts.map(p=>(pad+p[0])+','+(pad+p[1])).join(' ')}" fill="${AFILL}" stroke="${ASTK}" stroke-width="2.2"/>`;
+    labels.forEach(l=>{s+=`<text x="${pad+l.x}" y="${pad+l.y}" font-family="Outfit,Arial,sans-serif" font-size="13" font-weight="600" fill="#1a1917" text-anchor="${l.a||'middle'}" dominant-baseline="middle">${l.t}</text>`;});
+    return s+'</svg>';
+  }
+  function genArea(pede,dif){
+    const askA=pede!=='perimetro', askP=pede!=='area';
+    let fig,area,per,un,key;
+    if(dif==='facil'){ // malha quadriculada — contar
+      const L=Math.random()<0.4;
+      const W=rand(L?3:2,7),H=rand(L?3:2,5);
+      let pts=[[1,1],[1+W,1],[1+W,1+H],[1,1+H]];area=W*H;per=2*(W+H);
+      if(L){const w=rand(1,W-2),h=rand(1,H-2);pts=[[1,1],[1+W-w,1],[1+W-w,1+h],[1+W,1+h],[1+W,1+H],[1,1+H]];area=W*H-w*h;}
+      fig=svgMalha(pts,W+2,H+2);un=null;key='m'+JSON.stringify(pts);
+    } else if(dif==='medio'){ // retângulos e quadrados com medidas
+      un=Math.random()<0.75?'cm':'m';
+      const quad=Math.random()<0.3;const W=rand(3,15),H=quad?W:rand(2,12);
+      area=W*H;per=2*(W+H);key='r'+W+'x'+H+un;
+      const sc=Math.min(150/W,95/H,14),w=W*sc,h=H*sc;
+      const labs=[{x:w/2,y:h+14,t:`${W} ${un}`}];if(!quad)labs.push({x:-8,y:h/2,t:`${H} ${un}`,a:'end'});
+      fig=svgFig([[0,0],[w,0],[w,h],[0,h]],labs,w,h)+(quad?`<div style="font-size:11px;text-align:center;color:var(--paper-muted)">quadrado</div>`:'');
+    } else { // figura em L ou triângulo retângulo
+      un='cm';
+      if(Math.random()<0.6){
+        const W=rand(8,14),H=rand(6,12),w=rand(2,W-5),h=rand(2,H-3);
+        area=W*H-w*h;per=2*(W+H);key='L'+[W,H,w,h];
+        const sc=Math.min(160/W,110/H),X=x=>x*sc;
+        const pts=[[0,0],[X(W-w),0],[X(W-w),X(h)],[X(W),X(h)],[X(W),X(H)],[0,X(H)]];
+        const labs=[
+          // medidas do recorte ficam DENTRO da figura, em quadrantes opostos do canto (não se sobrepõem)
+          {x:X(W-w)/2,y:-12,t:`${W-w} ${un}`},{x:X(W-w)-6,y:X(h)/2,t:`${h} ${un}`,a:'end'},
+          {x:X(W-w)+X(w)/2,y:X(h)+13,t:`${w} ${un}`},{x:X(W)+6,y:X(h)+X(H-h)/2,t:`${H-h} ${un}`,a:'start'},
+          {x:X(W)/2,y:X(H)+14,t:`${W} ${un}`},{x:-6,y:X(H)/2,t:`${H} ${un}`,a:'end'}];
+        fig=svgFig(pts,labs,X(W),X(H));
+      } else {
+        // ternos pitagóricos → hipotenusa inteira (perímetro exato)
+        const [a,b,c]=pick([[3,4,5],[6,8,10],[5,12,13],[9,12,15],[8,15,17],[12,16,20]]);
+        const [alt,base]=Math.random()<0.5?[a,b]:[b,a];
+        area=alt*base/2;per=a+b+c;key='T'+alt+'x'+base;
+        const sc=Math.min(150/base,105/alt),w=base*sc,h=alt*sc;
+        // hipotenusa: rótulo afastado da linha, na direção de fora do triângulo
+        const len=Math.hypot(w,h),nx=h/len,ny=-w/len;
+        fig=svgFig([[0,0],[0,h],[w,h]],[{x:-6,y:h/2,t:`${alt} ${un}`,a:'end'},{x:w/2,y:h+14,t:`${base} ${un}`},{x:w/2+nx*12,y:h/2+ny*12,t:`${c} ${un}`,a:'start'}],w,h)
+          +`<div style="font-size:11px;text-align:center;color:var(--paper-muted)">triângulo retângulo</div>`;
+      }
+    }
+    const uA=un?`${un}²`:'quadradinhos', uP=un?un:'lados de quadradinho';
+    const resp=(askA?`<div class="ans-lbl">Área: <span class="ans"></span></div>`:'')+(askP?`<div class="ans-lbl">Perímetro: <span class="ans"></span></div>`:'')+(dif!=='facil'?'<div class="calc">Cálculo:</div><div class="calc-space"></div>':'');
+    const gab=[askA?`Área = ${area} ${uA}`:'',askP?`Perímetro = ${per} ${uP}`:''].filter(Boolean).join(' · ');
+    return{key,html:`<div class="area-q"><div class="fig">${fig}</div><div class="area-ans">${resp}</div></div>`,gab};
+  }
+
+  /* ══════════ GERADOR 4 — EQUAÇÕES DO 1º GRAU ══════════ */
+  function termo(c,first){ // coeficiente de x
+    const sg=c<0?MINUS:'+', ab=Math.abs(c), core=(ab===1?'':ab)+'x';
+    return first? (c<0?MINUS:'')+core : ` ${sg} ${core}`;
+  }
+  function cte(k,first){const sg=k<0?MINUS:'+';return first?(k<0?MINUS:'')+Math.abs(k):` ${sg} ${Math.abs(k)}`;}
+  function num(k){return k<0?MINUS+Math.abs(k):String(k);}
+  function genEquacao(dif){
+    let x,txt,forma;
+    if(dif==='facil'){
+      forma=pick(['soma','sub','mult']);x=rand(1,forma==='mult'?12:30);
+      if(forma==='soma'){const a=rand(1,20);txt=`x + ${a} = ${x+a}`;}
+      else if(forma==='sub'){const a=rand(1,20);txt=`x ${MINUS} ${a} = ${x-a}`;if(x-a<0)return genEquacao(dif);}
+      else{const a=rand(2,9);txt=`${a}x = ${a*x}`;}
+    } else if(dif==='medio'){
+      x=rand(1,15);const a=rand(2,9),b=rand(1,30);
+      txt=Math.random()<0.5?`${a}x + ${b} = ${a*x+b}`:`${a}x ${MINUS} ${b} = ${a*x-b}`;
+      if(/= -/.test(txt)||a*x-b<0) return genEquacao(dif);
+    } else {
+      do{x=rand(-6,12);}while(x===0);
+      forma=pick(['par','dois','par2']);
+      if(forma==='par'){const a=rand(2,6),b=rand(1,9);txt=`${a}(x + ${b}) = ${num(a*(x+b))}`;}
+      else if(forma==='par2'){const a=rand(2,5),b=rand(1,8),c=rand(1,15);txt=`${a}(x ${MINUS} ${b}) + ${c} = ${num(a*(x-b)+c)}`;}
+      else{let a,c;do{a=rand(2,9);c=rand(1,8);}while(a===c);const b=rand(-15,15),d=a*x+b-c*x;txt=`${termo(a,true)}${b?cte(b,false):''} = ${termo(c,true)}${d?cte(d,false):''}`;}
+    }
+    return{key:txt,html:`<div class="eq">${txt}</div>${lines(dif==='facil'?2:dif==='medio'?3:4)}<div class="ans-lbl">x = <span class="ans"></span></div>`,gab:`${txt} &nbsp;→&nbsp; <b>x = ${num(x)}</b>`};
+  }
+
+  /* ══════════ CONFIGURAÇÃO DOS GERADORES ══════════ */
+  const GERADORES={
+    operacoes:{
+      nome:'Operações',
+      niveis:{facil:'1º–2º ano',medio:'3º–4º ano',dificil:'5º ano+'},
+      extra:{id:'op',lbl:'Operação',ops:[['adicao','Adição +'],['subtracao','Subtração −'],['multiplicacao','Multiplicação ×'],['divisao','Divisão ÷'],['mista','Mista']]},
+      qtds:[6,9,12,16],qtd:9,
+      titulo:c=>OP_NOME[c.op],
+      instr:c=>'Resolva as contas. Use o espaço acima dos números para o "vai um" ou o "empresta".',
+      cols:c=>c.qtd<=6?3:4, colsMob:2,
+      gerar:c=>{const keys=['adicao','subtracao','multiplicacao','divisao'];return unicos(c.qtd,i=>{const op=c.op==='mista'?keys[i%4]:c.op;const p=OPS[op](c.dif);return{...p,key:op+p.a+'_'+p.b};});},
+      render:(p,i)=>`<div class="q"><div class="qn">${i+1}.</div><div class="op"><div class="op-row"><span class="op-num">${p.a}</span></div><div class="op-row"><span class="op-sign">${p.sign}</span><span class="op-num">${p.b}</span></div><div class="op-bar"></div>${p.resto?'<div class="op-resto">Resto: ____</div>':''}<div style="height:${p.op==='divisao'||p.op==='multiplicacao'?54:36}px"></div></div></div>`,
+      gab:p=>`${p.a} ${p.sign} ${p.b} = <b>${p.res}</b>${p.resto?` (resto ${p.resto})`:''}`
+    },
+    fracoes:{
+      nome:'Frações',
+      niveis:{facil:'4º ano',medio:'5º ano',dificil:'6º–7º ano'},
+      extra:{id:'tipo',lbl:'Tipo de questão',ops:[['misto','Misto'],['identificar','Identificar'],['pintar','Pintar'],['comparar','Comparar'],['operar','Somar e subtrair'],['equivalentes','Equivalentes']]},
+      qtds:[6,8,10],qtd:8,
+      titulo:c=>c.tipo==='misto'?'Frações':'Frações — '+FR_TIPOS[c.tipo],
+      instr:c=>({misto:'Leia cada questão com atenção e responda.',identificar:'Observe cada figura e escreva a fração que representa a parte pintada.',pintar:'Pinte, em cada figura, a fração indicada.',comparar:'Compare as frações: escreva > (maior), < (menor) ou = (igual) no círculo.',operar:'Calcule e escreva o resultado. Se puder, simplifique.',equivalentes:'Complete com o número que torna as frações equivalentes.'}[c.tipo]),
+      cols:()=>2, colsMob:1,
+      gerar:c=>{const ciclo=['identificar','comparar','operar','equivalentes','pintar'];return unicos(c.qtd,i=>genFracao(c.tipo==='misto'?ciclo[i%ciclo.length]:c.tipo,c.dif));},
+      render:(q,i,c)=>`<div class="q"><div class="qn">${i+1}.${c.tipo==='misto'?' '+FR_TIPOS[q.tipo]:''}</div><div class="qtxt">${q.html}</div></div>`,
+      gab:q=>q.gab
+    },
+    area:{
+      nome:'Área e perímetro',
+      niveis:{facil:'3º–4º ano · malha',medio:'5º–6º ano · retângulos',dificil:'7º ano+ · figuras compostas'},
+      extra:{id:'pede',lbl:'O que calcular',ops:[['ambos','Área e perímetro'],['area','Só área'],['perimetro','Só perímetro']]},
+      qtds:[4,6,8],qtd:6,
+      titulo:c=>({ambos:'Área e perímetro',area:'Área',perimetro:'Perímetro'}[c.pede]),
+      instr:c=>c.dif==='facil'?'Conte os quadradinhos. A área é quantos quadradinhos cabem dentro da figura; o perímetro é quantos lados de quadradinho formam o contorno.':'Use as medidas indicadas. Área = quanto a figura ocupa (unidade²). Perímetro = soma das medidas do contorno.',
+      cols:()=>2, colsMob:1,
+      gerar:c=>unicos(c.qtd,()=>genArea(c.pede,c.dif)),
+      render:(q,i)=>`<div class="q"><div class="qn">${i+1}.</div>${q.html}</div>`,
+      gab:q=>q.gab
+    },
+    equacoes:{
+      nome:'Equações do 1º grau',
+      niveis:{facil:'6º–7º ano',medio:'7º ano',dificil:'8º–9º ano'},
+      extra:null,
+      qtds:[6,9,12],qtd:9,
+      titulo:()=>'Equações do 1º grau',
+      instr:c=>'Descubra o valor de x em cada equação. Mostre como pensou nas linhas.',
+      cols:c=>c.qtd>=9?3:2, colsMob:1,
+      gerar:c=>unicos(c.qtd,()=>genEquacao(c.dif)),
+      render:(q,i)=>`<div class="q"><div class="qn">${i+1}.</div>${q.html}</div>`,
+      gab:q=>q.gab
+    }
+  };
+
+  /* ══════════ estado + UI ══════════ */
+  const estado={g:'operacoes',cfg:{}};
+  function cfgPadrao(g){const G=GERADORES[g];const c={dif:'facil',qtd:G.qtd};if(G.extra)c[G.extra.id]=G.extra.ops[0][0];return c;}
+  Object.keys(GERADORES).forEach(g=>estado.cfg[g]=cfgPadrao(g));
+
+  function pills(id,ops,val,cls=''){
+    return `<div class="pills">${ops.map(([v,t,sub])=>`<button class="pill ${cls}${v==val?' active':''}" data-k="${id}" data-v="${v}">${t}${sub?`<small>${sub}</small>`:''}</button>`).join('')}</div>`;
+  }
+  function renderOpts(){
+    const G=GERADORES[estado.g],c=estado.cfg[estado.g];
+    let h=`<span class="lbl">Nível</span>`+pills('dif',[['facil','Fácil',G.niveis.facil],['medio','Médio',G.niveis.medio],['dificil','Difícil',G.niveis.dificil]],c.dif,'dif ');
+    if(G.extra) h+=`<span class="lbl">${G.extra.lbl}</span>`+pills(G.extra.id,G.extra.ops,c[G.extra.id]);
+    h+=`<span class="lbl">Quantidade de questões</span>`+pills('qtd',G.qtds.map(q=>[q,String(q)]),c.qtd);
+    document.getElementById('opts').innerHTML=h;
+  }
+  document.getElementById('opts').addEventListener('click',e=>{
+    const b=e.target.closest('.pill');if(!b)return;
+    const c=estado.cfg[estado.g],k=b.dataset.k;c[k]=k==='qtd'?parseInt(b.dataset.v,10):b.dataset.v;
+    renderOpts();gerar();
+  });
+  document.getElementById('tabs').addEventListener('click',e=>{const t=e.target.closest('.tab');if(t)abrir(t.dataset.g,true);});
+  function abrir(g,push){
+    if(!GERADORES[g])g='operacoes';estado.g=g;
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.g===g));
+    if(push){try{history.replaceState(null,'','#'+g);}catch(e){}}
+    renderOpts();gerar();
+  }
+
+  function gerar(){
+    const G=GERADORES[estado.g],c=estado.cfg[estado.g];
+    const itens=G.gerar(c);
+    const data=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+    const nivel={facil:'Fácil',medio:'Médio',dificil:'Difícil'}[c.dif];
+    const cols=G.cols(c), mob=window.innerWidth<600;
+    const paper=document.getElementById('paper');
+    paper.style.setProperty('--cols-print',`repeat(${cols},1fr)`);
+    paper.innerHTML=`
+      <div class="sh-head">
+        <div class="sh-lbl">Doceria Pedagógica — Matemática</div>
+        <div class="sh-title">${G.titulo(c)}</div>
+        <div class="sh-meta">Nível ${nivel} (${G.niveis[c.dif]}) · ${itens.length} questões</div>
+        <div class="sh-name"><span>Nome: ______________________________________</span><span>Turma: __________</span><span>Data: ___/___/_____</span></div>
+      </div>
+      <div class="sh-instr">${G.instr(c)}</div>
+      <div class="qgrid" style="grid-template-columns:repeat(${mob?G.colsMob:cols},1fr)">${itens.map((q,i)=>G.render(q,i,c)).join('')}</div>
+      <div class="sh-foot"><b>Doceria Pedagógica</b><span>doceriapedagogica.com</span></div>
+      <div class="gaba">
+        <div class="gaba-tag">Gabarito — sai numa página separada na impressão</div>
+        <div class="gaba-title">Gabarito — uso do professor</div>
+        <div class="gaba-sub">${G.titulo(c)} · Nível ${nivel} · ${data}</div>
+        <div class="gaba-grid">${itens.map((q,i)=>`<div class="gaba-item"><span class="gaba-n">${i+1}.</span><span>${G.gab(q)}</span></div>`).join('')}</div>
+      </div>`;
+  }
+  let _mob=window.innerWidth<600;
+  window.addEventListener('resize',()=>{const m=window.innerWidth<600;if(m!==_mob){_mob=m;const g=document.querySelector('#paper .qgrid');if(g){const G=GERADORES[estado.g];g.style.gridTemplateColumns=`repeat(${m?G.colsMob:G.cols(estado.cfg[estado.g])},1fr)`;}}});
+  // na impressão, sempre usa as colunas do papel A4 (não as do celular)
+  window.addEventListener('beforeprint',()=>{const g=document.querySelector('#paper .qgrid');if(g)g.style.gridTemplateColumns='';});
+  window.addEventListener('afterprint',()=>{_mob=!_mob;window.dispatchEvent(new Event('resize'));});
+
+  document.getElementById('letraGrande').addEventListener('change',e=>document.body.classList.toggle('letra-grande',e.target.checked));
+
+  function imprimir(){
+    if(window.dpTrack) window.dpTrack('imprimir_gerador',{item:'matematica_'+estado.g,nivel:estado.cfg[estado.g].dif});
+    const go=()=>{ if(typeof window.dpPrint==='function') window.dpPrint(); else window.print(); };
+    if(isLoggedIn()) return go();
+    if(typeof window.dpEmailGate==='function'){
+      window.dpEmailGate().then(tok=>{ if(tok||isLoggedIn()) setTimeout(go,300); });
+    } else { window.location.href='/conta.html'; }
+  }
+
+  /* ══════════ ATIVIDADES PRONTAS (PDF) ══════════
+     Para adicionar: coloque o PDF em /public/atividades/<slug>.pdf e acrescente um objeto aqui. */
+  const ATIVIDADES=[];
+
+  function renderProntas(){
+    if(!ATIVIDADES.length) return;
+    document.getElementById('prontas').style.display='';
+    document.getElementById('cards').innerHTML=ATIVIDADES.map(a=>`
+      <article class="card">
+        <div class="badges"><span class="badge">${esc(a.nivel)}</span><span class="badge b2">${esc(a.tema)}</span></div>
+        <h3>${esc(a.titulo)}</h3>
+        <p class="desc">${esc(a.descricao)}</p>
+        ${(a.preview&&a.preview.length)?`<details><summary>Ver o conteúdo</summary><div class="preview"><ol>${a.preview.map(p=>`<li>${esc(p)}</li>`).join('')}</ol></div></details>`:''}
+        <div class="actions">
+          <button class="btn-sec" data-previa="${esc(a.slug)}">👁 Ver prévia</button>
+          <button class="btn-dl" data-baixar="${esc(a.slug)}">⬇ Baixar PDF</button>
+          <span class="dl-note">Prévia livre; baixar pede só o e-mail.</span>
+        </div>
+      </article>`).join('');
+  }
+  document.getElementById('cards').addEventListener('click',e=>{
+    const p=e.target.closest('[data-previa]'),b=e.target.closest('[data-baixar]');
+    if(p) verPrevia(p.dataset.previa); else if(b) baixar(b.dataset.baixar);
+  });
+  function ativ(slug){return ATIVIDADES.find(a=>a.slug===slug)||{slug};}
+  function baixar(slug){
+    if(window.dpTrack) window.dpTrack('download_atividade',{item:slug});
+    const url='/atividades/'+slug+'.pdf';
+    if(isLoggedIn()){window.open(url,'_blank');return;}
+    if(typeof window.dpEmailGate==='function') window.dpEmailGate().then(tok=>{if(tok||isLoggedIn())window.open(url,'_blank');});
+    else window.location.href='/conta.html';
+  }
+  let _previa=null;
+  function verPrevia(slug){
+    _previa=slug;const a=ativ(slug);
+    if(window.dpTrack) window.dpTrack('ver_previa',{item:slug});
+    const pdf='/atividades/'+slug+'.pdf';
+    document.getElementById('previa-frame').src=pdf+'#toolbar=0&navpanes=0&view=FitH';
+    document.getElementById('previa-open').href=pdf;
+    document.getElementById('previa-title').textContent=a.titulo||'Prévia da atividade';
+    document.getElementById('previa-overlay').classList.add('show');
+    document.body.style.overflow='hidden';
+  }
+  function fecharPrevia(){document.getElementById('previa-overlay').classList.remove('show');document.getElementById('previa-frame').src='';document.body.style.overflow='';}
+  function baixarDaPrevia(){if(_previa)baixar(_previa);}
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')fecharPrevia();});
+
+  if(isLoggedIn()) document.getElementById('loginLink').textContent='Meu painel';
+  renderProntas();
+  abrir((location.hash||'').slice(1)||'operacoes',false);
+</script>
+<script src="/js/dp-print.js"></script>
+<script src="/js/dp-auth.js"></script>
+</body>
+</html>
