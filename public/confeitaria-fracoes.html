@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F06292">
+<title>Confeitaria das Frações — jogo de frações | Doceria Pedagógica</title>
+<meta name="description" content="Jogo de frações para o 4º ano: atenda os clientes da confeitaria cortando bolos, pizzas e brigadeiros na fração certa e descubra quem leva mais. Grátis, no celular, no computador ou na TV.">
+<link rel="canonical" href="https://doceriapedagogica.com/confeitaria-fracoes.html">
+<meta property="og:title" content="Confeitaria das Frações — jogo de frações">
+<meta property="og:description" content="Corte bolos, pizzas e brigadeiros na fração certa! Jogo grátis de frações para o 4º ano.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://doceriapedagogica.com/confeitaria-fracoes.html">
+<meta property="og:image" content="https://doceriapedagogica.com/og/doceria.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/apresentacao.css">
+<style>
+:root{
+  --cream:#FFF7EE; --rose:#FFE3EC; --rose2:#FFF0F5;
+  --pink:#F0568A; --pink-d:#C93468; --pink-l:#FFB3CB;
+  --mint:#2FB89A; --mint-d:#1E8A72; --mint-l:#BFF0E2;
+  --butter:#FFCF5C; --butter-d:#E0A626;
+  --choco:#5B3626; --ink:#3A2230; --muted:#8B6E7A;
+  --wood:#D59B67; --wood-d:#AE7347;
+  --sky:#8ED1FF;
+  --app-h:100dvh;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:'Nunito',system-ui,sans-serif;color:var(--ink);background:var(--cream);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;color:inherit;cursor:pointer;border:none;background:none}
+.hidden{display:none !important}
+
+/* ─────────────── botões "3D" (táteis) ─────────────── */
+.b3d{position:relative;border-radius:18px;font-weight:900;padding:14px 22px;font-size:18px;color:#fff;
+  background:var(--c,var(--pink));box-shadow:0 6px 0 var(--cd,var(--pink-d)),0 10px 18px rgba(58,34,48,.18);
+  transition:transform .08s,box-shadow .08s,filter .15s;user-select:none}
+.b3d:hover{filter:brightness(1.05)}
+.b3d:active,.b3d.press{transform:translateY(5px);box-shadow:0 1px 0 var(--cd,var(--pink-d)),0 3px 8px rgba(58,34,48,.18)}
+.b3d:disabled{filter:grayscale(.6) opacity(.55);cursor:default}
+.b3d.mint{--c:var(--mint);--cd:var(--mint-d)}
+.b3d.butter{--c:var(--butter);--cd:var(--butter-d);color:#5a3a00}
+.b3d.white{--c:#fff;--cd:#e9d6dd;color:var(--ink)}
+
+/* ─────────────── fração tipográfica ─────────────── */
+.fr{display:inline-flex;flex-direction:column;align-items:center;line-height:.95;font-family:'Baloo 2',sans-serif;font-weight:800;vertical-align:middle;margin:0 .08em}
+.fr .n{color:var(--pink)}
+.fr .d{color:var(--mint-d);border-top:.09em solid var(--ink);padding-top:.04em;min-width:1.1em;text-align:center}
+.fr.mono .n,.fr.mono .d{color:inherit}
+
+/* ═════════════════ TELA INICIAL ═════════════════ */
+#home{min-height:var(--app-h);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 18px 40px;position:relative;overflow:hidden;
+  background:radial-gradient(1200px 600px at 50% -10%,#FFD6E5 0,transparent 60%),linear-gradient(#FFF0F5,#FFF7EE)}
+.home-top{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;z-index:3}
+.home-top a{font-weight:800;color:var(--pink-d);text-decoration:none;font-size:15px;background:#fff;padding:8px 14px;border-radius:99px;box-shadow:0 3px 0 #f3cfdc}
+.home-hero{display:flex;align-items:center;gap:clamp(10px,3vw,40px);max-width:1100px;width:100%;margin-top:30px}
+.home-hero .char{width:clamp(150px,24vw,280px);flex:0 0 auto}
+.home-title{font-family:'Baloo 2',sans-serif;font-weight:800;line-height:.95;font-size:clamp(42px,7.4vw,92px);color:var(--pink);letter-spacing:-1px;text-shadow:0 5px 0 #FFD0E0}
+.home-title span{display:block;color:var(--choco);font-size:.62em;text-shadow:none;letter-spacing:0}
+.home-sub{font-size:clamp(16px,2vw,21px);font-weight:700;color:var(--muted);margin-top:12px;max-width:560px;line-height:1.45}
+.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,2vw,22px);max-width:1100px;width:100%;margin-top:clamp(20px,4vh,40px)}
+@media(max-width:760px){.levels{grid-template-columns:1fr}.home-hero{flex-direction:column;text-align:center}.home-sub{margin-left:auto;margin-right:auto}}
+.lvl{background:#fff;border-radius:26px;padding:18px 18px 20px;text-align:left;box-shadow:0 8px 0 #F2D3DE,0 18px 34px rgba(240,86,138,.12);transition:transform .15s;display:flex;gap:14px;align-items:center;position:relative;overflow:hidden}
+.lvl:hover{transform:translateY(-4px)}
+.lvl:active{transform:translateY(3px)}
+.lvl .lv-ico{width:76px;height:76px;flex:0 0 auto;border-radius:20px;display:grid;place-items:center;background:var(--bg)}
+.lvl .lv-ico svg{width:64px;height:64px}
+.lvl .lv-n{font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--c)}
+.lvl .lv-t{font-family:'Baloo 2',sans-serif;font-size:24px;font-weight:800;line-height:1.05;color:var(--ink)}
+.lvl .lv-d{font-size:14px;color:var(--muted);font-weight:700;margin-top:3px;line-height:1.35}
+.lvl .lv-stars{margin-top:6px;font-size:15px;letter-spacing:2px;color:#e2c9d2}
+.lvl .lv-stars b{color:var(--butter-d)}
+.home-foot{margin-top:26px;font-size:14px;color:var(--muted);font-weight:700;text-align:center;line-height:1.6}
+.home-foot a{color:var(--pink-d)}
+.sound-pill{display:inline-flex;align-items:center;gap:6px}
+
+/* ═════════════════ JOGO ═════════════════ */
+#game{min-height:var(--app-h);display:grid;grid-template-rows:auto 1fr;position:relative;overflow:hidden;background:var(--rose2)}
+.hud{display:flex;align-items:center;gap:10px;padding:10px clamp(10px,2vw,22px);background:#fff;box-shadow:0 3px 0 #F6DCE6;position:relative;z-index:20}
+.hud .ib{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:20px;background:var(--rose2);box-shadow:0 3px 0 #F2CFDB}
+.hud .ib:active{transform:translateY(2px);box-shadow:0 1px 0 #F2CFDB}
+.hud .ib.off{opacity:.45}
+.hud-title{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:clamp(16px,2.2vw,22px);line-height:1;color:var(--pink-d);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hud-title small{display:block;font-family:'Nunito';font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.04em}
+.progress{display:flex;gap:6px;margin-left:auto}
+.progress i{width:clamp(16px,2.2vw,24px);height:clamp(16px,2.2vw,24px);border-radius:50%;background:#F4DCE5;display:block;transition:background .3s,transform .3s}
+.progress i.now{background:#fff;box-shadow:0 0 0 3px var(--pink);transform:scale(1.12)}
+.progress i.done{background:var(--mint)}
+.progress i.done.s3{background:var(--butter)}
+.starbox{display:flex;align-items:center;gap:6px;font-family:'Baloo 2';font-weight:800;font-size:22px;background:#FFF5D6;padding:4px 12px 2px;border-radius:99px;color:#8a5a00;box-shadow:0 3px 0 #F3DFA5}
+.starbox .st{font-size:20px}
+@media(max-width:520px){.hud-title small{display:none}.progress i{width:14px;height:14px}.starbox{font-size:18px}.hud .ib{width:38px;height:38px}}
+
+/* cenário */
+.stage{position:relative;display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.35fr) minmax(250px,1fr);grid-template-areas:"cust item tools";gap:clamp(8px,1.5vw,22px);padding:clamp(12px,2vh,26px) clamp(12px,2vw,28px) 0;min-height:0}
+.wall{position:absolute;inset:0;z-index:0;overflow:hidden;
+  background:repeating-linear-gradient(90deg,#FFE6EE 0 46px,#FFF1F6 46px 92px)}
+/* balcão: fica NA FRENTE dos clientes (que aparecem atrás dele) e atrás do doce/painel */
+.counter-front{position:absolute;left:0;right:0;bottom:0;height:var(--counter-h,26%);z-index:3;pointer-events:none;
+  background:linear-gradient(#EDB582,#D59B67 9px,#C2844F 20px,transparent 20px),
+             radial-gradient(circle at 22px 0,#C2844F 0 14px,transparent 15px) 0 20px/44px 22px repeat-x,
+             repeating-linear-gradient(90deg,transparent 0 86px,rgba(255,255,255,.35) 86px 90px) 0 0/100% 100%,
+             linear-gradient(#A8E3D3,#86D2BE);
+  box-shadow:0 -8px 22px rgba(120,60,30,.14)}
+.bunting{position:absolute;top:-2px;left:0;right:0;height:60px;pointer-events:none}
+.bunting svg{width:100%;height:100%}
+.bunting .flag{transform-box:fill-box;transform-origin:50% 0;animation:sway 3.2s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.lights circle{animation:twinkle 2.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:1}50%{opacity:.45}}
+.shelf{position:absolute;left:3%;top:22%;width:min(220px,22%);z-index:0;opacity:.95}
+.window{position:absolute;right:4%;top:15%;width:min(210px,20%);z-index:0}
+
+.col{position:relative;z-index:2;min-width:0;display:flex;flex-direction:column}
+.cust-col{grid-area:cust;justify-content:flex-end;align-items:center;z-index:2}
+.item-col{grid-area:item;justify-content:flex-end;align-items:center;z-index:4}
+.tools-col{grid-area:tools;justify-content:center;padding-bottom:clamp(14px,3vh,34px);z-index:4}
+.stage.cmp-mode{grid-template-columns:1fr;grid-template-areas:"item"}
+.stage.cmp-mode .cust-col,.stage.cmp-mode .tools-col{display:none}
+
+/* balão do pedido */
+.bubble{position:relative;background:#fff;border-radius:24px;padding:14px 18px 16px;box-shadow:0 6px 0 #F2D3DE,0 14px 26px rgba(58,34,48,.12);font-weight:800;font-size:clamp(16px,1.7vw,20px);line-height:1.3;max-width:340px;width:100%;margin-bottom:10px;transform-origin:20% 100%}
+.bubble::after{content:"";position:absolute;left:44%;bottom:-14px;border:14px solid transparent;border-top-color:#fff;border-bottom:0;filter:drop-shadow(0 4px 0 #F2D3DE)}
+.bubble .who{font-size:13px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--pink-d);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.bubble .order-fr{font-size:clamp(44px,5.4vw,64px);margin:2px 6px 0 0;float:left}
+.bubble .say{display:block;overflow:hidden}
+.bubble .say .fr{font-size:1.25em}
+.bubble.pop{animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+.patience{height:8px;border-radius:99px;background:#F7E2EA;margin-top:10px;overflow:hidden;clear:both}
+.patience i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--mint),var(--butter));border-radius:99px;transform-origin:left;transition:transform 1s linear}
+.patience.late i{background:var(--pink)}
+.speak{width:34px;height:34px;border-radius:50%;background:var(--rose2);display:inline-grid;place-items:center;font-size:16px;margin-left:auto}
+
+/* personagens */
+.char{display:block;overflow:visible}
+.char .m{display:none}
+.char[data-mood="idle"] .m-smile,.char:not([data-mood]) .m-smile{display:block}
+.char[data-mood="happy"] .m-open{display:block}
+.char[data-mood="wow"] .m-o{display:block}
+.char[data-mood="think"] .m-flat{display:block}
+.char[data-mood="sad"] .m-sad{display:block}
+.char.talk-b .m{display:none !important}
+.char.talk-b .m-talk{display:block !important}
+.char .lid{transform-box:fill-box;transform-origin:50% 0;transform:scaleY(0);animation:blink 4.6s infinite;animation-delay:var(--bd,0s)}
+@keyframes blink{0%,93%,100%{transform:scaleY(0)}95.5%{transform:scaleY(1)}}
+.char .pupil{transition:transform .5s;transform:translate(var(--lx,0px),var(--ly,0px))}
+.char .c-head{transform-box:fill-box;transform-origin:50% 90%;animation:bob 3.4s ease-in-out infinite;animation-delay:var(--bd,0s)}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(1.2deg)}}
+.char .c-body{transform-box:fill-box;transform-origin:50% 100%;animation:breathe 3.4s ease-in-out infinite;animation-delay:var(--bd,0s)}
+@keyframes breathe{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.015)}}
+.char .brows{transition:transform .3s}
+.char[data-mood="happy"] .brows{transform:translateY(-3px)}
+.char[data-mood="wow"] .brows{transform:translateY(-6px)}
+.char[data-mood="think"] .brow-l{transform:translateY(-4px) rotate(-8deg);transform-box:fill-box;transform-origin:center}
+.char[data-mood="sad"] .brow-l{transform:rotate(14deg);transform-box:fill-box;transform-origin:center}
+.char[data-mood="sad"] .brow-r{transform:rotate(-14deg);transform-box:fill-box;transform-origin:center}
+.char .arm{transform-box:fill-box;transition:transform .35s cubic-bezier(.3,1.5,.5,1)}
+.char .arm-l{transform-origin:85% 10%}
+.char .arm-r{transform-origin:15% 10%}
+.char.cele .arm-l{transform:rotate(130deg)}
+.char.cele .arm-r{transform:rotate(-130deg)}
+.char.cele{animation:jump .6s cubic-bezier(.3,1.4,.5,1) 2}
+@keyframes jump{0%,100%{transform:translateY(0)}40%{transform:translateY(-16px)}}
+.char.wave .arm-r{animation:wave .5s ease-in-out 4 alternate}
+@keyframes wave{from{transform:rotate(-120deg)}to{transform:rotate(-150deg)}}
+.char.shake{animation:shake .45s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+.cust-wrap{width:clamp(170px,100%,300px);position:relative;margin-bottom:calc(var(--counter-h,26%) * 0 - 4px)}
+.cust-wrap .char{width:100%}
+.cust-in{animation:walkin .7s cubic-bezier(.25,1.2,.5,1) both}
+.cust-out{animation:walkout .55s ease-in both}
+@keyframes walkin{0%{transform:translateX(-120%) rotate(-6deg)}60%{transform:translateX(6%) rotate(3deg)}100%{transform:none}}
+@keyframes walkout{to{transform:translateX(-140%) rotate(-8deg);opacity:0}}
+
+/* item (bolo/pizza/travessa) */
+.plate-wrap{position:relative;width:var(--item,min(46vh,100%));aspect-ratio:1/1;margin-bottom:calc(var(--counter-h-px,120px) * .32)}
+.plate-wrap svg{width:100%;height:100%;overflow:visible;display:block}
+.slice{cursor:pointer;transition:transform .32s cubic-bezier(.3,1.5,.5,1),filter .2s}
+.slice.sel{filter:drop-shadow(0 7px 4px rgba(90,40,20,.28)) brightness(1.06)}
+.slice .edge{fill:none;stroke:rgba(255,255,255,.95);stroke-width:0;transition:stroke-width .2s}
+.slice.sel .edge{stroke-width:5}
+.slice .check{opacity:0;transition:opacity .2s;pointer-events:none}
+.slice.sel .check{opacity:1}
+.cutline{stroke:#7A4A32;stroke-width:3;stroke-linecap:round;fill:none}
+.item-label{position:absolute;left:50%;bottom:-6px;transform:translate(-50%,100%);background:#fff;border-radius:99px;padding:6px 16px;font-weight:900;font-size:clamp(15px,1.6vw,19px);white-space:nowrap;box-shadow:0 4px 0 #F2D3DE;z-index:3}
+.knife-hint{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+
+/* brigadeiros */
+.tray{position:relative;width:var(--item,min(46vh,100%));aspect-ratio:1/1;margin-bottom:calc(var(--counter-h-px,120px) * .32)}
+.tray-bg{position:absolute;inset:4%;border-radius:22px;background:linear-gradient(#ECECEC,#D7D7D7);box-shadow:inset 0 4px 0 #fff,0 10px 0 #BDBDBD,0 18px 26px rgba(0,0,0,.15);transition:opacity .4s}
+.bri{position:absolute;left:0;top:0;pointer-events:none;width:var(--bs,48px);height:var(--bs,48px);transition:transform .55s cubic-bezier(.3,1.25,.5,1);will-change:transform}
+.bri svg{width:100%;height:100%;display:block}
+.gbox{position:absolute;border-radius:20px;border:3px dashed rgba(58,34,48,.18);background:rgba(255,255,255,.55);cursor:pointer;transition:transform .3s cubic-bezier(.3,1.5,.5,1),background .2s,border-color .2s,box-shadow .2s;animation:pop .35s cubic-bezier(.2,1.6,.4,1) both}
+.gbox.sel{background:#FFE0EB;border:3px solid var(--pink);box-shadow:0 8px 0 var(--pink-l);transform:translateY(-8px)}
+.gbox .gl{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--mint);color:#fff;font-weight:900;font-size:13px;border-radius:99px;padding:1px 9px;white-space:nowrap}
+.gbox.sel .gl{background:var(--pink)}
+.sobra{position:absolute;border-radius:16px;border:3px dotted #E0A626;background:#FFF5D6;display:grid;place-items:end center;font-weight:900;font-size:12px;color:#8a5a00;padding-bottom:2px}
+
+/* painel de ferramentas */
+.panel{background:#fff;border-radius:26px;padding:16px;box-shadow:0 8px 0 #F2D3DE,0 18px 30px rgba(58,34,48,.12);display:flex;flex-direction:column;gap:12px}
+.step-t{font-size:13px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+.step-t b{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:12px}
+.knives{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:10px}
+.knife{--c:#fff;--cd:#BFE9DD;color:var(--mint-d);font-family:'Baloo 2';font-size:28px;padding:6px 0 2px;border-radius:16px;border:3px solid var(--mint-l)}
+.knife small{display:block;font-family:'Nunito';font-size:10px;font-weight:900;letter-spacing:.04em;margin-top:-6px;opacity:.8}
+.knife.on{--c:var(--mint);--cd:var(--mint-d);color:#fff;border-color:var(--mint)}
+.counter{display:flex;align-items:center;justify-content:center;gap:12px;background:var(--rose2);border-radius:18px;padding:8px 10px;font-weight:900;font-size:16px;min-height:76px}
+.counter .fr{font-size:46px}
+.deliver{width:100%;font-size:22px;padding:16px}
+.tipbox{display:flex;gap:10px;align-items:flex-end}
+.tipbox .char{width:78px;flex:0 0 auto}
+.tip{flex:1;background:#FFF5D6;border-radius:18px 18px 18px 4px;padding:10px 12px;font-weight:800;font-size:14.5px;line-height:1.35;color:#5a3a00;box-shadow:0 4px 0 #F3DFA5;min-height:52px}
+.tip.warn{background:#FFE3EC;color:var(--pink-d);box-shadow:0 4px 0 #F6C3D4}
+.tip.good{background:#DDF7EE;color:var(--mint-d);box-shadow:0 4px 0 #B6E8D8}
+.tip.pop{animation:pop .35s cubic-bezier(.2,1.6,.4,1)}
+
+/* nível 3: comparar */
+.cmp{grid-column:1/-1;display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:clamp(8px,2vw,30px);padding-bottom:clamp(10px,2vh,24px)}
+.cmp-side{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+.cmp-row{display:flex;align-items:flex-end;gap:10px;width:100%;justify-content:center}
+.cmp-row .char{width:clamp(110px,14vw,190px);flex:0 0 auto}
+.cmp-row .bubble{max-width:200px;margin-bottom:40px;text-align:center}
+.cmp-row .bubble .order-fr{float:none;display:block;margin:0 auto}
+.mini{width:clamp(160px,min(24vw,38vh),300px);aspect-ratio:1/1;position:relative}
+.mini svg{width:100%;height:100%;overflow:visible}
+.mini .veil{position:absolute;inset:6%;border-radius:50%;background:repeating-linear-gradient(45deg,#fff 0 12px,#FFF0F5 12px 24px);display:grid;place-items:center;font-weight:900;color:var(--muted);font-size:15px;text-align:center;box-shadow:inset 0 0 0 3px #F6DCE6;transition:opacity .4s}
+.cmp-mid{display:flex;flex-direction:column;gap:12px;align-items:stretch;padding-bottom:30px;min-width:min(260px,30vw)}
+.cmp-q{font-family:'Baloo 2';font-weight:800;font-size:clamp(20px,2.4vw,30px);text-align:center;line-height:1.1;color:var(--ink)}
+.cmp-mid .b3d{font-size:18px}
+.cmp-mid .tip{text-align:center}
+
+/* banner de equação (acerto) */
+.eqbanner{position:absolute;left:50%;top:14%;transform:translateX(-50%);background:#fff;border-radius:22px;padding:12px 22px;font-weight:900;font-size:clamp(18px,2.4vw,28px);box-shadow:0 8px 0 #B6E8D8,0 18px 30px rgba(0,0,0,.12);z-index:30;display:flex;align-items:center;gap:10px;white-space:nowrap;animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+.eqbanner .fr{font-size:1.5em}
+
+/* resultado */
+#result{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:rgba(58,34,48,.45);backdrop-filter:blur(3px);padding:16px}
+.res-card{background:#fff;border-radius:32px;padding:26px 26px 24px;max-width:520px;width:100%;text-align:center;box-shadow:0 10px 0 #F2D3DE,0 30px 60px rgba(0,0,0,.25);animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+.res-card .char{width:150px;margin:-90px auto 0}
+.res-t{font-family:'Baloo 2';font-weight:800;font-size:38px;color:var(--pink);line-height:1}
+.res-stars{font-size:54px;letter-spacing:4px;margin:10px 0 2px}
+.res-stars span{display:inline-block;filter:grayscale(1) opacity(.25)}
+.res-stars span.on{filter:none;animation:pop .5s cubic-bezier(.2,1.6,.4,1) both}
+.res-n{font-weight:900;color:var(--muted);font-size:17px}
+.res-msg{font-weight:800;font-size:17px;margin:12px 0 18px;line-height:1.4}
+.res-btns{display:grid;gap:12px}
+
+/* confete e estrela voando */
+.confetti{position:fixed;left:0;top:0;width:10px;height:14px;border-radius:3px;z-index:90;pointer-events:none}
+.flystar{position:fixed;z-index:95;font-size:34px;pointer-events:none}
+
+/* ─────────── RESPONSIVO: celular em pé ─────────── */
+@media (max-width:860px), (orientation:portrait) and (max-width:1100px){
+  .stage{grid-template-columns:1fr;grid-template-areas:"cust" "item" "tools";grid-template-rows:auto 1fr auto;padding-top:10px}
+  .cust-col{flex-direction:row;align-items:flex-end;justify-content:center;gap:8px}
+  .cust-wrap{width:clamp(96px,26vw,150px);order:-1}
+  .bubble{margin-bottom:22px;max-width:none;flex:1}
+  .bubble::after{left:-12px;bottom:20px;border:12px solid transparent;border-right-color:#fff;border-left:0;filter:none}
+  .item-col{justify-content:center}
+  .plate-wrap,.tray{--item:min(70vw,29vh);margin-bottom:30px}
+  .panel>.s2{display:none}
+  .tools-col{padding-bottom:0}
+  .panel{border-radius:22px 22px 0 0;margin:0 -12px;padding:12px 12px calc(12px + env(safe-area-inset-bottom));gap:9px;
+    display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"t1 t1" "kn kn" "co de" "tp tp"}
+  .panel>.s1{grid-area:t1}.panel>.knives{grid-area:kn}.panel>.s2{grid-area:t2}
+  .panel>.counter{grid-area:co}.panel>.deliver{grid-area:de}.panel>.tipbox{grid-area:tp}
+  .step-t{font-size:11.5px}
+  .knives{grid-template-columns:repeat(5,1fr);gap:7px}
+  .knife{font-size:24px;padding:4px 0 0}
+  .counter{min-height:0;padding:4px 6px;gap:6px;font-size:13px}.counter .fr{font-size:32px}
+  .counter span[style]{font-size:12px !important}
+  .deliver{font-size:19px;padding:10px 8px}
+  .tip{font-size:13px;min-height:0;padding:8px 10px}
+  .apz-enter{display:none !important}
+  .shelf,.window{display:none}
+  .wall::after{height:calc(var(--counter-h-px,120px))}
+  .tipbox .char{width:56px}
+  .cmp{grid-template-columns:1fr 1fr;grid-template-areas:"a b" "m m"}
+  .cmp-side:first-child{grid-area:a}.cmp-side:last-child{grid-area:b}
+  .cmp-mid{grid-area:m;padding-bottom:16px;min-width:0}
+  .cmp-row{flex-direction:column;align-items:center}
+  .cmp-row .bubble{margin-bottom:4px}
+  .cmp-row .bubble::after{left:44%;bottom:-12px;border:12px solid transparent;border-top-color:#fff;border-bottom:0}
+  .cmp-row .char{width:clamp(80px,24vw,130px)}
+  .mini{width:clamp(110px,34vw,170px)}
+  .cmp-row .bubble{padding:8px 10px 10px}.cmp-row .bubble .order-fr{font-size:38px}
+  .cmp-mid{gap:9px}.cmp-mid .b3d{padding:11px 16px;font-size:17px}.cmp-q{font-size:20px}
+}
+
+/* modo apresentação (projetor/TV) */
+html.apresentando #game{min-height:var(--apz-vh,100vh)}
+html.apresentando .hud{padding-right:120px}
+html.apresentando .bubble{font-size:24px;max-width:420px}
+html.apresentando .tip{font-size:18px}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ TELA INICIAL ═══════════ -->
+<section id="home">
+  <div class="home-top">
+    <a href="/jogos-area.html">← Jogos</a>
+    <button class="b3d white sound-pill" id="homeSound" style="font-size:15px;padding:8px 14px;border-radius:99px" onclick="toggleSound()">🔊 Som ligado</button>
+  </div>
+  <div class="home-hero">
+    <div id="homeDuda"></div>
+    <div>
+      <div class="home-title">Confeitaria<span>das Frações</span></div>
+      <p class="home-sub">A Duda abriu a confeitaria! Atenda os clientes cortando bolos, pizzas e brigadeiros na <b style="color:var(--pink-d)">fração certa</b>.</p>
+    </div>
+  </div>
+  <div class="levels" id="levels"></div>
+  <p class="home-foot">Jogo da <b>Missão 5 — O bolo da Duda</b> da apostila <a href="/matematica.html">Missão Matemática (4º ano)</a> · BNCC EF04MA09<br>Funciona no celular, no computador e no projetor — sem login.</p>
+</section>
+
+<!-- ═══════════ JOGO ═══════════ -->
+<section id="game" class="hidden" data-palco>
+  <header class="hud">
+    <button class="ib" onclick="goHome()" aria-label="Voltar ao menu">🏠</button>
+    <div class="hud-title" id="hudTitle">Nível 1<small>Cortar e servir</small></div>
+    <div class="progress" id="progress"></div>
+    <div class="starbox" id="starbox"><span class="st">⭐</span><span id="starN">0</span></div>
+    <button class="ib" id="sndBtn" onclick="toggleSound()" aria-label="Som">🔊</button>
+  </header>
+  <main class="stage" id="stage">
+    <div class="wall" aria-hidden="true">
+      <div class="bunting" id="bunting"></div>
+      <svg class="shelf" viewBox="0 0 220 150" aria-hidden="true">
+        <rect x="0" y="118" width="220" height="12" rx="4" fill="#C98A57"/><rect x="10" y="130" width="10" height="20" fill="#AE7347"/><rect x="200" y="130" width="10" height="20" fill="#AE7347"/>
+        <g><rect x="16" y="62" width="52" height="56" rx="10" fill="#fff" opacity=".85"/><rect x="20" y="56" width="44" height="10" rx="4" fill="#F0568A"/><circle cx="32" cy="92" r="7" fill="#5B3626"/><circle cx="48" cy="96" r="7" fill="#F0568A"/><circle cx="40" cy="106" r="7" fill="#2FB89A"/><circle cx="54" cy="84" r="7" fill="#FFCF5C"/></g>
+        <g><rect x="84" y="40" width="54" height="78" rx="12" fill="#fff" opacity=".85"/><rect x="88" y="34" width="46" height="10" rx="4" fill="#2FB89A"/><rect x="96" y="60" width="30" height="40" rx="6" fill="#FFB3CB"/><path d="M98 64h26M98 72h26M98 80h26M98 88h26" stroke="#fff" stroke-width="3"/></g>
+        <g><path d="M156 118c0-30 10-52 26-52s26 22 26 52z" fill="#FFE3EC"/><circle cx="182" cy="62" r="9" fill="#E8344F"/><path d="M182 54c2-6 7-8 10-8" stroke="#2FB89A" stroke-width="3" fill="none"/><path d="M160 96c14 6 30 6 44 0" stroke="#fff" stroke-width="5" fill="none"/></g>
+      </svg>
+      <svg class="window" viewBox="0 0 210 170" aria-hidden="true">
+        <rect x="6" y="20" width="198" height="140" rx="16" fill="#fff"/><rect x="18" y="32" width="174" height="116" rx="10" fill="#BFE6FF"/>
+        <circle cx="150" cy="70" r="20" fill="#FFE07A"/><path d="M30 120c20-14 40-14 60 0s40 14 60 0 30-10 42-6v34H30z" fill="#9EDB9A"/>
+        <g fill="#fff" opacity=".9"><ellipse cx="62" cy="60" rx="22" ry="9"/><ellipse cx="78" cy="54" rx="14" ry="9"/></g>
+        <path d="M105 32v116M18 90h174" stroke="#fff" stroke-width="6"/>
+        <path d="M0 22h210l-14 22H14z" fill="#F0568A"/><path d="M14 44h26l-13 14zM40 44h26l-13 14zM66 44h26l-13 14zM92 44h26l-13 14zM118 44h26l-13 14zM144 44h26l-13 14zM170 44h26l-13 14z" fill="#F0568A"/>
+        <path d="M27 44h13v8zM79 44h13v8zM131 44h13v8zM183 44h13v8z" fill="#fff" opacity=".5"/>
+      </svg>
+    </div>
+    <div class="counter-front" aria-hidden="true"></div>
+    <!-- conteúdo do nível entra aqui -->
+    <div class="col cust-col" id="custCol"></div>
+    <div class="col item-col" id="itemCol"></div>
+    <div class="col tools-col" id="toolsCol"></div>
+  </main>
+  <div id="result" class="hidden"></div>
+</section>
+
+<script>
+'use strict';
+/* ══════════════════════════════════════════════════════════
+   CONFEITARIA DAS FRAÇÕES — Doceria Pedagógica
+   Nível 1: cortar e servir (fração de um inteiro)
+   Nível 2: brigadeiros (fração de uma quantidade)
+   Nível 3: quem leva mais? (comparar frações)
+   ══════════════════════════════════════════════════════════ */
+const $=s=>document.querySelector(s);
+const rand=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const store={get(k,d){try{const v=localStorage.getItem('cf_'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem('cf_'+k,JSON.stringify(v));}catch(e){}}};
+function track(ev,p){try{window.dpTrack&&window.dpTrack(ev,Object.assign({jogo:'confeitaria_fracoes'},p||{}));}catch(e){}}
+
+/* ───────── altura real da tela (barra do navegador no celular) ───────── */
+function setAppH(){document.documentElement.style.setProperty('--app-h',window.innerHeight+'px');layout();}
+window.addEventListener('resize',setAppH);window.addEventListener('orientationchange',()=>setTimeout(setAppH,250));
+
+/* ═════════════ SOM (Web Audio, sem arquivos) ═════════════ */
+let soundOn=store.get('som',true),actx=null;
+function ac(){if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}if(actx&&actx.state==='suspended')actx.resume();return actx;}
+function tone(f,d=.15,type='sine',vol=.18,when=0,slide=0){if(!soundOn)return;const a=ac();if(!a)return;const t=a.currentTime+when;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(slide,t+d);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(a.destination);o.start(t);o.stop(t+d+.05);}
+function noise(d=.18,vol=.16,when=0,f=2400){if(!soundOn)return;const a=ac();if(!a)return;const t=a.currentTime+when;const b=a.createBuffer(1,a.sampleRate*d,a.sampleRate),ch=b.getChannelData(0);for(let i=0;i<ch.length;i++)ch[i]=(Math.random()*2-1)*(1-i/ch.length);const s=a.createBufferSource();s.buffer=b;const fl=a.createBiquadFilter();fl.type='bandpass';fl.frequency.setValueAtTime(f,t);fl.frequency.exponentialRampToValueAtTime(f*2.2,t+d);const g=a.createGain();g.gain.value=vol;s.connect(fl).connect(g).connect(a.destination);s.start(t);}
+const sfx={
+  cut:(i=0)=>noise(.14,.13,i*.11,1800+i*120),
+  pop:()=>{tone(520,.09,'triangle',.2,0,880);},
+  unpop:()=>{tone(700,.08,'triangle',.14,0,420);},
+  ok:()=>{[523,659,784,1047].forEach((f,i)=>tone(f,.22,'triangle',.18,i*.09));},
+  nope:()=>{tone(300,.18,'sine',.16,0,220);tone(230,.22,'sine',.12,.12,170);},
+  star:(i=0)=>tone(1180+i*140,.16,'sine',.16,i*.12,1700),
+  win:()=>{[523,659,784,659,784,1047,1319].forEach((f,i)=>tone(f,.26,'triangle',.17,i*.12));},
+  group:(i=0)=>tone(400+i*60,.07,'sine',.1,i*.03),
+  tick:()=>tone(1000,.04,'square',.04)
+};
+function toggleSound(){soundOn=!soundOn;store.set('som',soundOn);if(!soundOn&&window.speechSynthesis)speechSynthesis.cancel();syncSoundUI();if(soundOn)sfx.pop();}
+function syncSoundUI(){const b=$('#sndBtn');if(b){b.textContent=soundOn?'🔊':'🔇';b.classList.toggle('off',!soundOn);}const h=$('#homeSound');if(h)h.textContent=soundOn?'🔊 Som ligado':'🔇 Som desligado';}
+
+/* ═════════════ VOZ (lê o pedido em voz alta) ═════════════ */
+let ptVoice=null;
+function loadVoice(){try{const v=speechSynthesis.getVoices();ptVoice=v.find(x=>/pt[-_]BR/i.test(x.lang))||v.find(x=>/^pt/i.test(x.lang))||null;}catch(e){}}
+if(window.speechSynthesis){loadVoice();speechSynthesis.onvoiceschanged=loadVoice;}
+function say(t){if(!soundOn||!window.speechSynthesis)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='pt-BR';if(ptVoice)u.voice=ptVoice;u.rate=.98;u.pitch=1.1;speechSynthesis.speak(u);}catch(e){}}
+
+/* ═════════════ FRAÇÕES: escrita e leitura ═════════════ */
+function frHTML(n,d,cls=''){return `<span class="fr ${cls}"><span class="n">${n}</span><span class="d">${d}</span></span>`;}
+const ORD={2:['meio','meios'],3:['terço','terços'],4:['quarto','quartos'],5:['quinto','quintos'],6:['sexto','sextos'],7:['sétimo','sétimos'],8:['oitavo','oitavos'],9:['nono','nonos'],10:['décimo','décimos'],100:['centésimo','centésimos']};
+const NUM=['zero','um','dois','três','quatro','cinco','seis','sete','oito','nove','dez','onze','doze'];
+function frWords(n,d){if(d===2&&n===1)return 'meio';const o=ORD[d];const den=o?(n===1?o[0]:o[1]):(n===1?NUM[d]+' avos':NUM[d]+' avos');return (NUM[n]||n)+' '+den;}
+function gcd(a,b){while(b)[a,b]=[b,a%b];return a;}
+
+/* ═════════════ PERSONAGENS (SVG vivo: pisca, respira, fala, reage) ═════════════ */
+const CHARS={
+  duda:{nome:'Duda',skin:'#6A402A',skinL:'#83563A',hair:'#22140D',shirt:'#FFFFFF',shirtD:'#EADFE3',lips:'#5A2420'},
+  lia:{nome:'Lia',skin:'#8E5B3D',skinL:'#A6714F',hair:'#2A1810',shirt:'#F7B928',shirtD:'#DC9C12',lips:'#6A2A22'},
+  teo:{nome:'Téo',skin:'#B77A50',skinL:'#CB9066',hair:'#3A2214',shirt:'#3F7FD8',shirtD:'#2E66B7',lips:'#7A3A2A'},
+  vo:{nome:'Vô Zé',skin:'#E3AE87',skinL:'#F0C29E',hair:'#ECE7E0',shirt:'#4CAF50',shirtD:'#3A9140',lips:'#9A4A3A'}
+};
+let charSeq=0;
+function charSVG(id,extra=''){
+  const c=CHARS[id],u='c'+(++charSeq);
+  const hairBack={
+    duda:`<circle cx="52" cy="66" r="27" fill="${c.hair}"/><circle cx="148" cy="66" r="27" fill="${c.hair}"/>`,
+    lia:`<circle cx="100" cy="40" r="22" fill="${c.hair}"/><path d="M52 104c-6-30 8-60 48-62 40 2 54 32 48 62l-6 18H58z" fill="${c.hair}"/>`,
+    teo:``,
+    vo:`<ellipse cx="56" cy="98" rx="12" ry="20" fill="${c.hair}"/><ellipse cx="144" cy="98" rx="12" ry="20" fill="${c.hair}"/>`
+  }[id];
+  const hairFront={
+    duda:`<path d="M54 92c-2-30 18-48 46-48s48 18 46 48c-10-14-26-20-46-20s-36 6-46 20z" fill="${c.hair}"/>`,
+    lia:`<path d="M52 98c-2-34 20-54 48-54 30 0 50 20 48 54-8-16-24-26-40-27 4 6 4 12 0 16-6-10-22-14-34-10-10 4-18 12-22 21z" fill="${c.hair}"/><rect x="112" y="30" width="26" height="10" rx="5" transform="rotate(28 125 35)" fill="#EC4F7A"/>`,
+    teo:`<path d="M52 94c-4-32 16-52 46-52 32 0 52 18 50 50-6-12-14-18-22-20 2 6 0 10-4 12-4-8-12-12-22-12 2 5 0 9-4 11-6-8-16-10-26-6-8 4-14 10-18 17z" fill="${c.hair}"/>`,
+    vo:`<path d="M60 74c8-18 24-28 40-28s32 10 40 28c-12-6-26-9-40-9s-28 3-40 9z" fill="${c.hair}" opacity=".9"/>`
+  }[id];
+  const hat=id==='duda'?`<g><rect x="66" y="42" width="68" height="18" rx="6" fill="#fff" stroke="#EADFE3" stroke-width="2"/><circle cx="76" cy="30" r="15" fill="#fff"/><circle cx="100" cy="20" r="19" fill="#fff"/><circle cx="124" cy="30" r="15" fill="#fff"/><rect x="70" y="26" width="60" height="22" fill="#fff"/><path d="M78 52h44" stroke="#F0568A" stroke-width="4" stroke-linecap="round"/></g>`:'';
+  const glasses=id==='vo'?`<g fill="none" stroke="#3A2A22" stroke-width="3"><circle cx="82" cy="104" r="13"/><circle cx="118" cy="104" r="13"/><path d="M95 103q5-4 10 0M69 102l-12-4M131 102l12-4"/></g><path d="M86 124q14-8 28 0q-6 8-14 4q-8 4-14-4z" fill="#F4F1EC"/>`:'';
+  const outfit={
+    duda:`<path d="M66 176h68l8 54H58z" fill="#F0568A"/><path d="M84 170l16 14 16-14" fill="none" stroke="#F0568A" stroke-width="5" stroke-linecap="round"/><path d="M92 198c0-6 8-8 8-2 0-6 8-4 8 2 0 6-8 10-8 12-0-2-8-6-8-12z" fill="#fff"/><rect x="80" y="210" width="40" height="14" rx="4" fill="#C93468"/>`,
+    lia:`<path d="M84 162q16 12 32 0" fill="none" stroke="${c.shirtD}" stroke-width="4"/>`,
+    teo:`<text x="100" y="212" text-anchor="middle" font-family="Baloo 2,Arial" font-weight="800" font-size="34" fill="#fff">10</text><path d="M80 164l20 16 20-16" fill="none" stroke="#fff" stroke-width="5"/>`,
+    vo:`<path d="M82 160l18 18 18-18" fill="#fff"/><path d="M100 178v52" stroke="${c.shirtD}" stroke-width="3"/><circle cx="100" cy="196" r="3" fill="#fff"/><circle cx="100" cy="214" r="3" fill="#fff"/>`
+  }[id];
+  const browColor=id==='vo'?c.hair:c.hair;
+  return `<svg class="char char-${id} ${extra}" data-mood="idle" viewBox="0 0 200 232" style="--bd:${(Math.random()*2).toFixed(2)}s" aria-label="${c.nome}" role="img">
+  <defs><radialGradient id="${u}s" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="${c.skinL}"/><stop offset="1" stop-color="${c.skin}"/></radialGradient></defs>
+  <g class="arm arm-l"><path d="M54 176c-14 8-22 26-24 50" stroke="${c.shirt}" stroke-width="22" stroke-linecap="round" fill="none"/><circle cx="30" cy="228" r="11" fill="${c.skin}"/></g>
+  <g class="arm arm-r"><path d="M146 176c14 8 22 26 24 50" stroke="${c.shirt}" stroke-width="22" stroke-linecap="round" fill="none"/><circle cx="170" cy="228" r="11" fill="${c.skin}"/></g>
+  <g class="c-body"><path d="M38 232c0-46 26-68 62-68s62 22 62 68z" fill="${c.shirt}"/><path d="M38 232c0-46 26-68 62-68" fill="none" stroke="${c.shirtD}" stroke-width="3" opacity=".6"/>${outfit}</g>
+  <g class="c-head">
+    <rect x="88" y="140" width="24" height="28" rx="10" fill="${c.skin}"/>
+    ${hairBack}
+    <circle cx="50" cy="108" r="11" fill="${c.skin}"/><circle cx="150" cy="108" r="11" fill="${c.skin}"/>
+    <ellipse cx="100" cy="102" rx="50" ry="52" fill="url(#${u}s)"/>
+    ${hairFront}${hat}
+    <ellipse cx="72" cy="122" rx="9" ry="5.5" fill="#FF7E86" opacity=".32"/><ellipse cx="128" cy="122" rx="9" ry="5.5" fill="#FF7E86" opacity=".32"/>
+    <g class="eyes">
+      <g transform="translate(82 104)"><ellipse rx="9.5" ry="11" fill="#fff"/><g class="pupil"><circle r="6.6" fill="#2B1810"/><circle cx="-2.2" cy="-2.6" r="2.3" fill="#fff"/><circle cx="2.4" cy="2.2" r="1" fill="#fff" opacity=".8"/></g><rect class="lid" x="-11" y="-12" width="22" height="24" rx="10" fill="${c.skin}"/></g>
+      <g transform="translate(118 104)"><ellipse rx="9.5" ry="11" fill="#fff"/><g class="pupil"><circle r="6.6" fill="#2B1810"/><circle cx="-2.2" cy="-2.6" r="2.3" fill="#fff"/><circle cx="2.4" cy="2.2" r="1" fill="#fff" opacity=".8"/></g><rect class="lid" x="-11" y="-12" width="22" height="24" rx="10" fill="${c.skin}"/></g>
+    </g>
+    <g class="brows" stroke="${browColor}" stroke-width="${id==='vo'?6:4.5}" stroke-linecap="round" fill="none">
+      <path class="brow-l" d="M72 86q10-6 19-1"/><path class="brow-r" d="M109 85q9-5 19 1"/>
+    </g>
+    <path d="M97 116q3 3 6 0" stroke="${c.lips}" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".55"/>
+    ${glasses}
+    <g class="mouths">
+      <path class="m m-smile" d="M86 128q14 13 28 0" stroke="${c.lips}" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <g class="m m-open"><path d="M83 125q17 26 34 0z" fill="#6E1F22"/><ellipse cx="100" cy="135" rx="9" ry="5" fill="#FF8D9A"/><path d="M86 126h28" stroke="#fff" stroke-width="3" stroke-linecap="round"/></g>
+      <ellipse class="m m-o" cx="100" cy="131" rx="6.5" ry="8" fill="#6E1F22"/>
+      <path class="m m-flat" d="M90 131q10 3 20-2" stroke="${c.lips}" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path class="m m-sad" d="M88 134q12-9 24 0" stroke="${c.lips}" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <ellipse class="m m-talk" cx="100" cy="130" rx="8" ry="6" fill="#6E1F22"/>
+    </g>
+  </g>
+</svg>`;
+}
+function mood(el,m){if(el)el.setAttribute('data-mood',m);}
+function look(el,x,y){if(el){el.style.setProperty('--lx',x+'px');el.style.setProperty('--ly',y+'px');}}
+let talkTimers=new Map();
+function talk(el,ms=1600){if(!el)return;clearInterval(talkTimers.get(el));let on=false;const t=setInterval(()=>{on=!on;el.classList.toggle('talk-b',on);},130);talkTimers.set(el,t);setTimeout(()=>{clearInterval(t);el.classList.remove('talk-b');},ms);}
+function celebrate(el){if(!el)return;el.classList.remove('cele');void el.getBoundingClientRect();el.classList.add('cele');mood(el,'happy');setTimeout(()=>el.classList.remove('cele'),1300);}
+function shake(el){if(!el)return;el.classList.remove('shake');void el.getBoundingClientRect();el.classList.add('shake');}
+
+/* ═════════════ DESENHO DOS DOCES ═════════════ */
+const FLAVORS={
+  morango:{nome:'bolo de morango',top:'#FFB7CC',top2:'#F28DAE',rim:'#FFE4EE',deco:'morango'},
+  chocolate:{nome:'bolo de chocolate',top:'#6B3A26',top2:'#5A2F1F',rim:'#7E4A33',deco:'granulado'},
+  cenoura:{nome:'bolo de cenoura',top:'#5E3322',top2:'#4E2919',rim:'#F2A65A',deco:'cenoura'},
+  limao:{nome:'bolo de limão',top:'#FFEE8C',top2:'#E8CF52',rim:'#FFF8CF',deco:'limao'}
+};
+function seeded(s){return()=>{s=(s*9301+49297)%233280;return s/233280;};}
+function roundArt(id,kind,flavor){
+  const R=100,r=seeded(7);let s='';
+  if(kind==='pizza'){
+    s+=`<circle r="${R}" fill="#E7B062"/><circle r="${R}" fill="none" stroke="#C98A3F" stroke-width="4"/><circle r="${R-13}" fill="#D9472B"/><circle r="${R-17}" fill="#F7D46A"/>`;
+    for(let i=0;i<22;i++){const a=r()*6.28,d=r()*(R-28);s+=`<ellipse cx="${(Math.cos(a)*d).toFixed(1)}" cy="${(Math.sin(a)*d).toFixed(1)}" rx="${8+r()*8}" ry="${5+r()*5}" fill="#FFE89A" opacity=".8"/>`;}
+    for(let i=0;i<11;i++){const a=i*0.571+.3,d=i%2?R*.55:R*.3+((i*13)%20);const x=Math.cos(a)*d,y=Math.sin(a)*d;s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="11" fill="#B8352A"/><circle cx="${(x-3).toFixed(1)}" cy="${(y-3).toFixed(1)}" r="2.2" fill="#8E2219"/><circle cx="${(x+4).toFixed(1)}" cy="${(y+2).toFixed(1)}" r="1.8" fill="#8E2219"/>`;}
+    for(let i=0;i<7;i++){const a=i*0.9+.7,d=R*.45+((i*17)%25);s+=`<ellipse cx="${(Math.cos(a)*d).toFixed(1)}" cy="${(Math.sin(a)*d).toFixed(1)}" rx="6" ry="3.4" transform="rotate(${i*40} ${(Math.cos(a)*d).toFixed(1)} ${(Math.sin(a)*d).toFixed(1)})" fill="#2E9E4F"/>`;}
+    return s;
+  }
+  const f=FLAVORS[flavor];
+  s+=`<circle r="${R+2}" fill="${f.rim}"/><circle r="${R-8}" fill="${f.top}"/><circle r="${R-8}" fill="url(#${id}g)"/>`;
+  // borda confeitada
+  for(let i=0;i<30;i++){const a=i/30*6.283;s+=`<circle cx="${(Math.cos(a)*(R-6)).toFixed(1)}" cy="${(Math.sin(a)*(R-6)).toFixed(1)}" r="8.5" fill="${f.rim}" stroke="${f.top2}" stroke-width="1.2"/>`;}
+  if(f.deco==='granulado'||f.deco==='cenoura'){const cols=f.deco==='cenoura'?['#F2A65A','#FFD27A','#fff']:['#F0568A','#FFCF5C','#8ED1FF','#fff','#2FB89A'];for(let i=0;i<70;i++){const a=r()*6.28,d=Math.sqrt(r())*(R-22);const x=Math.cos(a)*d,y=Math.sin(a)*d;s+=`<rect x="${(x-4).toFixed(1)}" y="${(y-1.5).toFixed(1)}" width="8" height="3" rx="1.5" fill="${pick2(cols,r)}" transform="rotate(${(r()*180).toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;}}
+  if(f.deco==='morango'){for(let i=0;i<12;i++){const a=(i+.5)/12*6.283,d=R*.62;const x=Math.cos(a)*d,y=Math.sin(a)*d;s+=`<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(a*57.3+90).toFixed(0)})"><path d="M0 -9c8 0 11 6 9 11-2 6-7 9-9 9s-7-3-9-9c-2-5 1-11 9-11z" fill="#E8344F"/><path d="M-5 -9l5 3 5-3-2 5h-6z" fill="#2E9E4F"/><circle cx="-3" cy="0" r=".9" fill="#FFE07A"/><circle cx="3" cy="2" r=".9" fill="#FFE07A"/><circle cx="0" cy="5" r=".9" fill="#FFE07A"/></g>`;}
+    for(let i=0;i<5;i++){const a=i*1.26;s+=`<circle cx="${(Math.cos(a)*24).toFixed(1)}" cy="${(Math.sin(a)*24).toFixed(1)}" r="7" fill="#fff" opacity=".9"/>`;}}
+  if(f.deco==='cenoura'){s+=`<circle r="${R-30}" fill="none" stroke="#7A4A33" stroke-width="2" opacity=".5"/>`;}
+  if(f.deco==='limao'){for(let i=0;i<12;i++){const a=(i+.5)/12*6.283,d=R*.64;const x=Math.cos(a)*d,y=Math.sin(a)*d;s+=`<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(a*57.3).toFixed(0)})"><path d="M-10 0a10 10 0 0 1 20 0z" fill="#E9F27A" stroke="#B8C93A" stroke-width="2"/><path d="M0 0l-6-6M0 0v-8M0 0l6-6" stroke="#fff" stroke-width="1.4"/></g>`;}
+    for(let i=0;i<40;i++){const a=r()*6.28,d=Math.sqrt(r())*(R-40);s+=`<circle cx="${(Math.cos(a)*d).toFixed(1)}" cy="${(Math.sin(a)*d).toFixed(1)}" r="1.6" fill="#9BC53D"/>`;}}
+  return s;
+}
+function pick2(a,r){return a[Math.floor(r()*a.length)];}
+function sheetArt(W,H,kind){
+  const r=seeded(11);let s='';
+  if(kind==='fuba'){s+=`<rect x="${-W/2}" y="${-H/2}" width="${W}" height="${H}" rx="10" fill="#F5C75A"/><rect x="${-W/2+6}" y="${-H/2+6}" width="${W-12}" height="${H-12}" rx="8" fill="#FBD978"/>`;for(let i=0;i<60;i++){s+=`<circle cx="${(r()*(W-24)-W/2+12).toFixed(1)}" cy="${(r()*(H-24)-H/2+12).toFixed(1)}" r="${(1+r()*1.6).toFixed(1)}" fill="#C88A3A" opacity=".7"/>`;}}
+  else{s+=`<rect x="${-W/2}" y="${-H/2}" width="${W}" height="${H}" rx="10" fill="#4A2618"/><rect x="${-W/2+6}" y="${-H/2+6}" width="${W-12}" height="${H-12}" rx="8" fill="#6A3622"/>`;for(let i=0;i<26;i++){const x=r()*(W-30)-W/2+15,y=r()*(H-30)-H/2+15;s+=`<path d="M${x.toFixed(1)} ${y.toFixed(1)}l6 -3 5 4 -6 3z" fill="#3A1C10" opacity=".7"/>`;}for(let i=0;i<40;i++){s+=`<rect x="${(r()*(W-24)-W/2+12).toFixed(1)}" y="${(r()*(H-24)-H/2+12).toFixed(1)}" width="7" height="2.6" rx="1.3" fill="${pick2(['#F0568A','#FFCF5C','#8ED1FF','#fff'],r)}" transform="rotate(${(r()*180).toFixed(0)})" opacity=".95"/>`;}}
+  return s;
+}
+const GRID={2:[1,2],3:[1,3],4:[2,2],5:[1,5],6:[2,3],8:[2,4],10:[2,5],12:[3,4]};
+let artSeq=0;
+/* desenha o doce no SVG. item:{kind:'bolo'|'pizza'|'travessa', flavor}  cut: nº de partes (1 = inteiro)  sel: Set */
+function drawItem(svg,item,cut,sel,opts={}){
+  const id='a'+(++artSeq),R=100;
+  let defs=`<radialGradient id="${id}g" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>`;
+  let body='',art;
+  const round=item.kind!=='travessa';
+  if(round){
+    art=`<g id="${id}art">${roundArt(id,item.kind,item.flavor)}</g>`;
+    const plate=`<ellipse cx="0" cy="14" rx="130" ry="128" fill="rgba(120,60,40,.16)"/><circle r="126" fill="#fff"/><circle r="126" fill="none" stroke="#E7CFD8" stroke-width="3"/><circle r="114" fill="none" stroke="#F3E4EA" stroke-width="2.5"/><circle r="120" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="2 9" opacity=".9"/><circle cx="0" cy="6" r="104" fill="rgba(90,40,20,.18)"/>`;
+    if(cut<=1){body=`<g class="slice whole">${art}</g>`;}
+    else{
+      defs+=`<g id="${id}src">${roundArt(id,item.kind,item.flavor)}</g>`;
+      for(let i=0;i<cut;i++){
+        const a0=(-90+i*360/cut)*Math.PI/180,a1=(-90+(i+1)*360/cut)*Math.PI/180,mid=(a0+a1)/2;
+        const RR=R+4,p=`M0 0 L${(Math.cos(a0)*RR).toFixed(2)} ${(Math.sin(a0)*RR).toFixed(2)} A${RR} ${RR} 0 ${360/cut>180?1:0} 1 ${(Math.cos(a1)*RR).toFixed(2)} ${(Math.sin(a1)*RR).toFixed(2)} Z`;
+        defs+=`<clipPath id="${id}c${i}"><path d="${p}"/></clipPath>`;
+        const isSel=sel&&sel.has(i),gap=opts.gap??4,lift=isSel?(opts.lift??16):0,dx=Math.cos(mid)*(gap+lift),dy=Math.sin(mid)*(gap+lift);
+        const cx=Math.cos(mid)*R*.58,cy=Math.sin(mid)*R*.58;
+        body+=`<g class="slice${isSel?' sel':''}" data-i="${i}" style="transform:translate(${dx.toFixed(1)}px,${dy.toFixed(1)}px)"><g clip-path="url(#${id}c${i})"><use href="#${id}src"/></g><path class="edge" d="${p}"/>
+          <g class="check" transform="translate(${cx.toFixed(1)} ${cy.toFixed(1)})"><circle r="13" fill="#F0568A" stroke="#fff" stroke-width="3"/><path d="M-6 0l4 4 8-8" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g>`;
+      }
+    }
+    svg.setAttribute('viewBox','-140 -140 280 280');
+    svg.innerHTML=`<defs>${defs}</defs>${plate}<g class="slices">${body}</g><g class="cuts"></g>`;
+  } else {
+    const W=230,H=150;
+    const tray=`<rect x="${-W/2-14}" y="${-H/2-14}" width="${W+28}" height="${H+28}" rx="18" fill="#fff" stroke="#EADBE1" stroke-width="3"/><rect x="${-W/2-14}" y="${H/2+4}" width="${W+28}" height="12" rx="6" fill="rgba(120,60,40,.12)"/>`;
+    defs+=`<g id="${id}src">${sheetArt(W,H,item.flavor)}</g>`;
+    if(cut<=1){body=`<g class="slice whole"><use href="#${id}src"/></g>`;}
+    else{
+      const [rows,cols]=GRID[cut];const cw=W/cols,ch=H/rows;
+      for(let i=0;i<cut;i++){const rr=Math.floor(i/cols),cc=i%cols;const x=-W/2+cc*cw,y=-H/2+rr*ch;
+        defs+=`<clipPath id="${id}c${i}"><rect x="${x}" y="${y}" width="${cw}" height="${ch}"/></clipPath>`;
+        const isSel=sel&&sel.has(i),gap=opts.gap??3;const gx=(cc-(cols-1)/2)*gap,gy=(rr-(rows-1)/2)*gap-(isSel?(opts.lift??12):0);
+        body+=`<g class="slice${isSel?' sel':''}" data-i="${i}" style="transform:translate(${gx.toFixed(1)}px,${gy.toFixed(1)}px)"><g clip-path="url(#${id}c${i})"><use href="#${id}src"/></g><rect class="edge" x="${x}" y="${y}" width="${cw}" height="${ch}" rx="3"/>
+          <g class="check" transform="translate(${x+cw/2} ${y+ch/2})"><circle r="12" fill="#F0568A" stroke="#fff" stroke-width="3"/><path d="M-6 0l4 4 8-8" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g>`;}
+    }
+    svg.setAttribute('viewBox','-140 -140 280 280');
+    svg.innerHTML=`<defs>${defs}</defs>${tray}<g class="slices">${body}</g><g class="cuts"></g>`;
+  }
+}
+/* animação da faca: traça as linhas de corte uma a uma */
+async function animateCut(svg,item,cut){
+  const g=svg.querySelector('.cuts');if(!g||cut<=1)return;
+  const lines=[];
+  if(item.kind!=='travessa'){for(let i=0;i<cut;i++){const a=(-90+i*360/cut)*Math.PI/180;lines.push([0,0,Math.cos(a)*104,Math.sin(a)*104]);}}
+  else{const [rows,cols]=GRID[cut],W=230,H=150;for(let c=1;c<cols;c++){const x=-W/2+c*W/cols;lines.push([x,-H/2-6,x,H/2+6]);}for(let r=1;r<rows;r++){const y=-H/2+r*H/rows;lines.push([-W/2-6,y,W/2+6,y]);}}
+  g.innerHTML=lines.map(l=>{const len=Math.hypot(l[2]-l[0],l[3]-l[1]);return `<line class="cutline" x1="${l[0]}" y1="${l[1]}" x2="${l[2]}" y2="${l[3]}" stroke-dasharray="${len}" stroke-dashoffset="${len}"/>`;}).join('');
+  const els=[...g.children];
+  for(let i=0;i<els.length;i++){sfx.cut(0);els[i].animate([{strokeDashoffset:els[i].getAttribute('stroke-dashoffset')},{strokeDashoffset:0}],{duration:170,fill:'forwards',easing:'ease-out'});await sleep(95);}
+  await sleep(160);
+}
+
+function brigadeiroSVG(cup){return `<svg viewBox="0 0 60 60"><path d="M8 34h44l-5 20H13z" fill="${cup}"/><path d="M8 34h44" stroke="#fff" stroke-width="2" opacity=".6"/><path d="M12 38l2 14M20 38l1 15M28 38v15M36 38l-1 15M44 38l-2 14" stroke="rgba(0,0,0,.12)" stroke-width="2"/><circle cx="30" cy="27" r="17" fill="#4A2618"/><circle cx="30" cy="27" r="17" fill="url(#bg)"/>${[[22,20,20],[34,17,-30],[27,29,60],[38,28,10],[20,31,-50],[31,23,85],[25,14,40],[36,35,-20]].map(p=>`<rect x="${p[0]}" y="${p[1]}" width="6" height="2.4" rx="1.2" fill="#2A120A" transform="rotate(${p[2]} ${p[0]+3} ${p[1]+1})"/>`).join('')}<ellipse cx="24" cy="19" rx="5" ry="3" fill="#fff" opacity=".25"/></svg>`;}
+
+/* ═════════════ ESTADO DO JOGO ═════════════ */
+const LEVELS=[
+  {n:1,t:'Cortar e servir',d:'Bolos e pizzas: corte em partes iguais e entregue a fração do pedido.',c:'#F0568A',bg:'#FFE3EC'},
+  {n:2,t:'Brigadeiros',d:'Fração de uma quantidade: separe os brigadeiros em grupos iguais.',c:'#8A5A3B',bg:'#F6E6DA'},
+  {n:3,t:'Quem leva mais?',d:'Compare os pedidos e descubra quem vai levar mais doce.',c:'#1E8A72',bg:'#DDF7EE'}
+];
+const G={level:1,orders:[],idx:0,stars:0,mistakes:0,late:false,cut:1,sel:new Set(),busy:false,patT:null,cust:null,duda:null};
+
+function goHome(){clearInterval(G.patT);if(window.speechSynthesis)speechSynthesis.cancel();$('#game').classList.add('hidden');$('#home').classList.remove('hidden');$('#result').classList.add('hidden');renderHome();window.scrollTo(0,0);}
+function renderHome(){
+  const ico=[
+    `<svg viewBox="-140 -140 280 280"></svg>`,
+    `<svg viewBox="0 0 60 60">${brigadeiroSVG('#F0568A').replace(/^<svg[^>]*>|<\/svg>$/g,'')}</svg>`,
+    `<svg viewBox="0 0 64 64"><text x="6" y="30" font-family="Baloo 2" font-weight="800" font-size="26" fill="#F0568A">1</text><rect x="4" y="34" width="20" height="4" rx="2" fill="#3A2230"/><text x="6" y="60" font-family="Baloo 2" font-weight="800" font-size="26" fill="#1E8A72">3</text><text x="26" y="44" font-family="Baloo 2" font-weight="800" font-size="24" fill="#3A2230">&gt;</text><text x="42" y="30" font-family="Baloo 2" font-weight="800" font-size="26" fill="#F0568A">1</text><rect x="40" y="34" width="20" height="4" rx="2" fill="#3A2230"/><text x="42" y="60" font-family="Baloo 2" font-weight="800" font-size="26" fill="#1E8A72">4</text></svg>`
+  ];
+  $('#levels').innerHTML=LEVELS.map((L,i)=>{const best=store.get('best'+L.n,0);const st=best>=16?3:best>=11?2:best>=1?1:0;
+    return `<button class="lvl" style="--c:${L.c};--bg:${L.bg}" onclick="startLevel(${L.n})"><div class="lv-ico">${ico[i]}</div><div><div class="lv-n">Nível ${L.n}</div><div class="lv-t">${L.t}</div><div class="lv-d">${L.d}</div><div class="lv-stars">${'<b>★</b>'.repeat(st)}${'★'.repeat(3-st)}${best?` <span style="font-size:12px;color:#8B6E7A;letter-spacing:0">recorde: ${best} ⭐</span>`:''}</div></div></button>`;}).join('');
+  const s=$('#levels .lvl svg');drawItem(s,{kind:'bolo',flavor:'morango'},4,new Set([0]),{gap:5,lift:12});
+  if(!$('#homeDuda').firstChild){$('#homeDuda').innerHTML=charSVG('duda','wave');const d=$('#homeDuda .char');setTimeout(()=>d.classList.add('wave'),400);setInterval(()=>{d.classList.remove('wave');void d.getBoundingClientRect();d.classList.add('wave');},6000);}
+  syncSoundUI();
+}
+
+/* ───────── layout: tamanho do doce conforme o espaço ───────── */
+function layout(){
+  const st=$('#stage');if(!st||$('#game').classList.contains('hidden'))return;
+  const r=st.getBoundingClientRect();const narrow=window.matchMedia('(max-width:860px), (orientation:portrait) and (max-width:1100px)').matches;
+  const counterPx=Math.round(r.height*(narrow?.2:.26));
+  st.style.setProperty('--counter-h',counterPx+'px');st.style.setProperty('--counter-h-px',counterPx+'px');
+  if(!narrow){const col=$('#itemCol').getBoundingClientRect();const size=Math.max(220,Math.min(col.width*.96,r.height*.68));st.style.setProperty('--item',size+'px');}
+  else st.style.removeProperty('--item');
+  // cliente "atrás do balcão": o balcão cobre só a parte de baixo do corpo
+  const cw=$('#custWrap');
+  if(cw&&!narrow){const h=cw.offsetHeight||cw.offsetWidth*1.16;cw.style.marginBottom=Math.round(counterPx-h*.22)+'px';}
+  else if(cw)cw.style.marginBottom='';
+  clearTimeout(layout._t);layout._t=setTimeout(relayout2,120);
+}
+
+/* ═════════════ NÍVEIS: geração dos pedidos ═════════════ */
+const CUSTOMERS=['lia','teo','vo'];
+const FALAS={
+  lia:['Oi, Duda! Quero {fr} {item}, por favor!','Duda, me vê {fr} {item}? Vou dividir com a minha mãe!'],
+  teo:['Bora, Duda! Me vê {fr} {item}! Tô com fome de campeão!','E aí, Duda! Quero {fr} {item}, rapidinho que tem jogo!'],
+  vo:['Bom dia, menina! Vou levar {fr} {item}.','Duda, minha filha, separa {fr} {item} pro lanche da tarde?']
+};
+function makeOrders(level){
+  const os=[];let last=null;
+  const who=()=>{let w;do{w=pick(CUSTOMERS);}while(w===last);last=w;return w;};
+  if(level===1){
+    const plan=[[2,4],[3,4],[4,6],[6,8],[8,10],[5,12]];
+    const kinds=['bolo','pizza','travessa','bolo','pizza','travessa'];
+    shuffle(kinds.slice(1));
+    plan.forEach((ds,i)=>{
+      let kind=kinds[i];let d=pick(ds);
+      if(kind==='travessa'&&!GRID[d])d=6;
+      if(kind!=='travessa'&&d>12)d=12;
+      const flavor=kind==='bolo'?pick(Object.keys(FLAVORS)):kind==='travessa'?pick(['fuba','brownie']):'calabresa';
+      const n=i===0?1:rand(1,d-1);
+      const opts=new Set([d]);const pool=kind==='travessa'?[2,3,4,5,6,8,10,12]:[2,3,4,5,6,8,10,12];
+      while(opts.size<5)opts.add(pick(pool));
+      os.push({who:who(),kind,flavor,n,d,knives:[...opts].sort((a,b)=>a-b)});
+    });
+  } else if(level===2){
+    const plan=[[[6,2,1],[8,2,1]],[[8,4,1],[12,4,1]],[[12,3,1],[9,3,1]],[[10,5,1],[15,5,1]],[[12,4,3],[8,4,3]],[[12,3,2],[18,6,5]]];
+    plan.forEach(p=>{const [N,d,n]=pick(p);os.push({who:who(),N,d,n});});
+  } else {
+    const pools=[
+      ()=>{const d=pick([4,5,6,8]);let a=rand(1,d-1),b;do{b=rand(1,d-1);}while(b===a);return[[a,d],[b,d],true];},
+      ()=>{const ds=shuffle([2,3,4,5,6,8]).slice(0,2);return[[1,ds[0]],[1,ds[1]],true];},
+      ()=>{const e=pick([[[1,2],[2,4]],[[1,2],[3,6]],[[1,3],[2,6]],[[1,4],[2,8]],[[2,3],[4,6]]]);return[...shuffle(e.slice()),true];},
+      ()=>{const ds=shuffle([2,3,4,6,8,10]).slice(0,2);return[[1,ds[0]],[1,ds[1]],false];},
+      ()=>{const d=pick([5,6,8,10]);let a=rand(1,d-1),b;do{b=rand(1,d-1);}while(b===a);return[[a,d],[b,d],false];},
+      ()=>{const e=pick([[[1,2],[4,8]],[[3,4],[6,8]],[[2,5],[4,10]],[[1,3],[1,4]],[[3,8],[1,2]],[[2,3],[1,2]]]);return[...shuffle(e.slice()),false];}
+    ];
+    pools.forEach(f=>{const [A,B,show]=f();const ppl=shuffle(CUSTOMERS.slice()).slice(0,2);const flavor=pick(Object.keys(FLAVORS));os.push({A,B,show,ppl,flavor});});
+  }
+  return os;
+}
+
+/* ═════════════ INÍCIO DO NÍVEL ═════════════ */
+function startLevel(n){
+  ac();G.level=n;G.orders=makeOrders(n);G.idx=0;G.stars=0;G.results=[];
+  $('#home').classList.add('hidden');$('#game').classList.remove('hidden');$('#result').classList.add('hidden');
+  $('#hudTitle').innerHTML=`Nível ${n}<small>${LEVELS[n-1].t}</small>`;
+  $('#starN').textContent='0';
+  buildBunting();syncSoundUI();
+  track('jogo_inicio',{nivel:n});
+  setAppH();nextOrder(true);
+}
+function buildBunting(){
+  const cols=['#F0568A','#FFCF5C','#2FB89A','#8ED1FF','#C99BFF'];let s='<svg viewBox="0 0 1000 60" preserveAspectRatio="none"><path d="M0 8 Q500 34 1000 8" stroke="#C98A57" stroke-width="2.5" fill="none"/>';
+  for(let i=0;i<22;i++){const x=i*46+10,y=8+Math.sin((x/1000)*Math.PI)*24;s+=`<path class="flag" style="animation-delay:${(i%5)*.3}s" d="M${x} ${y.toFixed(1)}l30 0-15 26z" fill="${cols[i%5]}"/>`;}
+  s+='</svg>';$('#bunting').innerHTML=s;
+}
+function renderProgress(){$('#progress').innerHTML=G.orders.map((o,i)=>`<i class="${i<G.idx?'done'+((G.results[i]||0)===3?' s3':''):i===G.idx?'now':''}"></i>`).join('');}
+
+async function nextOrder(first){
+  clearInterval(G.patT);G.busy=false;G.mistakes=0;G.late=false;G.cut=1;G.sel=new Set();G.groups=0;
+  if(G.idx>=G.orders.length){return endLevel();}
+  renderProgress();
+  const st=$('#stage');st.classList.toggle('cmp-mode',G.level===3);
+  if(G.level===3)return renderCompare();
+  const o=G.orders[G.idx];
+  /* cliente */
+  const cc=$('#custCol');
+  const itemName=G.level===1?(o.kind==='pizza'?'da pizza de calabresa':o.kind==='travessa'?(o.flavor==='fuba'?'do bolo de fubá':'do brownie'):'do '+FLAVORS[o.flavor].nome):`dos ${o.N} brigadeiros`;
+  const modelo=pick(FALAS[o.who]);
+  const fala=modelo.replace('{fr}','<b>'+frWords(o.n,o.d)+'</b>').replace('{item}',itemName);
+  o.vozFull=modelo.replace('{fr}',frWords(o.n,o.d)).replace('{item}',itemName);
+  cc.innerHTML=`<div class="bubble pop" id="bubble"><div class="who">${CHARS[o.who].nome} pediu <button class="speak" onclick="say(G.orders[G.idx].vozFull)" aria-label="Ouvir o pedido">🔊</button></div>
+    <span class="order-fr">${frHTML(o.n,o.d)}</span><span class="say">${fala}</span>
+    <div class="patience" id="pat"><i></i></div></div>
+    <div class="cust-wrap cust-in" id="custWrap">${charSVG(o.who)}</div>`;
+  const falaVoz=o.vozFull;
+  G.cust=cc.querySelector('.char');look(G.cust,4,0);
+  setTimeout(()=>{talk(G.cust,1800);say(falaVoz);},450);
+  /* doce + ferramentas */
+  if(G.level===1)renderLevel1(o);else renderLevel2(o);
+  layout();
+  /* paciência (suave: se acabar, só perde 1 estrela possível) */
+  const total=G.level===1?50:55;let left=total;const bar=$('#pat i');
+  G.patT=setInterval(()=>{if(G.busy)return;left--;if(bar)bar.style.transform=`scaleX(${Math.max(0,left/total)})`;
+    if(left===10){mood(G.cust,'think');}
+    if(left<=0){clearInterval(G.patT);G.late=true;$('#pat').classList.add('late');mood(G.cust,'think');talk(G.cust,1200);tip('O cliente está com pressa, mas espera você terminar. 😉','warn');}
+  },1000);
+}
+
+/* ───────── dica da Duda ───────── */
+function tip(html,kind=''){const t=$('#tip');if(!t)return;t.className='tip pop '+kind;t.innerHTML=html;void t.offsetWidth;const d=G.duda;if(d){talk(d,1400);mood(d,kind==='warn'?'think':kind==='good'?'happy':'idle');}}
+
+/* ═════════════ NÍVEL 1: cortar e servir ═════════════ */
+function renderLevel1(o){
+  $('#itemCol').innerHTML=`<div class="plate-wrap"><svg id="itemSvg" aria-label="doce"></svg><div class="item-label" id="itemLabel">Bolo inteiro</div></div>`;
+  $('#toolsCol').innerHTML=`<div class="panel">
+    <div class="step-t s1"><b style="background:var(--mint)">1</b> Escolha a faca: em quantas partes?</div>
+    <div class="knives">${o.knives.map(k=>`<button class="b3d knife" data-k="${k}" onclick="chooseKnife(${k})">${k}<small>partes</small></button>`).join('')}</div>
+    <div class="step-t s2"><b style="background:var(--pink)">2</b> Toque nos pedaços do pedido</div>
+    <div class="counter" id="counter"><span style="color:var(--muted)">corte primeiro ✂️</span></div>
+    <button class="b3d deliver" id="deliverBtn" onclick="deliver1()">Entregar 🎁</button>
+    <div class="tipbox"><div id="dudaBox"></div><div class="tip" id="tip">O número de <b style="color:var(--mint-d)">baixo</b> diz em quantas partes iguais cortar. O de <b style="color:var(--pink)">cima</b>, quantas entregar!</div></div>
+  </div>`;
+  $('#dudaBox').innerHTML=charSVG('duda');G.duda=$('#dudaBox .char');
+  const svg=$('#itemSvg');drawItem(svg,o,1,null);
+  $('#itemLabel').textContent=o.kind==='pizza'?'Pizza inteira':o.kind==='travessa'?'Travessa inteira':'Bolo inteiro';
+  svg.addEventListener('click',e=>{const s=e.target.closest('.slice[data-i]');if(s)toggleSlice(+s.dataset.i);});
+}
+async function chooseKnife(k){
+  if(G.busy)return;const o=G.orders[G.idx];if(G.cut===k)return;
+  G.busy=true;G.cut=k;G.sel=new Set();
+  document.querySelectorAll('.knife').forEach(b=>b.classList.toggle('on',+b.dataset.k===k));
+  const svg=$('#itemSvg');drawItem(svg,o,1,null);await animateCut(svg,o,k);
+  drawItem(svg,o,k,G.sel);updateCounter1();G.busy=false;
+  $('#itemLabel').textContent=`Cortado em ${k} partes`;
+  look(G.cust,6,4);
+  if(k!==o.d)tip(`Você cortou em <b style="color:var(--mint-d)">${k}</b> partes. Confira o número de baixo do pedido!`);
+  else tip(`Isso! <b style="color:var(--mint-d)">${k}</b> partes iguais. Agora toque em <b style="color:var(--pink)">${o.n}</b> ${o.n>1?'pedaços':'pedaço'}.`,'good');
+}
+function toggleSlice(i){
+  if(G.busy||G.cut<=1)return;const o=G.orders[G.idx];
+  if(G.sel.has(i)){G.sel.delete(i);sfx.unpop();}else{G.sel.add(i);sfx.pop();}
+  const svg=$('#itemSvg');const el=svg.querySelector(`.slice[data-i="${i}"]`);
+  // anima só o pedaço tocado (sem redesenhar tudo)
+  const on=G.sel.has(i);el.classList.toggle('sel',on);
+  const k=G.cut;
+  if(o.kind!=='travessa'){const mid=((-90+(i+.5)*360/k))*Math.PI/180,d=4+(on?16:0);el.style.transform=`translate(${(Math.cos(mid)*d).toFixed(1)}px,${(Math.sin(mid)*d).toFixed(1)}px)`;}
+  else{const [rows,cols]=GRID[k];const rr=Math.floor(i/cols),cc=i%cols;el.style.transform=`translate(${((cc-(cols-1)/2)*3).toFixed(1)}px,${((rr-(rows-1)/2)*3-(on?12:0)).toFixed(1)}px)`;}
+  updateCounter1();look(G.cust,on?8:2,on?5:0);
+}
+function updateCounter1(){
+  const c=$('#counter');if(G.cut<=1){c.innerHTML='<span style="color:var(--muted)">corte primeiro ✂️</span>';return;}
+  c.innerHTML=`<span style="color:var(--muted);font-size:14px;text-align:right">Você<br>separou</span>${frHTML(G.sel.size,G.cut)}<span style="color:var(--muted);font-size:14px">${G.sel.size} de ${G.cut}<br>pedaços</span>`;
+}
+async function deliver1(){
+  if(G.busy)return;const o=G.orders[G.idx];
+  if(G.cut<=1){tip('Primeiro escolha a <b style="color:var(--mint-d)">faca</b>: em quantas partes iguais cortar?','warn');sfx.nope();shake($('#deliverBtn'));return;}
+  if(G.cut!==o.d){G.mistakes++;sfx.nope();mood(G.cust,'sad');shake($('#custWrap'));
+    tip(`Quase! Você cortou em <b>${G.cut}</b>, mas o pedido é ${frHTML(o.n,o.d)}: o <b style="color:var(--mint-d)">${o.d}</b> de baixo pede <b>${o.d} partes iguais</b>. Troque a faca!`,'warn');
+    setTimeout(()=>mood(G.cust,'think'),1400);return;}
+  if(G.sel.size!==o.n){G.mistakes++;sfx.nope();mood(G.cust,'think');shake($('#custWrap'));
+    tip(G.sel.size===0?`Toque nos pedaços para separar. O <b style="color:var(--pink)">${o.n}</b> de cima diz quantos.`:`Você separou <b>${G.sel.size}</b> ${G.sel.size>1?'pedaços':'pedaço'}. O número de cima pede <b style="color:var(--pink)">${o.n}</b>!`,'warn');return;}
+  await success(`${frHTML(o.n,o.d)} = ${o.n} de ${o.d} pedaços iguais`);
+}
+
+/* ═════════════ NÍVEL 2: brigadeiros ═════════════ */
+const CUPS=['#F0568A','#2FB89A','#FFCF5C','#8ED1FF','#C99BFF','#FF9F6B'];
+function renderLevel2(o){
+  $('#itemCol').innerHTML=`<div class="tray" id="tray"><div class="tray-bg" id="trayBg"></div></div>`;
+  $('#toolsCol').innerHTML=`<div class="panel">
+    <div class="step-t s1"><b style="background:var(--mint)">1</b> Separe em grupos iguais</div>
+    <div class="knives">${[2,3,4,5,6].map(k=>`<button class="b3d knife" data-k="${k}" onclick="chooseGroups(${k})">${k}<small>grupos</small></button>`).join('')}</div>
+    <div class="step-t s2"><b style="background:var(--pink)">2</b> Toque nos grupos do pedido</div>
+    <div class="counter" id="counter"><span style="color:var(--muted)">separe primeiro 🍫</span></div>
+    <button class="b3d deliver" id="deliverBtn" onclick="deliver2()">Entregar 🎁</button>
+    <div class="tipbox"><div id="dudaBox"></div><div class="tip" id="tip">Para achar ${frHTML(1,o.d)} de ${o.N}, separe os brigadeiros em <b style="color:var(--mint-d)">grupos iguais</b>. Quantos grupos? Olhe o número de baixo!</div></div>
+  </div>`;
+  $('#dudaBox').innerHTML=charSVG('duda');G.duda=$('#dudaBox .char');
+  const tray=$('#tray');
+  let h='<svg width="0" height="0" style="position:absolute"><defs><radialGradient id="bg" cx="35%" cy="30%" r="70%"><stop offset="0" stop-color="#7A4632"/><stop offset="1" stop-color="#3A1C10"/></radialGradient></defs></svg>';
+  for(let i=0;i<o.N;i++)h+=`<div class="bri" data-i="${i}">${brigadeiroSVG(CUPS[i%CUPS.length])}</div>`;
+  tray.insertAdjacentHTML('beforeend',h);
+  tray.addEventListener('click',e=>{const g=e.target.closest('.gbox');if(g)toggleGroup(+g.dataset.g);});
+  placeTray(o);
+}
+/* reposiciona os brigadeiros (ex.: girou o celular) */
+function relayout2(){const o=G.orders[G.idx];if(G.level!==2||!$('#tray')||!o)return;if(G.groups){const k=G.groups,sel=new Set(G.sel);G.groups=0;chooseGroups(k,true);sel.forEach(g=>toggleGroup(g,true));}else placeTray(o);}
+function trayBox(){const t=$('#tray');return t?t.getBoundingClientRect():{width:300,height:300};}
+function placeTray(o){
+  const b=trayBox(),W=b.width,H=b.height;const cols=Math.ceil(Math.sqrt(o.N*1.2)),rows=Math.ceil(o.N/cols);
+  const bs=Math.min((W*.86)/cols,(H*.86)/rows)*.92;$('#tray').style.setProperty('--bs',bs+'px');
+  const ox=(W-cols*bs)/2,oy=(H-rows*bs)/2;
+  document.querySelectorAll('.bri').forEach((el,i)=>{const r=Math.floor(i/cols),c=i%cols;el.style.transform=`translate(${(ox+c*bs).toFixed(1)}px,${(oy+r*bs).toFixed(1)}px)`;});
+}
+function groupLayout(o,k){
+  const b=trayBox(),W=b.width,H=b.height;const per=Math.floor(o.N/k),rem=o.N%k;
+  // testa as arrumações (grupos por linha × doces por linha) e fica com a que deixa o doce MAIOR
+  let best=null;
+  for(let gc=1;gc<=k;gc++){const gr=Math.ceil(k/gc);const rowsAvail=gr+(rem?0.55:0);const gw=W/gc,gh=H/rowsAvail;
+    for(let ic=1;ic<=per;ic++){const ir=Math.ceil(per/ic);const bs=Math.min((gw*.8)/ic,(gh*.7)/ir,W*.24);
+      if(!best||bs>best.bs+.5)best={per,rem,gc,gr,gw,gh,ic,ir,bs};}}
+  return best;
+}
+function chooseGroups(k,quiet){
+  if(G.busy)return;const o=G.orders[G.idx];if(G.groups===k)return;
+  G.groups=k;G.sel=new Set();document.querySelectorAll('.knife').forEach(b=>b.classList.toggle('on',+b.dataset.k===k));
+  const tray=$('#tray');tray.querySelectorAll('.gbox,.sobra').forEach(e=>e.remove());$('#trayBg').style.opacity='.0';
+  const L=groupLayout(o,k);tray.style.setProperty('--bs',L.bs+'px');
+  let html='';
+  for(let g=0;g<k;g++){const gx=(g%L.gc)*L.gw,gy=Math.floor(g/L.gc)*L.gh;html+=`<div class="gbox" data-g="${g}" style="left:${gx+L.gw*.05}px;top:${gy+L.gh*.08}px;width:${L.gw*.9}px;height:${L.gh*.84}px;animation-delay:${g*60}ms"><span class="gl">grupo ${g+1}</span></div>`;}
+  if(L.rem){html+=`<div class="sobra" style="left:${(L.gc*L.gw-Math.min(L.gw,L.rem*L.bs+30))/2}px;top:${L.gr*L.gh+4}px;width:${Math.min(L.gw,L.rem*L.bs+30)}px;height:${L.gh*.5}px">sobra${L.rem>1?'m':''} ${L.rem}</div>`;}
+  tray.insertAdjacentHTML('afterbegin',html);
+  // move os brigadeiros para os grupos
+  document.querySelectorAll('.bri').forEach((el,i)=>{let x,y;
+    if(i<L.per*k){const g=Math.floor(i/L.per),j=i%L.per;const gx=(g%L.gc)*L.gw,gy=Math.floor(g/L.gc)*L.gh;const r=Math.floor(j/L.ic),c=j%L.ic;
+      const ox=gx+(L.gw-L.ic*L.bs)/2,oy=gy+(L.gh-L.ir*L.bs)/2+L.gh*.04;x=ox+c*L.bs;y=oy+r*L.bs;}
+    else{const j=i-L.per*k;const w=L.rem*L.bs;x=(L.gc*L.gw-w)/2+j*L.bs;y=L.gr*L.gh+4;}
+    el.style.transitionDelay=(i*14)+'ms';el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;});
+  updateCounter2();
+  if(quiet)return;
+  for(let i=0;i<Math.min(o.N,10);i++)sfx.group(i);
+  if(L.rem)tip(`${o.N} não dá para separar em <b>${k}</b> grupos iguais: sobra${L.rem>1?'m':''} <b>${L.rem}</b>. O pedido é ${frHTML(o.n,o.d)} — olhe o número de baixo!`,'warn');
+  else if(k!==o.d)tip(`${k} grupos de ${L.per}. Mas o pedido é ${frHTML(o.n,o.d)}… quantos grupos o número de baixo pede?`);
+  else tip(`Isso! ${o.N} ÷ ${k} = <b>${L.per}</b> em cada grupo. Agora toque em <b style="color:var(--pink)">${o.n}</b> ${o.n>1?'grupos':'grupo'}.`,'good');
+  setTimeout(()=>document.querySelectorAll('.bri').forEach(el=>el.style.transitionDelay='0ms'),900);
+}
+function toggleGroup(g,force){
+  if(G.busy||!G.groups)return;const o=G.orders[G.idx];
+  if(force)G.sel.add(g);else if(G.sel.has(g)){G.sel.delete(g);sfx.unpop();}else{G.sel.add(g);sfx.pop();}
+  document.querySelectorAll('.gbox').forEach(b=>b.classList.toggle('sel',G.sel.has(+b.dataset.g)));
+  // brigadeiros do grupo sobem junto
+  const L=groupLayout(o,G.groups);
+  document.querySelectorAll('.bri').forEach((el,i)=>{if(i>=L.per*G.groups)return;const gg=Math.floor(i/L.per);const t=el.style.transform.replace(/ translateY\([^)]*\)/,'');el.style.transform=t+(G.sel.has(gg)?' translateY(-8px)':'');});
+  updateCounter2();
+}
+function updateCounter2(){
+  const o=G.orders[G.idx],c=$('#counter');if(!G.groups){c.innerHTML='<span style="color:var(--muted)">separe primeiro 🍫</span>';return;}
+  const per=Math.floor(o.N/G.groups);
+  c.innerHTML=`${frHTML(G.sel.size,G.groups)}<span style="font-size:15px;color:var(--muted);text-align:left">${G.sel.size} ${G.sel.size===1?'grupo':'grupos'} de ${G.groups}<br>= <b style="color:var(--ink);font-size:20px">${G.sel.size*per}</b> brigadeiros</span>`;
+}
+async function deliver2(){
+  if(G.busy)return;const o=G.orders[G.idx];
+  if(!G.groups){tip('Primeiro separe os brigadeiros em <b style="color:var(--mint-d)">grupos iguais</b>!','warn');sfx.nope();shake($('#deliverBtn'));return;}
+  if(G.groups!==o.d){G.mistakes++;sfx.nope();mood(G.cust,'sad');shake($('#custWrap'));
+    tip(`O pedido é ${frHTML(o.n,o.d)}: o <b style="color:var(--mint-d)">${o.d}</b> de baixo pede <b>${o.d} grupos iguais</b>. Você fez ${G.groups}.`,'warn');setTimeout(()=>mood(G.cust,'think'),1400);return;}
+  if(G.sel.size!==o.n){G.mistakes++;sfx.nope();mood(G.cust,'think');shake($('#custWrap'));
+    tip(`O número de cima é <b style="color:var(--pink)">${o.n}</b>: toque em ${o.n} ${o.n>1?'grupos':'grupo'}. Você marcou ${G.sel.size}.`,'warn');return;}
+  const per=o.N/o.d;
+  await success(o.n===1?`${frHTML(1,o.d)} de ${o.N} = ${o.N} ÷ ${o.d} = <b>${per}</b> 🍫`:`${frHTML(o.n,o.d)} de ${o.N} → ${o.N} ÷ ${o.d} = ${per} · ${o.n} × ${per} = <b>${o.n*per}</b> 🍫`);
+}
+
+/* ═════════════ NÍVEL 3: quem leva mais? ═════════════ */
+function renderCompare(){
+  const o=G.orders[G.idx];const [A,B]=[o.A,o.B];
+  $('#custCol').innerHTML='';$('#toolsCol').innerHTML='';
+  const side=(who,f,k)=>`<div class="cmp-side" data-s="${k}">
+      <div class="cmp-row"><div class="cust-wrap cust-in" style="width:auto">${charSVG(who)}</div>
+      <div class="bubble pop"><div class="who" style="justify-content:center">${CHARS[who].nome}</div><span class="order-fr">${frHTML(f[0],f[1])}</span><span class="say" style="font-size:15px">${frWords(f[0],f[1])} do bolo</span></div></div>
+      <div class="mini"><svg data-mini="${k}"></svg>${o.show?'':`<div class="veil" data-veil="${k}">bolo<br>tampado 🙈</div>`}</div></div>`;
+  $('#itemCol').innerHTML=`<div class="cmp">${side(o.ppl[0],A,0)}
+     <div class="cmp-mid"><div class="cmp-q">Quem vai levar<br>mais bolo?</div>
+       <button class="b3d" onclick="answer3(0)">${CHARS[o.ppl[0]].nome}</button>
+       <button class="b3d butter" onclick="answer3(2)">Os dois levam igual</button>
+       <button class="b3d mint" onclick="answer3(1)">${CHARS[o.ppl[1]].nome}</button>
+       ${o.show?'':'<button class="b3d white" style="font-size:15px;padding:10px" onclick="peek()">👀 Espiar os bolos</button>'}
+       <div class="tipbox" style="justify-content:center"><div id="dudaBox"></div><div class="tip" id="tip">${o.show?'Compare os pedaços separados nos dois bolos iguais.':'Pense: em quantas partes cada bolo foi cortado? Quantas cada um leva?'}</div></div>
+     </div>${side(o.ppl[1],B,1)}</div>`;
+  $('#dudaBox').innerHTML=charSVG('duda');G.duda=$('#dudaBox .char');
+  [A,B].forEach((f,k)=>{const s=document.querySelector(`[data-mini="${k}"]`);drawItem(s,{kind:'bolo',flavor:o.flavor},f[1],new Set([...Array(f[0]).keys()]),{gap:3,lift:12});});
+  G.custs=[...document.querySelectorAll('.cmp-side .char')];G.custs.forEach((c,i)=>{look(c,i?-4:4,4);});
+  G.peeked=false;
+  setTimeout(()=>{const t=`${CHARS[o.ppl[0]].nome} quer ${frWords(A[0],A[1])} do bolo. ${CHARS[o.ppl[1]].nome} quer ${frWords(B[0],B[1])} de um bolo igual. Quem vai levar mais?`;say(t);talk(G.custs[0],1200);setTimeout(()=>talk(G.custs[1],1200),1300);},500);
+  layout();
+}
+function peek(){const o=G.orders[G.idx];if(o.show||G.peeked)return;G.peeked=true;document.querySelectorAll('.veil').forEach(v=>v.style.opacity=0);sfx.pop();tip('Olhe bem: os dois bolos são do mesmo tamanho. Qual pedaço separado é maior?');}
+async function answer3(k){
+  if(G.busy)return;const o=G.orders[G.idx];const [A,B]=[o.A,o.B];
+  const v=A[0]*B[1]-B[0]*A[1];const right=v>0?0:v<0?1:2;
+  document.querySelectorAll('.veil').forEach(x=>x.style.opacity=0);
+  const why=explain(A,B,o.ppl);
+  if(k===right){
+    if(right===2)G.custs.forEach(celebrate);else celebrate(G.custs[right]);
+    await success(right===2?`${frHTML(A[0],A[1])} = ${frHTML(B[0],B[1])} 🍰`:`${frHTML(...(right===0?A:B))} &gt; ${frHTML(...(right===0?B:A))} 🍰`,why);
+  } else {
+    G.mistakes++;sfx.nope();G.custs.forEach(c=>{mood(c,'think');shake(c.parentElement);});tip('Hmm, olhe de novo! '+why,'warn');
+  }
+}
+function explain(A,B,ppl){
+  const n=i=>CHARS[ppl[i]].nome;
+  if(A[0]*B[1]===B[0]*A[1])return `${frHTML(A[0],A[1])} e ${frHTML(B[0],B[1])} são a <b>mesma quantidade</b> de bolo — frações equivalentes!`;
+  if(A[1]===B[1])return `Os dois bolos foram cortados em <b>${A[1]}</b> partes iguais. Quem pega <b>mais pedaços</b> leva mais.`;
+  if(A[0]===B[0])return `Os dois pegam ${A[0]===1?'1 pedaço':A[0]+' pedaços'}, mas quanto <b>mais partes</b> o bolo é cortado, <b>menor</b> fica cada pedaço!`;
+  return 'Compare os pedaços separados nos dois bolos: qual ocupa mais espaço?';
+}
+
+/* ═════════════ ACERTO: festa, estrelas e próximo pedido ═════════════ */
+async function success(eqHTML,extraTip){
+  G.busy=true;clearInterval(G.patT);
+  const st=Math.max(1,3-G.mistakes-(G.late?1:0)-(G.peeked?1:0));G.results[G.idx]=st;
+  sfx.ok();
+  if(G.level!==3){celebrate(G.cust);}
+  if(G.duda)celebrate(G.duda);
+  tip(extraTip||pick(['Perfeito! Cliente feliz! 🎉','Que corte caprichado! ✨','Que capricho! 🧁','Pedido certinho! 💖']),'good');
+  const banner=document.createElement('div');banner.className='eqbanner';banner.innerHTML=eqHTML;$('#game').appendChild(banner);
+  confetti();
+  await sleep(500);
+  const from=($('#itemSvg')||$('#tray')||$('#itemCol')).getBoundingClientRect(),to=$('#starbox').getBoundingClientRect();
+  for(let i=0;i<st;i++){flyStar(from,to,i);}
+  await sleep(450+st*180);
+  G.stars+=st;$('#starN').textContent=G.stars;$('#starbox').animate([{transform:'scale(1)'},{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:350});
+  await sleep(G.level===3?2100:1300);
+  banner.remove();
+  if(G.level!==3){const w=$('#custWrap');if(w){w.classList.remove('cust-in');w.classList.add('cust-out');}$('#bubble')&&$('#bubble').animate([{opacity:1},{opacity:0,transform:'scale(.8)'}],{duration:300,fill:'forwards'});await sleep(520);}
+  G.idx++;nextOrder();
+}
+function flyStar(from,to,i){
+  const s=document.createElement('div');s.className='flystar';s.textContent='⭐';document.body.appendChild(s);
+  const x0=from.left+from.width/2-17,y0=from.top+from.height/3,x1=to.left+8,y1=to.top;
+  s.animate([{transform:`translate(${x0}px,${y0}px) scale(.4)`,opacity:0},{transform:`translate(${x0+(i-1)*40}px,${y0-60}px) scale(1.3)`,opacity:1,offset:.35},{transform:`translate(${x1}px,${y1}px) scale(.7)`,opacity:1}],{duration:800,delay:i*180,easing:'cubic-bezier(.5,0,.4,1)',fill:'forwards'}).onfinish=()=>{s.remove();sfx.star(i);};
+}
+function confetti(n=46){
+  const cols=['#F0568A','#FFCF5C','#2FB89A','#8ED1FF','#C99BFF','#FF9F6B'];const cx=innerWidth/2,cy=innerHeight*.45;
+  for(let i=0;i<n;i++){const c=document.createElement('div');c.className='confetti';c.style.background=cols[i%cols.length];document.body.appendChild(c);
+    const a=Math.random()*Math.PI*2,v=180+Math.random()*320,dx=Math.cos(a)*v,dy=Math.sin(a)*v-200;
+    c.animate([{transform:`translate(${cx}px,${cy}px) rotate(0)`,opacity:1},{transform:`translate(${cx+dx}px,${cy+dy+420}px) rotate(${Math.random()*900}deg)`,opacity:0}],{duration:1300+Math.random()*700,easing:'cubic-bezier(.2,.6,.4,1)'}).onfinish=()=>c.remove();}
+}
+
+/* ═════════════ FIM DO NÍVEL ═════════════ */
+function endLevel(){
+  clearInterval(G.patT);renderProgress();
+  const max=G.orders.length*3,pct=G.stars/max,trophy=pct>=.88?3:pct>=.6?2:1;
+  const best=store.get('best'+G.level,0);if(G.stars>best)store.set('best'+G.level,G.stars);
+  track('jogo_fim',{nivel:G.level,estrelas:G.stars});
+  const msgs=['Muito bem! Cada pedido deixa você mais craque. Que tal jogar de novo para ganhar mais estrelas?','Mandou bem! A confeitaria está ficando famosa no bairro!','Incrível! Você é craque das frações do bairro! 🏆'];
+  const next=G.level<3?`<button class="b3d mint" onclick="startLevel(${G.level+1})">Próximo nível → ${LEVELS[G.level].t}</button>`:'';
+  const r=$('#result');r.innerHTML=`<div class="res-card">${charSVG('duda','')}<div class="res-t">Nível ${G.level} concluído!</div>
+    <div class="res-stars">${[0,1,2].map(i=>`<span class="${i<trophy?'on':''}" style="animation-delay:${.3+i*.25}s">⭐</span>`).join('')}</div>
+    <div class="res-n">${G.stars} de ${max} estrelas${G.stars>best?' · novo recorde! 🎉':''}</div>
+    <div class="res-msg">${msgs[trophy-1]}</div>
+    <div class="res-btns">${next}<button class="b3d" onclick="startLevel(${G.level})">Jogar de novo ↻</button><button class="b3d white" onclick="goHome()">Menu</button></div></div>`;
+  r.classList.remove('hidden');const d=r.querySelector('.char');setTimeout(()=>celebrate(d),300);
+  sfx.win();confetti(80);
+  for(let i=0;i<trophy;i++)setTimeout(()=>sfx.star(i),400+i*250);
+}
+
+/* teclado: números escolhem a faca, Enter entrega */
+document.addEventListener('keydown',e=>{
+  if($('#game').classList.contains('hidden'))return;
+  if(/^[2-9]$/.test(e.key)){const k=+e.key;if(document.querySelector(`.knife[data-k="${k}"]`)){G.level===2?chooseGroups(k):chooseKnife(k);}}
+  if(e.key==='Enter'&&$('#deliverBtn')){G.level===2?deliver2():deliver1();}
+});
+
+renderHome();
+</script>
+<script src="/js/apresentacao.js"></script>
+<script src="/js/dp-analytics.js"></script>
+</body>
+</html>

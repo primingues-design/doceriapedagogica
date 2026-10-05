@@ -33,6 +33,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: "https://doceriapedagogica.com/confeitaria-fracoes.html",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: "https://doceriapedagogica.com/matematica.html",
       lastModified: new Date(),
       changeFrequency: "weekly",
