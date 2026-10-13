@@ -81,6 +81,9 @@ export default function RootLayout({
         />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
+            // "Sou eu" (?sou-eu / ?nao-sou-eu): navegador da dona não entra nas estatísticas (ver /js/dp-analytics.js)
+            try{var q=location.search;if(/[?&]nao-sou-eu\\b/.test(q))localStorage.removeItem('dp_interno');else if(/[?&]sou-eu\\b/.test(q))localStorage.setItem('dp_interno','1');
+              if(localStorage.getItem('dp_interno')==='1')window['ga-disable-G-D20QSCLT8C']=true;}catch(e){}
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
@@ -89,7 +92,8 @@ export default function RootLayout({
         </Script>
         <Script id="microsoft-clarity" strategy="afterInteractive">
           {`
-            (function(c,l,a,r,i,t,y){
+            var dpInterno=false;try{var dq=location.search;dpInterno=!/[?&]nao-sou-eu\\b/.test(dq)&&(/[?&]sou-eu\\b/.test(dq)||localStorage.getItem('dp_interno')==='1');}catch(e){}
+            if(!dpInterno)(function(c,l,a,r,i,t,y){
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
               t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
               y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
