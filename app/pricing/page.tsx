@@ -104,7 +104,7 @@ export default function PricingPage() {
             <div className="text-xs font-bold uppercase tracking-widest text-[#C8742A] mb-1">Grátis para começar</div>
             <h2 className="text-2xl font-bold text-[#3D1F0D] mb-1">Experimente sem pagar nada</h2>
             <p className="text-[#8A7060] text-sm">
-              <strong className="text-[#6B3A1F]">10 gerações grátis</strong> no primeiro mês, depois 5 por mês. Todas as ferramentas liberadas, sem cartão.
+              <strong className="text-[#6B3A1F]">3 gerações grátis sem cadastro</strong>, mais 2 com o seu e-mail e 1 grátis por semana. Todas as ferramentas liberadas, sem cartão.
             </p>
           </div>
           <Link
@@ -231,7 +231,7 @@ export default function PricingPage() {
           <div className="space-y-6">
             <div>
               <h3 className="font-semibold text-[#3D1F0D] mb-1">Preciso assinar alguma coisa?</h3>
-              <p className="text-[#8A7060] text-sm">Não. Você pode usar as 10 gerações grátis e, quando quiser mais, comprar um pacote de créditos avulsos. É pagamento único, sem mensalidade.</p>
+              <p className="text-[#8A7060] text-sm">Não. Você pode usar as gerações grátis (3 sem cadastro, +2 com o e-mail e 1 por semana) e, quando quiser mais, comprar um pacote de créditos avulsos. É pagamento único, sem mensalidade.</p>
             </div>
             <div>
               <h3 className="font-semibold text-[#3D1F0D] mb-1">Os créditos avulsos expiram?</h3>

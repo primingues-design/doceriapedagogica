@@ -8,24 +8,34 @@
     _an.src = '/js/dp-analytics.js';
     (document.head || document.documentElement).appendChild(_an);
   }
+  function track(ev, p) { try { if (window.dpTrack) window.dpTrack(ev, p); } catch (e) {} }
 
-  function getToken() {
-    try {
-      const raw = localStorage.getItem(SUPA_KEY);
-      if (!raw) return null;
-      return JSON.parse(raw)?.access_token || null;
-    } catch {
-      return null;
-    }
+  /* ── Sessão salva pelo Supabase no navegador ── */
+  function stored() {
+    try { return JSON.parse(localStorage.getItem(SUPA_KEY)); } catch (e) { return null; }
   }
+  function getToken() {
+    var s = stored();
+    return (s && s.access_token) || null;
+  }
+  function tokenVencido() {
+    var s = stored();
+    return !s || !s.expires_at || s.expires_at < Date.now() / 1000 + 30;
+  }
+  // Visitante que entrou sem cadastro (usuário anônimo do Supabase)
+  function isAnon() {
+    var s = stored();
+    return !!(s && s.user && s.user.is_anonymous);
+  }
+  window.dpIsAnon = isAnon;
 
   /**
    * Exibe mensagem de sem créditos com link para planos.
    * Uso: dpHandleNoCredits(document.getElementById('errBox'))
    */
   window.dpHandleNoCredits = function (errBox) {
-    var msg = '⚠️ Seus créditos acabaram. ' +
-      '<a href="/conta.html" style="color:#2d6e6e;font-weight:600;text-decoration:underline;">Ver planos →</a>';
+    var msg = '⚠️ Seus créditos acabaram. Você ganha 1 geração grátis por semana — ou ' +
+      '<a href="/conta.html" style="color:#2d6e6e;font-weight:600;text-decoration:underline;">compre créditos avulsos →</a>';
     if (errBox) {
       errBox.innerHTML = msg;
       errBox.style.display = 'block';
@@ -38,13 +48,13 @@
         'font-size:13px;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,.25);' +
         'font-family:Outfit,sans-serif;text-align:center;';
       t.innerHTML = '⚠️ Seus créditos acabaram. ' +
-        '<a href="/conta.html" style="color:#fff;font-weight:700;text-decoration:underline;">Ver planos →</a>';
+        '<a href="/conta.html" style="color:#fff;font-weight:700;text-decoration:underline;">Ver créditos →</a>';
       document.body.appendChild(t);
       setTimeout(function () { if (t.parentNode) t.remove(); }, 7000);
     }
   };
 
-  // ── Cliente Supabase carregado sob demanda (só quando o portão de e-mail é usado) ──
+  // ── Cliente Supabase carregado sob demanda ──
   const SUPA_URL  = 'https://atkwvwhwbkerezdmipxw.supabase.co';
   const SUPA_ANON = 'sb_publishable_zWPrTWOrbMSCnD1uwOWulg_borGCRbZ';
   var _sbPromise = null;
@@ -60,15 +70,50 @@
       var s = document.createElement('script');
       s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
       s.onload = make;
-      s.onerror = function () { reject(new Error('supabase load failed')); };
+      s.onerror = function () { _sbPromise = null; reject(new Error('supabase load failed')); };
       (document.head || document.documentElement).appendChild(s);
     });
     return _sbPromise;
   }
+  // Token válido: renova a sessão se venceu (o Supabase usa o refresh token)
+  function tokenFresco() {
+    return loadSupabase().then(function (sb) { return sb.auth.getSession(); })
+      .then(function (r) { return (r && r.data && r.data.session && r.data.session.access_token) || null; })
+      .catch(function () { return null; });
+  }
+  // Entrada SEM cadastro: cria um visitante anônimo (3 gerações grátis).
+  // Se o anônimo estiver desligado no Supabase, devolve null e o site cai no portão de e-mail.
+  function entrarAnonimo() {
+    return loadSupabase().then(function (sb) { return sb.auth.signInAnonymously(); })
+      .then(function (r) {
+        if (r && !r.error && r.data && r.data.session) { track('entrada_anonima'); return r.data.session.access_token; }
+        return null;
+      })
+      .catch(function () { return null; });
+  }
 
-  // ── Portão "Comece grátis com o e-mail" — aparece quando a pessoa tenta gerar sem estar logada.
-  //    Resolve com o access_token (sessão criada) ou null (cancelou / precisa confirmar e-mail).
-  function showEmailGate() {
+  /* ── Portão de e-mail ──
+     • Visitante anônimo  → coloca o e-mail na MESMA conta (mantém histórico) e ganha +2.
+     • Sem sessão nenhuma → cria a conta só com o e-mail (senha gerada nos bastidores).
+     opts.motivo: 'creditos' (acabaram as 3 grátis) | 'download' (baixar/imprimir) | padrão
+     Resolve com o access_token, ou null se cancelar / precisar confirmar por e-mail. */
+  function showEmailGate(opts) {
+    opts = opts || {};
+    var converter = isAnon();
+    var titulo, texto, botao;
+    if (converter && opts.motivo === 'creditos') {
+      titulo = 'Suas 3 gerações grátis acabaram 🎉';
+      texto = 'Gostou? Coloque seu e-mail para continuar e ganhe <strong>mais 2 gerações grátis</strong>. Sem cartão, sem senha.';
+      botao = 'Continuar grátis →';
+    } else if (converter) {
+      titulo = 'Falta só o seu e-mail';
+      texto = 'Deixe seu e-mail para continuar — e ganhe <strong>mais 2 gerações grátis</strong> com a IA da Doceria. Sem cartão, sem senha.';
+      botao = 'Continuar →';
+    } else {
+      titulo = 'Comece grátis agora';
+      texto = 'Digite seu e-mail e ganhe <strong>5 gerações grátis</strong> com a IA da Doceria. Sem cartão, sem senha.';
+      botao = 'Começar grátis →';
+    }
     return new Promise(function (resolve) {
       var old = document.getElementById('dp-gate'); if (old) old.remove();
       var overlay = document.createElement('div');
@@ -80,16 +125,16 @@
       card.style.cssText = 'background:#fff;color:#1a1917;max-width:380px;width:100%;border-radius:16px;padding:26px 24px;box-shadow:0 14px 44px rgba(0,0,0,.3);';
       card.innerHTML =
         '<div style="font-size:30px;margin-bottom:8px;">✨</div>' +
-        '<div style="font-size:19px;font-weight:700;margin-bottom:6px;">Comece grátis agora</div>' +
-        '<div style="font-size:13px;color:#6b6560;line-height:1.5;margin-bottom:16px;">Digite seu e-mail e ganhe <strong>10 materiais grátis</strong> para gerar. Sem cartão, sem senha.</div>' +
+        '<div style="font-size:19px;font-weight:700;margin-bottom:6px;">' + titulo + '</div>' +
+        '<div style="font-size:13px;color:#6b6560;line-height:1.5;margin-bottom:16px;">' + texto + '</div>' +
         '<input id="dp-gate-email" type="email" placeholder="seuemail@escola.com" style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;margin-bottom:8px;box-sizing:border-box;" />' +
         '<div id="dp-gate-msg" style="font-size:12px;color:#d95f3b;min-height:16px;margin-bottom:8px;"></div>' +
-        '<button id="dp-gate-go" style="width:100%;background:#c8963e;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;">Começar grátis →</button>' +
+        '<button id="dp-gate-go" style="width:100%;background:#c8963e;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;">' + botao + '</button>' +
         '<button id="dp-gate-cancel" style="width:100%;background:transparent;color:#8a8785;border:none;padding:10px;font-size:13px;cursor:pointer;font-family:inherit;margin-top:4px;">Agora não</button>' +
         '<div style="font-size:11px;color:#8a8785;text-align:center;margin-top:8px;">Já tem conta? <a href="/conta.html" style="color:#c8963e;font-weight:600;text-decoration:none;">Entrar</a></div>';
       overlay.appendChild(card);
       document.body.appendChild(overlay);
-      if (window.dpTrack) window.dpTrack('gate_shown');
+      track('gate_shown', { modo: converter ? 'converter' : 'cadastro', motivo: opts.motivo || '' });
 
       var emailEl = card.querySelector('#dp-gate-email');
       var msgEl   = card.querySelector('#dp-gate-msg');
@@ -98,78 +143,100 @@
       setTimeout(function () { try { emailEl.focus(); } catch (_) {} }, 50);
 
       function finish(tokenOrNull) { overlay.remove(); resolve(tokenOrNull); }
+      function erro(m) { msgEl.style.color = '#d95f3b'; msgEl.innerHTML = m; goBtn.textContent = botao; goBtn.disabled = false; }
+      function jaTemConta() { erro('Esse e-mail já tem conta. <a href="/conta.html" style="color:#c8963e;font-weight:600;">Entrar →</a>'); }
+      function ehJaCadastrado(e) { var m = ((e && e.message) || '').toLowerCase(); return m.indexOf('already') >= 0 || m.indexOf('registered') >= 0 || m.indexOf('exists') >= 0; }
       cancelBtn.onclick = function () { finish(null); };
       overlay.addEventListener('click', function (e) { if (e.target === overlay) finish(null); });
       emailEl.addEventListener('keydown', function (e) { if (e.key === 'Enter') goBtn.click(); });
 
       goBtn.onclick = function () {
-        var email = (emailEl.value || '').trim();
-        if (!email || email.indexOf('@') < 0) { msgEl.style.color = '#d95f3b'; msgEl.textContent = 'Digite um e-mail válido.'; return; }
-        msgEl.style.color = '#d95f3b'; msgEl.textContent = '';
-        goBtn.textContent = 'Começando...'; goBtn.disabled = true;
-        var sbRef = null;
+        var email = (emailEl.value || '').trim().toLowerCase();
+        if (!email || email.indexOf('@') < 0) { erro('Digite um e-mail válido.'); return; }
+        msgEl.textContent = '';
+        goBtn.textContent = 'Um instante...'; goBtn.disabled = true;
+        var senha = 'Dp-' + ((window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now() + 'x' + Math.random().toString(36).slice(2)));
+
         loadSupabase().then(function (sb) {
-          sbRef = sb;
-          var senha = 'Dp-' + ((window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now() + 'x' + Math.random().toString(36).slice(2)));
-          return sb.auth.signUp({ email: email, password: senha, options: { data: { nome: email.split('@')[0], nivel: '' } } });
-        }).then(function (res) {
-          if (res.error) {
-            var m = (res.error.message || '').toLowerCase();
-            if (m.indexOf('already') >= 0 || m.indexOf('registered') >= 0 || m.indexOf('exists') >= 0) {
-              msgEl.innerHTML = 'Você já tem conta. <a href="/conta.html" style="color:#c8963e;font-weight:600;">Entrar →</a>';
-            } else {
-              msgEl.textContent = res.error.message || 'Não foi possível começar.';
+          if (converter) {
+            // MESMA conta: o visitante anônimo passa a ter e-mail (o servidor dá o bônus de +2)
+            return sb.auth.updateUser({ email: email, data: { nome: email.split('@')[0] } }).then(function (res) {
+              if (res.error) { if (ehJaCadastrado(res.error)) return jaTemConta(); return erro(res.error.message || 'Não foi possível continuar.'); }
+              var u = res.data && res.data.user;
+              if (u && (u.email || '').toLowerCase() === email) {
+                track('sign_up', { method: 'anon_convert' });
+                var seguir = function () {
+                  return sb.auth.refreshSession().then(function (r) {
+                    finish((r && r.data && r.data.session && r.data.session.access_token) || getToken());
+                  }, function () { finish(getToken()); });
+                };
+                // senha gerada nos bastidores (a pessoa entra depois por "esqueci a senha / link")
+                return sb.auth.updateUser({ password: senha }).then(seguir, seguir);
+              }
+              // e-mail pendente de confirmação
+              msgEl.style.color = '#2d6e6e';
+              msgEl.textContent = '✅ Enviamos um link para o seu e-mail. Clique nele e volte aqui.';
+              goBtn.textContent = botao; goBtn.disabled = false;
+            });
+          }
+          return sb.auth.signUp({ email: email, password: senha, options: { data: { nome: email.split('@')[0], nivel: '' } } }).then(function (res) {
+            if (res.error) { if (ehJaCadastrado(res.error)) return jaTemConta(); return erro(res.error.message || 'Não foi possível começar.'); }
+            if (res.data && res.data.session && res.data.session.access_token) {
+              var tok = res.data.session.access_token, uid = res.data.user && res.data.user.id;
+              track('sign_up', { method: 'gate' });
+              var done = function () { finish(tok); };
+              // garante o perfil (normalmente o trigger cria; isto é um seguro). Segue mesmo se falhar.
+              if (uid) { sb.from('profiles').insert({ id: uid, nome: email.split('@')[0], nivel: '' }).then(done, done); }
+              else { done(); }
+              return;
             }
-            goBtn.textContent = 'Começar grátis →'; goBtn.disabled = false; return;
-          }
-          if (res.data && res.data.session && res.data.session.access_token) {
-            var tok = res.data.session.access_token, uid = res.data.user && res.data.user.id;
-            if (window.dpTrack) window.dpTrack('sign_up', { method: 'gate' });
-            var done = function () { finish(tok); };
-            // garante o perfil (normalmente um trigger cria; isto é um seguro). Segue mesmo se falhar (duplicado).
-            if (uid) { sbRef.from('profiles').insert({ id: uid, nome: email.split('@')[0], nivel: '' }).then(done, done); }
-            else { done(); }
-            return; // sessão criada → garante perfil → segue a geração
-          }
-          // sem sessão (confirmação de e-mail ligada) → não dá pra continuar agora
-          msgEl.style.color = '#2d6e6e';
-          msgEl.textContent = '✅ Enviamos um link de acesso ao seu e-mail. Clique nele e volte aqui.';
-          goBtn.textContent = 'Começar grátis →'; goBtn.disabled = false;
-        }).catch(function () {
-          msgEl.style.color = '#d95f3b'; msgEl.textContent = 'Erro de conexão. Tente novamente.';
-          goBtn.textContent = 'Começar grátis →'; goBtn.disabled = false;
-        });
+            msgEl.style.color = '#2d6e6e';
+            msgEl.textContent = '✅ Enviamos um link de acesso ao seu e-mail. Clique nele e volte aqui.';
+            goBtn.textContent = botao; goBtn.disabled = false;
+          });
+        }).catch(function () { erro('Erro de conexão. Tente novamente.'); });
       };
     });
   }
 
   const _fetch = window.fetch.bind(window);
   function withAuth(init, token) {
-    init = init || {};
+    init = Object.assign({}, init || {});
     init.headers = Object.assign({}, init.headers, { 'Authorization': 'Bearer ' + token });
     return init;
   }
   function unauthorized() {
     return new Response(JSON.stringify({ error: 'Não autenticado' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
   }
-  function gateThenRetry(input, init) {
-    return showEmailGate().then(function (token) {
-      if (!token) token = getToken();           // caso a sessão tenha sido persistida
-      if (!token) return unauthorized();        // cancelou ou precisa confirmar e-mail
-      return _fetch(input, withAuth(init, token));
-    });
-  }
   // Funil: marca "material_gerado" quando uma geração via /api/claude dá certo.
-  // Fica aqui porque é o ponto único por onde TODAS as ferramentas passam.
-  function trackGen(url) {
-    return function (res) {
-      try {
-        if (res && res.ok && typeof url === 'string' && url.indexOf('/api/claude') >= 0 && window.dpTrack) {
-          window.dpTrack('material_gerado');
-        }
-      } catch (e) {}
-      return res;
-    };
+  function trackGen(url, res) {
+    try { if (res && res.ok && url.indexOf('/api/claude') >= 0) track('material_gerado', { anonimo: isAnon() }); } catch (e) {}
+    return res;
+  }
+
+  /* Geração de conteúdo/imagem: garante uma sessão (sem pedir nada) e trata créditos.
+     1) token salvo (renova se venceu) → 2) entra como visitante anônimo → 3) portão de e-mail */
+  async function gerar(input, init, url) {
+    var token = getToken();
+    if (token && tokenVencido()) token = (await tokenFresco()) || null;
+    if (!token) token = await entrarAnonimo();
+    if (!token) token = await showEmailGate();
+    if (!token) return unauthorized();
+
+    var res = await _fetch(input, withAuth(init, token));
+    if (res.status === 401) {                       // sessão inválida → renova, senão portão
+      token = (await tokenFresco()) || (await showEmailGate());
+      if (!token) return res;
+      res = await _fetch(input, withAuth(init, token));
+    }
+    if (res.status === 402) {                       // visitante usou as 3 grátis → e-mail (+2)
+      var info = await res.clone().json().catch(function () { return {}; });
+      if (info && info.precisaEmail) {
+        var t2 = await showEmailGate({ motivo: 'creditos' });
+        if (t2) res = await _fetch(input, withAuth(init, t2));
+      }
+    }
+    return trackGen(url, res);
   }
 
   window.fetch = function (input, init) {
@@ -177,21 +244,13 @@
       : input instanceof Request ? input.url : '';
     const isAI = url.includes('/api/claude') || url.includes('/api/salvar-atividade') || url.includes('/api/pexels') || url.includes('/api/imagem');
     if (!isAI) return _fetch(input, init);
-    // Só a geração de conteúdo/imagem abre o portão; endpoints auxiliares só anexam o token se houver.
-    const needsGate = url.includes('/api/claude') || url.includes('/api/imagem');
+    // Só a geração de conteúdo/imagem garante sessão; endpoints auxiliares só anexam o token se houver.
+    if (url.includes('/api/claude') || url.includes('/api/imagem')) return gerar(input, init, url);
     const token = getToken();
-    if (token) {
-      return _fetch(input, withAuth(init, token)).then(function (res) {
-        if (res.status === 401 && needsGate) return gateThenRetry(input, init); // token expirou → reentra
-        return res;
-      }).then(trackGen(url));
-    }
-    if (needsGate) return gateThenRetry(input, init).then(trackGen(url));
-    return _fetch(input, init);
+    return token ? _fetch(input, withAuth(init, token)) : _fetch(input, init);
   };
 
-  // Exposto para páginas que precisam do portão fora do fetch de IA
-  // (ex.: download de atividade pronta atrás de cadastro). Resolve com o
-  // access_token da sessão criada, ou null se cancelar/confirmar por e-mail.
-  window.dpEmailGate = showEmailGate;
+  // Para páginas que pedem e-mail fora da IA (ex.: baixar/imprimir atividade pronta).
+  // Visitante anônimo é convertido na mesma conta. Resolve com o token ou null.
+  window.dpEmailGate = function (opts) { return showEmailGate(Object.assign({ motivo: 'download' }, opts || {})); };
 })();

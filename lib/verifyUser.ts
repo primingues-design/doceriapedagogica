@@ -7,7 +7,8 @@ const SUPA_URL = process.env.SUPABASE_URL || 'https://atkwvwhwbkerezdmipxw.supab
 const SUPA_APIKEY = () =>
   process.env.SUPABASE_SERVICE_ROLE_KEY || 'sb_publishable_zWPrTWOrbMSCnD1uwOWulg_borGCRbZ';
 
-export type VerifiedUser = { id: string; email: string };
+// isAnonymous: visitante que entrou sem cadastro (Supabase anonymous sign-in)
+export type VerifiedUser = { id: string; email: string; isAnonymous: boolean };
 
 export function tokenFrom(authHeader: string | null): string {
   return (authHeader || '').replace(/^Bearer\s+/i, '').trim();
@@ -23,7 +24,7 @@ export async function verifyUser(token: string): Promise<VerifiedUser | null> {
     if (!r.ok) return null;
     const u = await r.json();
     if (!u?.id) return null;
-    return { id: String(u.id), email: String(u.email || '').toLowerCase() };
+    return { id: String(u.id), email: String(u.email || '').toLowerCase(), isAnonymous: u.is_anonymous === true };
   } catch {
     return null;
   }

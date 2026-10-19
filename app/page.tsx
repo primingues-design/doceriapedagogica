@@ -405,7 +405,7 @@ export default function Home() {
           <div className="text-[#C8742A] text-xs font-bold uppercase tracking-widest mb-3">Comece agora</div>
           <h2 className="text-4xl sm:text-5xl font-bold text-[#3D1F0D] mb-4 tracking-tight">Entre e explore à vontade</h2>
           <p className="text-[#8A7060] mb-8 text-lg">
-            Muita coisa é aberta — <strong className="text-[#3D1F0D]">jogos</strong>, especial sazonal e atividades avulsas. Crie sua conta em segundos e, para gerar com IA, ganhe <strong className="text-[#3D1F0D]">10 gerações grátis</strong>. Depois, só créditos avulsos que não expiram — sem assinatura.
+            Muita coisa é aberta — <strong className="text-[#3D1F0D]">jogos</strong>, especial sazonal e atividades avulsas. Para gerar com IA, comece <strong className="text-[#3D1F0D]">sem cadastro: 3 gerações grátis</strong>. Com o e-mail você ganha mais 2 e, depois, 1 geração grátis por semana. Quer mais? Créditos avulsos que não expiram — sem assinatura.
           </p>
           <EmailStart variant="cta" />
           <p className="text-sm text-[#8A7060]/80 mt-5">

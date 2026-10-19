@@ -9,6 +9,11 @@ const SUPA_KEY = () => process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const CREATOR_EMAILS = (process.env.CREATOR_EMAILS || 'professorapriscila2006@gmail.com,primingues@gmail.com,crissmuniz@gmail.com')
   .toLowerCase().split(',').map((s) => s.trim()).filter(Boolean);
 
+/* ── Créditos grátis ──
+   anonimo: entra sem cadastro e experimenta · bonusEmail: ao colocar o e-mail (mesma conta)
+   cadastro: quem se cadastra direto pelo e-mail · semanal: renova se zerar (a cada 7 dias)    */
+const CRED = { anonimo: 3, bonusEmail: 2, cadastro: 5, semanal: 1, novosDesde: '2026-10-19' } as const;
+
 /* ── Modelos de IA (preços por milhão de tokens: entrada / saída) ──
    completo: Claude Sonnet 5.5 (US$ 2 / 10) — atividades, avaliações, apostilas, planos, slides
    rapido:   Claude Haiku 5.5  (US$ 0,10 / 0,50) — jogos, caça-palavras, cruzadinha, quiz        */
@@ -72,14 +77,15 @@ export async function POST(request: NextRequest) {
     const profiles = await profileRes.json();
     let profile = profiles?.[0];
     if (!profile) {
-      // Perfil ainda não existe (cadastro novo pelo portão, ou trigger que não rodou / RLS
-      // que bloqueou o insert no cliente). Cria aqui com a service role (ignora RLS) e segue
-      // como Free / 10 créditos. Não quebra mais a geração de quem acabou de se cadastrar.
-      const nome = (email && email.split('@')[0]) || 'Professor(a)';
+      // Perfil ainda não existe (trigger que não rodou / RLS que bloqueou o insert no cliente).
+      // Cria aqui com a service role (ignora RLS): visitante anônimo começa com 3, cadastro com 5.
+      const nome = (email && email.split('@')[0]) || (user.isAnonymous ? 'Visitante' : 'Professor(a)');
       await supaFetch('/profiles', {
         method: 'POST',
         headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({ id: userId, nome, nivel: '', plan: 'Free', credits: 10, credits_reset_at: new Date().toISOString() }),
+        body: JSON.stringify(user.isAnonymous
+          ? { id: userId, nome, nivel: '', plan: 'Anonimo', credits: CRED.anonimo }
+          : { id: userId, nome, nivel: '', plan: 'Free', credits: CRED.cadastro, credits_reset_at: new Date().toISOString() }),
       }).catch(() => {});
       const reRes = await supaFetch(`/profiles?id=eq.${userId}&select=plan,credits,credits_reset_at,created_at,is_creator`);
       const reArr = await reRes.json().catch(() => []);
@@ -90,22 +96,46 @@ export async function POST(request: NextRequest) {
     if (profile.is_creator) {
       isCreator = true;
     } else {
-    const plan: string = profile.plan || 'Free';
-    credits = profile.credits ?? 10;
+    let plan: string = profile.plan || 'Free';
+    credits = profile.credits ?? CRED.cadastro;
+    const agora = new Date().toISOString();
+    const salvar = (campos: Record<string, unknown>) => supaFetch(`/profiles?id=eq.${userId}`, {
+      method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify(campos),
+    });
 
     const PLAN_MONTHLY_CREDITS: Record<string, number> = { Pro: 40, Escola: 400 };
 
-    if (plan === 'Free') {
+    if (user.isAnonymous) {
+      // Visitante sem cadastro: 3 gerações para experimentar (o trigger do banco cria o perfil
+      // como 'Free'; na 1ª geração ele vira 'Anonimo' com no máximo 3). Não renova.
+      if (plan !== 'Anonimo') {
+        plan = 'Anonimo';
+        credits = Math.min(credits, CRED.anonimo);
+        await salvar({ plan, credits });
+      }
+      if (credits < creditCost) {
+        // a página mostra "coloque seu e-mail para continuar" (ganha +2)
+        return NextResponse.json({ error: 'Suas gerações grátis acabaram', precisaEmail: true, bonusEmail: CRED.bonusEmail }, { status: 402 });
+      }
+    } else if (plan === 'Anonimo') {
+      // Era visitante e acabou de colocar o e-mail (mesma conta): vira 'Free' e ganha o bônus.
+      plan = 'Free';
+      credits += CRED.bonusEmail;
+      await salvar({ plan, credits, credits_reset_at: agora });
+    } else if (plan === 'Free') {
+      // Cadastros novos (a partir desta mudança) começam com no máximo 5 grátis.
+      // (Só se o saldo ainda for o padrão do banco — nunca mexe em crédito comprado.)
+      if (!profile.credits_reset_at && profile.created_at >= CRED.novosDesde && credits <= 10 && credits > CRED.cadastro) {
+        credits = CRED.cadastro;
+        await salvar({ credits, credits_reset_at: agora });
+      }
+      // Renovação semanal: quem está sem crédito ganha 1 geração grátis a cada 7 dias.
       const refDate = profile.credits_reset_at || profile.created_at;
-      if (refDate) {
+      if (refDate && credits < 1) {
         const daysSince = (Date.now() - new Date(refDate).getTime()) / 86_400_000;
-        if (daysSince >= 30) {
-          credits = 5;
-          await supaFetch(`/profiles?id=eq.${userId}`, {
-            method: 'PATCH',
-            headers: { Prefer: 'return=minimal' },
-            body: JSON.stringify({ credits: 5, credits_reset_at: new Date().toISOString() }),
-          });
+        if (daysSince >= 7) {
+          credits = CRED.semanal;
+          await salvar({ credits, credits_reset_at: agora });
         }
       }
     } else if (plan in PLAN_MONTHLY_CREDITS) {
@@ -134,7 +164,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (credits < creditCost) {
-      return NextResponse.json({ error: 'Sem créditos disponíveis', upgrade: true }, { status: 402 });
+      return NextResponse.json({ error: 'Sem créditos disponíveis', upgrade: true, semanal: plan === 'Free' }, { status: 402 });
     }
 
     await supaFetch(`/profiles?id=eq.${userId}`, {

@@ -488,7 +488,7 @@
 
 <script>
   const SUPA_KEY='sb-atkwvwhwbkerezdmipxw-auth-token';
-  function isLoggedIn(){try{const s=JSON.parse(localStorage.getItem(SUPA_KEY));return s&&(s.expires_at||0)>Date.now()/1000&&!!s.access_token;}catch{return false;}}
+  function isLoggedIn(){try{const s=JSON.parse(localStorage.getItem(SUPA_KEY));return s&&(s.expires_at||0)>Date.now()/1000&&!!s.access_token&&!(s.user&&s.user.is_anonymous);}catch{return false;}}
   function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
   /* ══════════ utilidades ══════════ */
