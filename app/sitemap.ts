@@ -51,6 +51,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: "https://doceriapedagogica.com/consciencia-negra.html",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: "https://doceriapedagogica.com/eleicoes.html",
       lastModified: new Date(),
       changeFrequency: "weekly",
