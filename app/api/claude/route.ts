@@ -9,6 +9,25 @@ const SUPA_KEY = () => process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const CREATOR_EMAILS = (process.env.CREATOR_EMAILS || 'professorapriscila2006@gmail.com,primingues@gmail.com,crissmuniz@gmail.com')
   .toLowerCase().split(',').map((s) => s.trim()).filter(Boolean);
 
+/* ── Modelos de IA (preços por milhão de tokens: entrada / saída) ──
+   completo: Claude Sonnet 5.5 (US$ 2 / 10) — atividades, avaliações, apostilas, planos, slides
+   rapido:   Claude Haiku 5.5  (US$ 0,10 / 0,50) — jogos, caça-palavras, cruzadinha, quiz        */
+const MODELOS = {
+  completo: { model: 'claude-sonnet-5-5', effort: 'medium', folga: 8000, fallback: true },
+  rapido:   { model: 'claude-haiku-5-5',  effort: 'low',    folga: 4000, fallback: false },
+} as const;
+// páginas de geração simples → modelo rápido e barato (o resto usa o completo)
+const PAGINAS_RAPIDAS = ['jogos.html', 'memoria.html', 'trilha.html', 'palavras.html', 'interativo.html',
+  'ingles-jogo.html', 'cacapalavras-print.html', 'cruzadinha-print.html', '/professor/caca-palavras', '/professor/cruzadinha'];
+function escolherTier(referer: string | null): keyof typeof MODELOS {
+  try {
+    const p = new URL(referer || '').pathname;
+    return PAGINAS_RAPIDAS.some((x) => p.endsWith(x) || p.startsWith(x)) ? 'rapido' : 'completo';
+  } catch {
+    return 'completo';
+  }
+}
+
 async function supaFetch(path: string, options: RequestInit = {}) {
   const key = SUPA_KEY();
   return fetch(`${SUPA_URL}/rest/v1${path}`, {
@@ -126,8 +145,21 @@ export async function POST(request: NextRequest) {
     } // end else (not is_creator)
   }
 
-  // Remove o campo de controle interno antes de repassar à API da Anthropic.
-  const { creditCost: _omitCost, ...anthropicBody } = body;
+  // O MODELO é escolhido aqui (o que a página mandar é ignorado): troca o site todo num lugar só
+  // e impede que alguém peça um modelo caro direto do navegador.
+  const tier = escolherTier(request.headers.get('referer'));
+  const cfg = MODELOS[tier];
+  const pedidoMax = Math.min(Math.max(parseInt(body?.max_tokens, 10) || 2000, 256), 8000);
+  const anthropicBody: Record<string, unknown> = {
+    model: cfg.model,
+    // folga: nos modelos novos o raciocínio interno também conta no limite de tokens
+    max_tokens: pedidoMax + cfg.folga,
+    output_config: { effort: cfg.effort },
+    messages: body?.messages,
+    ...(body?.system ? { system: body.system } : {}),
+    ...(body?.stop_sequences ? { stop_sequences: body.stop_sequences } : {}),
+    ...(cfg.fallback ? { fallbacks: 'default' } : {}),
+  };
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -136,11 +168,31 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
+        ...(cfg.fallback ? { 'anthropic-beta': 'server-side-fallback-2026-07-01' } : {}),
       },
       body: JSON.stringify(anthropicBody),
     });
 
     const data = await response.json();
+
+    // Recusa de segurança (raro em conteúdo escolar): devolve o crédito e explica.
+    if (response.ok && data?.stop_reason === 'refusal') {
+      if (!isCreator) {
+        await supaFetch(`/profiles?id=eq.${userId}`, {
+          method: 'PATCH',
+          headers: { Prefer: 'return=minimal' },
+          body: JSON.stringify({ credits }),
+        });
+      }
+      return NextResponse.json({ error: 'A IA não conseguiu gerar este material. Tente reformular o pedido.' }, { status: 422 });
+    }
+
+    // As páginas leem data.content[0].text: devolve só o TEXTO final (sem blocos de raciocínio),
+    // no mesmo formato de antes — nenhuma página precisa mudar.
+    if (response.ok && Array.isArray(data?.content)) {
+      const texto = data.content.filter((b: { type?: string }) => b.type === 'text').map((b: { text?: string }) => b.text || '').join('');
+      data.content = [{ type: 'text', text: texto }];
+    }
 
     if (!response.ok) {
       if (!isCreator) {

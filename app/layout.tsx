@@ -17,12 +17,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://doceriapedagogica.com"),
   title: {
-    default: "Doceria Pedagógica — Atividades e Planos de Aula com IA",
+    default: "IA para Professores: atividades e planos de aula | Doceria Pedagógica",
     template: "%s | Doceria Pedagógica",
   },
   description:
-    "Gere atividades, planos de aula, jogos e materiais pedagógicos alinhados à BNCC em segundos. Pronto para imprimir. Para professores brasileiros.",
+    "Doceria Pedagógica é a plataforma de IA para professores: gere atividades, avaliações, planos de aula e jogos alinhados à BNCC em segundos, prontos para imprimir.",
   keywords: [
+    "ia para professores",
+    "inteligência artificial para professores",
+    "plataforma de ia para professores",
     "atividades pedagógicas",
     "plano de aula",
     "BNCC",
@@ -36,9 +39,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Doceria Pedagógica" }],
   openGraph: {
-    title: "Doceria Pedagógica — Atividades e Planos de Aula com IA",
+    title: "Doceria Pedagógica — a plataforma de IA para professores",
     description:
-      "Gere atividades, planos de aula e materiais alinhados à BNCC em segundos. Pronto para imprimir.",
+      "Atividades, avaliações, planos de aula e jogos alinhados à BNCC em segundos, prontos para imprimir.",
     url: "https://doceriapedagogica.com",
     siteName: "Doceria Pedagógica",
     locale: "pt_BR",

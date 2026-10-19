@@ -84,13 +84,13 @@ export default function Home() {
           {/* Texto */}
           <div className="flex-1 text-center md:text-left">
             <div className="inline-flex items-center gap-2 bg-[#C8742A]/10 border border-[#C8742A]/20 text-[#C8742A] px-4 py-1.5 rounded-full text-xs font-bold mb-6">
-              ✨ IA especialmente para professores brasileiros
+              ✨ A plataforma de IA para professores brasileiros
             </div>
             <h1 className="text-[2.5rem] leading-[1.05] sm:text-6xl lg:text-7xl font-extrabold text-[#3D1F0D] tracking-tight mb-6">
-              Prepare aulas <span className="text-[#C8742A] italic">incríveis</span> em minutos, não em horas
+              IA para professores: aulas <span className="text-[#C8742A] italic">incríveis</span> em minutos
             </h1>
             <p className="text-lg sm:text-xl text-[#8A7060] max-w-xl mx-auto md:mx-0 mb-8 leading-relaxed">
-              Gere atividades, planos de aula, jogos e materiais pedagógicos{' '}
+              A inteligência artificial da Doceria gera atividades, avaliações, planos de aula, jogos e materiais pedagógicos{' '}
               <strong className="text-[#3D1F0D]">alinhados à BNCC</strong> — prontos para imprimir ou usar em sala.
             </p>
 
