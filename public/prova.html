@@ -1903,11 +1903,15 @@ RESPONDA SÓ COM ESTE JSON (sem markdown, sem crases):
 
   // estado inicial
   onTextoChange();
-  // Link direto da Central de Matemática: prova.html?componente=matematica
-  if(/^matem/i.test(new URLSearchParams(location.search).get('componente')||'')){
-    document.getElementById('a_componente').value='Matemática';
-    onComponenteChange();
-  }
+  // Link direto das centrais: prova.html?componente=matematica | portugues | ciencias | historia | geografia | ingles
+  (function(){
+    const sem=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+    const p=sem(new URLSearchParams(location.search).get('componente'));
+    if(!p) return;
+    const sel=document.getElementById('a_componente');
+    const op=[...sel.options].find(o=>o.value&&sem(o.value).replace('lingua ','').startsWith(p.slice(0,5)));
+    if(op){ sel.value=op.value; onComponenteChange(); }
+  })();
 </script>
 <script src="/js/dp-print.js"></script>
 <script src="/js/dp-auth.js"></script>

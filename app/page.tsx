@@ -1,43 +1,85 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import Script from 'next/script'
+import { useEffect } from 'react'
 
 const SUPABASE_KEY = 'sb-atkwvwhwbkerezdmipxw-auth-token'
+const COMECAR = '/prova.html' // gerador principal — funciona sem cadastro (3 grátis)
 
-/* Campo de e-mail que já inicia o cadastro grátis no /conta.html */
-function EmailStart({ variant = 'hero' }: { variant?: 'hero' | 'cta' }) {
-  const [email, setEmail] = useState('')
+/* Centrais por matéria: 'pronta' = central com atividades prontas; 'nova' = em construção; 'ia' = gera com IA (matéria já escolhida) */
+const CENTRAIS = [
+  { i: '🔤', t: 'Alfabetização', c: '#E85A7D', bg: '#FFE3EC', s: 'Sílabas, leitura, ditado, consciência fonológica', status: 'nova', href: '/alfabetizacao.html' },
+  { i: '➗', t: 'Matemática', c: '#2FB89A', bg: '#DDF7EE', s: 'Operações, frações, área, dinheiro, equações + apostila', status: 'pronta', href: '/matematica.html' },
+  { i: '📖', t: 'Língua Portuguesa', c: '#C8742A', bg: '#FFF0DE', s: 'Interpretação de texto, gramática, produção', status: 'ia', href: '/prova.html?componente=portugues' },
+  { i: '🔬', t: 'Ciências', c: '#3B82C4', bg: '#E3F0FB', s: 'Corpo humano, ecossistemas, sistema solar — com esquemas certos', status: 'ia', href: '/prova.html?componente=ciencias' },
+  { i: '🏛️', t: 'História', c: '#8A5A3B', bg: '#F4E8DD', s: 'Linhas do tempo, Brasil colônia, fontes históricas', status: 'ia', href: '/prova.html?componente=historia' },
+  { i: '🌎', t: 'Geografia', c: '#2E7D4F', bg: '#E2F3E7', s: 'Mapas, relevo, clima, regiões do Brasil', status: 'ia', href: '/prova.html?componente=geografia' },
+  { i: '🎒', t: 'EJA', c: '#B5462A', bg: '#FBE7DF', s: 'Simples, mas nunca infantilizadas — com letra grande', status: 'pronta', href: '/eja.html' },
+  { i: '🎮', t: 'Jogos', c: '#7C5CE0', bg: '#EEE9FF', s: 'Quiz, memória, Confeitaria das Frações, Caixa da Feirinha', status: 'pronta', href: '/jogos-area.html' },
+]
 
-  const go = (e: React.FormEvent) => {
-    e.preventDefault()
-    const v = email.trim()
-    window.location.href = v.includes('@')
-      ? '/conta.html?start=' + encodeURIComponent(v)
-      : '/conta.html'
-  }
+const IA_TIPOS = [
+  ['✏️', 'Atividade com gabarito', '/prova.html'],
+  ['📋', 'Avaliação (A a D)', '/prova.html'],
+  ['🗓️', 'Plano de aula BNCC', '/plano.html'],
+  ['🖥️', 'Slides para a aula', '/slides.html'],
+  ['🧠', 'Mapa mental', '/mapa.html'],
+  ['🎲', 'Jogo para a turma', '/jogos.html'],
+]
 
-  return (
-    <form
-      onSubmit={go}
-      className={`flex flex-col sm:flex-row gap-3 ${variant === 'hero' ? 'max-w-md mx-auto md:mx-0' : 'max-w-md mx-auto'}`}
-    >
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="seuemail@escola.com"
-        aria-label="Seu e-mail"
-        className="flex-1 bg-white border border-[#C8742A]/25 rounded-full px-5 py-3.5 text-[#3D1F0D] placeholder-[#8A7060]/60 text-base outline-none focus:border-[#C8742A] focus:ring-2 focus:ring-[#C8742A]/20 transition"
-      />
-      <button
-        type="submit"
-        className="bg-[#C8742A] text-white px-7 py-3.5 rounded-full font-semibold text-base hover:bg-[#6B3A1F] transition whitespace-nowrap shadow-sm"
-      >
-        Comece por aqui →
-      </button>
-    </form>
-  )
+const PORQUE = [
+  ['🖨️', 'Imprime perfeito', 'Folhas no tamanho certo, sem desperdício, com gabarito em página separada.'],
+  ['🗺️', 'Imagens que não erram', 'Mapas do IBGE, esquemas de ciências e obras reais — nada de imagem inventada.'],
+  ['🎯', 'BNCC e gabarito', 'Toda questão com habilidade da BNCC e resposta comentada para o professor.'],
+  ['📺', 'Jogos para a TV', 'Personagens, sons e modo apresentação para jogar com a turma toda.'],
+]
+
+const DEPOIMENTOS = [
+  {
+    texto: '"Eu estava nesse exato momento fazendo as provas de geografia e já fiz por lá! Dá certo! Amanhã vou parear o celular com a TV da minha sala e fazer um Quiz com a turma!"',
+    nome: 'Professora Luciana',
+    cargo: '5º Ano · Escola Pública',
+    inicial: 'L',
+  },
+  {
+    texto: '"Dá pra explorar demais! Sempre que termino um conteúdo gosto de dar um jogo online específico daquilo. No site consigo gerar do jeitinho que eu quiser — bem específico da matéria que acabei de dar. Espelho o celular no projetor e um aluno joga enquanto os outros assistem. Dá até pra alfabetização em inglês!"',
+    nome: 'Professora Cristiane',
+    cargo: 'Inglês · Escola Pública',
+    inicial: 'C',
+  },
+]
+
+const FAQ = [
+  ['O que é a Doceria Pedagógica?', 'É uma plataforma de IA para professores: você gera atividades, avaliações, planos de aula, slides e jogos alinhados à BNCC em segundos — e ainda encontra centrais com materiais prontos de cada matéria.'],
+  ['Preciso me cadastrar para usar?', 'Não. Você começa com 3 materiais grátis sem cadastro. Com o e-mail ganha mais 2 e, depois, 1 material grátis por semana.'],
+  ['O que usa crédito?', 'Cada material que você baixa, imprime ou gera usa 1 crédito — tanto as atividades prontas das centrais quanto as criadas pela IA. Ver as prévias e navegar é livre.'],
+  ['É assinatura?', 'Não. Se quiser mais, compra créditos avulsos que não expiram, a partir de R$ 9,90.'],
+  ['A IA erra?', 'A IA pode errar, por isso todo material vem com gabarito e você revisa antes de imprimir. Imagens factuais (mapas, esquemas) vêm de fontes confiáveis, não de imagem inventada.'],
+]
+
+const FAQ_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+}
+
+declare global {
+  interface Window { charSVG?: (id: string, extra?: string) => string }
+}
+
+function montarTurma() {
+  if (!window.charSVG) return
+  document.querySelectorAll<HTMLElement>('[data-char]').forEach((el, i) => {
+    if (el.dataset.ok) return
+    el.dataset.ok = '1'
+    el.innerHTML = window.charSVG!(el.dataset.char!)
+    const c = el.firstElementChild as HTMLElement | null
+    if (!c) return
+    const acenar = () => { c.classList.remove('wave'); void c.getBoundingClientRect(); c.classList.add('wave') }
+    setTimeout(acenar, 600 + i * 350)
+    setInterval(acenar, 7000 + i * 900)
+  })
 }
 
 export default function Home() {
@@ -47,350 +89,198 @@ export default function Home() {
       if (raw) {
         const session = JSON.parse(raw)
         const expiresAt = session?.expires_at ?? 0
-        if (expiresAt > Date.now() / 1000) {
+        // visitante anônimo (3 grátis) continua vendo a landing
+        if (expiresAt > Date.now() / 1000 && !session?.user?.is_anonymous) {
           window.location.href = '/conta.html'
         }
       }
     } catch {
       // sem sessão válida — exibe a landing page normalmente
     }
+    montarTurma()
   }, [])
 
   return (
-    <main className="min-h-screen bg-[#FFFAF5] overflow-x-hidden">
+    <main className="dp-home min-h-screen bg-[#FFFAF5] text-[#3D1F0D] overflow-x-hidden">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;600;700;800;900&display=swap" precedence="default" />
+      <link rel="stylesheet" href="/css/dp-turma.css" precedence="default" />
+      <Script src="/js/dp-turma.js" strategy="afterInteractive" onLoad={montarTurma} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_LD) }} />
+      <style>{`
+        .dp-home{font-family:'Nunito',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+        .dp-home .baloo{font-family:'Baloo 2','Nunito',sans-serif}
+        .dp-home .blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;pointer-events:none}
+        .dp-home .b3d{transition:transform .08s,box-shadow .08s}
+        .dp-home .b3d:active{transform:translateY(4px)}
+        .dp-home .card-central{transition:transform .18s,box-shadow .18s}
+        .dp-home .card-central:hover{transform:translateY(-5px)}
+        .dp-home .float{animation:dpflt 6s ease-in-out infinite}
+        .dp-home .float.d2{animation-delay:-2s}
+        .dp-home .float.d3{animation-delay:-4s}
+        @keyframes dpflt{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-10px) rotate(var(--r,0deg))}}
+        .dp-home .turma .char{width:100%;height:auto}
+        .dp-home details summary::-webkit-details-marker{display:none}
+        @media (prefers-reduced-motion:reduce){.dp-home .float{animation:none}}
+      `}</style>
 
       {/* ── NAV ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#FDF6ED]/90 backdrop-blur border-b border-[#C8742A]/10 px-4 sm:px-8 h-16 flex items-center justify-between overflow-hidden">
-        <div className="flex items-center gap-2 font-bold text-xl flex-shrink-0">
-          <div className="w-8 h-8 bg-[#C8742A] rounded-lg flex items-center justify-center text-white text-sm flex-shrink-0">🍰</div>
-          <span className="whitespace-nowrap">Doceria <span className="text-[#C8742A]">Pedagógica</span></span>
+      <header className="fixed top-0 inset-x-0 z-50 bg-[#FFFAF5]/90 backdrop-blur border-b border-[#C8742A]/10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-8 h-16 flex items-center gap-6">
+          <a href="/" className="flex items-center gap-2 font-extrabold text-lg whitespace-nowrap">
+            <img src="/img/robo-logo.png" alt="" width={44} height={44} className="w-11 h-11 object-contain -my-1" />
+            Doceria <span className="text-[#C8742A]">Pedagógica</span>
+          </a>
+          <nav className="hidden md:flex gap-6 text-[15px] font-bold text-[#6B3A1F] ml-4">
+            <a href="#centrais" className="hover:text-[#C8742A]">Centrais</a>
+            <a href="#ia" className="hover:text-[#C8742A]">IA para professores</a>
+            <a href="/jogos-area.html" className="hover:text-[#C8742A]">Jogos</a>
+            <Link href="/pricing" className="hover:text-[#C8742A]">Preços</Link>
+          </nav>
+          <div className="ml-auto flex items-center gap-3">
+            <Link href="/conta.html" className="hidden sm:block font-bold text-[#6B3A1F] hover:text-[#C8742A]">Entrar</Link>
+            <a href={COMECAR} className="b3d bg-[#C8742A] text-white font-extrabold px-4 sm:px-5 py-2 sm:py-2.5 text-sm sm:text-base whitespace-nowrap rounded-full shadow-[0_4px_0_#9A5418]">Testar grátis</a>
+          </div>
         </div>
-        <div className="flex items-center gap-3 sm:gap-6">
-          <Link href="#ferramentas" className="hidden sm:block text-sm text-[#6B3A1F] hover:text-[#C8742A]">Ferramentas</Link>
-          <a href="/eja.html" className="hidden sm:block text-sm text-[#6B3A1F] hover:text-[#C8742A]">Atividades EJA</a>
-          <Link href="/pricing" className="hidden sm:block text-sm text-[#6B3A1F] hover:text-[#C8742A]">Preços</Link>
-          <Link href="/conta.html" className="text-sm font-medium text-[#6B3A1F] hover:text-[#C8742A]">Entrar</Link>
-          <Link href="/conta.html" className="bg-[#C8742A] text-white px-4 sm:px-5 py-2 rounded-full text-sm font-semibold hover:bg-[#6B3A1F] transition whitespace-nowrap">
-            <span className="sm:hidden">Acessar</span>
-            <span className="hidden sm:inline">Comece por aqui</span>
-          </Link>
-        </div>
-      </nav>
+      </header>
 
       {/* ── HERO ── */}
-      <section className="pt-32 sm:pt-36 pb-16 px-4 sm:px-8 max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row items-center gap-10 lg:gap-16">
-
-          {/* Texto */}
-          <div className="flex-1 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 bg-[#C8742A]/10 border border-[#C8742A]/20 text-[#C8742A] px-4 py-1.5 rounded-full text-xs font-bold mb-6">
-              ✨ A plataforma de IA para professores brasileiros
-            </div>
-            <h1 className="text-[2.5rem] leading-[1.05] sm:text-6xl lg:text-7xl font-extrabold text-[#3D1F0D] tracking-tight mb-6">
-              IA para professores: aulas <span className="text-[#C8742A] italic">incríveis</span> em minutos
+      <section className="relative overflow-hidden pt-28 sm:pt-32 pb-16">
+        <div className="blob w-[520px] h-[520px] bg-[#FFD9A8] -top-40 -left-40" />
+        <div className="blob w-[420px] h-[420px] bg-[#FFC2D6] top-20 right-[-120px]" />
+        <div className="blob w-[360px] h-[360px] bg-[#BFEFE2] bottom-[-140px] left-1/3" />
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-8 grid lg:grid-cols-[1.05fr_1fr] gap-10 items-center">
+          <div className="text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 bg-white border border-[#C8742A]/20 text-[#9A5418] px-4 py-1.5 rounded-full text-sm font-extrabold mb-6 shadow-sm">✨ A plataforma de IA para professores brasileiros</div>
+            <h1 className="baloo text-[2.6rem] leading-[1.02] sm:text-6xl lg:text-[4.3rem] font-extrabold tracking-tight mb-5">
+              IA para professores: aulas <span className="text-[#C8742A]">incríveis</span> em minutos
             </h1>
-            <p className="text-lg sm:text-xl text-[#8A7060] max-w-xl mx-auto md:mx-0 mb-8 leading-relaxed">
-              A inteligência artificial da Doceria gera atividades, avaliações, planos de aula, jogos e materiais pedagógicos{' '}
-              <strong className="text-[#3D1F0D]">alinhados à BNCC</strong> — prontos para imprimir ou usar em sala.
+            <p className="text-lg sm:text-xl text-[#7D5A44] max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed font-semibold">
+              Atividades, avaliações, planos de aula e jogos <b className="text-[#3D1F0D]">alinhados à BNCC</b>, com gabarito e prontos para imprimir — ou use as <b className="text-[#3D1F0D]">centrais prontas</b> de cada matéria.
             </p>
-
-            {/* Entrada grátis — vitrine */}
-            <EmailStart variant="hero" />
-            <p className="text-sm text-[#8A7060] mt-4 flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-1">
-              <span className="flex items-center gap-1.5"><span className="text-[#C8742A]">✓</span> Jogos e atividades grátis</span>
-              <span className="flex items-center gap-1.5"><span className="text-[#C8742A]">✓</span> Sem cartão</span>
-              <span className="flex items-center gap-1.5"><span className="text-[#C8742A]">✓</span> Comece só com o e-mail</span>
-            </p>
-          </div>
-
-          {/* Mockup de atividade gerada — lado direito */}
-          <div className="flex-1 w-full max-w-md md:max-w-none">
-            <div className="bg-white rounded-2xl shadow-2xl border border-[#C8742A]/10 p-6 text-left relative">
-              {/* Badge "gerado agora" */}
-              <div className="absolute -top-3 right-4 bg-[#C8742A] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow">
-                ✦ Gerado em 18 segundos
-              </div>
-              {/* Cabeçalho do material */}
-              <div className="border-b border-gray-100 pb-3 mb-4">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <p className="text-[10px] text-[#8A7060] uppercase tracking-widest">Atividade · 3º Ano · Português</p>
-                    <h3 className="text-base font-bold text-[#3D1F0D] mt-0.5">O Ciclo da Água</h3>
-                  </div>
-                  <span className="text-[10px] bg-[#C8742A]/10 text-[#C8742A] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">BNCC EF03CI04</span>
-                </div>
-              </div>
-              {/* Texto introdutório */}
-              <p className="text-xs text-gray-600 mb-4 leading-relaxed">
-                A água percorre um ciclo natural chamado <strong>Ciclo da Água</strong>, passando pelos estados líquido, gasoso e sólido. Esse processo é essencial para a vida na Terra...
-              </p>
-              {/* Atividade 1 */}
-              <div className="bg-[#FFFAF5] rounded-xl p-3 mb-3 border border-[#C8742A]/10">
-                <p className="text-xs font-semibold text-[#3D1F0D] mb-2">1. Responda com suas palavras:</p>
-                <p className="text-xs text-gray-500 mb-1">O que acontece com a água quando ela esquenta?</p>
-                <div className="h-5 border-b border-dashed border-gray-200 mt-2"></div>
-                <div className="h-5 border-b border-dashed border-gray-200 mt-2"></div>
-              </div>
-              {/* Atividade 2 */}
-              <div className="bg-[#FFFAF5] rounded-xl p-3 border border-[#C8742A]/10">
-                <p className="text-xs font-semibold text-[#3D1F0D] mb-2">2. Verdadeiro ou Falso:</p>
-                <div className="space-y-1.5 text-xs text-gray-600">
-                  {[
-                    'A água pode estar no estado gasoso.',
-                    'O ciclo ocorre apenas nos oceanos.',
-                  ].map((frase, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <div className="flex gap-1 flex-shrink-0">
-                        <span className="border border-gray-300 rounded px-1.5 text-[10px]">V</span>
-                        <span className="border border-gray-300 rounded px-1.5 text-[10px]">F</span>
-                      </div>
-                      <span>{frase}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              {/* Rodapé do PDF */}
-              <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
-                <p className="text-[9px] text-gray-300">Doceria Pedagógica · doceriapedagogica.com</p>
-                <p className="text-[9px] text-gray-300">BNCC EF03CI04</p>
-              </div>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+              <a href={COMECAR} className="b3d bg-[#C8742A] text-white text-lg font-extrabold px-7 py-4 rounded-2xl shadow-[0_6px_0_#9A5418]">✨ Experimentar grátis — sem cadastro</a>
+              <a href="#centrais" className="b3d bg-white text-[#3D1F0D] text-lg font-extrabold px-7 py-4 rounded-2xl shadow-[0_6px_0_#EAD6C3] border border-[#C8742A]/15">Ver as centrais ↓</a>
+            </div>
+            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 justify-center lg:justify-start text-sm font-bold text-[#8A7060]">
+              <span>✔ Comece grátis, sem cadastro</span><span>✔ Gabarito em toda atividade</span><span>✔ Funciona no celular e na TV</span>
             </div>
           </div>
-        </div>
-
-        {/* STATS */}
-        <div className="flex flex-col sm:flex-row justify-center gap-8 sm:gap-16 mt-16 pt-12 border-t border-[#C8742A]/10">
-          <div className="text-center">
-            <div className="text-4xl sm:text-5xl font-extrabold text-[#C8742A]">+12</div>
-            <div className="text-sm text-[#8A7060] mt-1">ferramentas pedagógicas</div>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl sm:text-5xl font-extrabold text-[#C8742A]">30 seg</div>
-            <div className="text-sm text-[#8A7060] mt-1">para gerar um material completo</div>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl sm:text-5xl font-extrabold text-[#C8742A]">100%</div>
-            <div className="text-sm text-[#8A7060] mt-1">pronto para imprimir ou projetar</div>
+          <div className="relative h-[420px] sm:h-[480px]" aria-hidden="true">
+            <img src="/atividades/previa/missao-matematica-4ano-mini.jpg" alt="" className="float absolute right-2 top-0 w-40 sm:w-48 rounded-xl shadow-2xl border-4 border-white" style={{ '--r': '5deg' } as React.CSSProperties} />
+            <img src="/atividades/previa/mat-geometria-parte2-mini.jpg" alt="" className="float d2 absolute left-0 top-6 w-36 sm:w-44 rounded-xl shadow-2xl border-4 border-white" style={{ '--r': '-6deg' } as React.CSSProperties} />
+            <div className="float d3 absolute left-1/2 -translate-x-1/2 top-24 bg-white rounded-2xl shadow-2xl px-4 py-3 text-center border border-[#C8742A]/10" style={{ '--r': '-2deg' } as React.CSSProperties}>
+              <div className="text-xs font-extrabold text-[#2FB89A] uppercase tracking-wide">gerado em 20 s</div>
+              <div className="baloo text-xl font-extrabold">Avaliação · 5º ano</div>
+              <div className="text-sm font-bold text-[#8A7060]">10 questões + gabarito</div>
+            </div>
+            <div className="turma absolute inset-x-0 bottom-0 grid grid-cols-4 gap-1 items-end px-2">
+              <div data-char="lia" /><div data-char="teo" /><div data-char="duda" /><div data-char="vo" />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── ESPECIAL SAZONAL ──
-          🔁 SLOT REUTILIZÁVEL: troque tema/links/cor aqui a cada temporada.
-             Hoje: Eleições 2026 (cidadania, não-partidário → /eleicoes.html).
-      */}
-      <section className="px-4 sm:px-8 pb-4">
+      {/* ── CENTRAIS ── */}
+      <section id="centrais" className="py-16 sm:py-20 px-4 sm:px-8 scroll-mt-16">
         <div className="max-w-6xl mx-auto">
-          <a
-            href="/eleicoes.html"
-            className="block rounded-3xl overflow-hidden shadow-xl relative group"
-            style={{ background: 'linear-gradient(135deg,#0b2a5b,#1e5fae)' }}
-          >
-            <div className="absolute right-4 -bottom-8 text-[130px] opacity-15 select-none leading-none">🗳️</div>
-            <div className="relative p-7 sm:p-10 flex flex-col sm:flex-row sm:items-center gap-5">
+          <div className="text-center mb-10">
+            <div className="text-[#C8742A] text-sm font-extrabold uppercase tracking-widest mb-2">Escolha sua central</div>
+            <h2 className="baloo text-4xl sm:text-5xl font-extrabold tracking-tight">O básico de cada matéria, pronto para usar</h2>
+            <p className="text-lg text-[#8A7060] font-semibold mt-3 max-w-2xl mx-auto">Atividades prontas e geradores com gabarito. Precisa de outro assunto? É só pedir para a IA da Doceria.</p>
+          </div>
+
+          {/* 🔁 SLOT SAZONAL: troque tema/links/cor a cada temporada */}
+          <a href="/consciencia-negra.html" className="card-central block mb-3 rounded-3xl overflow-hidden shadow-xl bg-gradient-to-r from-[#8E3219] via-[#B5462A] to-[#E07A45] text-white">
+            <div className="p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+              <div className="text-5xl">✊🏿</div>
               <div className="flex-1">
-                <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#ffcc29] mb-2">
-                  🗳️ Especial · Eleições 2026
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight mb-2">
-                  Atividades sobre Eleições e Cidadania
-                </h2>
-                <p className="text-white/80 text-sm sm:text-base max-w-xl">
-                  Democracia, voto e o que são esquerda e direita — de forma <strong className="text-white">não-partidária</strong>. Esquemas, caça-palavras e perguntas para refletir, prontos para imprimir.
-                </p>
+                <div className="text-xs font-extrabold uppercase tracking-widest text-[#FBE6BF]">Especial do mês · 20 de novembro</div>
+                <div className="baloo text-3xl font-extrabold leading-tight">Consciência Negra</div>
+                <div className="font-semibold opacity-90">Texto de apoio, 9 atividades, mapa do IBGE por estado e avaliação de A a D.</div>
               </div>
-              <span className="bg-white text-[#0b2a5b] px-6 py-3 rounded-full font-semibold text-sm whitespace-nowrap self-start sm:self-auto group-hover:bg-[#ffcc29] transition">
-                Ver atividades →
-              </span>
+              <span className="bg-white text-[#B5462A] font-extrabold px-5 py-3 rounded-full whitespace-nowrap">Ver atividades →</span>
             </div>
           </a>
-        </div>
-      </section>
-
-      {/* ── ÁREAS ABERTAS (explore sem cadastro) ── */}
-      <section className="px-4 sm:px-8 pt-6 pb-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-5">
-            <div className="text-[#C8742A] text-xs font-bold uppercase tracking-widest mb-1">Explore de graça</div>
-            <p className="text-[#8A7060] text-sm">Conheça a Doceria sem compromisso. O e-mail só é pedido na hora de baixar.</p>
+          <div className="text-center sm:text-right mb-6 text-sm font-bold text-[#8A7060]">
+            Também: <a href="/eleicoes.html" className="text-[#1e5fae] hover:underline">🗳️ Eleições e Cidadania (não partidário) →</a>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <a href="/jogos-area.html" className="group flex items-center gap-4 rounded-2xl bg-white border border-[#C8742A]/15 p-5 shadow-sm hover:-translate-y-0.5 hover:shadow-md transition">
-              <div className="text-3xl flex-shrink-0">🎮</div>
-              <div className="flex-1 min-w-0">
-                <div className="font-semibold text-[#3D1F0D]">Jogos para alunos</div>
-                <div className="text-sm text-[#8A7060]">Quiz, memória, trilha e caça-palavras — grátis, na TV ou no celular.</div>
-              </div>
-              <span className="text-[#C8742A] flex-shrink-0 group-hover:translate-x-0.5 transition">→</span>
-            </a>
-            <a href="/eja.html" className="group flex items-center gap-4 rounded-2xl bg-white border border-[#C8742A]/15 p-5 shadow-sm hover:-translate-y-0.5 hover:shadow-md transition">
-              <div className="text-3xl flex-shrink-0">📚</div>
-              <div className="flex-1 min-w-0">
-                <div className="font-semibold text-[#3D1F0D]">Atividades para EJA</div>
-                <div className="text-sm text-[#8A7060]">Prontas para imprimir — simples, mas nunca infantilizadas.</div>
-              </div>
-              <span className="text-[#C8742A] flex-shrink-0 group-hover:translate-x-0.5 transition">→</span>
-            </a>
-            <a href="/matematica.html" className="group flex items-center gap-4 rounded-2xl bg-white border border-[#C8742A]/15 p-5 shadow-sm hover:-translate-y-0.5 hover:shadow-md transition">
-              <div className="text-3xl flex-shrink-0">➗</div>
-              <div className="flex-1 min-w-0">
-                <div className="font-semibold text-[#3D1F0D]">Central de Matemática</div>
-                <div className="text-sm text-[#8A7060]">Contas, frações, dinheiro, área e equações com gabarito — grátis por tempo limitado.</div>
-              </div>
-              <span className="text-[#C8742A] flex-shrink-0 group-hover:translate-x-0.5 transition">→</span>
-            </a>
-          </div>
-        </div>
-      </section>
 
-      {/* ── FERRAMENTAS ── */}
-      <section id="ferramentas" className="py-24 px-4 sm:px-8 bg-[#FDF6ED]">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-[#C8742A] text-xs font-bold uppercase tracking-widest mb-3">Ferramentas de IA</div>
-          <h2 className="text-4xl sm:text-5xl font-bold text-[#3D1F0D] mb-4 tracking-tight">Tudo que você precisa, num só lugar</h2>
-          <p className="text-[#8A7060] text-lg mb-12 max-w-2xl">
-            Criadas para a realidade das professoras brasileiras. Alinhadas à BNCC. Sem precisar saber de tecnologia.
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-            {[
-              {
-                icon: '📋',
-                title: 'Plano de Aula',
-                desc: 'Completo com objetivos, desenvolvimento e avaliação — com código BNCC.',
-                badge: 'BNCC',
-              },
-              {
-                icon: '📝',
-                title: 'Atividade com Gabarito',
-                desc: 'Texto, interpretação, V ou F, múltipla escolha e questões abertas. Pronta para imprimir.',
-              },
-              {
-                icon: '🔤',
-                title: 'Alfabetização',
-                desc: 'Ligue/associe, complete a palavra e formação de sílabas para Ed. Infantil e Fund. I.',
-                badge: 'Infantil',
-              },
-              {
-                icon: '🎮',
-                title: 'Jogos Interativos',
-                desc: 'Quiz, memória, trilha e caça-palavras que seus alunos jogam na TV ou celular.',
-                badge: 'Gratuito',
-              },
-              {
-                icon: '📺',
-                title: 'Aula na Lousa',
-                desc: 'Roteiro do que escrever e falar no quadro — introdução, desenvolvimento e fechamento.',
-              },
-              {
-                icon: '🗓️',
-                title: 'Aula do Dia',
-                desc: 'A IA sugere um tema pedagógico baseado no dia de hoje — aula sempre relevante.',
-                badge: 'Novidade',
-              },
-              {
-                icon: '🎨',
-                title: 'Apresentação de Slides',
-                desc: '6 temas visuais, fullscreen, exportação em PDF para projetar em sala.',
-              },
-              {
-                icon: '➗',
-                title: 'Gerador de Matemática',
-                desc: 'Contas, operações e problemas com gabarito para imprimir — por nível de dificuldade.',
-              },
-              {
-                icon: '🧩',
-                title: 'Cruzadinha & Caça-palavras',
-                desc: 'Interativo online e em PDF. Qualquer tema em segundos.',
-                badge: 'Gratuito',
-              },
-            ].map(({ icon, title, desc, badge }) => (
-              <div key={title} className="rounded-2xl bg-white p-6 border border-[#C8742A]/10 shadow-sm relative transition hover:-translate-y-1 hover:shadow-md">
-                {badge && (
-                  <span className="absolute top-4 right-4 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#C8742A]/10 text-[#C8742A]">
-                    {badge}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {CENTRAIS.map((c) => (
+              <a key={c.t} href={c.href} className="card-central bg-white rounded-3xl p-6 border border-black/5 flex flex-col" style={{ boxShadow: `0 8px 0 ${c.bg}` }}>
+                <div className="w-14 h-14 rounded-2xl grid place-items-center text-3xl mb-4" style={{ background: c.bg }}>{c.i}</div>
+                <h3 className="baloo text-2xl font-extrabold leading-tight">{c.t}</h3>
+                <p className="text-sm text-[#8A7060] font-semibold mt-1 flex-1">{c.s}</p>
+                <div className="mt-4 flex items-center justify-between">
+                  <span className="text-xs font-extrabold px-2.5 py-1 rounded-full" style={{ background: c.bg, color: c.c }}>
+                    {c.status === 'pronta' ? '✔ Atividades prontas' : c.status === 'nova' ? '🆕 Central nova' : '✨ Gere com IA'}
                   </span>
-                )}
-                <div className="text-3xl mb-3">{icon}</div>
-                <h3 className="text-lg font-semibold text-[#3D1F0D] mb-1">{title}</h3>
-                <p className="text-[#8A7060] text-sm leading-relaxed">{desc}</p>
-              </div>
+                  <span className="font-extrabold" style={{ color: c.c }}>→</span>
+                </div>
+              </a>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── COMO FUNCIONA ── */}
-      <section id="como-funciona" className="py-24 px-4 sm:px-8">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="text-[#C8742A] text-xs font-bold uppercase tracking-widest mb-3">Como funciona</div>
-          <h2 className="text-4xl sm:text-5xl font-bold text-[#3D1F0D] mb-4 tracking-tight">3 passos e o material está pronto</h2>
-          <p className="text-[#8A7060] text-lg mb-16 max-w-xl mx-auto">
-            Sem editar template, sem dominar design. Você informa o tema — a Doceria entrega.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {[
-              {
-                n: '1',
-                title: 'Escolha a ferramenta',
-                desc: 'Plano de aula, atividade, jogo, slides… selecione o que a turma precisa hoje.',
-              },
-              {
-                n: '2',
-                title: 'Informe tema, série e objetivo',
-                desc: 'Digite o assunto e selecione o nível. Você pode incluir a habilidade da BNCC.',
-              },
-              {
-                n: '3',
-                title: 'Baixe ou imprima',
-                desc: 'O material aparece em segundos — PDF pronto, com gabarito quando necessário.',
-              },
-            ].map(({ n, title, desc }) => (
-              <div key={n} className="flex flex-col items-center">
-                <div className="w-16 h-16 rounded-full bg-[#C8742A] text-white flex items-center justify-center text-2xl font-bold mb-5 shadow-md">{n}</div>
-                <h3 className="text-xl font-semibold text-[#3D1F0D] mb-2">{title}</h3>
-                <p className="text-[#8A7060]">{desc}</p>
-              </div>
+      {/* ── IA PARA PROFESSORES ── */}
+      <section id="ia" className="py-16 sm:py-20 px-4 sm:px-8 bg-[#3D1F0D] text-white relative overflow-hidden scroll-mt-16">
+        <div className="blob w-[420px] h-[420px] bg-[#C8742A] -right-40 -top-40" style={{ opacity: 0.3 }} />
+        <div className="relative max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 items-center">
+          <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start text-center sm:text-left">
+            <div className="relative shrink-0 w-40 sm:w-48">
+              <div className="absolute -top-3 left-1/2 sm:left-auto sm:-right-6 -translate-x-1/2 sm:translate-x-0 z-10 bg-white text-[#3D1F0D] font-extrabold text-sm px-3 py-1.5 rounded-2xl rounded-bl-sm shadow-lg whitespace-nowrap">Me diga o tema! 😊</div>
+              <img src="/img/robo-doceria.webp" alt="Robozinho da IA da Doceria" width={359} height={440} className="float w-full h-auto drop-shadow-[0_18px_30px_rgba(0,0,0,.45)] mt-6" />
+            </div>
+            <div>
+              <div className="text-[#FFD9A8] text-sm font-extrabold uppercase tracking-widest mb-2">Não achou o assunto?</div>
+              <h2 className="baloo text-4xl sm:text-5xl font-extrabold leading-tight mb-4">A IA da Doceria faz para você</h2>
+              <p className="text-lg text-white/80 font-semibold mb-6">Diga o tema, a turma e o objetivo. Em segundos você recebe o material pronto, com BNCC, gabarito e imagens certas — mapas e esquemas de verdade, não imagens inventadas.</p>
+              <a href={COMECAR} className="b3d inline-block bg-[#FFC93C] text-[#3D1F0D] text-lg font-extrabold px-7 py-4 rounded-2xl shadow-[0_6px_0_#C99A16]">✨ Gerar com IA agora</a>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {IA_TIPOS.map(([i, t, href]) => (
+              <a key={t} href={href} className="bg-white/10 hover:bg-white/15 border border-white/15 rounded-2xl p-4 font-extrabold flex items-center gap-3 transition">
+                <span className="text-2xl">{i}</span>{t}
+              </a>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── DEPOIMENTOS ──
-          ⚠️  Substitua o conteúdo abaixo por depoimentos reais das professoras.
-              Basta pedir autorização e trocar nome, cargo e texto.
-      */}
-      <section className="py-24 px-4 sm:px-8 bg-[#FDF6ED]">
+      {/* ── POR QUE ── */}
+      <section className="py-16 sm:py-20 px-4 sm:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <div className="text-[#C8742A] text-xs font-bold uppercase tracking-widest mb-3">Quem já usa</div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#3D1F0D] tracking-tight">Professoras que ganharam tempo — e alunos que aprenderam mais</h2>
+          <h2 className="baloo text-4xl sm:text-5xl font-extrabold tracking-tight text-center mb-10">Feita por professora, para professores</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {PORQUE.map(([i, t, d]) => (
+              <div key={t} className="bg-white rounded-3xl p-6 border border-black/5 shadow-sm">
+                <div className="text-4xl mb-3">{i}</div>
+                <h3 className="baloo text-xl font-extrabold mb-1">{t}</h3>
+                <p className="text-[#8A7060] font-semibold text-sm">{d}</p>
+              </div>
+            ))}
           </div>
-          {/* ⚠️ Adicione mais cards aqui quando tiver novos depoimentos reais */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            {[
-              {
-                texto: '"Eu estava nesse exato momento fazendo as provas de geografia e já fiz por lá! Dá certo! Amanhã vou parear o celular com a TV da minha sala e fazer um Quiz com a turma!"',
-                nome: 'Professora Luciana',
-                cargo: '5º Ano · Escola Pública',
-                inicial: 'L',
-              },
-              {
-                texto: '"Dá pra explorar demais! Sempre que termino um conteúdo gosto de dar um jogo online específico daquilo. No site consigo gerar do jeitinho que eu quiser — bem específico da matéria que acabei de dar. Espelho o celular no projetor e um aluno joga enquanto os outros assistem. Dá até pra alfabetização em inglês!"',
-                nome: 'Professora Cristiane',
-                cargo: 'Inglês · Escola Pública',
-                inicial: 'C',
-              },
-            ].map(({ texto, nome, cargo, inicial }) => (
-              <div key={nome} className="bg-white rounded-2xl p-6 border border-[#C8742A]/10 shadow-sm flex flex-col gap-4">
-                <p className="text-[#6B3A1F] text-sm leading-relaxed italic flex-1">{texto}</p>
+        </div>
+      </section>
+
+      {/* ── DEPOIMENTOS (reais) ── */}
+      <section className="pb-16 sm:pb-20 px-4 sm:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-8">
+            <div className="text-[#C8742A] text-sm font-extrabold uppercase tracking-widest mb-2">Quem já usa</div>
+            <h2 className="baloo text-3xl sm:text-4xl font-extrabold tracking-tight">Professoras que ganharam tempo</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {DEPOIMENTOS.map(({ texto, nome, cargo, inicial }) => (
+              <div key={nome} className="bg-white rounded-3xl p-6 border border-black/5 shadow-sm flex flex-col gap-4">
+                <p className="text-[#6B3A1F] leading-relaxed italic font-semibold flex-1">{texto}</p>
                 <div className="flex items-center gap-3 pt-4 border-t border-[#C8742A]/10">
-                  <div className="w-9 h-9 rounded-full bg-[#C8742A]/20 flex items-center justify-center text-[#C8742A] font-bold text-sm flex-shrink-0">
-                    {inicial}
-                  </div>
+                  <div className="w-10 h-10 rounded-full bg-[#FFE3C4] flex items-center justify-center text-[#C8742A] font-extrabold flex-shrink-0">{inicial}</div>
                   <div>
-                    <p className="text-sm font-semibold text-[#3D1F0D]">{nome}</p>
-                    <p className="text-xs text-[#8A7060]">{cargo}</p>
+                    <p className="font-extrabold">{nome}</p>
+                    <p className="text-sm text-[#8A7060] font-semibold">{cargo}</p>
                   </div>
                 </div>
               </div>
@@ -399,46 +289,66 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CTA FINAL (grátis como vitrine) ── */}
-      <section className="py-24 px-4 sm:px-8">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="text-[#C8742A] text-xs font-bold uppercase tracking-widest mb-3">Comece agora</div>
-          <h2 className="text-4xl sm:text-5xl font-bold text-[#3D1F0D] mb-4 tracking-tight">Entre e explore à vontade</h2>
-          <p className="text-[#8A7060] mb-8 text-lg">
-            Muita coisa é aberta — <strong className="text-[#3D1F0D]">jogos</strong>, especial sazonal e atividades avulsas. Para gerar com IA, comece <strong className="text-[#3D1F0D]">sem cadastro: 3 gerações grátis</strong>. Com o e-mail você ganha mais 2 e, depois, 1 geração grátis por semana. Quer mais? Créditos avulsos que não expiram — sem assinatura.
-          </p>
-          <EmailStart variant="cta" />
-          <p className="text-sm text-[#8A7060]/80 mt-5">
-            Só o e-mail para começar.{' '}
-            <Link href="/pricing" className="text-[#C8742A] font-semibold hover:underline">Ver preços →</Link>
-          </p>
+      {/* ── CRÉDITOS ── */}
+      <section id="creditos" className="pb-16 sm:pb-20 px-4 sm:px-8 scroll-mt-16">
+        <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl border border-[#C8742A]/10 p-6 sm:p-10">
+          <h2 className="baloo text-3xl sm:text-4xl font-extrabold text-center mb-2">Comece grátis</h2>
+          <p className="text-center text-[#8A7060] font-semibold mb-8">Sem cadastro para começar. Cada material que você baixa ou gera — pronto da central ou criado pela IA — usa 1 crédito.</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+            <div className="rounded-2xl bg-[#FFF3E2] p-5"><div className="baloo text-4xl font-extrabold text-[#C8742A]">3</div><div className="font-bold">materiais grátis, sem cadastro</div></div>
+            <div className="rounded-2xl bg-[#FFE3EC] p-5"><div className="baloo text-4xl font-extrabold text-[#C93468]">+2</div><div className="font-bold">com o seu e-mail</div></div>
+            <div className="rounded-2xl bg-[#DDF7EE] p-5"><div className="baloo text-4xl font-extrabold text-[#1E8A72]">1</div><div className="font-bold">material grátis por semana</div></div>
+            <div className="rounded-2xl bg-[#EEE9FF] p-5"><div className="baloo text-3xl font-extrabold text-[#6A4FD8]">R$ 9,90</div><div className="font-bold">10 créditos que não expiram</div></div>
+          </div>
+          <div className="text-center mt-6">
+            <Link href="/pricing" className="font-extrabold text-[#C8742A] hover:underline">Ver todos os pacotes →</Link>
+          </div>
         </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="pb-16 px-4 sm:px-8">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="baloo text-3xl sm:text-4xl font-extrabold text-center mb-6">Perguntas frequentes</h2>
+          <div className="space-y-3">
+            {FAQ.map(([q, a]) => (
+              <details key={q} className="bg-white rounded-2xl border border-black/5 shadow-sm p-5">
+                <summary className="cursor-pointer font-extrabold text-lg flex justify-between gap-4">{q}<span className="text-[#C8742A]">+</span></summary>
+                <p className="mt-3 text-[#7D5A44] font-semibold">{a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA FINAL ── */}
+      <section className="pb-20 px-4 sm:px-8 text-center">
+        <h2 className="baloo text-3xl sm:text-4xl font-extrabold mb-5">Sua próxima aula pode ficar pronta agora</h2>
+        <a href={COMECAR} className="b3d inline-block bg-[#C8742A] text-white text-lg font-extrabold px-8 py-4 rounded-2xl shadow-[0_6px_0_#9A5418]">✨ Experimentar grátis — sem cadastro</a>
       </section>
 
       {/* ── FOOTER ── */}
       <footer className="py-10 px-4 sm:px-8 border-t border-[#C8742A]/10">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 font-bold text-[#3D1F0D]">
-            <div className="w-7 h-7 bg-[#C8742A] rounded-lg flex items-center justify-center text-white text-xs flex-shrink-0">🍰</div>
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm font-semibold text-[#8A7060]">
+          <div className="flex items-center gap-2 font-extrabold text-[#3D1F0D]">
+            <img src="/img/robo-logo.png" alt="" width={32} height={32} className="w-8 h-8 object-contain" />
             Doceria Pedagógica
           </div>
-          <div className="flex flex-col sm:flex-row items-center gap-3 text-sm text-[#8A7060] text-center">
-            <p>© {new Date().getFullYear()} Doceria Pedagógica. Feito com carinho para professores brasileiros.</p>
-            <a href="mailto:doceriapedagogica@gmail.com" className="text-[#C8742A] hover:underline whitespace-nowrap">
-              ✉ doceriapedagogica@gmail.com
-            </a>
+          <div className="flex flex-col items-center gap-1 text-center">
+            <p>© {new Date().getFullYear()} Doceria Pedagógica · A plataforma de IA para professores</p>
+            <a href="mailto:doceriapedagogica@gmail.com" className="text-[#C8742A] hover:underline">✉ doceriapedagogica@gmail.com</a>
           </div>
           <div className="flex items-center flex-wrap justify-center gap-4">
-            <a href="/jogos-area.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Jogos grátis</a>
-            <a href="/eja.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Atividades EJA</a>
-            <a href="/matematica.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Matemática</a>
-            <a href="/eleicoes.html" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Eleições 2026</a>
-            <Link href="/pricing" className="text-sm text-[#8A7060] hover:text-[#C8742A]">Preços</Link>
-            <Link href="/conta.html" className="text-sm text-[#C8742A] font-semibold hover:underline whitespace-nowrap">Entrar na plataforma →</Link>
+            <a href="/matematica.html" className="hover:text-[#C8742A]">Matemática</a>
+            <a href="/eja.html" className="hover:text-[#C8742A]">EJA</a>
+            <a href="/jogos-area.html" className="hover:text-[#C8742A]">Jogos</a>
+            <a href="/consciencia-negra.html" className="hover:text-[#C8742A]">Consciência Negra</a>
+            <a href="/eleicoes.html" className="hover:text-[#C8742A]">Eleições 2026</a>
+            <Link href="/pricing" className="hover:text-[#C8742A]">Preços</Link>
+            <Link href="/conta.html" className="text-[#C8742A] font-extrabold hover:underline whitespace-nowrap">Entrar →</Link>
           </div>
         </div>
       </footer>
-
     </main>
   )
 }
