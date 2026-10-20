@@ -34,7 +34,7 @@
    * Uso: dpHandleNoCredits(document.getElementById('errBox'))
    */
   window.dpHandleNoCredits = function (errBox) {
-    var msg = '⚠️ Seus créditos acabaram. Você ganha 1 geração grátis por semana — ou ' +
+    var msg = '⚠️ Seus créditos acabaram. Você ganha 1 material grátis por semana — ou ' +
       '<a href="/conta.html" style="color:#2d6e6e;font-weight:600;text-decoration:underline;">compre créditos avulsos →</a>';
     if (errBox) {
       errBox.innerHTML = msg;
@@ -102,16 +102,16 @@
     var converter = isAnon();
     var titulo, texto, botao;
     if (converter && opts.motivo === 'creditos') {
-      titulo = 'Suas 3 gerações grátis acabaram 🎉';
-      texto = 'Gostou? Coloque seu e-mail para continuar e ganhe <strong>mais 2 gerações grátis</strong>. Sem cartão, sem senha.';
+      titulo = 'Seus 3 materiais grátis acabaram 🎉';
+      texto = 'Gostou? Coloque seu e-mail para continuar e ganhe <strong>mais 2 materiais grátis</strong>. Sem cartão, sem senha.';
       botao = 'Continuar grátis →';
     } else if (converter) {
       titulo = 'Falta só o seu e-mail';
-      texto = 'Deixe seu e-mail para continuar — e ganhe <strong>mais 2 gerações grátis</strong> com a IA da Doceria. Sem cartão, sem senha.';
+      texto = 'Deixe seu e-mail para continuar — e ganhe <strong>mais 2 materiais grátis</strong> na Doceria. Sem cartão, sem senha.';
       botao = 'Continuar →';
     } else {
       titulo = 'Comece grátis agora';
-      texto = 'Digite seu e-mail e ganhe <strong>5 gerações grátis</strong> com a IA da Doceria. Sem cartão, sem senha.';
+      texto = 'Digite seu e-mail e ganhe <strong>5 materiais grátis</strong> na Doceria. Sem cartão, sem senha.';
       botao = 'Começar grátis →';
     }
     return new Promise(function (resolve) {
