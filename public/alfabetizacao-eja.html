@@ -174,6 +174,7 @@ section{padding:46px 0}
 .cp-sm .cp td{width:50px;height:50px;font-size:24px !important}
 body[data-caixa=MAI] .paper{text-transform:uppercase}
 body[data-caixa=MAI] .texto-tema{font-size:19px;line-height:1.5}
+.texto-tema.longo,body[data-caixa=MAI] .texto-tema.longo{font-size:16px;line-height:1.45}
 body[data-caixa=MAI] .mx.big div{margin:5px 0;font-size:18px}
 .probs{flex:1;display:flex;flex-direction:column;justify-content:space-evenly;gap:10px}
 .prob{border:2px dashed #E8D9C9;border-radius:14px;padding:10px 16px}
@@ -598,7 +599,7 @@ function leituraTema(T){
   const mcq=T.mc.map(([q,ops],n)=>{const r=(n+1)%3;const o=ops.map((_,j)=>ops[(j+r)%3]);return{q,o,certa:letras[o.indexOf(ops[0])]+') '+ops[0]}});
   const pg=[];
   pg.push(head(T.ic+' '+T.t,'Leia o texto com atenção. Depois, <b>responda</b>.')+
-    `<div class="texto-tema" style="border-color:${T.cor}">${T.texto.join(' ')}</div>`+
+    `<div class="texto-tema${T.texto.join(" ").length>430?" longo":""}" style="border-color:${T.cor}">${T.texto.join(' ')}</div>`+
     '<div class="qs">'+mcq.map(({q,o},n)=>`<div class="qq"><p>${n+1}. ${q} <i>Marque com X.</i></p><div class="mx big">${o.map((x,j)=>`<div><span class="ck"></span>${letras[j]}) ${x}</div>`).join('')}</div></div>`).join('')+
     `<div class="qq"><p>3. ${T.aberta}</p><div class="linha-c"></div><div class="linha-c"></div></div></div>`);
   const ws=T.pal.slice(0,8);const it=ws.map((p,i)=>({p,k:i%p.sil.length}));
@@ -624,18 +625,18 @@ async function temaLivre(){
   const prompt=`Crie uma leitura para ALFABETIZAÇÃO DE JOVENS E ADULTOS (EJA) no Brasil sobre o tema: "${tema}".
 Regras: linguagem simples e respeitosa, nada infantil; frases curtas e claras; informações corretas e atuais do Brasil (na dúvida, não afirme); nada partidário.
 Responda SOMENTE com JSON válido, sem texto antes ou depois, neste formato:
-{"titulo":"título curto","emoji":"um emoji","texto":["frase 1","frase 2","frase 3","frase 4","frase 5"],
+{"titulo":"título curto","emoji":"um emoji","texto":["frase 1","frase 2","frase 3","frase 4","frase 5"] (EXATAMENTE 5 frases curtas, no máximo 15 palavras cada),
 "mc":[["pergunta de compreensão 1",["alternativa CORRETA","errada","errada"]],["pergunta de compreensão 2",["alternativa CORRETA","errada","errada"]]],
 "aberta":"pergunta pessoal ligada à vida do aluno",
 "palavras":["SA-Ú-DE 🩺","VA-CI-NA 💉"]}
-Em "palavras": exatamente 12 palavras concretas do tema, em MAIÚSCULAS, separadas em sílabas com hífen pela norma do português, cada uma seguida de um espaço e UM emoji que represente a palavra. As respostas das perguntas devem estar no texto.`;
+Em "palavras": exatamente 12 palavras concretas do tema, em MAIÚSCULAS, separadas em sílabas com hífen pela norma do português (exemplos certos: AR-ROZ, CAN-JI-CA, A-MEN-DO-IM, VI-O-LA, PÁS-SA-RO, CHU-VA, QUA-DRI-LHA), cada uma seguida de um espaço e UM emoji que represente a palavra. As respostas das perguntas devem estar no texto.`;
   try{
     const r=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({max_tokens:1800,messages:[{role:'user',content:prompt}]})});
     if(!r.ok){msg.textContent=r.status===402?'Seus créditos acabaram.':'Não deu certo agora. Tente de novo.';return}
     const d=await r.json();const txt=d?.content?.[0]?.text||'';const j=JSON.parse(txt.slice(txt.indexOf('{'),txt.lastIndexOf('}')+1));
-    const palavras=(j.palavras||[]).filter(x=>/^[A-ZÁÉÍÓÚÂÊÔÃÕÇ]+(-[A-ZÁÉÍÓÚÂÊÔÃÕÇ]+)* \S+$/u.test(String(x).trim())).map(x=>String(x).trim());
+    const palavras=(j.palavras||[]).filter(x=>/^[A-ZÁÉÍÓÚÂÊÔÃÕÇ]+(-[A-ZÁÉÍÓÚÂÊÔÃÕÇ]+)* \S+$/u.test(String(x).trim())).map(x=>{const[w,f]=String(x).trim().split(" ");return corrigeSilabas(w)+" "+f});
     if(!Array.isArray(j.texto)||j.texto.length<3||!Array.isArray(j.mc)||j.mc.length<2||palavras.length<8)throw new Error('formato');
-    const T={id:'livre',ic:j.emoji||'📖',t:String(j.titulo||tema),cor:'#2d6e6e',bg:'#e3f1f0',texto:j.texto.map(String),
+    const T={id:'livre',ic:j.emoji||'📖',t:String(j.titulo||tema),cor:'#2d6e6e',bg:'#e3f1f0',texto:j.texto.slice(0,6).map(String),
       mc:j.mc.slice(0,2).map(([q,o])=>[String(q),o.slice(0,3).map(String)]),aberta:String(j.aberta||'O que você sabe sobre esse tema?'),pal:pal(palavras.join('|'))};
     KITS['tema-livre']={t:T.t,paginas(){if(!this._c||this._k!==st.caixa){this._c=leituraTema(T);this._k=st.caixa}return this._c}};
     if(typeof kitsPagos!=='undefined')kitsPagos['tema-livre']=true; // a geração já usou o crédito
@@ -648,6 +649,27 @@ Em "palavras": exatamente 12 palavras concretas do tema, em MAIÚSCULAS, separad
 function autoditadoHTML(ps){return '<div class="g2">'+ps.map(p=>`<div class="item"><span class="fig">${p.fig}</span><span class="linha-ad"></span></div>`).join('')+'</div>'}
 GER.autoditado={...GER.autoditado,d:'figura e linha',gerar(){const ps=emb(BANCO).slice(0,st.qtd);
   return{folha:head('Autoditado','Olhe a figura e <b>escreva o nome</b> na linha.')+autoditadoHTML(ps),gab:ps.map(p=>`${p.fig} ${cx(p.pal)}`).join(' · ')}}};
+
+// corretor de separação silábica para as palavras que vêm da IA
+function corrigeSilabas(w){
+  const V=/[AEIOUÁÉÍÓÚÂÊÔÃÕ]/;
+  const ONSET=/^(|[BCDFGJKLMNPQRSTVXZÇ]|CH|LH|NH|QU|GU|[BCDFGKPTV][LR]|DR|TL)$/;
+  let s=w.split('-').filter(Boolean);
+  // 1) sílaba sem vogal junta com a anterior (A-R-ROZ → AR-ROZ)
+  for(let i=0;i<s.length;i++){if(!V.test(s[i])){if(i>0){s[i-1]+=s[i];s.splice(i,1);i--}else if(s[1]){s[1]=s[0]+s[1];s.splice(0,1);i--}}}
+  // 2) consoante sozinha entre vogais vai para a sílaba seguinte (AM-EN → A-MEN)
+  for(let i=1;i<s.length;i++){if(/^[AEIOUÁÉÍÓÚÂÊÔÃÕ]/.test(s[i])&&/[AEIOUÁÉÍÓÚÂÊÔÃÕ][BCDFGJKLMNPQRSTVXZ]$/.test(s[i-1])){
+    const c=s[i-1].slice(-1);s[i-1]=s[i-1].slice(0,-1);s[i]=c+s[i]}}
+  // 3) início de sílaba impossível: passa consoantes para a anterior (CA-NJI → CAN-JI)
+  for(let i=1;i<s.length;i++){let on=s[i].match(/^[^AEIOUÁÉÍÓÚÂÊÔÃÕ]*/)[0];
+    while(on&&!ONSET.test(on)){s[i-1]+=on[0];s[i]=s[i].slice(1);on=on.slice(1)}}
+  // 4) I/U + vogal depois de consoante (não após G/Q) é hiato na escola: VIO-LA → VI-O-LA
+  const out=[];for(const x of s){const m=x.match(/^([^AEIOUÁÉÍÓÚÂÊÔÃÕ]+)([IU])([AEO][^AEIOUÁÉÍÓÚÂÊÔÃÕ]*)$/);
+    if(m&&!/[GQ]$/.test(m[1]))out.push(m[1]+m[2],m[3]);else out.push(x)}
+  // 5) ditongos nasais ÃO/ÃE/ÕE não se separam: MÃ-OS → MÃOS
+  for(let i=1;i<out.length;i++){if(/[ÃÕ]$/.test(out[i-1])&&/^[OE]S?$/.test(out[i])){out[i-1]+=out[i];out.splice(i,1);i--}}
+  return out.join('-');
+}
 
 const ORDEM=['dados','placas','compras','problemas','familia','completar','vogais','quebra','orto','caca','ligar','silabas','autoditado'];
 st.g='dados';
