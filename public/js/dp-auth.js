@@ -242,10 +242,10 @@
   window.fetch = function (input, init) {
     const url = typeof input === 'string' ? input
       : input instanceof Request ? input.url : '';
-    const isAI = url.includes('/api/claude') || url.includes('/api/salvar-atividade') || url.includes('/api/pexels') || url.includes('/api/imagem');
+    const isAI = url.includes('/api/claude') || url.includes('/api/consumir') || url.includes('/api/salvar-atividade') || url.includes('/api/pexels') || url.includes('/api/imagem');
     if (!isAI) return _fetch(input, init);
     // Só a geração de conteúdo/imagem garante sessão; endpoints auxiliares só anexam o token se houver.
-    if (url.includes('/api/claude') || url.includes('/api/imagem')) return gerar(input, init, url);
+    if (url.includes('/api/claude') || url.includes('/api/imagem') || url.includes('/api/consumir')) return gerar(input, init, url);
     const token = getToken();
     return token ? _fetch(input, withAuth(init, token)) : _fetch(input, init);
   };
@@ -253,4 +253,22 @@
   // Para páginas que pedem e-mail fora da IA (ex.: baixar/imprimir atividade pronta).
   // Visitante anônimo é convertido na mesma conta. Resolve com o token ou null.
   window.dpEmailGate = function (opts) { return showEmailGate(Object.assign({ motivo: 'download' }, opts || {})); };
+
+  // Atividade pronta das centrais (folha ou kit): desconta 1 crédito antes de imprimir.
+  // Mesmo fluxo da IA: entra como visitante, pede e-mail ao zerar os 3 grátis. Resolve true/false.
+  window.dpCobrar = async function (item) {
+    try {
+      var res = await window.fetch('/api/consumir', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item: item || '' }),
+      });
+      if (res.ok) {
+        track('download_atividade', { item: item || '', pago: true, anonimo: isAnon() });
+        return true;
+      }
+      if (res.status === 402) window.dpHandleNoCredits(null);
+      return false;
+    } catch (e) {
+      return false;
+    }
+  };
 })();

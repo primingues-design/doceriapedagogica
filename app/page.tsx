@@ -9,7 +9,7 @@ const COMECAR = '/prova.html' // gerador principal — funciona sem cadastro (3 
 
 /* Centrais por matéria: 'pronta' = central com atividades prontas; 'nova' = em construção; 'ia' = gera com IA (matéria já escolhida) */
 const CENTRAIS = [
-  { i: '🔤', t: 'Alfabetização', c: '#E85A7D', bg: '#FFE3EC', s: 'Sílabas, leitura, ditado, consciência fonológica', status: 'nova', href: '/alfabetizacao.html' },
+  { i: '🔤', t: 'Alfabetização', c: '#E85A7D', bg: '#FFE3EC', s: 'Vogais, famílias silábicas, LH/NH/CH, caça-palavras + kits prontos', status: 'pronta', href: '/atividades-alfabetizacao.html' },
   { i: '➗', t: 'Matemática', c: '#2FB89A', bg: '#DDF7EE', s: 'Operações, frações, área, dinheiro, equações + apostila', status: 'pronta', href: '/matematica.html' },
   { i: '📖', t: 'Língua Portuguesa', c: '#C8742A', bg: '#FFF0DE', s: 'Interpretação de texto, gramática, produção', status: 'ia', href: '/prova.html?componente=portugues' },
   { i: '🔬', t: 'Ciências', c: '#3B82C4', bg: '#E3F0FB', s: 'Corpo humano, ecossistemas, sistema solar — com esquemas certos', status: 'ia', href: '/prova.html?componente=ciencias' },
@@ -339,6 +339,7 @@ export default function Home() {
             <a href="mailto:doceriapedagogica@gmail.com" className="text-[#C8742A] hover:underline">✉ doceriapedagogica@gmail.com</a>
           </div>
           <div className="flex items-center flex-wrap justify-center gap-4">
+            <a href="/atividades-alfabetizacao.html" className="hover:text-[#C8742A]">Alfabetização</a>
             <a href="/matematica.html" className="hover:text-[#C8742A]">Matemática</a>
             <a href="/eja.html" className="hover:text-[#C8742A]">EJA</a>
             <a href="/jogos-area.html" className="hover:text-[#C8742A]">Jogos</a>
