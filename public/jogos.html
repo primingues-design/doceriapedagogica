@@ -505,7 +505,52 @@
   @keyframes robJump{0%{transform:translateY(0) scale(1)}35%{transform:translateY(-26px) scale(1.12)}70%{transform:translateY(0) scale(1)}100%{transform:translateY(0) scale(1)}}
   #robo.erro{animation:robShake .5s ease;}
   @keyframes robShake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-5px) rotate(-5deg)}50%{transform:translateX(5px) rotate(5deg)}75%{transform:translateX(-4px) rotate(-4deg)}}
+
+  /* ===== TURMINHA, EQUIPES, MEUS QUIZZES, REVISAR, IMPRIMIR ===== */
+  #robo{display:none!important}
+  body.playing .quiz-container{max-width:1000px}
+  body.playing #playingScreen.show{display:grid;grid-template-columns:minmax(150px,250px) 1fr;gap:18px;align-items:start}
+  #playingScreen .quiz-hud,#playingScreen .placar{grid-column:1/-1}
+  .turma-stage{display:flex;flex-direction:column;align-items:center;gap:10px;position:sticky;top:12px}
+  .turma-stage .char{width:100%;max-width:240px;height:auto;filter:drop-shadow(0 8px 14px rgba(76,29,149,.18))}
+  .turma-fala{background:#fff;border:3px solid var(--cor,#7C3AED);border-radius:18px;padding:8px 14px;font-family:'Nunito',sans-serif;font-weight:900;color:#2b2140;text-align:center;font-size:clamp(14px,1.6vw,22px);line-height:1.2;box-shadow:0 4px 0 rgba(0,0,0,.06)}
+  html.apresentando .turma-stage .char{max-width:330px}
+  html.apresentando body.playing #playingScreen.show{grid-template-columns:minmax(200px,330px) 1fr}
+  @media(max-width:700px){body.playing #playingScreen.show{grid-template-columns:1fr}.turma-stage{flex-direction:row;position:static;justify-content:center}.turma-stage .char{max-width:92px}.turma-fala{font-size:14px}}
+  .placar{display:none;gap:8px;flex-wrap:wrap;justify-content:center;margin:2px 0 4px}
+  .placar.on{display:flex}
+  .placar .eq{display:flex;align-items:center;gap:8px;background:#fff;border:3px solid var(--cor);border-radius:14px;padding:5px 12px;font-family:'Nunito',sans-serif;font-weight:900;font-size:clamp(14px,1.6vw,22px);color:#2b2140;opacity:.55;transition:all .2s}
+  .placar .eq.vez{opacity:1;transform:scale(1.08);box-shadow:0 0 0 4px color-mix(in srgb,var(--cor) 25%,transparent)}
+  .placar .eq b{background:var(--cor);color:#fff;border-radius:9px;padding:1px 9px}
+  .som-btn{background:#fff;border:2px solid var(--border-mid);border-radius:10px;font-size:18px;width:40px;height:38px;cursor:pointer}
+  .modo-jogo{margin:4px 0 16px;text-align:center}
+  .modo-tit{font-family:'Nunito',sans-serif;font-weight:900;color:#4C1D95;margin-bottom:8px}
+  .modo-pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .modo-pills button,.start-extra button,.mq-item button{font-family:'Nunito',sans-serif;font-weight:900;border:2px solid #E9D5FF;background:#fff;border-radius:12px;padding:9px 14px;cursor:pointer;color:#4C1D95;font-size:14px}
+  .modo-pills button.on{background:#6D28D9;border-color:#6D28D9;color:#fff}
+  .start-extra{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+  .meus-quizzes{margin:0 0 16px;border:1.5px solid #E9D5FF;border-radius:14px;background:#FAF5FF;padding:10px 12px}
+  .meus-quizzes summary{cursor:pointer;font-weight:900;color:#4C1D95;font-size:14px}
+  .mq-lista{display:flex;flex-direction:column;gap:6px;margin-top:8px;max-height:260px;overflow:auto}
+  .mq-item{display:flex;align-items:center;gap:6px;background:#fff;border-radius:10px;padding:7px 9px;font-size:13px}
+  .mq-item span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
+  .mq-item small{color:var(--text-muted)}
+  .mq-item button{padding:5px 9px;font-size:12px}
+  .editor-ov{position:fixed;inset:0;background:rgba(20,10,40,.55);z-index:99999;display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:24px 12px}
+  .editor-ov.show{display:flex}
+  .editor-box{background:#fff;border-radius:18px;max-width:760px;width:100%;padding:18px;font-family:'Nunito',sans-serif}
+  .ed-q{border:1.5px solid #E9D5FF;border-radius:14px;padding:12px;margin-bottom:10px}
+  .ed-q textarea,.ed-q input{width:100%;border:1.5px solid #ddd;border-radius:8px;padding:7px 9px;font:inherit;font-size:14px;margin:3px 0}
+  .ed-op{display:flex;align-items:center;gap:6px}.ed-op input[type=radio]{width:auto}
+  .ed-bar{display:flex;gap:8px;justify-content:flex-end;position:sticky;bottom:0;background:#fff;padding-top:8px}
+  .ed-bar button{font-family:'Nunito',sans-serif;font-weight:900;border:0;border-radius:12px;padding:10px 16px;cursor:pointer}
+  #printQuiz{display:none}
+  @media print{body.imprimindo>*:not(#printQuiz){display:none!important}body.imprimindo #printQuiz{display:block!important}
+    #printQuiz{font-family:Arial,sans-serif;color:#111}#printQuiz .pq-h{display:flex;gap:16px;border-bottom:2px solid #111;padding-bottom:6px;margin-bottom:10px;font-weight:700}#printQuiz .pq-h div{flex:1;border-bottom:1px solid #777;height:26px}
+    #printQuiz h2{text-align:center;margin:4px 0 12px}#printQuiz .pq-q{break-inside:avoid;margin-bottom:12px}#printQuiz .pq-q p{font-weight:700;margin:0 0 5px}
+    #printQuiz .pq-o{margin:2px 0 2px 12px}#printQuiz .pq-gab{break-before:page}@page{size:A4;margin:14mm}}
 </style>
+<link rel="stylesheet" href="/css/dp-turma.css">
 </head>
 <body>
 
@@ -533,6 +578,8 @@
   <div class="form-panel">
     <div class="form-title">Quiz Interativo</div>
     <div class="form-sub">A IA cria as perguntas — seus alunos jogam e aprendem na hora.</div>
+
+    <details class="meus-quizzes" id="meusQuizzes" style="display:none"><summary>📚 Meus quizzes salvos (<span id="mqN">0</span>) — jogue de novo sem gastar crédito</summary><div class="mq-lista" id="mqLista"></div></details>
 
     <div class="field">
       <label class="field-label">Tema ou conteúdo <span class="field-required">*</span></label>
@@ -662,9 +709,12 @@
                 <div class="quiz-meta-label">dificuldade</div>
               </div>
             </div>
+            <div class="modo-jogo"><div class="modo-tit">Como a turma vai jogar?</div>
+              <div class="modo-pills" id="modoPills"><button class="on" data-n="0">🙋 Turma toda</button><button data-n="2">👥 2 equipes</button><button data-n="3">3 equipes</button><button data-n="4">4 equipes</button></div></div>
             <div class="quiz-start-actions">
               <button class="btn-start" onclick="startQuiz()">▶ Começar Quiz</button>
             </div>
+            <div class="start-extra"><button onclick="abrirEditor()">✏️ Revisar perguntas</button><button onclick="imprimirQuiz()">🖨️ Imprimir com gabarito</button></div>
           </div>
         </div>
       </div>
@@ -683,9 +733,12 @@
           </div>
           <div class="hud-score" id="hudScore">🏆 0</div>
           <div class="hud-timer" id="hudTimer">⏱ —</div>
+          <button class="som-btn" id="somBtn" onclick="alternarSom()" aria-label="Som">🔊</button>
           <button class="quiz-x" onclick="exitPlay()" aria-label="Sair do jogo">✕</button>
         </div>
 
+        <div class="placar" id="placar"></div>
+        <div class="turma-stage" id="turmaStage"><div class="turma-fala" id="turmaFala">Vamos lá!</div><div id="turmaChar"></div></div>
         <div class="question-card" id="questionCard">
           <div class="question-card-header">
             <div class="question-number" id="qNumber">1</div>
@@ -712,6 +765,7 @@
               <span id="resultsAcertos">0</span>/<span id="resultsTotal">0</span>
             </div>
             <div class="results-message" id="resultsMessage">Bom trabalho!</div>
+            <div id="podio"></div>
           </div>
           <div class="results-body">
             <div class="results-stats">
@@ -868,6 +922,7 @@ REGRAS:
       // "Sem tempo" = data-val "0" → 0 segundos (não cai no fallback 30). NaN vira 30.
       const tps = parseInt(tempo, 10);
       timerSeconds = isNaN(tps) ? 30 : tps;
+      salvarQuiz({nivel, num, dif, tempo});
       showStartScreen(quizData, nivel, num, dif, tempo);
 
     } catch (err) {
@@ -957,7 +1012,9 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
   // ── SONS (gerados no navegador, sem arquivos) ──
   let _actx=null;
   function actx(){ if(!_actx){ try{ _actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(_actx&&_actx.state==='suspended'){ _actx.resume(); } return _actx; }
-  function tone(freq,dur,type,vol,delay){ const c=_actx; if(!c)return; const t=c.currentTime+(delay||0); const o=c.createOscillator(),g=c.createGain(); o.type=type||'sine'; o.frequency.value=freq; g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol||0.18,t+0.012); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+dur+0.03); }
+  let SOM_ON=(function(){try{return localStorage.getItem('dp_quiz_som')!=='0'}catch(e){return true}})();
+  function alternarSom(){SOM_ON=!SOM_ON;try{localStorage.setItem('dp_quiz_som',SOM_ON?'1':'0')}catch(e){}document.getElementById('somBtn').textContent=SOM_ON?'🔊':'🔇';if(SOM_ON){actx();sndCorrect()}}
+  function tone(freq,dur,type,vol,delay){ const c=_actx; if(!c||!SOM_ON)return; vol=Math.min(0.9,(vol||0.18)*2.8); const t=c.currentTime+(delay||0); const o=c.createOscillator(),g=c.createGain(); o.type=type||'sine'; o.frequency.value=freq; g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol||0.18,t+0.012); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+dur+0.03); }
   function sndCorrect(){ actx(); tone(660,0.12,'sine',0.2,0); tone(880,0.14,'sine',0.2,0.1); tone(1245,0.22,'sine',0.2,0.21); }
   function sndWrong(){ actx(); tone(240,0.16,'sawtooth',0.16,0); tone(170,0.28,'sawtooth',0.16,0.13); }
   function sndWin(){ actx(); [523,659,784,1047].forEach(function(f,i){ tone(f,0.25,'sine',0.2,i*0.13); }); }
@@ -965,7 +1022,8 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
 
   // ── MASCOTE (robozinho que reage) ──
   const ROBO={normal:'/assets/mascote/robo-pensando.png',acerto:'/assets/mascote/robo-feliz.png',erro:'/assets/mascote/robo-triste.png'};
-  function robReact(type){ const r=document.getElementById('robo'); if(!r)return; r.classList.remove('acerto','erro'); void r.offsetWidth; if(type==='acerto'){ r.src=ROBO.acerto; r.classList.add('acerto'); } else if(type==='erro'){ r.src=ROBO.erro; r.classList.add('erro'); } else { r.src=ROBO.normal; return; } setTimeout(function(){ r.classList.remove('acerto','erro'); r.src=ROBO.normal; },1600); }
+  function robReact(type){ turmaReage(type); }
+  function robReactAntigo(type){ const r=document.getElementById('robo'); if(!r)return; r.classList.remove('acerto','erro'); void r.offsetWidth; if(type==='acerto'){ r.src=ROBO.acerto; r.classList.add('acerto'); } else if(type==='erro'){ r.src=ROBO.erro; r.classList.add('erro'); } else { r.src=ROBO.normal; return; } setTimeout(function(){ r.classList.remove('acerto','erro'); r.src=ROBO.normal; },1600); }
 
   // ── SAIR DO MODO JOGO (volta ao formulario) ──
   function exitPlay(){ stopTimer(); if(window.Apresentacao && Apresentacao.isActive()) Apresentacao.exit(); document.body.classList.remove('playing'); showScreen('start'); window.scrollTo(0,0); }
@@ -975,6 +1033,7 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
     currentQ = 0;
     score = 0;
     userAnswers = [];
+    iniciarEquipes();
     actx();
     document.body.classList.add('playing');
     setAppH();
@@ -995,6 +1054,7 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
     document.getElementById('hudScore').textContent = `🏆 ${score}`;
     document.getElementById('hudProgressFill').style.width = `${(currentQ / total) * 100}%`;
 
+    turmaVez();
     // Question
     document.getElementById('qNumber').textContent = currentQ + 1;
     document.getElementById('qText').textContent = q.enunciado;
@@ -1073,7 +1133,7 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
     const q = quizData.questoes[currentQ];
     const isCorrect = chosen === q.resposta_correta;
 
-    if (isCorrect) { score++; sndCorrect(); robReact('acerto'); } else { sndWrong(); robReact('erro'); }
+    if (isCorrect) { score++; pontoEquipe(); sndCorrect(); robReact('acerto'); } else { sndWrong(); robReact('erro'); }
     userAnswers.push({ questionIndex: currentQ, chosen, correct: isCorrect });
 
     disableOptions();
@@ -1186,6 +1246,7 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
         </div>`;
     });
 
+    resultadoEquipes();
     showScreen('results');
     document.getElementById('quizContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -1194,6 +1255,70 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
   function playAgain() {
     startQuiz();
   }
+
+  // ════ TURMINHA (personagens grandes que reagem) ════
+  const EQUIPES_BASE=[{nome:'Equipe Roxa',cor:'#7C3AED',ch:'lia'},{nome:'Equipe Verde',cor:'#0D9488',ch:'teo'},{nome:'Equipe Rosa',cor:'#DB2777',ch:'duda'},{nome:'Equipe Laranja',cor:'#EA580C',ch:'vo'}];
+  let modoN=0,equipes=[];
+  document.querySelectorAll('#modoPills button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#modoPills button').forEach(x=>x.classList.remove('on'));b.classList.add('on');modoN=+b.dataset.n}));
+  function iniciarEquipes(){equipes=modoN?EQUIPES_BASE.slice(0,modoN).map(e=>({...e,pts:0})):[];document.getElementById('placar').classList.toggle('on',!!modoN);document.getElementById('somBtn').textContent=SOM_ON?'🔊':'🔇'}
+  function eqDaVez(){return equipes.length?equipes[currentQ%equipes.length]:null}
+  function charEl(){return document.querySelector('#turmaChar .char')}
+  function falar(txt){const f=document.getElementById('turmaFala');if(f)f.textContent=txt;const c=charEl();if(c&&window.talk)talk(c,1300)}
+  function turmaVez(){
+    const e=eqDaVez();const ch=e?e.ch:['lia','teo','duda','vo'][currentQ%4];
+    const box=document.getElementById('turmaChar');if(box&&window.charSVG&&box.dataset.ch!==ch){box.innerHTML=charSVG(ch);box.dataset.ch=ch}
+    document.getElementById('turmaStage').style.setProperty('--cor',e?e.cor:'#7C3AED');
+    const c=charEl();if(c&&window.mood)mood(c,'think');
+    falar(e?('Vez da '+e.nome+'!'):['Você sabe essa?','Pense com calma!','Vamos lá!','Essa é boa!'][currentQ%4]);
+    desenharPlacar();
+  }
+  function turmaReage(t){const c=charEl();if(!c)return;
+    if(t==='acerto'){if(window.celebrate)celebrate(c);falar(['Acertou! 🎉','Muito bem! ⭐','Isso aí! 👏'][Math.floor(Math.random()*3)])}
+    else if(t==='erro'){if(window.mood)mood(c,'sad');if(window.shake)shake(c);falar('Quase! Veja a resposta certa.')}}
+  function pontoEquipe(){const e=eqDaVez();if(e)e.pts++;desenharPlacar()}
+  function desenharPlacar(){const p=document.getElementById('placar');if(!equipes.length){p.innerHTML='';return}const v=eqDaVez();
+    p.innerHTML=equipes.map(e=>`<div class="eq ${e===v?'vez':''}" style="--cor:${e.cor}">${e.nome} <b>${e.pts}</b></div>`).join('')}
+  function resultadoEquipes(){const pod=document.getElementById('podio');pod.innerHTML='';if(!equipes.length)return;
+    const ord=[...equipes].sort((a,b)=>b.pts-a.pts);const emp=ord.length>1&&ord[0].pts===ord[1].pts;
+    document.getElementById('resultsTrophy').textContent='🏆';
+    document.getElementById('resultsMessage').textContent=emp?'Empate! Todo mundo jogou muito bem!':ord[0].nome+' venceu!';
+    pod.innerHTML='<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px">'+ord.map((e,i)=>`<div style="background:#fff;border:3px solid ${e.cor};border-radius:16px;padding:8px 14px;text-align:center;min-width:110px"><div style="font-size:26px">${['🥇','🥈','🥉','🏅'][i]}</div><div style="font-weight:900;color:#2b2140">${e.nome}</div><div style="font-weight:900;font-size:24px;color:${e.cor}">${e.pts} pts</div></div>`).join('')+'</div>';
+    const box=document.getElementById('turmaChar');if(!emp&&box&&window.charSVG){box.innerHTML=charSVG(ord[0].ch);box.dataset.ch=ord[0].ch;const c=charEl();if(c&&window.celebrate)celebrate(c)}}
+
+  // ════ MEUS QUIZZES (salvos neste aparelho: jogar de novo sem gastar crédito) ════
+  const MQ_KEY='dp_meus_quizzes';
+  function lerMQ(){try{return JSON.parse(localStorage.getItem(MQ_KEY)||'[]')}catch(e){return []}}
+  function gravarMQ(l){try{localStorage.setItem(MQ_KEY,JSON.stringify(l.slice(0,40)))}catch(e){}}
+  let quizIdAtual=null;
+  function salvarQuiz(meta){const l=lerMQ();quizIdAtual='q'+Date.now();l.unshift({id:quizIdAtual,titulo:quizData.titulo||document.getElementById('tema').value,data:new Date().toLocaleDateString('pt-BR'),meta,quiz:quizData});gravarMQ(l);listarMQ()}
+  function atualizarSalvo(){const l=lerMQ();const it=l.find(x=>x.id===quizIdAtual);if(it){it.quiz=quizData;it.titulo=quizData.titulo||it.titulo;gravarMQ(l);listarMQ()}}
+  function listarMQ(){const l=lerMQ();const box=document.getElementById('meusQuizzes');box.style.display=l.length?'block':'none';document.getElementById('mqN').textContent=l.length;
+    document.getElementById('mqLista').innerHTML=l.map(x=>`<div class="mq-item"><span title="${escH(x.titulo)}">${escH(x.titulo)}</span><small>${x.data}</small><button onclick="abrirMQ('${x.id}')">▶ Abrir</button><button onclick="apagarMQ('${x.id}')" title="Apagar">🗑</button></div>`).join('')}
+  function abrirMQ(id){const x=lerMQ().find(q=>q.id===id);if(!x)return;quizData=x.quiz;quizIdAtual=x.id;const m=x.meta||{};const t=parseInt(m.tempo,10);timerSeconds=isNaN(t)?30:t;
+    document.getElementById('quizEmpty').style.display='none';showStartScreen(quizData,m.nivel||'',m.num,m.dif||'Médio',m.tempo||'30')}
+  function apagarMQ(id){if(!confirm('Apagar este quiz salvo?'))return;gravarMQ(lerMQ().filter(q=>q.id!==id));listarMQ()}
+  function escH(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+  listarMQ();
+
+  // ════ REVISAR PERGUNTAS ════
+  function abrirEditor(){if(!quizData)return;const L=['a','b','c','d'];
+    document.getElementById('edLista').innerHTML=quizData.questoes.map((q,i)=>`<div class="ed-q"><b>Pergunta ${i+1}</b><textarea rows="2" data-i="${i}" data-k="enunciado">${escH(q.enunciado)}</textarea>`+
+      L.map(l=>`<div class="ed-op"><input type="radio" name="ok${i}" value="${l}" ${q.resposta_correta===l?'checked':''}><b>${l.toUpperCase()})</b><input data-i="${i}" data-op="${l}" value="${escH((q.opcoes||{})[l]||'')}"></div>`).join('')+
+      `<input data-i="${i}" data-k="explicacao" placeholder="Explicação (aparece depois da resposta)" value="${escH(q.explicacao||'')}"></div>`).join('');
+    document.getElementById('editorOv').classList.add('show')}
+  function fecharEditor(){document.getElementById('editorOv').classList.remove('show')}
+  function salvarEditor(){const box=document.getElementById('edLista');
+    box.querySelectorAll('[data-k]').forEach(el=>{quizData.questoes[+el.dataset.i][el.dataset.k]=el.value.trim()});
+    box.querySelectorAll('[data-op]').forEach(el=>{const q=quizData.questoes[+el.dataset.i];q.opcoes=q.opcoes||{};q.opcoes[el.dataset.op]=el.value.trim()});
+    quizData.questoes.forEach((q,i)=>{const r=box.querySelector(`input[name="ok${i}"]:checked`);if(r)q.resposta_correta=r.value});
+    atualizarSalvo();fecharEditor()}
+
+  // ════ IMPRIMIR COM GABARITO ════
+  function imprimirQuiz(){if(!quizData)return;const L=['a','b','c','d'];const qs=quizData.questoes||[];
+    document.getElementById('printQuiz').innerHTML=`<div class="pq-h">Nome:<div></div>Data:<div style="flex:.4"></div></div><h2>${escH(quizData.titulo||'Quiz')}</h2>`+
+      qs.map((q,i)=>`<div class="pq-q"><p>${i+1}. ${escH(q.enunciado)}</p>${L.filter(l=>(q.opcoes||{})[l]).map(l=>`<div class="pq-o">( &nbsp; ) ${l.toUpperCase()}) ${escH(q.opcoes[l])}</div>`).join('')}</div>`).join('')+
+      `<div class="pq-gab"><h2>Gabarito — ${escH(quizData.titulo||'Quiz')}</h2>${qs.map((q,i)=>`<p><b>${i+1}. ${(q.resposta_correta||'').toUpperCase()})</b> ${escH((q.opcoes||{})[q.resposta_correta]||'')}${q.explicacao?' — <i>'+escH(q.explicacao)+'</i>':''}</p>`).join('')}</div>`;
+    document.body.classList.add('imprimindo');setTimeout(()=>{window.print();setTimeout(()=>document.body.classList.remove('imprimindo'),400)},60)}
 
   // ── NEW QUIZ (go back to start screen) ──
   function newQuiz() {
@@ -1208,6 +1333,9 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
 
 </script>
 
+<div class="editor-ov" id="editorOv"><div class="editor-box"><h3 style="margin:0 0 4px;color:#4C1D95">✏️ Revisar perguntas</h3><p style="margin:0 0 12px;color:#666;font-size:14px">Corrija o que quiser. A alternativa marcada é a resposta certa.</p><div id="edLista"></div><div class="ed-bar"><button style="background:#eee" onclick="fecharEditor()">Cancelar</button><button style="background:#6D28D9;color:#fff" onclick="salvarEditor()">Salvar alterações</button></div></div></div>
+<div id="printQuiz"></div>
+<script src="/js/dp-turma.js"></script>
 <script src="/js/dp-auth.js"></script>
 <script src="/js/apresentacao.js"></script>
 </body>
