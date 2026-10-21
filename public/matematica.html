@@ -483,7 +483,7 @@
     <div class="previa-head">
       <div class="previa-title" id="previa-title">Prévia da atividade</div>
       <div class="previa-actions">
-        <a class="previa-open" id="previa-open" href="#" target="_blank" rel="noopener">Abrir em nova aba ↗</a>
+
         <button class="previa-close" onclick="fecharPrevia()" aria-label="Fechar">×</button>
       </div>
     </div>
@@ -962,7 +962,7 @@
     const fr=document.getElementById('previa-pags');
     fr.innerHTML=(a.paginas||[null]).map(p=>`<div class="wm"><img style="display:block;width:100%" src="/atividades/previa/${slug}${p?'-p'+p:''}.jpg" alt="Prévia: ${esc(a.titulo||'')}${p?' — página '+p:''}"></div>`).join('');
     fr.scrollTop=0;
-    document.getElementById('previa-open').href=pdf;
+
     document.getElementById('previa-title').textContent=a.titulo||'Prévia da atividade';
     document.getElementById('previa-overlay').classList.add('show');
     document.body.style.overflow='hidden';
