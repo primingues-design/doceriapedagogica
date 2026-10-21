@@ -12,6 +12,7 @@ const CENTRAIS = [
   { i: '🔤', t: 'Alfabetização', c: '#E85A7D', bg: '#FFE3EC', s: 'Vogais, famílias silábicas, LH/NH/CH, caça-palavras + kits prontos', status: 'pronta', href: '/atividades-alfabetizacao.html' },
   { i: '➗', t: 'Matemática', c: '#2FB89A', bg: '#DDF7EE', s: 'Operações, frações, área, dinheiro, equações + apostila', status: 'pronta', href: '/matematica.html' },
   { i: '💬', t: 'Inglês', c: '#1F4E9A', bg: '#E3ECFA', s: 'Vocabulário por tema, flashcards e pronúncia', status: 'pronta', href: '/atividades-ingles.html' },
+  { i: '💃', t: 'Espanhol', c: '#C8102E', bg: '#FDE3E6', s: 'Vocabulário por tema, tarjetas e pronúncia', status: 'pronta', href: '/atividades-espanhol.html' },
   { i: '📖', t: 'Língua Portuguesa', c: '#C8742A', bg: '#FFF0DE', s: 'Interpretação de texto, gramática, produção', status: 'ia', href: '/prova.html?componente=portugues' },
   { i: '🔬', t: 'Ciências', c: '#3B82C4', bg: '#E3F0FB', s: 'Corpo humano, ecossistemas, sistema solar — com esquemas certos', status: 'ia', href: '/prova.html?componente=ciencias' },
   { i: '🏛️', t: 'História', c: '#8A5A3B', bg: '#F4E8DD', s: 'Linhas do tempo, Brasil colônia, fontes históricas', status: 'ia', href: '/prova.html?componente=historia' },
@@ -212,7 +213,7 @@ export default function Home() {
             Também: <a href="/eleicoes.html" className="text-[#1e5fae] hover:underline">🗳️ Eleições e Cidadania (não partidário) →</a>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {CENTRAIS.map((c) => (
               <a key={c.t} href={c.href} className="card-central bg-white rounded-3xl p-6 border border-black/5 flex flex-col" style={{ boxShadow: `0 8px 0 ${c.bg}` }}>
                 <div className="w-14 h-14 rounded-2xl grid place-items-center text-3xl mb-4" style={{ background: c.bg }}>{c.i}</div>
@@ -349,6 +350,7 @@ export default function Home() {
             <a href="/atividades-alfabetizacao.html" className="hover:text-[#C8742A]">Alfabetização</a>
             <a href="/matematica.html" className="hover:text-[#C8742A]">Matemática</a>
             <a href="/atividades-ingles.html" className="hover:text-[#C8742A]">Inglês</a>
+            <a href="/atividades-espanhol.html" className="hover:text-[#C8742A]">Espanhol</a>
             <a href="/eja.html" className="hover:text-[#C8742A]">EJA</a>
             <a href="/alfabetizacao-eja.html" className="hover:text-[#C8742A]">Alfabetização EJA</a>
             <a href="/jogos-area.html" className="hover:text-[#C8742A]">Jogos</a>
