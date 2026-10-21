@@ -254,6 +254,29 @@
   // Visitante anônimo é convertido na mesma conta. Resolve com o token ou null.
   window.dpEmailGate = function (opts) { return showEmailGate(Object.assign({ motivo: 'download' }, opts || {})); };
 
+  // Vindo do painel ("Gerar parecido" ou a busca): ?tema= já preenche o tema da ferramenta.
+  function preencherTema() {
+    try {
+      var t = new URLSearchParams(location.search).get('tema');
+      if (!t) return;
+      var el = ['tema', 'a_tema', 'inTema'].map(function (i) { return document.getElementById(i); }).filter(Boolean)[0];
+      if (el && !el.value) { el.value = t; el.dispatchEvent(new Event('input', { bubbles: true })); }
+    } catch (e) {}
+  }
+  // Topo das centrais: quem tem conta vê "Minha conta" no lugar de "Entrar" / "Testar grátis".
+  function ajustarTopo() {
+    var s = stored();
+    if (!(s && s.user && !s.user.is_anonymous)) return;
+    document.querySelectorAll('a[href="/conta.html"]').forEach(function (a) {
+      if (a.textContent.trim() === 'Entrar') a.textContent = 'Minha conta';
+    });
+    var cta = document.querySelector('.cta-top');
+    if (cta && /Testar/.test(cta.textContent)) { cta.textContent = 'Minha conta'; cta.setAttribute('href', '/conta.html'); }
+  }
+  function aoCarregar() { preencherTema(); ajustarTopo(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', aoCarregar);
+  else aoCarregar();
+
   // Atividade pronta das centrais (folha ou kit): desconta 1 crédito antes de imprimir.
   // Mesmo fluxo da IA: entra como visitante, pede e-mail ao zerar os 3 grátis. Resolve true/false.
   window.dpCobrar = async function (item) {

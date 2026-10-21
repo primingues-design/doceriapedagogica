@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Acesso — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="/js/dp-analytics.js"></script>
 <style>
   :root {
@@ -806,6 +807,76 @@
   .success-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900; margin-bottom: 8px; }
   .success-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
 
+
+  /* ── PAINEL NOVO (por objetivo) ── */
+  .nd{font-family:'Nunito',system-ui,sans-serif;background:#FFFAF5;color:#3D1F0D}
+  .nd a{cursor:pointer}
+  .nd-wrap{padding:26px clamp(16px,3vw,40px) 60px;max-width:1180px}
+  .nd-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+  .nd-h1{font-family:'Baloo 2',sans-serif;font-size:clamp(1.6rem,3vw,2.3rem);margin:0;line-height:1.1}
+  .nd-sub{margin:2px 0 0;color:#8A7060;font-weight:700}
+  .nd-chip{margin-left:auto;background:#fff;border:1px solid rgba(200,116,42,.18);border-radius:99px;padding:8px 14px;font:inherit;font-weight:900;box-shadow:0 3px 0 #F1E2D3;cursor:pointer;color:#3D1F0D}
+  .nd-busca{position:relative;background:#3D1F0D;border-radius:28px;padding:22px;color:#fff;overflow:hidden;margin-bottom:26px}
+  .nd-robo{position:absolute;right:16px;bottom:-14px;width:120px;filter:drop-shadow(0 10px 18px rgba(0,0,0,.4))}
+  .nd-busca h2{font-family:'Baloo 2',sans-serif;font-size:clamp(1.4rem,2.6vw,2rem);margin:0 0 12px;max-width:calc(100% - 130px);color:#fff}
+  .nd-campo{display:flex;gap:8px;max-width:calc(100% - 140px);background:#fff;border-radius:18px;padding:6px;margin:0}
+  .nd-campo input{flex:1;border:0;outline:0;font:inherit;font-weight:700;font-size:17px;padding:10px 12px;color:#3D1F0D;min-width:0;background:transparent}
+  .nd-campo button{border:0;background:#FFC93C;color:#3D1F0D;font:inherit;font-weight:900;border-radius:14px;padding:10px 16px;box-shadow:0 4px 0 #C99A16;white-space:nowrap;cursor:pointer}
+  .nd-sug{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;max-width:calc(100% - 140px)}
+  .nd-sug button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:99px;padding:6px 12px;font:inherit;font-weight:700;font-size:14px;color:#fff;cursor:pointer}
+  .nd-res{margin-top:12px;display:none;gap:8px;flex-direction:column;max-width:calc(100% - 140px)}
+  .nd-res a{background:#fff;color:#3D1F0D;border-radius:14px;padding:10px 14px;font-weight:800;display:flex;gap:10px;align-items:center;text-decoration:none}
+  .nd-res a small{color:#8A7060;font-weight:700;margin-left:auto;white-space:nowrap}
+  .nd-sec{font-family:'Baloo 2',sans-serif;font-size:1.45rem;margin:0 0 12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .nd-sec small{font-family:'Nunito',sans-serif;font-size:14px;color:#8A7060;font-weight:700}
+  .nd-sec small a{color:#C8742A;text-decoration:underline}
+  .nd-int{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:12px}
+  .nd-ic{background:#fff;border:2px solid transparent;border-radius:22px;padding:16px;text-align:left;display:flex;gap:14px;align-items:center;box-shadow:0 6px 0 var(--sh);transition:transform .12s;font:inherit;color:#3D1F0D;cursor:pointer}
+  .nd-ic:hover{transform:translateY(-3px)}
+  .nd-ic.on{border-color:var(--c)}
+  .nd-ic .e{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-size:30px;background:var(--sh);flex:none}
+  .nd-ic b{font-family:'Baloo 2',sans-serif;font-size:1.25rem;line-height:1.1;display:block}
+  .nd-ic span{font-size:13px;color:#8A7060;font-weight:700}
+  .nd-opcoes{display:none;background:#fff;border-radius:22px;padding:16px;margin-bottom:26px;border:2px solid var(--c);box-shadow:0 6px 0 var(--sh)}
+  .nd-opcoes.on{display:block}
+  .nd-opcoes h3{margin:0 0 10px;font-family:'Baloo 2',sans-serif;font-size:1.2rem}
+  .nd-op-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+  .nd-op{border:1.5px solid #F0E3D6;border-radius:16px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;text-decoration:none;color:#3D1F0D}
+  .nd-op:hover{background:#FFFAF2;border-color:var(--c)}
+  .nd-op .oe{font-size:24px}
+  .nd-op b{display:block}
+  .nd-op span{font-size:13px;color:#8A7060;font-weight:700}
+  .nd-op .cr{display:inline-block;margin-top:6px;font-size:11px;font-weight:900;padding:2px 8px;border-radius:99px;background:#FFF3E2;color:#9A5418}
+  .nd-op .cr.free{background:#DDF7EE;color:#1E8A72}
+  .nd-dest{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0 26px}
+  .nd-dc{border-radius:22px;padding:18px;color:#fff;display:flex;gap:14px;align-items:center;text-decoration:none}
+  .nd-dc .e{font-size:36px}
+  .nd-dc small{font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;opacity:.85}
+  .nd-dc b{font-family:'Baloo 2',sans-serif;font-size:1.25rem;display:block;line-height:1.15}
+  .nd-dc span{font-size:13px;opacity:.88;font-weight:700}
+  .nd-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:26px}
+  .nd-ct{background:#fff;border-radius:20px;padding:14px;border:1px solid rgba(0,0,0,.05);box-shadow:0 5px 0 var(--sh);text-decoration:none;color:#3D1F0D}
+  .nd-ct .e{font-size:28px}
+  .nd-ct b{font-family:'Baloo 2',sans-serif;font-size:1.1rem;display:block;line-height:1.1;margin-top:6px}
+  .nd-ct span{font-size:12px;color:#8A7060;font-weight:700}
+  .nd-vazio{padding:22px;text-align:center;color:#8A7060;background:#fff;border-radius:16px;border:1px dashed #EAD6C3;font-weight:700}
+  .nd .history-item{background:#fff;border-radius:16px}
+  .btn-parecido{border:1.5px solid #F0E3D6;background:#fff;border-radius:10px;padding:6px 10px;font:inherit;font-weight:800;font-size:12px;color:#3D1F0D;cursor:pointer;white-space:nowrap;text-decoration:none;margin-left:6px}
+  .nd-mini{display:flex;gap:18px;flex-wrap:wrap;color:#8A7060;font-weight:700;font-size:14px;margin-top:22px}
+  .nd-mini b{color:#3D1F0D}
+  .nd-mini a{color:#C8742A;text-decoration:underline}
+  .dash-nav-sec{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.55;margin:12px 12px 4px}
+  /* menu no celular (a barra lateral some abaixo de 900px) */
+  .nd-mnav{display:none;gap:8px;overflow-x:auto;padding:10px 14px;background:#fff;border-bottom:1px solid rgba(200,116,42,.15);position:sticky;top:0;z-index:20;scrollbar-width:none}
+  .nd-mnav a{flex:none;border:1.5px solid #F0E3D6;border-radius:99px;padding:7px 12px;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;color:#3D1F0D;text-decoration:none;white-space:nowrap;background:#fff}
+  .nd-mnav a.on{background:#FFF0DE;border-color:#C8742A}
+  @media(max-width:1100px){.nd-row{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:1000px){.nd-int{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:900px){.nd-mnav{display:flex}}
+  @media(max-width:800px){.nd-dest{grid-template-columns:1fr}}
+  @media(max-width:700px){.nd-robo{display:none}.nd-busca h2,.nd-campo,.nd-sug,.nd-res{max-width:none}}
+  @media(max-width:560px){.nd-row{grid-template-columns:repeat(2,1fr)}.nd-int{grid-template-columns:1fr}}
+
   /* RESPONSIVE */
   @media (max-width: 900px) {
     .auth-layout { grid-template-columns: 1fr; }
@@ -988,61 +1059,18 @@
 <div class="screen" id="screen-dashboard">
   <div class="dash-layout">
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR (o menu é montado por montarMenus(), igual nas 3 telas) -->
     <div class="dash-sidebar">
-      <a class="dash-logo" href="/">
-        <div class="dash-logo-mark">✦</div>
+      <a class="dash-logo" href="/" title="Página inicial — todas as centrais">
+        <img src="/img/robo-logo.png" alt="" style="width:40px;height:40px;object-fit:contain">
         <span class="dash-logo-name">Doceria</span>
       </a>
-
-      <nav class="dash-nav">
-        <button class="dash-nav-item active" onclick="switchTab('home')">
-          <span class="dash-nav-icon">🏠</span> Início
-        </button>
-        <button class="dash-nav-item" onclick="window.open('apostila.html')">
-          <span class="dash-nav-icon">📖</span> Texto &amp; Compreensão
-        </button>
-        <!-- 🔁 SLOT SAZONAL reutilizável. Hoje: Eleições 2026 -->
-        <button class="dash-nav-item" onclick="window.open('eleicoes.html')">
-          <span class="dash-nav-icon">🗳️</span> Eleições 2026
-        </button>
-        <button class="dash-nav-item" onclick="window.open('eja.html')">
-          <span class="dash-nav-icon">📚</span> Atividades EJA
-        </button>
-        <button class="dash-nav-item" onclick="window.open('matematica.html')">
-          <span class="dash-nav-icon">➗</span> Central de Matemática
-        </button>
-        <button class="dash-nav-item" onclick="window.open('atividades-alfabetizacao.html')">
-          <span class="dash-nav-icon">🔤</span> Central de Alfabetização
-        </button>
-        <button class="dash-nav-item" onclick="window.open('alfabetizacao-eja.html')">
-          <span class="dash-nav-icon">🎒</span> Alfabetização EJA
-        </button>
-        <button class="dash-nav-item" onclick="location.href='/#centrais'">
-          <span class="dash-nav-icon">🧁</span> Todas as centrais
-        </button>
-        <button class="dash-nav-item" onclick="window.open('lousa.html')">
-          <span class="dash-nav-icon">🖊️</span> Aula na Lousa
-        </button>
-        <button class="dash-nav-item" onclick="window.open('auladadia.html')">
-          <span class="dash-nav-icon">📰</span> Aula do Dia
-        </button>
-        <button class="dash-nav-item" onclick="window.open('maonaMassa.html')">
-          <span class="dash-nav-icon">🔨</span> Mão na Massa
-        </button>
-        <button class="dash-nav-item" onclick="showScreen('screen-history')">
-          <span class="dash-nav-icon">📄</span> PDFs Baixados
-        </button>
-        <div class="dash-nav-sep"></div>
-        <button class="dash-nav-item" onclick="showScreen('screen-plans')">
-          <span class="dash-nav-icon">⭐</span> Planos e créditos
-        </button>
-      </nav>
+      <nav class="dash-nav" data-ativo="inicio"></nav>
 
       <div class="dash-plan-badge">
         <div class="dash-plan-name" id="sb-plan-name">Plano Free</div>
         <div class="dash-plan-credits" id="sb-credits">5</div>
-        <div class="dash-plan-sub">créditos disponíveis</div>
+        <div class="dash-plan-sub">créditos disponíveis · +1 grátis por semana</div>
         <div class="dash-plan-bar">
           <div class="dash-plan-bar-fill" id="sb-bar" style="width:100%"></div>
         </div>
@@ -1059,216 +1087,51 @@
       <div class="sidebar-contact">✉ <a href="mailto:doceriapedagogica@gmail.com">doceriapedagogica@gmail.com</a></div>
     </div>
 
-    <!-- CONTENT -->
-    <div class="dash-content">
-      <div class="dash-topbar">
-        <div>
-          <div class="dash-page-title" id="dash-greeting">Bom dia, Professora! ☀️</div>
-          <div class="dash-page-sub">Pronta para criar seu próximo material?</div>
-        </div>
-        <div class="dash-topbar-right">
-          <div class="credits-chip" onclick="showScreen('screen-plans')">
-            ✦ <span id="top-credits">5</span> créditos
-          </div>
-        </div>
-      </div>
-
-      <div class="dash-body">
-        <!-- STATS -->
-        <div class="stats-row">
-          <div class="stat-card">
-            <div class="stat-label">Materiais gerados</div>
-            <div class="stat-value" id="stat-total">0</div>
-            <div class="stat-sub">desde o início</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Créditos disponíveis</div>
-            <div class="stat-value" id="stat-credits">5</div>
-            <div class="stat-sub"><a style="color:var(--gold);cursor:pointer;font-size:12px;" onclick="showScreen('screen-plans')">+ Comprar créditos</a></div>
-          </div>
-          <div class="stat-card" onclick="showScreen('screen-history')" style="cursor:pointer;" title="Ver histórico">
-            <div class="stat-label">PDFs baixados</div>
-            <div class="stat-value" id="stat-pdfs">0</div>
-            <div class="stat-sub"><a style="color:var(--gold);cursor:pointer;font-size:12px;">Ver histórico →</a></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Seu plano</div>
-            <div class="stat-value" style="font-size:20px;" id="stat-plan">Free</div>
-            <div class="stat-sub"><a style="color:var(--gold);cursor:pointer;font-size:12px;" onclick="showScreen('screen-plans')">Ver planos</a></div>
-          </div>
+    <!-- CONTEÚDO: painel organizado pelo que a professora quer fazer -->
+    <div class="dash-content nd">
+      <div class="nd-wrap">
+        <div class="nd-top">
+          <div><h1 class="nd-h1" id="dash-greeting">Bom dia, Professora! ☀️</h1><p class="nd-sub">O que vamos preparar para a sua turma hoje?</p></div>
+          <button class="nd-chip" onclick="showScreen('screen-plans')">✦ <span id="top-credits">5</span> créditos</button>
         </div>
 
-        <!-- AULA DO DIA — DESTAQUE DIÁRIO -->
-        <div onclick="window.open('auladadia.html')"
-          style="display:flex;align-items:center;gap:18px;background:linear-gradient(135deg,#7a3d10,#c8742a);border-radius:14px;padding:20px 24px;margin-bottom:20px;cursor:pointer;transition:opacity 0.2s;"
-          onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">
-          <div style="font-size:38px;flex-shrink:0;">🗓️</div>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:4px;">
-              Aula do Dia &bull; <span id="aula-dia-data">hoje</span>
-            </div>
-            <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:900;color:#fff;margin-bottom:3px;line-height:1.3;">
-              A IA já sugeriu o tema de hoje. <em style="color:#ffd060;">Veja antes de entrar em sala.</em>
-            </div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.6);">
-              Tema baseado em datas comemorativas e notícias — atualizado todo dia
-            </div>
-          </div>
-          <div style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.3);border-radius:20px;padding:8px 16px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;flex-shrink:0;">
-            Ver tema →
-          </div>
+        <!-- BUSCA -->
+        <div class="nd-busca">
+          <img class="nd-robo" src="/img/robo-doceria.webp" alt="">
+          <h2>O que você quer fazer hoje?</h2>
+          <form class="nd-campo" onsubmit="event.preventDefault();ndBuscar(true)"><input id="nd-q" placeholder="Ex.: prova de frações, plano de aula sobre a água, jogo de sílabas…" oninput="ndBuscar()" autocomplete="off"><button>✨ Ir</button></form>
+          <div class="nd-sug" id="nd-sug"></div>
+          <div class="nd-res" id="nd-res"></div>
         </div>
 
-        <!-- 🔁 ESPECIAL SAZONAL — slot reutilizável. Hoje: Eleições 2026 -->
-        <div onclick="window.open('eleicoes.html')"
-          style="display:flex;align-items:center;gap:18px;background:linear-gradient(135deg,#0b2a5b,#1e5fae);border-radius:14px;padding:20px 24px;margin-bottom:20px;cursor:pointer;transition:opacity 0.2s;position:relative;overflow:hidden;"
-          onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">
-          <div style="font-size:38px;flex-shrink:0;">🗳️</div>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#ffcc29;margin-bottom:4px;">
-              Especial &bull; Eleições 2026
-            </div>
-            <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:900;color:#fff;margin-bottom:3px;line-height:1.3;">
-              Atividades sobre Eleições e Cidadania
-            </div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.75);">
-              Democracia, voto, esquerda e direita — não-partidário &bull; esquemas, caça-palavras e perguntas &bull; grátis
-            </div>
-          </div>
-          <div style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.3);border-radius:20px;padding:8px 16px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;flex-shrink:0;">
-            Ver atividades →
-          </div>
+        <!-- INTENÇÕES -->
+        <h2 class="nd-sec">Escolha por objetivo <small>clique para ver as opções</small></h2>
+        <div class="nd-int" id="nd-int"></div>
+        <div class="nd-opcoes" id="nd-opcoes"></div>
+
+        <!-- DESTAQUES -->
+        <div class="nd-dest">
+          <a class="nd-dc" href="auladadia.html" style="background:linear-gradient(135deg,#7a3d10,#c8742a)"><div class="e">🗓️</div><div><small>Aula do dia · <span id="aula-dia-data">hoje</span></small><b>A IA já sugeriu o tema de hoje</b><span>Datas comemorativas e notícias — veja antes de entrar em sala</span></div></a>
+          <!-- 🔁 SLOT SAZONAL -->
+          <a class="nd-dc" href="consciencia-negra.html" style="background:linear-gradient(135deg,#8E3219,#E07A45)"><div class="e">✊🏿</div><div><small>Especial do mês · 20 de novembro</small><b>Consciência Negra</b><span>Texto de apoio, 9 atividades, mapa do IBGE e avaliação</span></div></a>
         </div>
 
-        <!-- ÁREA DE EJA -->
-        <div onclick="window.open('eja.html')"
-          style="display:flex;align-items:center;gap:18px;background:linear-gradient(135deg,#8a5a1e,#c8963e);border-radius:14px;padding:20px 24px;margin-bottom:20px;cursor:pointer;transition:opacity 0.2s;position:relative;overflow:hidden;"
-          onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">
-          <div style="font-size:38px;flex-shrink:0;">📚</div>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#fff0d0;margin-bottom:4px;">
-              Educação de Jovens e Adultos
-            </div>
-            <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:900;color:#fff;margin-bottom:3px;line-height:1.3;">
-              Atividades para EJA prontas para imprimir
-            </div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.78);">
-              Leitura, alfabetização, produção de texto e mais &bull; simples, mas nunca infantilizadas &bull; grátis
-            </div>
-          </div>
-          <div style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.3);border-radius:20px;padding:8px 16px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;flex-shrink:0;">
-            Ver atividades →
-          </div>
+        <!-- CENTRAIS -->
+        <h2 class="nd-sec">Centrais prontas <small>gere e imprima sem esperar a IA</small></h2>
+        <div class="nd-row">
+          <a class="nd-ct" href="atividades-alfabetizacao.html" style="--sh:#FFE3EC"><div class="e">🔤</div><b>Alfabetização</b><span>12 geradores + kits</span></a>
+          <a class="nd-ct" href="alfabetizacao-eja.html" style="--sh:#e3f1f0"><div class="e">🎒</div><b>Alfabetização EJA</b><span>Leituras por tema</span></a>
+          <a class="nd-ct" href="matematica.html" style="--sh:#DDF7EE"><div class="e">➗</div><b>Matemática</b><span>Operações, frações, dinheiro</span></a>
+          <a class="nd-ct" href="eja.html" style="--sh:#FBE7DF"><div class="e">📚</div><b>Atividades EJA</b><span>Prontas em PDF</span></a>
+          <a class="nd-ct" href="jogos-area.html" style="--sh:#EEE9FF"><div class="e">🎮</div><b>Jogos</b><span>Para a TV ou o celular</span></a>
         </div>
 
-        <!-- QUICK ACTIONS -->
-        <div class="quick-title">Criar novo material</div>
-        <div style="margin-bottom:16px;">
-          <a href="jogos-area.html" target="_blank" style="display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,#2d1f6e,#1a3a5c);border-radius:14px;padding:18px 22px;text-decoration:none;transition:opacity 0.2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
-            <div style="font-size:36px;flex-shrink:0;">🎮</div>
-            <div>
-              <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:900;color:#ffd060;margin-bottom:3px;">Área do Aluno — Jogos Interativos</div>
-              <div style="font-size:12px;color:rgba(255,255,255,0.65);">Quiz • Memória • Trilha • Caça-palavras • Cruzadinha — acesso gratuito para alunos</div>
-            </div>
-            <div style="margin-left:auto;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.2);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:700;color:#7fdc9e;white-space:nowrap;flex-shrink:0;">Gratuito ✓</div>
-          </a>
+        <!-- RECENTES -->
+        <h2 class="nd-sec">Continue de onde parou <small><a onclick="showScreen('screen-history')">ver todos →</a></small></h2>
+        <div id="history-list">
+          <div class="nd-vazio">📄 Nenhum material gerado ainda. Escolha um objetivo acima para começar!</div>
         </div>
-        <div class="quick-grid">
-          <a class="quick-card" href="apostila.html">
-            <div class="quick-card-accent" style="background:var(--gold);"></div>
-            <div class="quick-card-cost">2 créditos</div>
-            <div class="quick-card-icon">📚</div>
-            <div class="quick-card-name">Texto &amp; Compreensão</div>
-            <div class="quick-card-desc">Texto de qualquer disciplina + perguntas de interpretação e gabarito</div>
-          </a>
-          <a class="quick-card" href="prova.html">
-            <div class="quick-card-accent" style="background:var(--teal);"></div>
-            <div class="quick-card-cost">1 crédito</div>
-            <div class="quick-card-icon">📝</div>
-            <div class="quick-card-name">Atividades / Avaliações</div>
-            <div class="quick-card-desc">Atividade ou avaliação, com imagens por IA e gabarito — pronto para imprimir</div>
-          </a>
-          <a class="quick-card" href="slides.html">
-            <div class="quick-card-accent" style="background:#7c6af5;"></div>
-            <div class="quick-card-cost">1 crédito</div>
-            <div class="quick-card-icon">🎞️</div>
-            <div class="quick-card-name">Apresentação de Slides</div>
-            <div class="quick-card-desc">6 temas visuais, fullscreen, exportação em PDF</div>
-          </a>
-          <a class="quick-card" href="alfabetizacao.html">
-            <div class="quick-card-accent" style="background:#3d9e6e;"></div>
-            <div class="quick-card-cost">1 crédito</div>
-            <div class="quick-card-icon">🖍️</div>
-            <div class="quick-card-name">Atividades de Alfabetização</div>
-            <div class="quick-card-desc">Autoditado, relacione, lista, parlenda, bingo e receita — com imagens reais</div>
-          </a>
-          <a class="quick-card" href="plano.html">
-            <div class="quick-card-accent" style="background:var(--coral);"></div>
-            <div class="quick-card-cost">1 crédito</div>
-            <div class="quick-card-icon">📋</div>
-            <div class="quick-card-name">Plano de Aula</div>
-            <div class="quick-card-desc">BNCC, objetivo, desenvolvimento e avaliação</div>
-          </a>
-          <a class="quick-card" href="mapa.html">
-            <div class="quick-card-accent" style="background:#e06090;"></div>
-            <div class="quick-card-cost">1 crédito</div>
-            <div class="quick-card-icon">🧠</div>
-            <div class="quick-card-name">Esquema Linear</div>
-            <div class="quick-card-desc">Tópicos numerados em estrutura sequencial para revisar</div>
-          </a>
-          <a class="quick-card" href="matematica.html">
-            <div class="quick-card-accent" style="background:#7c6af5;"></div>
-            <div class="quick-card-cost">Grátis · tempo limitado</div>
-            <div class="quick-card-icon">➗</div>
-            <div class="quick-card-name">Central de Matemática</div>
-            <div class="quick-card-desc">Contas, frações, área e perímetro, equações — com gabarito</div>
-          </a>
-          <a class="quick-card" href="cacapalavras-print.html">
-            <div class="quick-card-accent" style="background:#2d6e6e;"></div>
-            <div class="quick-card-cost">1 crédito</div>
-            <div class="quick-card-icon">🔤</div>
-            <div class="quick-card-name">Caça-Palavras</div>
-            <div class="quick-card-desc">Grade de letras para imprimir + gabarito</div>
-          </a>
-          <a class="quick-card" href="cruzadinha-print.html">
-            <div class="quick-card-accent" style="background:#c8963e;"></div>
-            <div class="quick-card-cost">1 crédito</div>
-            <div class="quick-card-icon">🧩</div>
-            <div class="quick-card-name">Cruzadinha</div>
-            <div class="quick-card-desc">Grade numerada com dicas para imprimir</div>
-          </a>
-          <a class="quick-card" href="lousa.html">
-            <div class="quick-card-accent" style="background:#2d6e6e;"></div>
-            <div class="quick-card-cost free">Gratuito</div>
-            <div class="quick-card-icon">🖊️</div>
-            <div class="quick-card-name">Aula na Lousa</div>
-            <div class="quick-card-desc">Roteiro rápido para o quadro — introdução, desenvolvimento e fechamento</div>
-          </a>
-          <a class="quick-card" href="auladadia.html">
-            <div class="quick-card-accent" style="background:#c8963e;"></div>
-            <div class="quick-card-cost free">Gratuito</div>
-            <div class="quick-card-icon">📰</div>
-            <div class="quick-card-name">Aula do Dia</div>
-            <div class="quick-card-desc">IA sugere tema baseado em notícias e datas de hoje — aula atual e relevante</div>
-          </a>
-          <a class="quick-card" href="maonaMassa.html">
-            <div class="quick-card-accent" style="background:#d95f3b;"></div>
-            <div class="quick-card-cost free">Gratuito</div>
-            <div class="quick-card-icon">🔨</div>
-            <div class="quick-card-name">Mão na Massa</div>
-            <div class="quick-card-desc">Projetos práticos, maker e experimentos com materiais simples</div>
-          </a>
-        </div>
-
-        <!-- HISTORY -->
-        <div class="quick-title">Últimos materiais</div>
-        <div class="history-list" id="history-list">
-          <div style="padding:28px;text-align:center;color:var(--text-muted);background:var(--cream);border-radius:12px;border:1px solid var(--border);">
-            <div style="font-size:32px;margin-bottom:10px;opacity:0.3;">📄</div>
-            <div style="font-size:14px;">Nenhum material gerado ainda.</div>
-            <div style="font-size:12px;margin-top:4px;">Clique em um dos cards acima para começar!</div>
-          </div>
-        </div>
+        <div class="nd-mini"><span>Materiais gerados: <b id="stat-total">0</b></span><span>PDFs baixados: <b id="stat-pdfs">0</b></span><span>Plano: <b id="stat-plan">Free</b></span><span>Créditos: <b id="stat-credits">5</b> · <a onclick="showScreen('screen-plans')">comprar mais</a></span></div>
       </div>
     </div>
   </div>
@@ -2012,6 +1875,103 @@
     }
   })();
 
+
+  // ── PAINEL NOVO: menu igual nas 3 telas, objetivos e busca ──
+  const ND_MENU=[
+    ['inicio','🏠','Início',"showScreen('screen-dashboard')"],
+    ['materiais','🗂️','Meus materiais',"showScreen('screen-history')"],
+    ['sec','Centrais prontas'],
+    ['','🔤','Alfabetização',"location.href='atividades-alfabetizacao.html'"],
+    ['','🎒','Alfabetização EJA',"location.href='alfabetizacao-eja.html'"],
+    ['','➗','Matemática',"location.href='matematica.html'"],
+    ['','📚','Atividades EJA',"location.href='eja.html'"],
+    ['','🎮','Jogos para a turma',"location.href='jogos-area.html'"],
+    ['','🧁','Todas as centrais',"location.href='/#centrais'"],
+    ['sec','Conta'],
+    ['planos','⭐','Planos e créditos',"showScreen('screen-plans')"],
+  ];
+  function montarMenus(){
+    const ativoDe={'screen-dashboard':'inicio','screen-history':'materiais','screen-plans':'planos'};
+    document.querySelectorAll('.dash-nav').forEach(nav=>{
+      const tela=nav.closest('.screen');const at=nav.dataset.ativo||ativoDe[tela&&tela.id]||'';
+      nav.innerHTML=ND_MENU.map(m=>m[0]==='sec'?`<div class="dash-nav-sec">${m[1]}</div>`:
+        `<button class="dash-nav-item${m[0]&&m[0]===at?' active':''}" onclick="${m[3]}"><span class="dash-nav-icon">${m[1]}</span> ${m[2]}</button>`).join('');
+    });
+    // celular: barra de atalhos no topo de cada tela
+    document.querySelectorAll('.dash-content').forEach(c=>{
+      if(c.querySelector('.nd-mnav'))return;const tela=c.closest('.screen');const at=ativoDe[tela&&tela.id]||'';
+      const b=document.createElement('nav');b.className='nd-mnav';
+      b.innerHTML=ND_MENU.filter(m=>m[0]!=='sec').map(m=>`<a class="${m[0]&&m[0]===at?'on':''}" onclick="${m[3]}">${m[1]} ${m[2]}</a>`).join('')+`<a onclick="doLogout()">↩ Sair</a>`;
+      c.prepend(b);
+    });
+  }
+  const ND_ELEICOES=new Date()<new Date('2026-10-26T00:00:00-03:00');
+  const ND_INT=[
+    {k:'atividade',e:'✏️',t:'Criar uma atividade',d:'Folha com gabarito, de qualquer matéria',c:'#C8742A',sh:'#FFF0DE',op:[
+      ['📝','Atividade com gabarito','Interpretação, V ou F, completar, questões abertas','prova.html','1 crédito'],
+      ['📖','Texto e compreensão','Texto de qualquer disciplina + perguntas','apostila.html','2 créditos'],
+      ['🖍️','Alfabetização com IA','Autoditado, relacione, parlenda, bingo, receita','alfabetizacao.html','1 crédito'],
+      ['🔤','Caça-palavras','Com o tema que você quiser','cacapalavras-print.html','1 crédito'],
+      ['🧩','Cruzadinha','Grade numerada com dicas','cruzadinha-print.html','1 crédito']]},
+    {k:'avaliacao',e:'📋',t:'Fazer uma avaliação',d:'Prova com gabarito, pronta para imprimir',c:'#2d6e6e',sh:'#e3f1f0',op:[
+      ['📋','Avaliação com gabarito','Questões alinhadas à BNCC, prontas para imprimir','prova.html','1 crédito'],
+      ['✊🏿','Avaliação pronta: Consciência Negra','12 questões de A a D','consciencia-negra.html','Grátis']]},
+    {k:'planejar',e:'🗓️',t:'Planejar a aula',d:'Plano, roteiro de lousa, tema do dia',c:'#D9465F',sh:'#FFE3EC',op:[
+      ['📋','Plano de aula BNCC','Objetivos, desenvolvimento e avaliação','plano.html','1 crédito'],
+      ['🖊️','Aula na lousa','O que escrever e falar no quadro','lousa.html','Grátis'],
+      ['📰','Aula do dia','Tema sugerido pela data de hoje','auladadia.html','Grátis'],
+      ['🔨','Mão na massa','Projetos e experimentos com material simples','maonaMassa.html','Grátis']]},
+    {k:'explicar',e:'🖥️',t:'Explicar um conteúdo',d:'Slides e esquemas para projetar',c:'#6A4FD8',sh:'#EEE9FF',op:[
+      ['🎞️','Apresentação de slides','6 temas visuais, tela cheia e PDF','slides.html','1 crédito'],
+      ['🧠','Esquema linear','Tópicos em sequência para revisar','mapa.html','1 crédito']]},
+    {k:'jogar',e:'🎮',t:'Jogar com a turma',d:'Quiz e jogos na TV ou no celular',c:'#2C7BB6',sh:'#E3F0FB',op:[
+      ['❓','Quiz interativo','Perguntas com o tema da aula','jogos.html','1 crédito'],
+      ['🃏','Jogo da memória','Pares de palavras e imagens','memoria.html','1 crédito'],
+      ['🎲','Trilha','Tabuleiro com perguntas','trilha.html','1 crédito'],
+      ['🕹️','Jogos prontos','Confeitaria das Frações, Caixa da Feirinha e mais','jogos-area.html','Grátis']]},
+    {k:'pronto',e:'🖨️',t:'Imprimir algo pronto',d:'Centrais e atividades já montadas',c:'#1E8A72',sh:'#DDF7EE',op:[
+      ['🔤','Central de Alfabetização','12 geradores e 3 kits','atividades-alfabetizacao.html','1 crédito por folha'],
+      ['🎒','Alfabetização EJA','Leituras por tema, mercado, placas','alfabetizacao-eja.html','1 crédito por folha'],
+      ['➗','Central de Matemática','Operações, frações, área, dinheiro','matematica.html','Grátis por tempo limitado'],
+      ['📚','Atividades EJA','PDFs prontos','eja.html','Grátis'],
+      ['✊🏿','Consciência Negra','9 atividades + avaliação','consciencia-negra.html','Grátis'],
+      ...(ND_ELEICOES?[['🗳️','Eleições e cidadania','Não partidário · esquemas e caça-palavras','eleicoes.html','Grátis']]:[])]},
+  ];
+  let ndAberta=null;
+  function ndDesenhar(){
+    const g=document.getElementById('nd-int');if(!g)return;
+    g.innerHTML=ND_INT.map(i=>`<button class="nd-ic ${ndAberta===i.k?'on':''}" style="--c:${i.c};--sh:${i.sh}" onclick="ndAbrir('${i.k}')"><div class="e">${i.e}</div><div><b>${i.t}</b><span>${i.d}</span></div></button>`).join('');
+    const o=document.getElementById('nd-opcoes');const I=ND_INT.find(i=>i.k===ndAberta);
+    if(!I){o.className='nd-opcoes';return}
+    o.className='nd-opcoes on';o.style.setProperty('--c',I.c);o.style.setProperty('--sh',I.sh);
+    o.innerHTML=`<h3>${I.e} ${I.t}</h3><div class="nd-op-grid">`+I.op.map(([e,t,d,u,cr])=>`<a class="nd-op" href="${u}"><div class="oe">${e}</div><div><b>${t}</b><span>${d}</span><br><span class="cr ${/Grátis/.test(cr)?'free':''}">${cr}</span></div></a>`).join('')+'</div>';
+  }
+  function ndAbrir(k){ndAberta=ndAberta===k?null:k;ndDesenhar();if(ndAberta)document.getElementById('nd-opcoes').scrollIntoView({behavior:'smooth',block:'nearest'})}
+  // busca: acha a ferramenta certa pelo que a professora escreve
+  const ND_TODAS=ND_INT.flatMap(i=>i.op.map(o=>({i,o})));
+  const ND_CHAVES={prova:'avaliacao',avalia:'avaliacao',teste:'avaliacao',plano:'planejar',planej:'planejar',lousa:'planejar',slide:'explicar',apresenta:'explicar',esquema:'explicar',mapa:'explicar',jogo:'jogar',quiz:'jogar',memória:'jogar',trilha:'jogar',caça:'atividade',cruzad:'atividade',texto:'atividade',leitura:'atividade',atividade:'atividade',exerc:'atividade'};
+  const ND_FERR={fraç:['Central de Matemática'],frac:['Central de Matemática'],matem:['Central de Matemática'],conta:['Central de Matemática'],sílab:['Central de Alfabetização'],silab:['Central de Alfabetização'],alfabet:['Central de Alfabetização','Alfabetização EJA'],eja:['Alfabetização EJA','Atividades EJA'],adult:['Alfabetização EJA','Atividades EJA'],consci:['Consciência Negra']};
+  function ndBuscar(ir){
+    const q=document.getElementById('nd-q').value.trim();const res=document.getElementById('nd-res');
+    if(!q){res.style.display='none';return}
+    const sem=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');const qq=sem(q);
+    const hits=ND_TODAS.filter(({o})=>sem(o[1]+' '+o[2]).split(/\W+/).some(w=>w.length>3&&qq.includes(w.slice(0,5))));
+    const ks=Object.entries(ND_CHAVES).filter(([w])=>qq.includes(sem(w))).map(([,k])=>k);
+    const fs_=Object.entries(ND_FERR).filter(([w])=>qq.includes(sem(w))).flatMap(([,n])=>n);
+    const lista=[...new Map([...ND_TODAS.filter(({i,o})=>ks.includes(i.k)&&!/pronta/i.test(o[1])).slice(0,2),...ND_TODAS.filter(({o})=>fs_.includes(o[1])),...hits].map(x=>[x.o[1],x])).values()].slice(0,4);
+    const ia=`prova.html?tema=${encodeURIComponent(q)}`;
+    if(ir&&!lista.length){location.href=ia;return}
+    const esc=s=>s.replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+    const comTema=u=>/^(prova|plano|slides|apostila|mapa|alfabetizacao|jogos|memoria|trilha|lousa|cacapalavras-print|cruzadinha-print)\.html$/.test(u)?u+'?tema='+encodeURIComponent(q):u;
+    res.style.display='flex';
+    res.innerHTML=lista.map(({o})=>`<a href="${comTema(o[3])}"><span>${o[0]}</span>${o[1]}<small>${o[4]}</small></a>`).join('')+
+      `<a href="${ia}" style="background:#FFC93C"><span>✨</span>Pedir para a IA: “${esc(q)}”<small>1 crédito</small></a>`;
+    if(ir&&lista.length)location.href=comTema(lista[0].o[3]);
+  }
+  function ndSugestoes(){const s=document.getElementById('nd-sug');if(!s)return;
+    s.innerHTML=['Prova de frações','Plano de aula sobre a água','Jogo de sílabas','Slides do sistema solar','Atividade de EJA'].map(t=>`<button type="button" onclick="document.getElementById('nd-q').value='${t}';ndBuscar()">${t}</button>`).join('')}
+  montarMenus();ndDesenhar();ndSugestoes();
+
   // ── DASHBOARD UI ──
   function updateDashUI() {
     if (!currentUser) return;
@@ -2099,6 +2059,7 @@
 
   // ── HISTÓRICO DE ATIVIDADES ──
 
+  const ND_PAG = { apostila:'apostila.html', plano:'plano.html', slides:'slides.html', mapa:'mapa.html', alfabetizacao:'alfabetizacao.html', prova:'prova.html' };
   const TIPO_CONFIG = {
     apostila:      { icon: '📚', label: 'Atividade/Apostila', cor: '#c8742a' },
     plano:         { icon: '📋', label: 'Plano de Aula',      cor: '#3d9e6e' },
@@ -2160,6 +2121,7 @@
               ? `<button class="btn-reimprimir" onclick="reimprimir('${item.id}')">🖨️ Reimprimir</button>`
               : `<span class="history-dl" title="Conteúdo indisponível">—</span>`
             }
+            ${ND_PAG[item.tipo] && item.tema ? `<a class="btn-parecido" href="${ND_PAG[item.tipo]}?tema=${encodeURIComponent(item.tema)}">🔁 Gerar parecido</a>` : ''}
           </div>`;
       }).join('');
 

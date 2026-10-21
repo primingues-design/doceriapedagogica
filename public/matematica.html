@@ -247,6 +247,7 @@
   <div class="top-links">
     <a class="hide-sm" href="/jogos-area.html">Jogos</a>
     <a class="hide-sm" href="/eja.html">EJA</a>
+    <a class="hide-sm" href="/#centrais">Centrais</a>
     <a class="top-cta" href="/conta.html" id="loginLink">Entrar</a>
   </div>
 </div>
@@ -965,7 +966,7 @@
   function baixarDaPrevia(){if(_previa)baixar(_previa);}
   document.addEventListener('keydown',e=>{if(e.key==='Escape')fecharPrevia();});
 
-  if(isLoggedIn()) document.getElementById('loginLink').textContent='Meu painel';
+  if(isLoggedIn()) document.getElementById('loginLink').textContent='Minha conta';
   renderProntas();
   abrir((location.hash||'').slice(1)||'operacoes',false);
   // links "Atividades por assunto" (#fracoes etc.) abrem o gerador e sobem até ele

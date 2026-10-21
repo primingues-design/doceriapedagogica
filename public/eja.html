@@ -95,6 +95,7 @@
   <a class="logo" href="/"><span class="logo-mark">🍰</span>Doceria <span>Pedagógica</span></a>
   <div class="top-links">
     <a href="/folclore.html">Folclore</a>
+    <a class="hide-sm" href="/#centrais">Centrais</a>
     <a class="top-cta" href="/conta.html" id="loginLink">Entrar</a>
   </div>
 </div>
@@ -303,7 +304,7 @@
   function baixarDaPrevia(){ if(_previaSlug) baixar(_previaSlug,_previaEvento); }
   document.addEventListener('keydown',function(e){ if(e.key==='Escape') fecharPrevia(); });
 
-  if(isLoggedIn()) document.getElementById('loginLink').textContent='Meu painel';
+  if(isLoggedIn()) document.getElementById('loginLink').textContent='Minha conta';
   render();
 </script>
 <script src="/js/dp-auth.js"></script>
