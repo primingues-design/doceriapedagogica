@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { tokenFrom, verifyUser } from '@/lib/verifyUser';
 import { cobrar } from '@/lib/creditos';
+import { criarTokenImagem } from '@/lib/imgToken';
 
 /* ── Modelos de IA (preços por milhão de tokens: entrada / saída) ──
    completo: Claude Sonnet 5.5 (US$ 2 / 10) — atividades, avaliações, apostilas, planos, slides
@@ -88,9 +89,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(data, { status: response.status });
     }
 
+    // Autorização para as imagens desta geração (a página manda de volta em /api/imagem).
+    const imgToken = criarTokenImagem(user.id);
     return NextResponse.json(data, {
       status: 200,
-      headers: { 'X-Credits-Remaining': cob.restante === null ? 'ilimitado' : String(cob.restante) },
+      headers: {
+        'X-Credits-Remaining': cob.restante === null ? 'ilimitado' : String(cob.restante),
+        ...(imgToken ? { 'X-Img-Token': imgToken } : {}),
+      },
     });
   } catch (e) {
     await cob.devolver();

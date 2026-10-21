@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { tokenFrom, verifyUser } from '@/lib/verifyUser';
+import { usarTokenImagem } from '@/lib/imgToken';
 
 // Tamanhos aceitos pelo fal.ai (Flux)
 const SIZES = new Set([
@@ -12,8 +13,13 @@ export async function POST(request: NextRequest) {
   if (!key) return NextResponse.json({ url: null, error: 'FAL_KEY não configurada' }, { status: 500 });
 
   // Só usuários logados de verdade (token conferido no Supabase) — evita abuso da cota.
-  if (!(await verifyUser(tokenFrom(request.headers.get('authorization'))))) {
+  const user = await verifyUser(tokenFrom(request.headers.get('authorization')));
+  if (!user) {
     return NextResponse.json({ url: null, error: 'Não autenticado' }, { status: 401 });
+  }
+  // E só logo depois de uma geração paga: /api/claude entrega a autorização de imagens.
+  if (!usarTokenImagem(request.headers.get('x-img-token') || '', user.id)) {
+    return NextResponse.json({ url: null, error: 'Imagens liberadas só junto com uma geração' }, { status: 403 });
   }
 
   let body: { prompt?: string; size?: string };

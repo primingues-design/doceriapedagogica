@@ -202,7 +202,10 @@
   const _fetch = window.fetch.bind(window);
   function withAuth(init, token) {
     init = Object.assign({}, init || {});
-    init.headers = Object.assign({}, init.headers, { 'Authorization': 'Bearer ' + token });
+    var extra = { 'Authorization': 'Bearer ' + token };
+    // autorização de imagens recebida na última geração (a IA de imagem só responde com ela)
+    try { var it = sessionStorage.getItem('dp_img_token'); if (it) extra['X-Img-Token'] = it; } catch (e) {}
+    init.headers = Object.assign({}, init.headers, extra);
     return init;
   }
   function unauthorized() {
@@ -211,6 +214,7 @@
   // Funil: marca "material_gerado" quando uma geração via /api/claude dá certo.
   function trackGen(url, res) {
     try { if (res && res.ok && url.indexOf('/api/claude') >= 0) track('material_gerado', { anonimo: isAnon() }); } catch (e) {}
+    try { var it = res && res.headers.get('X-Img-Token'); if (it) sessionStorage.setItem('dp_img_token', it); } catch (e) {}
     return res;
   }
 
