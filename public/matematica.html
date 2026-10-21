@@ -238,6 +238,11 @@
     .gaba-tag{display:none}
     .qgrid{grid-template-columns:var(--cols-print) !important}
   }
+
+/* marca d'água da prévia (some na impressão) */
+#paper,.wm{position:relative}
+#paper::after,.wm::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:6;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27360%27%20height%3D%27230%27%3E%3Ctext%20x%3D%27180%27%20y%3D%27115%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27middle%27%20transform%3D%27rotate(-30%20180%20115)%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27700%27%20font-size%3D%2721%27%20fill%3D%27%238A5A3B%27%20fill-opacity%3D%270.26%27%3Edoceriapedagogica.com%20%C2%B7%20pr%C3%A9via%3C%2Ftext%3E%3C%2Fsvg%3E");background-repeat:repeat;background-position:center}
+@media print{#paper::after,.wm::after{display:none !important;content:none !important}}
 </style>
 </head>
 <body>
@@ -955,7 +960,7 @@
     // prévia em imagem (leve e funciona bem no celular); o PDF fica no "Abrir em nova aba"
     // apostilas mostram várias páginas de amostra; atividades de 1 folha, a própria folha
     const fr=document.getElementById('previa-pags');
-    fr.innerHTML=(a.paginas||[null]).map(p=>`<img src="/atividades/previa/${slug}${p?'-p'+p:''}.jpg" alt="Prévia: ${esc(a.titulo||'')}${p?' — página '+p:''}">`).join('');
+    fr.innerHTML=(a.paginas||[null]).map(p=>`<div class="wm"><img style="display:block;width:100%" src="/atividades/previa/${slug}${p?'-p'+p:''}.jpg" alt="Prévia: ${esc(a.titulo||'')}${p?' — página '+p:''}"></div>`).join('');
     fr.scrollTop=0;
     document.getElementById('previa-open').href=pdf;
     document.getElementById('previa-title').textContent=a.titulo||'Prévia da atividade';

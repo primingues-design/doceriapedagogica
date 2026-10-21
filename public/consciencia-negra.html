@@ -188,6 +188,11 @@
     body.printing .gaba{display:block !important;break-before:page;page-break-before:always;border-top:none;margin-top:0}
     .dp-no-print{display:none !important}
   }
+
+/* marca d'água da prévia (some na impressão) */
+.sheet:not(.artigo){position:relative}
+.sheet:not(.artigo)::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:6;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27360%27%20height%3D%27230%27%3E%3Ctext%20x%3D%27180%27%20y%3D%27115%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27middle%27%20transform%3D%27rotate(-30%20180%20115)%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27700%27%20font-size%3D%2721%27%20fill%3D%27%238A5A3B%27%20fill-opacity%3D%270.26%27%3Edoceriapedagogica.com%20%C2%B7%20pr%C3%A9via%3C%2Ftext%3E%3C%2Fsvg%3E");background-repeat:repeat;background-position:center}
+@media print{.sheet:not(.artigo)::after{display:none !important;content:none !important}}
 </style>
 </head>
 <body>
