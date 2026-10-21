@@ -1070,5 +1070,391 @@
       ],
       "colorir": false
     }
+  },
+  "arte": {
+    "independencia_ou_morte": {
+      "arquivo": "/assets/arte/independencia-ou-morte.jpg",
+      "titulo": "Independência ou Morte (O Grito do Ipiranga) — Pedro Américo, 1888",
+      "descricao": "D. Pedro levanta a espada às margens do riacho Ipiranga, cercado pela guarda de honra, no momento da Independência (7 de setembro de 1822). Ao lado, um carreiro observa a cena.",
+      "uso_pedagogico": "Independência do Brasil. Leitura de imagem: a pintura foi feita 66 anos depois do fato e idealiza o momento — bom para comparar acontecimento e representação.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Independência ou Morte (O Grito do Ipiranga) — Pedro Américo, 1888. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Pedro_Am%C3%A9rico_-_Independ%C3%AAncia_ou_Morte_-_Google_Art_Project.jpg"
+    },
+    "primeira_missa": {
+      "arquivo": "/assets/arte/primeira-missa.jpg",
+      "titulo": "Primeira Missa no Brasil — Victor Meirelles, 1860",
+      "descricao": "A missa celebrada pelos portugueses em 1500, com a cruz ao centro e indígenas observando ao redor.",
+      "uso_pedagogico": "Chegada dos portugueses. Olhar crítico: como os povos indígenas foram representados pelo pintor no século XIX.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Primeira Missa no Brasil — Victor Meirelles, 1860. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Meirelles-primeiramissa2.jpg"
+    },
+    "desembarque_cabral": {
+      "arquivo": "/assets/arte/desembarque-cabral.jpg",
+      "titulo": "Desembarque de Pedro Álvares Cabral em Porto Seguro — Oscar Pereira da Silva, 1900",
+      "descricao": "Portugueses desembarcam na praia e encontram os povos indígenas, em 1500.",
+      "uso_pedagogico": "Chegada dos portugueses e encontro com os povos originários; ponto de vista de quem pintou.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Desembarque de Pedro Álvares Cabral em Porto Seguro — Oscar Pereira da Silva, 1900. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Oscar_Pereira_da_Silva_-_Desembarque_de_Pedro_%C3%81lvares_Cabral_em_Porto_Seguro,_1500,_Acervo_do_Museu_Paulista_da_USP.jpg"
+    },
+    "fundacao_sao_vicente": {
+      "arquivo": "/assets/arte/fundacao-sao-vicente.jpg",
+      "titulo": "Fundação de São Vicente — Benedito Calixto, 1900",
+      "descricao": "A fundação da vila de São Vicente por Martim Afonso de Sousa, em 1532 — a primeira vila do Brasil.",
+      "uso_pedagogico": "Início da colonização e das vilas; capitanias hereditárias.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Fundação de São Vicente — Benedito Calixto, 1900. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Benedito_Calixto_-_Funda%C3%A7%C3%A3o_de_S%C3%A3o_Vicente,_1900.jpg"
+    },
+    "batalha_guararapes": {
+      "arquivo": "/assets/arte/batalha-guararapes.jpg",
+      "titulo": "Batalha dos Guararapes — Victor Meirelles, 1879",
+      "descricao": "Combate em Pernambuco (1648–1649) contra os holandeses.",
+      "uso_pedagogico": "Brasil holandês e a expulsão dos holandeses do Nordeste.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Batalha dos Guararapes — Victor Meirelles, 1879. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Victor_Meirelles_-_%27Battle_of_Guararapes%27,_1879,_oil_on_canvas,_Museu_Nacional_de_Belas_Artes,_Rio_de_Janeiro.JPG"
+    },
+    "navio_negreiro": {
+      "arquivo": "/assets/arte/navio-negreiro.jpg",
+      "titulo": "Navio Negreiro — Johann Moritz Rugendas, 1830",
+      "descricao": "O porão superlotado de um navio que trazia pessoas escravizadas da África para o Brasil, em condições desumanas.",
+      "uso_pedagogico": "Tráfico de pessoas escravizadas, resistência e empatia; Consciência Negra.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Navio Negreiro — Johann Moritz Rugendas, 1830. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Navio_negreiro_-_Rugendas_1830.jpg"
+    },
+    "mercado_valongo": {
+      "arquivo": "/assets/arte/mercado-valongo.jpg",
+      "titulo": "Mercado da Rua do Valongo — Jean-Baptiste Debret, 1835",
+      "descricao": "Mercado no Rio de Janeiro onde pessoas escravizadas trazidas da África eram vendidas, no século XIX.",
+      "uso_pedagogico": "Escravidão no Brasil e o Cais do Valongo (patrimônio da UNESCO); Consciência Negra.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Mercado da Rua do Valongo — Jean-Baptiste Debret, 1835. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Debret,_Mercado_de_escravos.jpg"
+    },
+    "tiradentes_esquartejado": {
+      "arquivo": "/assets/arte/tiradentes-esquartejado.jpg",
+      "titulo": "Tiradentes Esquartejado — Pedro Américo, 1893",
+      "descricao": "Representação do corpo de Tiradentes depois da execução, em 1792, como mártir da Inconfidência Mineira.",
+      "uso_pedagogico": "Inconfidência Mineira e a construção de Tiradentes como herói pela República. Imagem forte — para turmas maiores.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Tiradentes Esquartejado — Pedro Américo, 1893. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Tiradentes_quartered_(Tiradentes_escuartejado)_by_Pedro_Am%C3%A9rico_1893.jpg"
+    },
+    "proclamacao_republica": {
+      "arquivo": "/assets/arte/proclamacao-republica.jpg",
+      "titulo": "Proclamação da República — Benedito Calixto, 1893",
+      "descricao": "O momento da Proclamação da República, em 15 de novembro de 1889, no Rio de Janeiro.",
+      "uso_pedagogico": "Fim do Império e início da República.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Proclamação da República — Benedito Calixto, 1893. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Proclama%C3%A7%C3%A3o_da_Rep%C3%BAblica_by_Benedito_Calixto_1893.jpg"
+    },
+    "caipira_picando_fumo": {
+      "arquivo": "/assets/arte/caipira-picando-fumo.jpg",
+      "titulo": "Caipira Picando Fumo — Almeida Júnior, 1893",
+      "descricao": "Um homem do interior paulista, sentado na porta de casa de pau a pique, picando fumo.",
+      "uso_pedagogico": "Vida no campo e cultura caipira; realismo na arte brasileira; leitura de imagem.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Caipira Picando Fumo — Almeida Júnior, 1893. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Almeida_J%C3%BAnior_-_Caipira_Cutting_Tobacco_-_Google_Art_Project.jpg"
+    },
+    "missa_abolicao_1888": {
+      "arquivo": "/assets/arte/missa-abolicao-1888.jpg",
+      "titulo": "Missa campal em celebração à Abolição (fotografia) — Antonio Luiz Ferreira, 1888",
+      "descricao": "Fotografia de 17 de maio de 1888, no Rio de Janeiro: uma multidão reunida em celebração à abolição da escravatura, poucos dias depois da Lei Áurea.",
+      "uso_pedagogico": "Abolição da escravatura (13 de maio de 1888); fotografia como fonte histórica.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Missa campal em celebração à Abolição (fotografia) — Antonio Luiz Ferreira, 1888. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Missa_campal_celebrada_em_a%C3%A7%C3%A3o_de_gra%C3%A7as_pela_Aboli%C3%A7%C3%A3o_da_Escravatura_no_Brasil,_1888.jpg"
+    },
+    "dom_pedro_ii": {
+      "arquivo": "/assets/arte/dom-pedro-ii.jpg",
+      "titulo": "Dom Pedro II (fotografia) — Hermann Witte, 1887",
+      "descricao": "Fotografia do imperador D. Pedro II, por volta de 1887.",
+      "uso_pedagogico": "Segundo Reinado; fotografia como fonte histórica.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Dom Pedro II (fotografia) — Hermann Witte, 1887. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Dom_Pedro_II_circa_1887.jpg"
+    },
+    "princesa_isabel": {
+      "arquivo": "/assets/arte/princesa-isabel.jpg",
+      "titulo": "Princesa Isabel (fotografia) — Joaquim Insley Pacheco, 1870",
+      "descricao": "Fotografia da Princesa Isabel por volta de 1870. Ela assinou a Lei Áurea em 1888.",
+      "uso_pedagogico": "Abolição — sempre junto com a luta e a resistência das pessoas escravizadas e dos abolicionistas.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Princesa Isabel (fotografia) — Joaquim Insley Pacheco, 1870. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Isabel_princess_imperial_around_1870.jpg"
+    },
+    "machado_de_assis": {
+      "arquivo": "/assets/arte/machado-de-assis.jpg",
+      "titulo": "Machado de Assis (fotografia) — autor desconhecido, 1904",
+      "descricao": "Fotografia do escritor Machado de Assis em 1904. Ele foi um dos fundadores da Academia Brasileira de Letras.",
+      "uso_pedagogico": "Literatura brasileira; biografia; Consciência Negra (Machado era neto de pessoas escravizadas libertas).",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Machado de Assis (fotografia) — autor desconhecido, 1904. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Machado_de_Assis_1904.jpg"
+    },
+    "santos_dumont_14bis": {
+      "arquivo": "/assets/arte/santos-dumont-14bis.jpg",
+      "titulo": "O 14-bis de Santos Dumont (fotografia) — autor desconhecido, 1906",
+      "descricao": "O avião 14-bis no campo de Bagatelle, em Paris, em 1906.",
+      "uso_pedagogico": "Invenções e história da aviação; Santos Dumont.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "O 14-bis de Santos Dumont (fotografia) — autor desconhecido, 1906. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:14-bis_no_campo_de_Bagatelle._Julho_1906_-Museu_Casa_Natal_de_Santos_Dumont-.jpg"
+    },
+    "planisferio_cantino": {
+      "arquivo": "/assets/arte/planisferio-cantino.jpg",
+      "titulo": "Planisfério de Cantino — cartógrafo português anônimo, 1502",
+      "descricao": "Mapa-múndi português de 1502, um dos primeiros a mostrar o litoral do Brasil e a linha do Tratado de Tordesilhas.",
+      "uso_pedagogico": "Grandes navegações e Tratado de Tordesilhas; mapas antigos como fonte histórica.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Planisfério de Cantino — cartógrafo português anônimo, 1502. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Cantino_planisphere_(1502).jpg"
+    },
+    "mona_lisa": {
+      "arquivo": "/assets/arte/mona-lisa.jpg",
+      "titulo": "Mona Lisa — Leonardo da Vinci, 1503",
+      "descricao": "Retrato de uma mulher sorrindo levemente, com uma paisagem ao fundo. Pintada entre 1503 e 1506.",
+      "uso_pedagogico": "Renascimento; leitura de imagem; retrato.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Mona Lisa — Leonardo da Vinci, 1503. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg"
+    },
+    "noite_estrelada": {
+      "arquivo": "/assets/arte/noite-estrelada.jpg",
+      "titulo": "A Noite Estrelada — Vincent van Gogh, 1889",
+      "descricao": "Céu noturno com redemoinhos e estrelas brilhantes sobre uma pequena vila, com um cipreste em primeiro plano.",
+      "uso_pedagogico": "Pós-impressionismo; cores e pinceladas; releitura em artes.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "A Noite Estrelada — Vincent van Gogh, 1889. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
+    },
+    "girassois": {
+      "arquivo": "/assets/arte/girassois.jpg",
+      "titulo": "Os Girassóis — Vincent van Gogh, 1888",
+      "descricao": "Vaso com girassóis em tons de amarelo.",
+      "uso_pedagogico": "Natureza-morta; cor amarela; releitura em artes.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Os Girassóis — Vincent van Gogh, 1888. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Vincent_van_Gogh_-_Sunflowers_(1888,_National_Gallery_London).jpg"
+    },
+    "o_grito": {
+      "arquivo": "/assets/arte/o-grito.jpg",
+      "titulo": "O Grito — Edvard Munch, 1893",
+      "descricao": "Uma figura com as mãos no rosto, numa ponte, sob um céu alaranjado e ondulado.",
+      "uso_pedagogico": "Expressionismo; emoções na arte.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "O Grito — Edvard Munch, 1893. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Edvard_Munch,_1893,_The_Scream,_oil,_tempera_and_pastel_on_cardboard,_91_x_73_cm,_National_Gallery_of_Norway.jpg"
+    },
+    "moca_brinco_perola": {
+      "arquivo": "/assets/arte/moca-brinco-perola.jpg",
+      "titulo": "Moça com Brinco de Pérola — Johannes Vermeer, 1665",
+      "descricao": "Retrato de uma moça com turbante azul e amarelo e um brinco de pérola, olhando por cima do ombro.",
+      "uso_pedagogico": "Retrato; luz e sombra; releitura em artes.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Moça com Brinco de Pérola — Johannes Vermeer, 1665. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:1665_Girl_with_a_Pearl_Earring.jpg"
+    },
+    "criacao_de_adao": {
+      "arquivo": "/assets/arte/criacao-de-adao.jpg",
+      "titulo": "A Criação de Adão — Michelangelo, 1511",
+      "descricao": "Detalhe do teto da Capela Sistina: duas mãos quase se tocando.",
+      "uso_pedagogico": "Renascimento; afresco; leitura de imagem.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "A Criação de Adão — Michelangelo, 1511. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Michelangelo_-_Creation_of_Adam_(cropped).jpg"
+    },
+    "impressao_nascer_do_sol": {
+      "arquivo": "/assets/arte/impressao-nascer-do-sol.jpg",
+      "titulo": "Impressão, Nascer do Sol — Claude Monet, 1872",
+      "descricao": "Um porto com barcos e o sol laranja nascendo na névoa — obra que deu nome ao Impressionismo.",
+      "uso_pedagogico": "Impressionismo; luz e cor.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Impressão, Nascer do Sol — Claude Monet, 1872. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Monet_-_Impression,_Sunrise.jpg"
+    },
+    "grande_onda": {
+      "arquivo": "/assets/arte/grande-onda.jpg",
+      "titulo": "A Grande Onda de Kanagawa — Katsushika Hokusai, 1831",
+      "descricao": "Uma grande onda prestes a cair sobre barcos, com o monte Fuji ao fundo. Xilogravura japonesa.",
+      "uso_pedagogico": "Arte japonesa; xilogravura; natureza.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "A Grande Onda de Kanagawa — Katsushika Hokusai, 1831. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Tsunami_by_hokusai_19th_century.jpg"
+    },
+    "las_meninas": {
+      "arquivo": "/assets/arte/las-meninas.jpg",
+      "titulo": "As Meninas — Diego Velázquez, 1656",
+      "descricao": "A infanta Margarida com suas damas de companhia; o próprio pintor aparece à esquerda, diante da tela.",
+      "uso_pedagogico": "Barroco; ponto de vista; leitura de imagem.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "As Meninas — Diego Velázquez, 1656. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Las_Meninas_01.jpg"
+    },
+    "o_beijo": {
+      "arquivo": "/assets/arte/o-beijo.jpg",
+      "titulo": "O Beijo — Gustav Klimt, 1907",
+      "descricao": "Um casal abraçado envolto em mantos dourados e decorados.",
+      "uso_pedagogico": "Art nouveau; uso do dourado e padrões.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "O Beijo — Gustav Klimt, 1907. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg"
+    },
+    "grande_jatte": {
+      "arquivo": "/assets/arte/grande-jatte.jpg",
+      "titulo": "Uma Tarde de Domingo na Ilha de Grande Jatte — Georges Seurat, 1884",
+      "descricao": "Pessoas passeando num parque à beira do rio, pintadas com pequenos pontos de cor.",
+      "uso_pedagogico": "Pontilhismo; mistura de cores.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Uma Tarde de Domingo na Ilha de Grande Jatte — Georges Seurat, 1884. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:A_Sunday_on_La_Grande_Jatte,_Georges_Seurat,_1884.jpg"
+    },
+    "redencao_de_cam": {
+      "arquivo": "/atividades/arte/redencao-de-cam-brocos-1895.jpg",
+      "titulo": "A Redenção de Cam — Modesto Brocos, 1895",
+      "descricao": "Uma avó negra ergue as mãos ao céu ao lado da filha e do neto de pele clara, com o genro branco sentado — a pintura defendia a ideia de \"branqueamento\" da população.",
+      "uso_pedagogico": "Política de branqueamento no pós-abolição; racismo; Consciência Negra. Leitura crítica da obra.",
+      "publico": [
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "A Redenção de Cam — Modesto Brocos, 1895. Domínio público."
+    }
   }
 }
