@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Script from 'next/script'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const SUPABASE_KEY = 'sb-atkwvwhwbkerezdmipxw-auth-token'
 const COMECAR = '/prova.html' // gerador principal — funciona sem cadastro (3 grátis)
@@ -83,19 +83,19 @@ function montarTurma() {
 }
 
 export default function Home() {
+  // Quem já tem conta continua vendo a página inicial (centrais sempre acessíveis);
+  // só o botão do topo muda para "Minha conta".
+  const [logada, setLogada] = useState(false)
   useEffect(() => {
     try {
       const raw = localStorage.getItem(SUPABASE_KEY)
       if (raw) {
         const session = JSON.parse(raw)
-        const expiresAt = session?.expires_at ?? 0
-        // visitante anônimo (3 grátis) continua vendo a landing
-        if (expiresAt > Date.now() / 1000 && !session?.user?.is_anonymous) {
-          window.location.href = '/conta.html'
-        }
+        // visitante anônimo (3 grátis) não conta como conta criada
+        if (session?.user && !session.user.is_anonymous) setLogada(true)
       }
     } catch {
-      // sem sessão válida — exibe a landing page normalmente
+      // sem sessão salva — mostra Entrar / Testar grátis
     }
     montarTurma()
   }, [])
@@ -137,8 +137,14 @@ export default function Home() {
             <Link href="/pricing" className="hover:text-[#C8742A]">Preços</Link>
           </nav>
           <div className="ml-auto flex items-center gap-3">
-            <Link href="/conta.html" className="hidden sm:block font-bold text-[#6B3A1F] hover:text-[#C8742A]">Entrar</Link>
-            <a href={COMECAR} className="b3d bg-[#C8742A] text-white font-extrabold px-4 sm:px-5 py-2 sm:py-2.5 text-sm sm:text-base whitespace-nowrap rounded-full shadow-[0_4px_0_#9A5418]">Testar grátis</a>
+            {logada ? (
+              <a href="/conta.html" className="b3d bg-[#C8742A] text-white font-extrabold px-4 sm:px-5 py-2 sm:py-2.5 text-sm sm:text-base whitespace-nowrap rounded-full shadow-[0_4px_0_#9A5418]">Minha conta →</a>
+            ) : (
+              <>
+                <Link href="/conta.html" className="hidden sm:block font-bold text-[#6B3A1F] hover:text-[#C8742A]">Entrar</Link>
+                <a href={COMECAR} className="b3d bg-[#C8742A] text-white font-extrabold px-4 sm:px-5 py-2 sm:py-2.5 text-sm sm:text-base whitespace-nowrap rounded-full shadow-[0_4px_0_#9A5418]">Testar grátis</a>
+              </>
+            )}
           </div>
         </div>
       </header>
