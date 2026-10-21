@@ -854,7 +854,7 @@
   .nd-dc small{font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;opacity:.85}
   .nd-dc b{font-family:'Baloo 2',sans-serif;font-size:1.25rem;display:block;line-height:1.15}
   .nd-dc span{font-size:13px;opacity:.88;font-weight:700}
-  .nd-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:26px}
+  .nd-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:26px}
   .nd-ct{background:#fff;border-radius:20px;padding:14px;border:1px solid rgba(0,0,0,.05);box-shadow:0 5px 0 var(--sh);text-decoration:none;color:#3D1F0D}
   .nd-ct .e{font-size:28px}
   .nd-ct b{font-family:'Baloo 2',sans-serif;font-size:1.1rem;display:block;line-height:1.1;margin-top:6px}
@@ -1122,6 +1122,7 @@
           <a class="nd-ct" href="atividades-alfabetizacao.html" style="--sh:#FFE3EC"><div class="e">🔤</div><b>Alfabetização</b><span>12 geradores + kits</span></a>
           <a class="nd-ct" href="alfabetizacao-eja.html" style="--sh:#e3f1f0"><div class="e">🎒</div><b>Alfabetização EJA</b><span>Leituras por tema</span></a>
           <a class="nd-ct" href="matematica.html" style="--sh:#DDF7EE"><div class="e">➗</div><b>Matemática</b><span>Operações, frações, dinheiro</span></a>
+          <a class="nd-ct" href="atividades-ingles.html" style="--sh:#E3ECFA"><div class="e">💬</div><b>Inglês</b><span>Vocabulário e pronúncia</span></a>
           <a class="nd-ct" href="eja.html" style="--sh:#FBE7DF"><div class="e">📚</div><b>Atividades EJA</b><span>Prontas em PDF</span></a>
           <a class="nd-ct" href="jogos-area.html" style="--sh:#EEE9FF"><div class="e">🎮</div><b>Jogos</b><span>Para a TV ou o celular</span></a>
         </div>
@@ -1884,6 +1885,7 @@
     ['','🔤','Alfabetização',"location.href='atividades-alfabetizacao.html'"],
     ['','🎒','Alfabetização EJA',"location.href='alfabetizacao-eja.html'"],
     ['','➗','Matemática',"location.href='matematica.html'"],
+    ['','💬','Inglês',"location.href='atividades-ingles.html'"],
     ['','📚','Atividades EJA',"location.href='eja.html'"],
     ['','🎮','Jogos para a turma',"location.href='jogos-area.html'"],
     ['','🧁','Todas as centrais',"location.href='/#centrais'"],
@@ -1933,6 +1935,7 @@
       ['🔤','Central de Alfabetização','12 geradores e 3 kits','atividades-alfabetizacao.html','1 crédito por folha'],
       ['🎒','Alfabetização EJA','Leituras por tema, mercado, placas','alfabetizacao-eja.html','1 crédito por folha'],
       ['➗','Central de Matemática','Operações, frações, área, dinheiro','matematica.html','Grátis por tempo limitado'],
+      ['💬','Central de Inglês','Vocabulário por tema, flashcards e pronúncia','atividades-ingles.html','1 crédito por folha'],
       ['📚','Atividades EJA','PDFs prontos','eja.html','Grátis'],
       ['✊🏿','Consciência Negra','9 atividades + avaliação','consciencia-negra.html','Grátis'],
       ...(ND_ELEICOES?[['🗳️','Eleições e cidadania','Não partidário · esquemas e caça-palavras','eleicoes.html','Grátis']]:[])]},
@@ -1950,7 +1953,7 @@
   // busca: acha a ferramenta certa pelo que a professora escreve
   const ND_TODAS=ND_INT.flatMap(i=>i.op.map(o=>({i,o})));
   const ND_CHAVES={prova:'avaliacao',avalia:'avaliacao',teste:'avaliacao',plano:'planejar',planej:'planejar',lousa:'planejar',slide:'explicar',apresenta:'explicar',esquema:'explicar',mapa:'explicar',jogo:'jogar',quiz:'jogar',memória:'jogar',trilha:'jogar',caça:'atividade',cruzad:'atividade',texto:'atividade',leitura:'atividade',atividade:'atividade',exerc:'atividade'};
-  const ND_FERR={fraç:['Central de Matemática'],frac:['Central de Matemática'],matem:['Central de Matemática'],conta:['Central de Matemática'],sílab:['Central de Alfabetização'],silab:['Central de Alfabetização'],alfabet:['Central de Alfabetização','Alfabetização EJA'],eja:['Alfabetização EJA','Atividades EJA'],adult:['Alfabetização EJA','Atividades EJA'],consci:['Consciência Negra']};
+  const ND_FERR={ingl:['Central de Inglês'],english:['Central de Inglês'],fraç:['Central de Matemática'],frac:['Central de Matemática'],matem:['Central de Matemática'],conta:['Central de Matemática'],sílab:['Central de Alfabetização'],silab:['Central de Alfabetização'],alfabet:['Central de Alfabetização','Alfabetização EJA'],eja:['Alfabetização EJA','Atividades EJA'],adult:['Alfabetização EJA','Atividades EJA'],consci:['Consciência Negra']};
   function ndBuscar(ir){
     const q=document.getElementById('nd-q').value.trim();const res=document.getElementById('nd-res');
     if(!q){res.style.display='none';return}
