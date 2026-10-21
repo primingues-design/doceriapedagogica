@@ -383,6 +383,13 @@
 
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   }
+  .graf{margin:6px 0 10px;padding:8px 10px;border:1px solid #e6dccf;border-radius:10px;background:#fff;break-inside:avoid;page-break-inside:avoid}
+  .graf-tit{font-weight:700;font-size:13px;text-align:center;margin-bottom:4px;color:#3D1F0D}
+  .graf-svg{width:100%;max-width:560px;height:auto;display:block;margin:0 auto}
+  .graf-un{text-align:center;font-size:11px;color:#555}
+  .graf-tab{border-collapse:collapse;margin:0 auto;font-size:13px}.graf-tab th,.graf-tab td{border:1px solid #bbb;padding:4px 14px;text-align:center}.graf-tab th{background:#f5efe7}
+  .graf-pizza{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+  .graf-leg div{display:flex;align-items:center;gap:6px;font-size:13px;margin:3px 0}.graf-leg span{width:13px;height:13px;border-radius:3px;display:inline-block}
 </style>
 </head>
 <body>
@@ -885,8 +892,8 @@
     const cands=[];
     const principal=(data.conteudo_principal?.imagem_principal_prompt||'').trim();
     if(principal && !data._principalUrl) cands.push({key:'principal',prompt:principal,size:'landscape_4_3'});
-    (data.itens_atividade||[]).forEach((it,idx)=>{const p=(it.api_image_prompt||'').trim();if(p&&!it._url)cands.push({key:'item',arr:'itens_atividade',idx,prompt:p,size:'square_hd'});});
-    (data.questoes||[]).forEach((q,idx)=>{const p=(q.api_image_prompt||'').trim();if(p&&!q._url)cands.push({key:'q',arr:'questoes',idx,prompt:p,size:'square_hd'});});
+    (data.itens_atividade||[]).forEach((it,idx)=>{const p=(it.api_image_prompt||'').trim();if(p&&!it._url&&!temGrafico(it))cands.push({key:'item',arr:'itens_atividade',idx,prompt:p,size:'square_hd'});});
+    (data.questoes||[]).forEach((q,idx)=>{const p=(q.api_image_prompt||'').trim();if(p&&!q._url&&!temGrafico(q))cands.push({key:'q',arr:'questoes',idx,prompt:p,size:'square_hd'});});
     const usar=cands.slice(0,6);
     await Promise.all(usar.map(async c=>{
       try{
@@ -896,6 +903,44 @@
     }));
   }
 
+  // ── GRÁFICOS: desenhados aqui a partir dos dados (sem IA de imagem → números sempre certos) ──
+  function temGrafico(o){const g=o&&o.grafico;return !!(g&&Array.isArray(g.dados)&&g.dados.filter(d=>Array.isArray(d)&&d.length>=2&&isFinite(+d[1])).length>=2)}
+  function graficoHTML(g){
+    if(!temGrafico({grafico:g}))return '';
+    const dados=g.dados.filter(d=>Array.isArray(d)&&d.length>=2&&isFinite(+d[1])).slice(0,10).map(d=>[String(d[0]),+d[1]]);
+    const tipo=String(g.tipo||'colunas').toLowerCase();const tit=esc(g.titulo||'');const un=esc(g.unidade||'');
+    const CORES=['#C8742A','#2d6e6e','#7c6af5','#e06090','#3b82c4','#d9a520','#5e9e3a','#b5462a','#8a5a3b','#4f6d9a'];
+    const fmt=v=>(Math.round(v*100)/100).toLocaleString('pt-BR');
+    const cab=tit?`<div class="graf-tit">${tit}</div>`:'';
+    if(tipo==='tabela'){
+      return `<div class="graf">${cab}<table class="graf-tab"><tr><th></th><th>${un||'Valor'}</th></tr>${dados.map(([l,v])=>`<tr><td>${esc(l)}</td><td>${fmt(v)}</td></tr>`).join('')}</table></div>`;
+    }
+    if(tipo==='pizza'){
+      const tot=dados.reduce((s,d)=>s+Math.max(0,d[1]),0)||1;let a=-Math.PI/2;const cx=120,cy=120,R=105;let fat='';
+      dados.forEach(([l,v],i)=>{const ang=Math.max(0,v)/tot*2*Math.PI;const x1=cx+R*Math.cos(a),y1=cy+R*Math.sin(a),x2=cx+R*Math.cos(a+ang),y2=cy+R*Math.sin(a+ang);
+        fat+=ang>=2*Math.PI-1e-6?`<circle cx="${cx}" cy="${cy}" r="${R}" fill="${CORES[i%10]}"/>`:`<path d="M${cx} ${cy} L${x1.toFixed(1)} ${y1.toFixed(1)} A${R} ${R} 0 ${ang>Math.PI?1:0} 1 ${x2.toFixed(1)} ${y2.toFixed(1)} Z" fill="${CORES[i%10]}" stroke="#fff" stroke-width="2"/>`;a+=ang});
+      const leg=dados.map(([l,v],i)=>`<div><span style="background:${CORES[i%10]}"></span>${esc(l)}: <b>${fmt(v)}${un==='%'?'%':(un?' '+un:'')}</b></div>`).join('');
+      return `<div class="graf">${cab}<div class="graf-pizza"><svg viewBox="0 0 240 240" width="210" height="210">${fat}</svg><div class="graf-leg">${leg}</div></div></div>`;
+    }
+    // colunas (padrão), barras (horizontais) e linha
+    const max=Math.max(...dados.map(d=>d[1]),0)||1;const passo=(()=>{const bruto=max/5;const p=Math.pow(10,Math.floor(Math.log10(bruto)));return [1,2,2.5,5,10].map(m=>m*p).find(s=>s>=bruto)})();const topo=Math.ceil(max/passo)*passo||1;
+    if(tipo==='barras'){
+      const W=560,lab=130,h0=34,H=dados.length*h0+30;let s='';
+      for(let v=0;v<=topo+1e-9;v+=passo){const x=lab+(W-lab-20)*v/topo;s+=`<line x1="${x}" y1="6" x2="${x}" y2="${H-22}" stroke="#ddd"/><text x="${x}" y="${H-6}" font-size="11" text-anchor="middle" fill="#555">${fmt(v)}</text>`}
+      dados.forEach(([l,v],i)=>{const y=8+i*h0;const w=(W-lab-20)*Math.max(0,v)/topo;s+=`<text x="${lab-8}" y="${y+16}" font-size="13" text-anchor="end" fill="#222">${esc(l)}</text><rect x="${lab}" y="${y+2}" width="${w.toFixed(1)}" height="22" rx="3" fill="${CORES[i%10]}"/><text x="${lab+w+5}" y="${y+18}" font-size="12" font-weight="700" fill="#222">${fmt(v)}</text>`});
+      return `<div class="graf">${cab}<svg viewBox="0 0 ${W} ${H}" class="graf-svg">${s}</svg>${un?`<div class="graf-un">${un}</div>`:''}</div>`;
+    }
+    const W=560,H=250,L=48,B=50,T=12,Rr=12;const larg=(W-L-Rr)/dados.length;let s='';
+    for(let v=0;v<=topo+1e-9;v+=passo){const y=H-B-(H-B-T)*v/topo;s+=`<line x1="${L}" y1="${y}" x2="${W-Rr}" y2="${y}" stroke="#ddd"/><text x="${L-6}" y="${y+4}" font-size="11" text-anchor="end" fill="#555">${fmt(v)}</text>`}
+    const pts=[];
+    dados.forEach(([l,v],i)=>{const xc=L+larg*(i+.5);const y=H-B-(H-B-T)*Math.max(0,v)/topo;pts.push([xc,y]);
+      if(tipo!=='linha'){const bw=Math.min(54,larg*.62);s+=`<rect x="${(xc-bw/2).toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${(H-B-y).toFixed(1)}" rx="3" fill="${CORES[i%10]}"/>`}
+      s+=`<text x="${xc}" y="${(y-5).toFixed(1)}" font-size="12" font-weight="700" text-anchor="middle" fill="#222">${fmt(v)}</text><text x="${xc}" y="${H-B+16}" font-size="12" text-anchor="middle" fill="#222">${esc(l.length>12?l.slice(0,11)+'…':l)}</text>`});
+    if(tipo==='linha')s+=`<polyline points="${pts.map(p=>p.map(n=>n.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="#C8742A" stroke-width="3"/>`+pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="4.5" fill="#C8742A"/>`).join('');
+    s+=`<line x1="${L}" y1="${H-B}" x2="${W-Rr}" y2="${H-B}" stroke="#333" stroke-width="1.5"/><line x1="${L}" y1="${T}" x2="${L}" y2="${H-B}" stroke="#333" stroke-width="1.5"/>`;
+    if(un)s+=`<text x="12" y="${(H-B+T)/2}" font-size="11" fill="#555" transform="rotate(-90 12 ${(H-B+T)/2})" text-anchor="middle">${un}</text>`;
+    return `<div class="graf">${cab}<svg viewBox="0 0 ${W} ${H}" class="graf-svg">${s}</svg></div>`;
+  }
   function isLibAsset(url){ return typeof url==='string' && url.indexOf('/assets/')===0; }
   function imgFrame(url,prompt,extraClass){
     // imagens da biblioteca curada (mapas etc.) mostram inteiras, sem corte
@@ -984,7 +1029,7 @@
     const num=it.id||i+1;
     const opcoes=Array.isArray(it.opcoes_selecao)?it.opcoes_selecao.filter(o=>String(o).trim()):[];
     const geo=isLibAsset(it._url);
-    const temImg=!!(it._url||(comImagemLateral&&it.api_image_prompt));
+    const temImg=!temGrafico(it)&&!!(it._url||(comImagemLateral&&it.api_image_prompt));
     const imgLateral=temImg&&!geo;   // imagem na coluna ao lado → opções ficam estreitas → mantém 1 coluna
     // múltipla escolha fica na coluna do conteúdo; linhas de resposta vão na LARGURA TODA, abaixo
     const respInline = opcoes.length
@@ -995,7 +1040,7 @@
     // mapa de Geografia: grande, ABAIXO da pergunta; demais imagens: coluna lateral como hoje
     const imgCol=(temImg&&!geo)?`<div class="prova-q-img">${imgFrame(it._url,it.api_image_prompt)}</div>`:'';
     const mapaAbaixo=geo?imgFrame(it._url,it.api_image_prompt,'mapa-geo'):'';
-    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div>${respLinhas}${mapaAbaixo}</div>`;
+    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div></div>${graficoHTML(it.grafico)}<div class="prova-q-row">${conteudo}${imgCol}</div>${respLinhas}${mapaAbaixo}</div>`;
   }
 
   // ════════ RENDER: AVALIAÇÃO ════════
@@ -1017,7 +1062,7 @@
     const num=i+1;const tipo=q.tipo||'dissertativa';
     let respInline='',respLinhas='';
     const geo=isLibAsset(q._url);
-    const temImg=!!(q._url||q.api_image_prompt);
+    const temImg=!temGrafico(q)&&!!(q._url||q.api_image_prompt);
     const imgLateral=temImg&&!geo;   // imagem na coluna ao lado → opções ficam estreitas → mantém 1 coluna
     if(tipo==='multipla_escolha'){
       const ops=(q.opcoes||[]).filter(o=>String(o).trim());
@@ -1033,7 +1078,7 @@
     const conteudo=`<div class="prova-q-conteudo"><div class="prova-q-enunciado">${richText(q.enunciado)}</div>${respInline}</div>`;
     const imgCol=(temImg&&!geo)?`<div class="prova-q-img">${imgFrame(q._url,q.api_image_prompt)}</div>`:'';
     const mapaAbaixo=geo?imgFrame(q._url,q.api_image_prompt,'mapa-geo'):'';
-    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div><div class="prova-q-tipo">${TIPO_LABEL[tipo]||''}</div></div><div class="prova-q-row">${conteudo}${imgCol}</div>${respLinhas}${mapaAbaixo}</div>`;
+    return `<div class="prova-questao"><div class="prova-q-head"><div class="prova-q-num">${num}</div><div class="prova-q-tipo">${TIPO_LABEL[tipo]||''}</div></div>${graficoHTML(q.grafico)}<div class="prova-q-row">${conteudo}${imgCol}</div>${respLinhas}${mapaAbaixo}</div>`;
   }
   function respostaGabarito(q){
     if(q.tipo==='multipla_escolha'){const L=(q.resposta||'').trim().toUpperCase();const idx=L.charCodeAt(0)-65;const op=(q.opcoes||[])[idx];return (L||'—')+(op?') '+String(op).replace(/^[A-Da-d]\)\s*/,''):'');}
@@ -1190,10 +1235,16 @@ RELACIONAR / LIGAR COLUNAS: quando a atividade for associar termos a definiçõe
 CONTINUIDADE: ao final, proponha "proximo_passo" pensando na progressão natural do aluno depois deste tema/ano. Texto curto, acolhedor, em 2ª pessoa (fale com o professor).
 ECONOMIA DE PAPEL (A4): a atividade será impressa. Aproveite bem o espaço — enunciados objetivos (sem encher linguiça), sem repetir comandos, e peça espaço de resposta PROPORCIONAL (pergunta curta = 1-2 linhas; média = 3; só dê muitas linhas/quadros quando a resposta realmente exigir). Quando for comparar características ou organizar dados, use uma TABELA markdown (| col | col |\\n|---|---|\\n| ... |) com células vazias para o aluno preencher — fica compacto e claro. Não infle a quantidade de itens só para preencher; priorize qualidade. Mire numa atividade enxuta que caiba em poucas folhas, a menos que o professor peça mais.
 ${blocoReligioso(o.componente)}${blocoBiblioteca(o.componente)}
+════ GRÁFICOS E TABELAS (REGRA OBRIGATÓRIA) ════
+Quando a questão pedir leitura ou interpretação de GRÁFICO ou TABELA, NÃO use imagem nem asset_key: preencha "grafico" com os DADOS — o sistema desenha com precisão.
+• "grafico": {"tipo":"colunas|barras|pizza|linha|tabela","titulo":"título curto","unidade":"ex.: alunos, R$, °C, %","dados":[["rótulo",número],...]}
+• 3 a 8 itens; números simples e coerentes com a pergunta (a resposta certa TEM de sair destes dados). Pizza: valores que somam 100 (%).
+• Use dados de situação fictícia e realista (ex.: "Pesquisa da turma: fruta preferida") — dados oficiais só se tiver CERTEZA, citando a fonte no título.
+• Questão sem gráfico: "grafico": null.
 RESPONDA SÓ COM ESTE JSON:
 {"metadados":{"titulo_atividade":"...","componente":"${o.componente}","tipo_layout":"'grade_autoditado'|'cena_unica_perguntas'|'multiplas_questoes'|'texto_e_imagem'","publico":"${o.publico}","bncc":["EFxxXXxx"]},
 "conteudo_principal":{"enunciado_geral":"...","imagem_principal_prompt":"prompt em inglês da cena única, ou vazio","asset_key":"chave da biblioteca p/ mapa correto, ou vazio"},
-"itens_atividade":[{"id":1,"enunciado_item":"...","opcoes_selecao":[],"palavra_alvo_alfabetizacao":"se sondagem/autoditado","classificacao_silabica":"se aplicável","api_image_prompt":"prompt em inglês ou vazio","asset_key":"chave da biblioteca ou vazio"}],
+"itens_atividade":[{"id":1,"enunciado_item":"...","opcoes_selecao":[],"palavra_alvo_alfabetizacao":"se sondagem/autoditado","classificacao_silabica":"se aplicável","api_image_prompt":"prompt em inglês ou vazio","asset_key":"chave da biblioteca ou vazio","grafico":null}],
 "proximo_passo":{"sugestao":"texto curto e amigável sugerindo a próxima atividade e por quê","tema":"tema sugerido para a próxima atividade"}}`;
   }
 
@@ -1232,11 +1283,17 @@ QUESTÕES: gere exatamente estas (${total} no total), distribuídas: ${tiposBloc
 - Alinhe à BNCC e devolva os códigos em "metadados.bncc".
 
 ${blocoReligioso(o.disciplina)}${blocoBiblioteca(o.disciplina)}
+════ GRÁFICOS E TABELAS (REGRA OBRIGATÓRIA) ════
+Quando a questão pedir leitura ou interpretação de GRÁFICO ou TABELA, NÃO use imagem nem asset_key: preencha "grafico" com os DADOS — o sistema desenha com precisão.
+• "grafico": {"tipo":"colunas|barras|pizza|linha|tabela","titulo":"título curto","unidade":"ex.: alunos, R$, °C, %","dados":[["rótulo",número],...]}
+• 3 a 8 itens; números simples e coerentes com a pergunta (a resposta certa TEM de sair destes dados). Pizza: valores que somam 100 (%).
+• Use dados de situação fictícia e realista (ex.: "Pesquisa da turma: fruta preferida") — dados oficiais só se tiver CERTEZA, citando a fonte no título.
+• Questão sem gráfico: "grafico": null.
 DECISÃO DE IMAGEM (VOCÊ decide, o professor NÃO): use imagem só quando ela realmente eleva a QUALIDADE pedagógica, a estética e o avanço do aluno — não force, a maioria das questões pode não ter imagem. Para conteúdo factual (mapas, biomas, diagramas científicos) use "asset_key" da biblioteca; para cenas genéricas não factuais use "api_image_prompt" (realista/fotográfico, em inglês, SEM texto/números dentro). Coerência texto↔imagem obrigatória. Cada questão usa OU "asset_key" OU "api_image_prompt", nunca os dois.
 
 RESPONDA SÓ COM ESTE JSON:
 {"titulo":"${o.titulo}","metadados":{"bncc":["EFxxXXxx"]},"texto_base":"texto ou vazio",
-"questoes":[{"tipo":"multipla_escolha|dissertativa|vf","enunciado":"...","opcoes":[],"resposta":"","afirmacoes":[],"resposta_modelo":"","linhas":4,"avalia":"o que a questão avalia","asset_key":"chave da biblioteca ou vazio","api_image_prompt":"prompt em inglês ou vazio"}]}`;
+"questoes":[{"tipo":"multipla_escolha|dissertativa|vf","enunciado":"...","opcoes":[],"resposta":"","afirmacoes":[],"resposta_modelo":"","linhas":4,"avalia":"o que a questão avalia","asset_key":"chave da biblioteca ou vazio","api_image_prompt":"prompt em inglês ou vazio","grafico":null}]}`;
   }
 
   function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -1285,7 +1342,14 @@ RESPONDA SÓ COM ESTE JSON:
     if(root)root[1].split(';').forEach(d=>{const m=d.match(/(--[\w-]+)\s*:\s*([^;]+)/);if(m)vars[m[1].trim()]=m[2].trim();});
     for(let i=0;i<3;i++) css=css.replace(/var\(\s*(--[\w-]+)\s*(?:,[^()]*)?\)/g,(m,n)=>vars[n]||'inherit');
     const titulo=(document.getElementById('phTitle')?.textContent||'material').trim();
-    const html=`<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/1999/xhtml"><head><meta charset="utf-8"><title>${esc(titulo)}</title><style>@page{size:A4 portrait;margin:1.2cm 1.4cm}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a}${css}\nhtml,body,.prova-doc,.doc-wrap,.preview-panel,#prova-doc{background:#ffffff !important;background-color:#ffffff !important;box-shadow:none !important}</style></head><body>${clone.outerHTML}</body></html>`;
+    const html=`<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/1999/xhtml"><head><meta charset="utf-8"><title>${esc(titulo)}</title><style>@page{size:A4 portrait;margin:1.2cm 1.4cm}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a}${css}\nhtml,body,.prova-doc,.doc-wrap,.preview-panel,#prova-doc{background:#ffffff !important;background-color:#ffffff !important;box-shadow:none !important}  .graf{margin:6px 0 10px;padding:8px 10px;border:1px solid #e6dccf;border-radius:10px;background:#fff;break-inside:avoid;page-break-inside:avoid}
+  .graf-tit{font-weight:700;font-size:13px;text-align:center;margin-bottom:4px;color:#3D1F0D}
+  .graf-svg{width:100%;max-width:560px;height:auto;display:block;margin:0 auto}
+  .graf-un{text-align:center;font-size:11px;color:#555}
+  .graf-tab{border-collapse:collapse;margin:0 auto;font-size:13px}.graf-tab th,.graf-tab td{border:1px solid #bbb;padding:4px 14px;text-align:center}.graf-tab th{background:#f5efe7}
+  .graf-pizza{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+  .graf-leg div{display:flex;align-items:center;gap:6px;font-size:13px;margin:3px 0}.graf-leg span{width:13px;height:13px;border-radius:3px;display:inline-block}
+</style></head><body>${clone.outerHTML}</body></html>`;
     const blob=new Blob(['﻿'+html],{type:'application/msword'});
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);
     a.download=(titulo.replace(/[\\/:*?"<>|]+/g,'').trim().slice(0,60)||'material')+'.doc';
