@@ -1299,6 +1299,7 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
   function apagarMQ(id){if(!confirm('Apagar este quiz salvo?'))return;gravarMQ(lerMQ().filter(q=>q.id!==id));listarMQ()}
   function escH(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
   listarMQ();
+  (function(){const id=new URLSearchParams(location.search).get('abrir');if(id&&lerMQ().some(q=>q.id===id))abrirMQ(id)})();
 
   // ════ REVISAR PERGUNTAS ════
   function abrirEditor(){if(!quizData)return;const L=['a','b','c','d'];

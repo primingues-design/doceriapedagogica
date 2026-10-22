@@ -342,6 +342,16 @@
     .pdf-slide { width: 297mm; height: 167mm; page-break-after: always; overflow: hidden; }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   }
+  .slide-image.asset,.capa-image.asset,.destaque-image.asset{object-fit:contain;background:#fff}
+  .slide-cred{position:absolute;right:2.5%;bottom:2%;font-size:clamp(7px,1.1cqw,12px);color:rgba(0,0,0,.55);background:rgba(255,255,255,.75);padding:2px 8px;border-radius:6px;max-width:60%;text-align:right}
+  .slide-graf{flex:1;display:flex;align-items:center;justify-content:center;min-height:0;padding:1% 0}
+  .slide-graf svg{width:100%;height:100%;max-height:100%}
+  .graf-com{text-align:center;font-size:clamp(10px,2cqw,22px);color:var(--text-mid);margin-top:1%}
+  .slide-quiz .qz-q{font-weight:800;font-size:clamp(11px,2.3cqw,26px);margin:1.2% 0 .6%}
+  .slide-quiz .qz-ops{display:grid;grid-template-columns:1fr 1fr;gap:.8% 2%}
+  .slide-quiz .qz-op{padding:.7% 1.5%;border-radius:10px;background:rgba(0,0,0,.05);font-size:clamp(9px,1.8cqw,20px);transition:all .2s}
+  .slide-quiz.revela .qz-op.ok{background:#16A34A;color:#fff;font-weight:800}
+  .slide-quiz .qz-btn{position:absolute;right:4%;top:5%;border:0;border-radius:99px;padding:.6% 1.6%;font:inherit;font-weight:800;font-size:clamp(9px,1.6cqw,18px);cursor:pointer;background:#16A34A;color:#fff}
 </style>
 </head>
 <body>
@@ -503,6 +513,7 @@
           <button class="btn-action" onclick="toggleFullscreen()" title="Tela cheia (F)">⛶ Tela cheia</button>
           <button class="btn-action primary" onclick="generateBtn_regen()">↻ Regerar</button>
           <button class="btn-action primary" id="pptxBtn" onclick="downloadPPTX()">⬇️ Baixar .pptx</button>
+          <button class="btn-action" id="quizBtn" onclick="virarQuiz()" title="Abre um quiz com as perguntas desta aula — sem gastar crédito">🎮 Virar quiz</button>
           <button class="btn-action primary" onclick="downloadPDF()">🖨️ Imprimir / Salvar PDF</button>
         </div>
       </div>
@@ -625,6 +636,8 @@
     };
     const densidadeBloco = DENS[densidade] || DENS.equilibrado;
 
+    const BIB = await carregarBibSlides();
+    const listaBib = Object.entries(BIB).map(([k,a])=>`  • "${k}" → ${a.titulo}`).join('\n');
     const prompt = `Crie uma apresentação pedagógica de slides com os dados abaixo:
 
 TEMA: ${tema}
@@ -657,12 +670,16 @@ Retorne SOMENTE este JSON válido (sem markdown):
     // SLIDE TIPO "dois_lados":
     { "tipo": "dois_lados", "emoji": "emoji", "titulo": "título do slide", "lado_a": { "titulo": "Título Lado A", "itens": ["item 1", "item 2", "item 3"] }, "lado_b": { "titulo": "Título Lado B", "itens": ["item 1", "item 2", "item 3"] } },
 
+    // SLIDE TIPO "grafico" (opcional, no máximo 1 — só se o tema tiver números/comparações):
+    { "tipo": "grafico", "titulo": "título do slide", "grafico": { "tipo": "colunas|barras|pizza|linha", "titulo": "título curto", "unidade": "ex.: %, alunos, km", "dados": [["rótulo", número]] }, "comentario": "1 frase sobre o que o gráfico mostra" },
+
     // SLIDE TIPO "pergunta":
     { "tipo": "pergunta", "emoji": "🤔", "pergunta": "pergunta reflexiva para a turma?", "dica": "dica ou contexto para o professor" },
 
     // SLIDE TIPO "fechamento":
     { "tipo": "fechamento", "emoji": "⭐", "titulo": "O que aprendemos hoje", "pontos": ["ponto 1", "ponto 2", "ponto 3"], "chamada": "chamada para ação ou tarefa opcional" }
-  ]
+  ],
+  "quiz": [ { "enunciado": "pergunta de revisão sobre o conteúdo dos slides", "opcoes": { "a": "...", "b": "...", "c": "...", "d": "..." }, "resposta_correta": "a", "explicacao": "1 linha" } ]
 }
 
 REGRAS (slides serão PROJETADOS no telão — texto grande, pouca palavra):
@@ -680,7 +697,12 @@ REGRAS (slides serão PROJETADOS no telão — texto grande, pouca palavra):
   • NUNCA use nome próprio de pessoa ou figura histórica (ex: "Princesa Isabel" retorna fotos genéricas e ERRADAS, tipo princesa de desenho). Descreva a CENA/CONTEXTO, não a pessoa.
   • Para slide sobre uma PESSOA específica, um CONCEITO ABSTRATO, ou um TEMA SENSÍVEL (escravidão, guerra, tragédia, violência), deixe "imagem_busca" como string vazia "" — é melhor ficar sem foto do que com uma imagem inadequada ou que destoe.
   • Em temas históricos, prefira cenas sóbrias e contextuais (ex: "old historical document", "colonial architecture brazil", "sugar cane plantation") em vez de pessoas.
-  • Evite termos abstratos (nada de "knowledge", "freedom", "learning").`;
+  • Evite termos abstratos (nada de "knowledge", "freedom", "learning").
+- IMAGENS VERDADEIRAS (use "asset_key" em vez de "imagem_busca"): para pinturas, fotos históricas, mapas, biomas e esquemas científicos, use SÓ estas imagens corretas da biblioteca (a foto de banco ERRA nesses casos):
+${listaBib}
+  • Um slide usa OU "asset_key" OU "imagem_busca", nunca os dois. Coerência: o texto do slide deve falar do que a imagem mostra.
+- GRÁFICO: no máximo 1 slide "grafico", só se o tema tiver dados de verdade (porcentagens, quantidades, comparações). Use números corretos e conhecidos; se não tiver certeza, use uma situação fictícia deixando isso claro no título (ex.: "Exemplo: pesquisa da turma").
+- "quiz": exatamente 5 perguntas de múltipla escolha sobre o que os slides ensinam (4 alternativas plausíveis, uma certa).`;
 
     try {
       const response = await fetch('/api/claude', {
@@ -716,6 +738,9 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
       catch(e) { throw new Error('Formato inesperado. Tente novamente.'); }
 
       slidesData = parsed.slides || [];
+      QUIZ_SLIDES = (parsed.quiz || []).filter(q => q && q.enunciado && q.opcoes);
+      TITULO_SLIDES = parsed.titulo || tema;
+      if (QUIZ_SLIDES.length >= 3) slidesData.push({ tipo: 'quiz', titulo: 'Perguntas rápidas', perguntas: QUIZ_SLIDES.slice(0, 3) });
       currentIndex = 0;
 
       // busca imagens reais (Pexels) antes de renderizar — não bloqueia se falhar
@@ -751,7 +776,20 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
   }
 
   // ── BUSCA DE IMAGENS (Pexels) ──
+  // ── ACERVO (imagens verdadeiras: obras, fotos históricas, mapas e esquemas) ──
+  let BIB_SLIDES = null;
+  async function carregarBibSlides() {
+    if (BIB_SLIDES) return BIB_SLIDES;
+    BIB_SLIDES = {};
+    try { const r = await fetch('/js/biblioteca-imagens.json'); const b = r.ok ? await r.json() : {};
+      for (const cat of ['arte', 'historia', 'geografia', 'ciencias', 'fisica', 'quimica']) { const c = b[cat] || {}; for (const k of Object.keys(c)) if (c[k] && c[k].arquivo) BIB_SLIDES[k] = c[k]; }
+    } catch (_) {}
+    return BIB_SLIDES;
+  }
+  let QUIZ_SLIDES = [], TITULO_SLIDES = '';
   async function buscarImagens(slides) {
+    const BIB = await carregarBibSlides();
+    (slides || []).forEach(s => { const a = s && s.asset_key && BIB[String(s.asset_key).trim()]; if (a) { s.imagemUrl = a.arquivo; s.asset = true; s.credito = a.credito || ''; s.imagem_busca = ''; } });
     const ORIENT = { capa: 'landscape', topicos: 'portrait', destaque: 'square' };
     const alvos = (slides || []).filter(s => s && s.imagem_busca && ORIENT[s.tipo]);
     await Promise.all(alvos.map(async s => {
@@ -763,6 +801,45 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
     }));
   }
 
+  // ── GRÁFICO (desenhado a partir dos dados: números sempre certos) ──
+  function graficoSVG(g) {
+    const dados = ((g && g.dados) || []).filter(d => Array.isArray(d) && d.length >= 2 && isFinite(+d[1])).slice(0, 8).map(d => [String(d[0]), +d[1]]);
+    if (dados.length < 2) return '';
+    const tipo = String(g.tipo || 'colunas').toLowerCase(); const un = g.unidade || '';
+    const CORES = ['#C8742A','#2d6e6e','#7c6af5','#e06090','#3b82c4','#d9a520','#5e9e3a','#b5462a'];
+    const fmt = v => (Math.round(v * 100) / 100).toLocaleString('pt-BR'); const e = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    if (tipo === 'pizza') {
+      const tot = dados.reduce((s, d) => s + Math.max(0, d[1]), 0) || 1; let a = -Math.PI / 2, s = ''; const cx = 230, cy = 210, R = 180;
+      dados.forEach(([l, v], i) => { const ang = Math.max(0, v) / tot * 2 * Math.PI; const x1 = cx + R * Math.cos(a), y1 = cy + R * Math.sin(a), x2 = cx + R * Math.cos(a + ang), y2 = cy + R * Math.sin(a + ang);
+        s += ang >= 2 * Math.PI - 1e-6 ? `<circle cx="${cx}" cy="${cy}" r="${R}" fill="${CORES[i % 8]}"/>` : `<path d="M${cx} ${cy} L${x1} ${y1} A${R} ${R} 0 ${ang > Math.PI ? 1 : 0} 1 ${x2} ${y2} Z" fill="${CORES[i % 8]}" stroke="#fff" stroke-width="3"/>`; a += ang;
+        s += `<rect x="470" y="${70 + i * 44}" width="24" height="24" rx="5" fill="${CORES[i % 8]}"/><text x="506" y="${89 + i * 44}" font-size="22" fill="#333">${e(l)}: ${fmt(v)}${un === '%' ? '%' : (un ? ' ' + e(un) : '')}</text>`; });
+      return `<svg viewBox="0 0 900 420" preserveAspectRatio="xMidYMid meet">${s}</svg>`;
+    }
+    const W = 900, H = 420, L = 70, B = 60, T = 20, Rr = 20; const max = Math.max(...dados.map(d => d[1]), 0) || 1;
+    const bruto = max / 5, p = Math.pow(10, Math.floor(Math.log10(bruto))); const passo = [1, 2, 2.5, 5, 10].map(m => m * p).find(x => x >= bruto); const topo = Math.ceil(max / passo) * passo || 1;
+    let s = ''; for (let v = 0; v <= topo + 1e-9; v += passo) { const y = H - B - (H - B - T) * v / topo; s += `<line x1="${L}" y1="${y}" x2="${W - Rr}" y2="${y}" stroke="#ddd"/><text x="${L - 8}" y="${y + 6}" font-size="18" text-anchor="end" fill="#555">${fmt(v)}</text>`; }
+    const larg = (W - L - Rr) / dados.length; const pts = [];
+    dados.forEach(([l, v], i) => { const xc = L + larg * (i + .5); const y = H - B - (H - B - T) * Math.max(0, v) / topo; pts.push([xc, y]);
+      if (tipo !== 'linha') { const bw = Math.min(90, larg * .62); s += `<rect x="${xc - bw / 2}" y="${y}" width="${bw}" height="${H - B - y}" rx="5" fill="${CORES[i % 8]}"/>`; }
+      s += `<text x="${xc}" y="${y - 8}" font-size="20" font-weight="700" text-anchor="middle" fill="#222">${fmt(v)}</text><text x="${xc}" y="${H - B + 28}" font-size="19" text-anchor="middle" fill="#222">${e(l.length > 14 ? l.slice(0, 13) + '…' : l)}</text>`; });
+    if (tipo === 'linha') s += `<polyline points="${pts.map(q => q.join(',')).join(' ')}" fill="none" stroke="#C8742A" stroke-width="5"/>` + pts.map(q => `<circle cx="${q[0]}" cy="${q[1]}" r="7" fill="#C8742A"/>`).join('');
+    s += `<line x1="${L}" y1="${H - B}" x2="${W - Rr}" y2="${H - B}" stroke="#333" stroke-width="2"/>`;
+    if (un) s += `<text x="${L}" y="${T - 4}" font-size="17" fill="#555">${e(un)}</text>`;
+    return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">${s}</svg>`;
+  }
+
+  // ── VIRAR QUIZ: abre o Quiz com as perguntas desta aula (sem gastar crédito) ──
+  function virarQuiz() {
+    if (!QUIZ_SLIDES.length) { alert('Esta apresentação não tem perguntas. Gere os slides de novo para criar o quiz junto.'); return; }
+    const id = 'q' + Date.now();
+    let l = []; try { l = JSON.parse(localStorage.getItem('dp_meus_quizzes') || '[]'); } catch (_) {}
+    l.unshift({ id, titulo: 'Quiz: ' + (TITULO_SLIDES || 'aula'), data: new Date().toLocaleDateString('pt-BR'),
+      meta: { nivel: document.getElementById('nivel').value, num: String(QUIZ_SLIDES.length), dif: 'Médio', tempo: '30' },
+      quiz: { titulo: 'Quiz: ' + (TITULO_SLIDES || 'aula'), disciplina: document.getElementById('disciplina').value || '', questoes: QUIZ_SLIDES } });
+    try { localStorage.setItem('dp_meus_quizzes', JSON.stringify(l.slice(0, 40))); } catch (_) {}
+    location.href = '/jogos.html?abrir=' + id;
+  }
+
   // ── RENDER ──
   function buildSlideHTML(slide, theme) {
     const t = `theme-${theme}`;
@@ -771,10 +848,11 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
       case 'capa': return `
         <div class="slide slide-capa ${t}">
           ${slide.imagemUrl
-            ? `<div class="capa-image-wrap"><img class="capa-image" src="${slide.imagemUrl}" alt=""></div>`
+            ? `<div class="capa-image-wrap"><img class="capa-image${slide.asset?' asset':''}" src="${slide.imagemUrl}" alt=""></div>`
             : `<div class="capa-emoji">${slide.emoji||'📚'}</div>`}
           <div class="capa-titulo">${slide.titulo||''}</div>
           <div class="capa-sub">${slide.subtitulo||''}</div>
+          ${slide.credito ? `<div class="slide-cred">${slide.credito}</div>` : ''}
           <div class="capa-meta">
             <span>${slide.professor||document.getElementById('professor').value||'DoceriaPedagógica'}</span>
             <span>${slide.disciplina||document.getElementById('disciplina').value||''}</span>
@@ -784,7 +862,7 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
 
       case 'topicos': {
         const visualPanel = slide.imagemUrl
-          ? `<div class="slide-image-panel"><img class="slide-image" src="${slide.imagemUrl}" alt=""></div>`
+          ? `<div class="slide-image-panel"><img class="slide-image${slide.asset?' asset':''}" src="${slide.imagemUrl}" alt=""></div>`
           : '';
         return `
         <div class="slide slide-body ${t}">
@@ -800,6 +878,7 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
             </div>
             ${visualPanel}
           </div>
+          ${slide.credito ? `<div class="slide-cred">${slide.credito}</div>` : ''}
         </div>`;
       }
 
@@ -807,11 +886,12 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
         <div class="slide slide-destaque ${t}">
           <div class="destaque-inner">
             ${slide.imagemUrl
-              ? `<div class="destaque-image-wrap"><img class="destaque-image" src="${slide.imagemUrl}" alt=""></div>`
+              ? `<div class="destaque-image-wrap"><img class="destaque-image${slide.asset?' asset':''}" src="${slide.imagemUrl}" alt=""></div>`
               : `<div class="destaque-acento">${slide.emoji||'💡'}</div>`}
             <div class="destaque-texto">${slide.texto||''}</div>
             ${slide.sub ? `<div class="destaque-sub">${slide.sub}</div>` : ''}
           </div>
+          ${slide.credito ? `<div class="slide-cred">${slide.credito}</div>` : ''}
         </div>`;
 
       case 'dois_lados': return `
@@ -851,6 +931,20 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
             ${(slide.pontos||[]).map(p => `<div class="fechamento-ponto">${p}</div>`).join('')}
           </div>
           ${slide.chamada ? `<div class="fechamento-chamada">${slide.chamada}</div>` : ''}
+        </div>`;
+
+      case 'grafico': return `
+        <div class="slide slide-body ${t}">
+          <div class="slide-header"><div class="slide-header-text"><div class="slide-titulo">${slide.titulo||''}</div><div class="slide-acento"></div></div></div>
+          <div class="slide-graf">${graficoSVG(slide.grafico)}</div>
+          ${slide.comentario ? `<div class="graf-com">${slide.comentario}</div>` : ''}
+        </div>`;
+
+      case 'quiz': return `
+        <div class="slide slide-body slide-quiz ${t}">
+          <button class="qz-btn" onclick="this.closest('.slide').classList.toggle('revela')">✔ Mostrar respostas</button>
+          <div class="slide-header"><div class="slide-header-text"><div class="slide-titulo">🎯 ${slide.titulo||'Perguntas rápidas'}</div><div class="slide-acento"></div></div></div>
+          ${(slide.perguntas||[]).map((q,i)=>`<div class="qz-q">${i+1}. ${q.enunciado}</div><div class="qz-ops">${['a','b','c','d'].filter(l=>q.opcoes&&q.opcoes[l]).map(l=>`<div class="qz-op ${l===q.resposta_correta?'ok':''}">${l.toUpperCase()}) ${q.opcoes[l]}</div>`).join('')}</div>`).join('')}
         </div>`;
 
       default: return `<div class="slide slide-body ${t}"><div style="padding:5%">${JSON.stringify(slide)}</div></div>`;
@@ -994,7 +1088,7 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
             const listW = hasImg ? 7.4 : (W - 2 * M);
             const bullets = (s.topicos || []).map(t => ({ text: t, options: { bullet: { code: '2022', indent: 18 }, color: th.text, fontSize: 20, paraSpaceAfter: 12 } }));
             slide.addText(bullets, { x: M, y: 1.9, w: listW, h: H - 2.6, valign: 'top' });
-            if (hasImg) slide.addImage({ data: img, x: M + listW + 0.3, y: 1.9, w: W - (M + listW + 0.3) - M, h: H - 2.6, sizing: { type: 'cover', w: W - (M + listW + 0.3) - M, h: H - 2.6 }, rounding: true });
+            if (hasImg) slide.addImage({ data: img, x: M + listW + 0.3, y: 1.9, w: W - (M + listW + 0.3) - M, h: H - 2.6, sizing: { type: s.asset ? 'contain' : 'cover', w: W - (M + listW + 0.3) - M, h: H - 2.6 }, rounding: !s.asset });
             break;
           }
           case 'destaque': {
@@ -1027,9 +1121,31 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
             if (s.chamada) slide.addText(s.chamada, { x: M, y: H - 1.0, w: W - 2 * M, h: 0.6, fontSize: 14, italic: true, color: th.sub, align: 'center' });
             break;
           }
+          case 'grafico': {
+            slide.addText(s.titulo || '', { x: M, y: 0.55, w: W - 2 * M, h: 1, fontFace: TF, fontSize: 26, bold: true, color: th.title });
+            const ds = ((s.grafico && s.grafico.dados) || []).filter(d => Array.isArray(d) && isFinite(+d[1]));
+            if (ds.length >= 2) {
+              const tg = String(s.grafico.tipo || 'colunas');
+              const ct = tg === 'pizza' ? pptx.ChartType.pie : tg === 'linha' ? pptx.ChartType.line : pptx.ChartType.bar;
+              slide.addChart(ct, [{ name: (s.grafico.titulo || s.titulo || ''), labels: ds.map(d => String(d[0])), values: ds.map(d => +d[1]) }],
+                { x: M, y: 1.6, w: W - 2 * M, h: H - 2.7, barDir: tg === 'barras' ? 'bar' : 'col', showValue: true, showLegend: tg === 'pizza', legendPos: 'r', dataLabelFontSize: 14, catAxisLabelFontSize: 14, valAxisLabelFontSize: 12 });
+            }
+            if (s.comentario) slide.addText(s.comentario, { x: M, y: H - 1.0, w: W - 2 * M, h: 0.6, fontSize: 15, color: th.sub, align: 'center' });
+            break;
+          }
+          case 'quiz': {
+            slide.addText('🎯 ' + (s.titulo || 'Perguntas rápidas'), { x: M, y: 0.4, w: W - 2 * M, h: 0.8, fontFace: TF, fontSize: 26, bold: true, color: th.title });
+            const linhas = [];
+            (s.perguntas || []).forEach((q, i) => { linhas.push({ text: (i + 1) + '. ' + q.enunciado, options: { bold: true, fontSize: 17, color: th.text, breakLine: true, paraSpaceBefore: 8 } });
+              ['a', 'b', 'c', 'd'].filter(l => q.opcoes && q.opcoes[l]).forEach(l => linhas.push({ text: '    ' + l.toUpperCase() + ') ' + q.opcoes[l], options: { fontSize: 14, color: th.text, breakLine: true } })); });
+            slide.addText(linhas, { x: M, y: 1.3, w: W - 2 * M, h: H - 1.8, valign: 'top' });
+            slide.addNotes('Respostas: ' + (s.perguntas || []).map((q, i) => (i + 1) + ') ' + String(q.resposta_correta || '').toUpperCase()).join('  '));
+            break;
+          }
           default:
             slide.addText(s.titulo || '', { x: M, y: 0.6, w: W - 2 * M, h: 1, fontFace: TF, fontSize: 26, bold: true, color: th.title });
         }
+        if (s.credito) slide.addText(s.credito, { x: W - 6.2, y: H - 0.45, w: 6, h: 0.35, fontSize: 9, italic: true, color: '666666', align: 'right' });
       });
 
       const nome = (document.getElementById('tema').value.trim() || 'apresentacao').replace(/[^\w\s-]/g, '').trim().slice(0, 40) || 'apresentacao';
