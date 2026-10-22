@@ -978,7 +978,25 @@ Gere exatamente ${num} questões. Varie os tipos de conhecimento testado (concei
   }
 
   // ── SHOW START SCREEN ──
+
+  // Aceita resposta em qualquer formato ("a", "A", "A)", "Alternativa B", 0..3) e alternativas em lista ou objeto
+  function normalizarQuestao(q){
+    if(!q) return q;
+    const L=['a','b','c','d'];
+    if(Array.isArray(q.opcoes)){const o={};q.opcoes.slice(0,4).forEach((t,i)=>{o[L[i]]=String(t).replace(/^\s*\(?[A-Da-d]\)\s+/,'')});q.opcoes=o}
+    if(q.opcoes&&!Array.isArray(q.opcoes)&&typeof q.opcoes==='object'){const o={};Object.keys(q.opcoes).forEach(k=>{const kk=String(k).trim().toLowerCase().replace(/[^a-d]/g,'');if(kk)o[kk]=q.opcoes[k]});q.opcoes=o}
+    let r=q.resposta_correta;
+    if(typeof r==='number') r=L[r]||'';
+    r=String(r==null?'':r).trim();
+    const m=r.match(/^(?:alternativa\s*|letra\s*)?\(?([A-Da-d])\)?(?:[\)\.:\s-]|$)/i);
+    if(m) r=m[1].toLowerCase();
+    else if(/^[0-3]$/.test(r)) r=L[+r];
+    else { const k=L.find(l=>q.opcoes&&String(q.opcoes[l]||'').trim().toLowerCase()===r.toLowerCase()); r=k||r.toLowerCase(); }
+    q.resposta_correta=r;
+    return q;
+  }
   function showStartScreen(data, nivel, num, dif, tempo) {
+    (data && data.questoes || []).forEach(normalizarQuestao);
     document.getElementById('startTitle').textContent = data.titulo || `Quiz: ${document.getElementById('tema').value}`;
     document.getElementById('startSub').textContent = `${data.disciplina || ''} • ${nivel}`;
     document.getElementById('metaQuestoes').textContent = (data.questoes || []).length;

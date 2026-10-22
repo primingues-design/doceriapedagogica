@@ -288,6 +288,9 @@
   /* IMAGENS REAIS (Pexels) — com fallback automático pro emoji */
   .slide-image-panel { width:clamp(140px,30%,360px); align-self:stretch; display:flex; }
   .slide-image { width:100%; height:100%; object-fit:cover; border-radius:16px; box-shadow:0 8px 28px rgba(0,0,0,0.16); display:block; }
+  .capa-image-wrap.obra { width:auto; height:22cqw; max-width:86cqw; aspect-ratio:auto; background:#fff; flex:none; margin-bottom:2.5%; }
+  .slide-capa .slide-cred { top:2.5%; bottom:auto; }
+  .capa-image-wrap.obra .capa-image { width:auto; height:100%; max-width:none; object-fit:contain; }
   .capa-image-wrap { width:clamp(180px,44%,560px); aspect-ratio:16/9; margin-bottom:4%; border-radius:18px; overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,0.22); }
   .capa-image { width:100%; height:100%; object-fit:cover; display:block; }
   .destaque-image-wrap { width:clamp(130px,24%,300px); aspect-ratio:1; margin:0 auto 4%; border-radius:24px; overflow:hidden; box-shadow:0 10px 34px rgba(0,0,0,0.2); }
@@ -738,7 +741,7 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
       catch(e) { throw new Error('Formato inesperado. Tente novamente.'); }
 
       slidesData = parsed.slides || [];
-      QUIZ_SLIDES = (parsed.quiz || []).filter(q => q && q.enunciado && q.opcoes);
+      QUIZ_SLIDES = (parsed.quiz || []).filter(q => q && q.enunciado && q.opcoes).map(normalizarQuestao);
       TITULO_SLIDES = parsed.titulo || tema;
       if (QUIZ_SLIDES.length >= 3) slidesData.push({ tipo: 'quiz', titulo: 'Perguntas rápidas', perguntas: QUIZ_SLIDES.slice(0, 3) });
       currentIndex = 0;
@@ -828,6 +831,24 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
     return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">${s}</svg>`;
   }
 
+
+  // Aceita resposta em qualquer formato ("a", "A", "A)", "Alternativa B", 0..3) e alternativas em lista ou objeto
+  function normalizarQuestao(q){
+    if(!q) return q;
+    const L=['a','b','c','d'];
+    if(Array.isArray(q.opcoes)){const o={};q.opcoes.slice(0,4).forEach((t,i)=>{o[L[i]]=String(t).replace(/^\s*\(?[A-Da-d]\)\s+/,'')});q.opcoes=o}
+    if(q.opcoes&&!Array.isArray(q.opcoes)&&typeof q.opcoes==='object'){const o={};Object.keys(q.opcoes).forEach(k=>{const kk=String(k).trim().toLowerCase().replace(/[^a-d]/g,'');if(kk)o[kk]=q.opcoes[k]});q.opcoes=o}
+    let r=q.resposta_correta;
+    if(typeof r==='number') r=L[r]||'';
+    r=String(r==null?'':r).trim();
+    const m=r.match(/^(?:alternativa\s*|letra\s*)?\(?([A-Da-d])\)?(?:[\)\.:\s-]|$)/i);
+    if(m) r=m[1].toLowerCase();
+    else if(/^[0-3]$/.test(r)) r=L[+r];
+    else { const k=L.find(l=>q.opcoes&&String(q.opcoes[l]||'').trim().toLowerCase()===r.toLowerCase()); r=k||r.toLowerCase(); }
+    q.resposta_correta=r;
+    return q;
+  }
+
   // ── VIRAR QUIZ: abre o Quiz com as perguntas desta aula (sem gastar crédito) ──
   function virarQuiz() {
     if (!QUIZ_SLIDES.length) { alert('Esta apresentação não tem perguntas. Gere os slides de novo para criar o quiz junto.'); return; }
@@ -848,7 +869,7 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
       case 'capa': return `
         <div class="slide slide-capa ${t}">
           ${slide.imagemUrl
-            ? `<div class="capa-image-wrap"><img class="capa-image${slide.asset?' asset':''}" src="${slide.imagemUrl}" alt=""></div>`
+            ? `<div class="capa-image-wrap${slide.asset?' obra':''}"><img class="capa-image${slide.asset?' asset':''}" src="${slide.imagemUrl}" alt=""></div>`
             : `<div class="capa-emoji">${slide.emoji||'📚'}</div>`}
           <div class="capa-titulo">${slide.titulo||''}</div>
           <div class="capa-sub">${slide.subtitulo||''}</div>
@@ -1069,7 +1090,7 @@ Retorne APENAS JSON válido, sem markdown, sem comentários, sem texto antes ou 
         switch (s.tipo) {
           case 'capa': {
             if (img) {
-              slide.addImage({ data: img, x: 0, y: 0, w: 5.6, h: H, sizing: { type: 'cover', w: 5.6, h: H } });
+              slide.addImage({ data: img, x: 0, y: 0, w: 5.6, h: H, sizing: { type: s.asset ? 'contain' : 'cover', w: 5.6, h: H } });
               const tx = 6.1, tw = W - 6.1 - M;
               slide.addText(s.titulo || '', { x: tx, y: 2.0, w: tw, h: 2.4, fontFace: TF, fontSize: 34, bold: true, color: th.title, align: 'left', valign: 'middle' });
               if (s.subtitulo) slide.addText(s.subtitulo, { x: tx, y: 4.4, w: tw, h: 1, fontSize: 16, color: th.sub, align: 'left' });
