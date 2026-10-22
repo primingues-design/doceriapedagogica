@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Esquema Linear — DoceriaPedagógica</title>
+<title>Mapa Mental — DoceriaPedagógica</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -206,6 +206,11 @@
     .esquema-ramo { page-break-inside: avoid; break-inside: avoid; }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   }
+  .vista{display:flex;gap:4px;background:#f3eee6;border-radius:12px;padding:4px;flex-wrap:wrap}
+  .vista button{border:0;background:transparent;border-radius:9px;padding:7px 11px;font:inherit;font-weight:700;font-size:13px;cursor:pointer;color:#5a4a3c}
+  .vista button.on{background:#fff;color:#2d6e6e;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+  .mapa-svg{width:100%;height:auto;display:block}
+  .mapa-dica{text-align:center;font-size:13px;color:#7a6a5c;margin:6px 0 0}
 </style>
 </head>
 <body>
@@ -220,8 +225,8 @@
 
 <div class="main">
   <div class="form-panel">
-    <div class="form-panel-title">Esquema Linear</div>
-    <div class="form-panel-sub">Gera um esquema organizado em tópicos e subtópicos — estrutura linear e numerada, ideal para estudar, revisar e imprimir. <strong>Não é mapa radial</strong> — é um esquema top-down sequencial.</div>
+    <div class="form-panel-title">Mapa Mental</div>
+    <div class="form-panel-sub">Tema no centro e galhos coloridos com as ideias principais — para projetar, estudar e imprimir. Tem também a <strong>versão para o aluno completar</strong> e a versão em lista.</div>
 
     <div class="field">
       <label class="field-label">Tema central <span class="field-required">*</span></label>
@@ -292,9 +297,9 @@
     <hr class="divider">
 
     <button class="generate-btn" id="generateBtn" onclick="generateMapa()">
-      <span class="btn-icon">📋</span>
+      <span class="btn-icon">🧠</span>
       <div class="spinner"></div>
-      Gerar Esquema Linear
+      Gerar Mapa Mental
     </button>
 
     <div class="error-box" id="errorBox"></div>
@@ -304,7 +309,7 @@
         <div class="progress-step" id="step1"><div class="step-dot">1</div><span>Analisando o tema central...</span></div>
         <div class="progress-step" id="step2"><div class="step-dot">2</div><span>Organizando tópicos principais...</span></div>
         <div class="progress-step" id="step3"><div class="step-dot">3</div><span>Desenvolvendo subtópicos...</span></div>
-        <div class="progress-step" id="step4"><div class="step-dot">4</div><span>Formatando esquema linear...</span></div>
+        <div class="progress-step" id="step4"><div class="step-dot">4</div><span>Desenhando o mapa mental...</span></div>
       </div>
     </div>
   </div>
@@ -316,15 +321,16 @@
         <div class="preview-material-meta" id="previewMeta"></div>
       </div>
       <div class="preview-actions">
+        <div class="vista" id="vistaBtns"><button class="on" data-v="mapa">🧠 Mapa mental</button><button data-v="completar">✏️ Para completar</button><button data-v="lista">📋 Lista</button></div>
         <button class="btn-regenerate" onclick="generateMapa()">↻ Gerar novamente</button>
         <button class="btn-download" onclick="printPDF()">🖨️ Imprimir / Salvar PDF</button>
       </div>
     </div>
 
     <div class="preview-empty" id="previewEmpty">
-      <div class="preview-empty-icon">📋</div>
+      <div class="preview-empty-icon">🧠</div>
       <div class="preview-empty-title">Seu esquema aparece aqui</div>
-      <div class="preview-empty-sub">Preencha o formulário ao lado e clique em <strong>Gerar Esquema Linear</strong> — tópicos numerados e subtópicos organizados, prontos para imprimir.</div>
+      <div class="preview-empty-sub">Preencha o formulário ao lado e clique em <strong>Gerar Mapa Mental</strong> — tema no centro, galhos coloridos e uma versão para o aluno completar. Tópicos e subtópicos organizados, prontos para imprimir.</div>
     </div>
 
     <div class="doc-wrapper" id="docWrapper">
@@ -387,7 +393,7 @@
 
     setStep(1);await delay(600);setStep(2);
 
-    const prompt=`Crie um esquema de estudo LINEAR e sequencial (NÃO radial) com os dados abaixo:
+    const prompt=`Crie um MAPA MENTAL de estudo com os dados abaixo (tema no centro, tópicos como galhos e itens curtos saindo de cada galho):
 
 TEMA: ${tema}
 ${disciplina?'DISCIPLINA: '+disciplina:''}
@@ -406,25 +412,26 @@ Retorne SOMENTE este JSON (sem markdown):
     {
       "titulo": "Título do Tópico (2-4 palavras)",
       "icone": "emoji relevante",
-      "itens": ["item claro e didático (máx 10 palavras)", "item 2", "item 3"]
+      "itens": ["item curto e didático (máx 6 palavras)", "item 2", "item 3"]
     }
   ]
 }
 
 REGRAS IMPORTANTES:
 - Gere exatamente ${ramos} tópicos com exatamente ${subtopicos} itens cada
-- Estrutura SEQUENCIAL — um tópico leva ao próximo logicamente
-- Cada item deve ser uma frase curta e objetiva (máx 10 palavras)
+- Os tópicos são galhos diferentes do tema; os itens são palavras-chave ou frases MUITO curtas
+- Cada item: no máximo 6 palavras (precisa caber no galho do mapa)
+- Títulos dos tópicos: 1 a 3 palavras
 - Foco: ${foco||'conceitos e definições'}
 - Linguagem adequada ao nível: ${nivel}
-- NÃO gere estrutura radial — apenas lista hierárquica linear`;
+- Informações corretas e adequadas ao nível; nada de conteúdo inventado`;
 
     try{
       const response=await fetch('/api/claude',{
         method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
           model:'claude-sonnet-4-6',max_tokens:3000,
-          system:`Você é pedagoga especialista em organização de conteúdo educacional. Crie esquemas lineares e sequenciais — nunca radiais. Estrutura: tema → tópicos numerados → itens em lista. Linguagem clara e adaptada ao nível. Retorne APENAS JSON válido, sem markdown.`,
+          system:`Você é pedagoga especialista em organização de conteúdo educacional. Crie mapas mentais claros: tema central → tópicos (galhos) → itens muito curtos (palavras-chave). Linguagem clara e adaptada ao nível. Retorne APENAS JSON válido, sem markdown.`,
           messages:[{role:'user',content:prompt}]
         })
       });
@@ -457,7 +464,10 @@ REGRAS IMPORTANTES:
     }
   }
 
-  function renderDocument(d,tema,nivel){
+  let MAPA=null,VISTA='mapa';
+  document.querySelectorAll('#vistaBtns button').forEach(b=>b.addEventListener('click',()=>{VISTA=b.dataset.v;document.querySelectorAll('#vistaBtns button').forEach(x=>x.classList.toggle('on',x===b));if(MAPA)renderDocument(MAPA.d,MAPA.tema,MAPA.nivel,true)}));
+  function renderDocument(d,tema,nivel,soVista){
+    MAPA={d,tema,nivel};
     const date=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
     document.getElementById('previewTitle').textContent=d.tema_central||tema;
     document.getElementById('previewMeta').textContent=`${d.disciplina||''} • ${d.nivel||nivel} • ${date}`;
@@ -486,8 +496,8 @@ REGRAS IMPORTANTES:
 
     document.getElementById('document-preview').innerHTML=`
       <div class="doc-header">
-        <div class="doc-header-school">DoceriaPedagógica — Esquema Linear</div>
-        <div class="doc-header-title">📋 ${d.tema_central||tema}</div>
+        <div class="doc-header-school">DoceriaPedagógica — ${VISTA==='lista'?'Esquema em lista':VISTA==='completar'?'Mapa mental para completar':'Mapa mental'}</div>
+        <div class="doc-header-title">${VISTA==='lista'?'📋':'🧠'} ${d.tema_central||tema}</div>
         <div class="doc-header-meta">
           <span class="doc-header-badge">📚 ${d.disciplina||''}</span>
           <span class="doc-header-badge">🎓 ${d.nivel||nivel}</span>
@@ -496,22 +506,60 @@ REGRAS IMPORTANTES:
         </div>
       </div>
       <div class="doc-body">
-        <div class="esquema-tema">${d.tema_central||tema}</div>
-        <div class="esquema-linha-v"></div>
-        ${topicosHtml}
+        ${VISTA==='lista'?`<div class="esquema-tema">${d.tema_central||tema}</div><div class="esquema-linha-v"></div>${topicosHtml}`:mapaSVG(d,tema,VISTA==='completar')}
       </div>
       <div class="doc-footer">
         <span class="doc-footer-logo">DoceriaPedagógica</span>
-        <span>Esquema linear gerado por IA • ${date}</span>
+        <span>${VISTA==='lista'?'Esquema':'Mapa mental'} • ${date}</span>
         <span>Aluno(a): ___________________________</span>
       </div>`;
 
     document.getElementById('docWrapper').classList.add('show');
     document.getElementById('previewHeader').classList.add('show');
     document.getElementById('previewEmpty').style.display='none';
-    document.getElementById('docWrapper').scrollIntoView({behavior:'smooth',block:'start'});
+    if(!soVista)document.getElementById('docWrapper').scrollIntoView({behavior:'smooth',block:'start'});
   }
 
+  // ════ MAPA MENTAL EM SVG: tema no centro, galhos à direita e à esquerda ════
+  function quebra(txt,max){const ws=String(txt||'').split(/\s+/);const ls=[];let l='';for(const w of ws){if((l+' '+w).trim().length>max&&l){ls.push(l);l=w}else l=(l+' '+w).trim()}if(l)ls.push(l);return ls}
+  function escM(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+  function mapaSVG(d,tema,branco){
+    const tops=(d.topicos||[]).slice(0,6);const n=tops.length;if(!n)return '';
+    const W=1100,H=800,cx=W/2,cy=H/2;let s='';
+    const dir=tops.map((t,i)=>({t,i,lado:i<Math.ceil(n/2)?1:-1}));
+    const lados=[dir.filter(x=>x.lado===1),dir.filter(x=>x.lado===-1)];
+    const fundo='',linhas=[];
+    for(const lado of lados){
+      if(!lado.length)continue;const sinal=lado[0].lado;
+      const totItens=lado.reduce((a,x)=>a+Math.max(1,(x.t.itens||[]).length),0);
+      const ih=Math.min(56,(H-90)/(totItens+lado.length*0.6));
+      let y=(H-(totItens*ih+(lado.length-1)*ih*0.6))/2;
+      for(const x of lado){
+        const its=(x.t.itens||[]).slice(0,6);const bloco=Math.max(1,its.length)*ih;const ty=y+bloco/2;
+        const cor=BRANCH_COLORS[x.i%BRANCH_COLORS.length].bg;
+        const tx=cx+sinal*240;const tw=180;const tl=quebra((x.t.icone?x.t.icone+' ':'')+(x.t.titulo||''),15);const th=22+tl.length*20;
+        // galho do centro até o tópico
+        const ox=cx+sinal*120;
+        s+=`<path d="M${ox} ${cy} C${ox+sinal*70} ${cy} ${tx-sinal*(tw/2)-sinal*70} ${ty} ${tx-sinal*(tw/2)} ${ty}" fill="none" stroke="${cor}" stroke-width="9" stroke-linecap="round"/>`;
+        // itens
+        its.forEach((it,k)=>{const iy=y+ih*(k+.5);const ix=tx+sinal*(tw/2+46);
+          s+=`<path d="M${tx+sinal*tw/2} ${ty} C${tx+sinal*(tw/2+24)} ${ty} ${ix-sinal*24} ${iy} ${ix} ${iy}" fill="none" stroke="${cor}" stroke-width="3.5" stroke-linecap="round" opacity=".85"/><circle cx="${ix}" cy="${iy}" r="5" fill="${cor}"/>`;
+          if(branco){s+=`<line x1="${ix+sinal*12}" y1="${iy+8}" x2="${ix+sinal*190}" y2="${iy+8}" stroke="#444" stroke-width="1.6"/>`}
+          else{const maxL=ih>=56?3:ih>=38?2:1;let ls=quebra(it,20);if(ls.length>maxL){ls=ls.slice(0,maxL);ls[maxL-1]=ls[maxL-1].replace(/[,.;:]?$/,"…")}const ax=ix+sinal*12;
+            ls.forEach((l,j)=>{s+=`<text x="${ax}" y="${iy+(j-(ls.length-1)/2)*18+6}" font-size="16" text-anchor="${sinal>0?'start':'end'}" fill="#2a2420" font-family="Nunito,Arial,sans-serif">${escM(l)}</text>`})}
+        });
+        // nó do tópico
+        s+=`<rect x="${tx-tw/2}" y="${ty-th/2}" width="${tw}" height="${th}" rx="16" fill="${cor}"/>`;
+        tl.forEach((l,j)=>{s+=`<text x="${tx}" y="${ty+(j-(tl.length-1)/2)*20+6}" font-size="17" font-weight="800" text-anchor="middle" fill="#fff" font-family="Nunito,Arial,sans-serif">${escM(l)}</text>`});
+        y+=bloco+ih*0.6;
+      }
+    }
+    // centro
+    const cl=quebra(d.tema_central||tema,15);const cH=56+cl.length*28;
+    s+=`<ellipse cx="${cx}" cy="${cy}" rx="146" ry="${Math.max(62,cH/2)}" fill="#3D1F0D"/><ellipse cx="${cx}" cy="${cy}" rx="136" ry="${Math.max(62,cH/2)-10}" fill="none" stroke="#e8b86d" stroke-width="2" stroke-dasharray="6 5"/>`;
+    cl.forEach((l,j)=>{s+=`<text x="${cx}" y="${cy+(j-(cl.length-1)/2)*28+8}" font-size="22" font-weight="900" text-anchor="middle" fill="#fff" font-family="Nunito,Arial,sans-serif">${escM(l)}</text>`});
+    return `<svg class="mapa-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${s}</svg>`+(branco?'<p class="mapa-dica">Complete cada galho com o que você aprendeu sobre o tema.</p>':'');
+  }
   function printPDF(){ dpPrint(); }
   function delay(ms){return new Promise(r=>setTimeout(r,ms));}
 </script>
