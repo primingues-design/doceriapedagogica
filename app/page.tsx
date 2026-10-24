@@ -15,7 +15,7 @@ const CENTRAIS = [
   { i: '💃', t: 'Espanhol', c: '#C8102E', bg: '#FDE3E6', s: 'Vocabulário por tema, tarjetas e pronúncia', status: 'pronta', href: '/atividades-espanhol.html' },
   { i: '📖', t: 'Língua Portuguesa', c: '#C8742A', bg: '#FFF0DE', s: 'Interpretação de texto, gramática, produção', status: 'ia', href: '/prova.html?componente=portugues' },
   { i: '🔬', t: 'Ciências', c: '#3B82C4', bg: '#E3F0FB', s: 'Corpo humano, ecossistemas, sistema solar — com esquemas certos', status: 'ia', href: '/prova.html?componente=ciencias' },
-  { i: '🏛️', t: 'História', c: '#8A5A3B', bg: '#F4E8DD', s: 'Linhas do tempo, Brasil colônia, fontes históricas', status: 'ia', href: '/prova.html?componente=historia' },
+  { i: '🏛️', t: 'História', c: '#8A5A3B', bg: '#F4E8DD', s: 'Linha do tempo por período, personagens, fontes e leitura de imagem', status: 'pronta', href: '/atividades-historia.html' },
   { i: '🌎', t: 'Geografia', c: '#2E7D4F', bg: '#E2F3E7', s: 'Mapas, relevo, clima, regiões do Brasil', status: 'ia', href: '/prova.html?componente=geografia' },
   { i: '🎒', t: 'EJA', c: '#B5462A', bg: '#FBE7DF', s: 'Alfabetização de adultos, leituras por tema e atividades prontas', status: 'pronta', href: '/eja.html' },
   { i: '🎮', t: 'Jogos', c: '#7C5CE0', bg: '#EEE9FF', s: 'Quiz, memória, Confeitaria das Frações, Caixa da Feirinha', status: 'pronta', href: '/jogos-area.html' },
@@ -351,6 +351,7 @@ export default function Home() {
             <a href="/matematica.html" className="hover:text-[#C8742A]">Matemática</a>
             <a href="/atividades-ingles.html" className="hover:text-[#C8742A]">Inglês</a>
             <a href="/atividades-espanhol.html" className="hover:text-[#C8742A]">Espanhol</a>
+            <a href="/atividades-historia.html" className="hover:text-[#C8742A]">História</a>
             <a href="/eja.html" className="hover:text-[#C8742A]">EJA</a>
             <a href="/alfabetizacao-eja.html" className="hover:text-[#C8742A]">Alfabetização EJA</a>
             <a href="/jogos-area.html" className="hover:text-[#C8742A]">Jogos</a>

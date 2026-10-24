@@ -1455,6 +1455,118 @@
       ],
       "colorir": false,
       "credito": "A Redenção de Cam — Modesto Brocos, 1895. Domínio público."
+    },
+    "tomada_da_bastilha": {
+      "arquivo": "/assets/arte/tomada-bastilha.jpg",
+      "titulo": "A Tomada da Bastilha — pintor não identificado, 1789",
+      "descricao": "Multidão armada ataca a fortaleza-prisão da Bastilha, em Paris, em 14 de julho de 1789, com canhões e fumaça.",
+      "uso_pedagogico": "Revolução Francesa. Leitura de imagem: pintada no mesmo ano do fato.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "A Tomada da Bastilha — pintor não identificado, 1789. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Anonymous_-_Prise_de_la_Bastille.jpg"
+    },
+    "revolucao_industrial_coalbrookdale": {
+      "arquivo": "/assets/arte/coalbrookdale-noite.jpg",
+      "titulo": "Coalbrookdale à noite — Philip James de Loutherbourg, 1801",
+      "descricao": "Fornos de fundição de ferro iluminam a noite numa vila industrial da Inglaterra, com fumaça e carroças.",
+      "uso_pedagogico": "Revolução Industrial: fábricas, carvão e ferro na Inglaterra; pintado na própria época.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Coalbrookdale à noite — Philip James de Loutherbourg, 1801. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Philipp_Jakob_Loutherbourg_d._J._002.jpg"
+    },
+    "trabalho_infantil_hine": {
+      "arquivo": "/assets/arte/trabalho-infantil-hine.jpg",
+      "titulo": "Addie Card, 12 anos, fiandeira numa fábrica de algodão (fotografia) — Lewis Hine, 1910",
+      "descricao": "Menina de 12 anos, descalça, ao lado das máquinas de fiar de uma fábrica de algodão nos Estados Unidos.",
+      "uso_pedagogico": "Trabalho infantil nas fábricas; consequências da industrialização; direitos da criança.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Addie Card, 12 anos, fiandeira numa fábrica de algodão (fotografia) — Lewis Hine, 1910. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Lewis_Hine_-_Addie_Card,_12_years._Spinner_in_North_Pownal_Cotton_Mill_MET_DP262027.jpg"
+    },
+    "chegada_lua_apollo11": {
+      "arquivo": "/assets/arte/apollo11-aldrin.jpg",
+      "titulo": "Buzz Aldrin na Lua, missão Apollo 11 (fotografia) — Neil Armstrong/NASA, 1969",
+      "descricao": "O astronauta Buzz Aldrin caminha na superfície da Lua; no visor do capacete aparece o reflexo de Neil Armstrong e do módulo lunar.",
+      "uso_pedagogico": "Corrida espacial e chegada do ser humano à Lua (20 de julho de 1969).",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Buzz Aldrin na Lua, missão Apollo 11 (fotografia) — Neil Armstrong/NASA, 1969. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Aldrin_Apollo_11_original.jpg"
+    },
+    "piramides_giza_foto": {
+      "arquivo": "/assets/arte/piramides-giza-bonfils.jpg",
+      "titulo": "As pirâmides de Gizé (fotografia) — Félix Bonfils, c. 1880",
+      "descricao": "Fotografia antiga das três grandes pirâmides de Gizé, no Egito, com um camelo e uma pessoa ao fundo, que mostram o tamanho delas.",
+      "uso_pedagogico": "Egito Antigo: as pirâmides, construídas há mais de 4.500 anos.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "As pirâmides de Gizé (fotografia) — Félix Bonfils, c. 1880. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Giza_Necopolis_by_F%C3%A9lix_Bonfils_c1880s.JPG"
+    },
+    "biblia_gutenberg": {
+      "arquivo": "/assets/arte/biblia-gutenberg.jpg",
+      "titulo": "Página da Bíblia de Gutenberg (livro impresso) — Johannes Gutenberg, c. 1455",
+      "descricao": "Página do livro de Gênesis, impressa com tipos móveis e decorada à mão com flores e animais.",
+      "uso_pedagogico": "Invenção da imprensa: um dos primeiros livros impressos com tipos móveis na Europa.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Página da Bíblia de Gutenberg (livro impresso) — Johannes Gutenberg, c. 1455. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Gutenberg_Bible_B42_Genesis.JPG"
+    },
+    "feudalismo_setembro": {
+      "arquivo": "/assets/arte/tres-riches-heures-setembro.jpg",
+      "titulo": "Setembro, do livro As Riquíssimas Horas do Duque de Berry — Irmãos Limbourg, c. 1412–1416",
+      "descricao": "Iluminura medieval: o grande castelo de Saumur, do senhor, ao fundo; embaixo, camponeses colhem uvas e carregam uma carroça puxada por bois.",
+      "uso_pedagogico": "Idade Média e feudalismo: o castelo do senhor feudal e o trabalho dos servos na terra. (Cena recortada, sem o calendário do alto da página.)",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Setembro, do livro As Riquíssimas Horas do Duque de Berry — Irmãos Limbourg, c. 1412–1416. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Les_Tr%C3%A8s_Riches_Heures_du_duc_de_Berry_septembre.jpg"
+    },
+    "tres_ordens_medievais": {
+      "arquivo": "/assets/arte/tres-ordens-medievais.jpg",
+      "titulo": "Clérigo, cavaleiro e camponês: as três ordens da sociedade medieval — manuscrito Li Livres dou Santé, França, fim do século XIII",
+      "descricao": "Letra decorada de um manuscrito medieval com três figuras lado a lado: um clérigo (os que rezam), um cavaleiro com escudo (os que lutam) e um camponês com uma pá (os que trabalham).",
+      "uso_pedagogico": "Sociedade feudal dividida em três ordens: clero, nobreza e camponeses.",
+      "publico": [
+        "fund1",
+        "fund2",
+        "eja"
+      ],
+      "colorir": false,
+      "credito": "Clérigo, cavaleiro e camponês: as três ordens da sociedade medieval — manuscrito Li Livres dou Santé, França, fim do século XIII. British Library. Domínio público (Wikimedia Commons).",
+      "fonte": "https://commons.wikimedia.org/wiki/File:Cleric-Knight-Workman.jpg"
     }
   }
 }
