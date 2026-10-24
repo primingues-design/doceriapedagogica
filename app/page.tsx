@@ -14,7 +14,7 @@ const CENTRAIS = [
   { i: '💬', t: 'Inglês', c: '#1F4E9A', bg: '#E3ECFA', s: 'Vocabulário por tema, flashcards e pronúncia', status: 'pronta', href: '/atividades-ingles.html' },
   { i: '💃', t: 'Espanhol', c: '#C8102E', bg: '#FDE3E6', s: 'Vocabulário por tema, tarjetas e pronúncia', status: 'pronta', href: '/atividades-espanhol.html' },
   { i: '📖', t: 'Língua Portuguesa', c: '#C8742A', bg: '#FFF0DE', s: 'Interpretação de texto, gramática, produção', status: 'ia', href: '/prova.html?componente=portugues' },
-  { i: '🔬', t: 'Ciências', c: '#3B82C4', bg: '#E3F0FB', s: 'Corpo humano, ecossistemas, sistema solar — com esquemas certos', status: 'ia', href: '/prova.html?componente=ciencias' },
+  { i: '🔬', t: 'Ciências', c: '#3B82C4', bg: '#E3F0FB', s: 'Animais, corpo humano, água, Sistema Solar e meio ambiente — com esquemas certos', status: 'pronta', href: '/atividades-ciencias.html' },
   { i: '🏛️', t: 'História', c: '#8A5A3B', bg: '#F4E8DD', s: 'Linha do tempo por período, personagens, fontes e leitura de imagem', status: 'pronta', href: '/atividades-historia.html' },
   { i: '🌎', t: 'Geografia', c: '#2E7D4F', bg: '#E2F3E7', s: 'Estados e capitais, mapa do Brasil, orientação, escala e leitura de mapas', status: 'pronta', href: '/atividades-geografia.html' },
   { i: '🎒', t: 'EJA', c: '#B5462A', bg: '#FBE7DF', s: 'Alfabetização de adultos, leituras por tema e atividades prontas', status: 'pronta', href: '/eja.html' },
@@ -357,6 +357,7 @@ export default function Home() {
             <a href="/atividades-espanhol.html" className="hover:text-[#C8742A]">Espanhol</a>
             <a href="/atividades-historia.html" className="hover:text-[#C8742A]">História</a>
             <a href="/atividades-geografia.html" className="hover:text-[#C8742A]">Geografia</a>
+            <a href="/atividades-ciencias.html" className="hover:text-[#C8742A]">Ciências</a>
             <a href="/eja.html" className="hover:text-[#C8742A]">EJA</a>
             <a href="/alfabetizacao-eja.html" className="hover:text-[#C8742A]">Alfabetização EJA</a>
             <a href="/jogos-area.html" className="hover:text-[#C8742A]">Jogos</a>

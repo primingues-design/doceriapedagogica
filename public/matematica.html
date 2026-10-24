@@ -160,6 +160,9 @@
   body.letra-grande .sh-title{font-size:27px}
   body.letra-grande .sh-name,body.letra-grande .ans-lbl{font-size:15px}
   body.letra-grande .gaba-item{font-size:14.5px}
+  /* caixa alta (ex.: turmas de EJA); as equações ficam como estão (x minúsculo) */
+  body.caixa-alta #paper{text-transform:uppercase}
+  body.caixa-alta #paper .eq{text-transform:none}
 
   /* atividades prontas (PDF) */
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:18px}
@@ -280,6 +283,7 @@
     <div class="panel no-print">
       <div id="opts"></div>
       <label class="chk"><input type="checkbox" id="letraGrande"> 🔡 Letra grande</label>
+      <label class="chk"><input type="checkbox" id="caixaAlta"> 🔠 Caixa alta (EJA)</label>
       <div class="chk-hint">Recomendado para EJA e anos iniciais</div>
       <button class="btn btn-new" onclick="gerar()">🔄 Gerar outra folha</button>
       <button class="btn btn-print" onclick="imprimir()">🖨️ Imprimir folha + gabarito</button>
@@ -871,6 +875,7 @@
   window.addEventListener('afterprint',()=>{_mob=!_mob;window.dispatchEvent(new Event('resize'));});
 
   document.getElementById('letraGrande').addEventListener('change',e=>document.body.classList.toggle('letra-grande',e.target.checked));
+  document.getElementById('caixaAlta').addEventListener('change',e=>document.body.classList.toggle('caixa-alta',e.target.checked));
 
   function imprimir(){
     if(window.dpTrack) window.dpTrack('imprimir_gerador',{item:'matematica_'+estado.g,nivel:estado.cfg[estado.g].dif});
