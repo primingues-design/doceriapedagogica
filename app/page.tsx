@@ -344,7 +344,11 @@ export default function Home() {
           </div>
           <div className="flex flex-col items-center gap-1 text-center">
             <p>© {new Date().getFullYear()} Doceria Pedagógica · A plataforma de IA para professores</p>
-            <a href="mailto:doceriapedagogica@gmail.com" className="text-[#C8742A] hover:underline">✉ doceriapedagogica@gmail.com</a>
+            <div className="flex flex-wrap justify-center gap-2 mt-1">
+              <a href="mailto:doceriapedagogica@gmail.com" className="inline-flex items-center gap-1.5 bg-white border border-[#C8742A]/25 rounded-full px-3 py-1.5 text-[#6B3A1F] font-extrabold hover:border-[#C8742A]">✉ doceriapedagogica@gmail.com</a>
+              <a href="https://www.instagram.com/doceria_pedagogica/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 bg-white border border-[#C8742A]/25 rounded-full px-3 py-1.5 text-[#6B3A1F] font-extrabold hover:border-[#C8742A]">📷 @doceria_pedagogica</a>
+              <a href="https://wa.me/5511970739703?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Doceria%20Pedag%C3%B3gica." target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 bg-[#E7F8EE] border border-[#9AD9B4] rounded-full px-3 py-1.5 text-[#14683A] font-extrabold hover:border-[#14683A]">💬 WhatsApp (11) 97073-9703</a>
+            </div>
           </div>
           <div className="flex items-center flex-wrap justify-center gap-4">
             <a href="/atividades-alfabetizacao.html" className="hover:text-[#C8742A]">Alfabetização</a>
