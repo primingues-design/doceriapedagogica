@@ -209,9 +209,6 @@ export default function Home() {
               <span className="bg-white text-[#B5462A] font-extrabold px-5 py-3 rounded-full whitespace-nowrap">Ver atividades →</span>
             </div>
           </a>
-          <div className="text-center sm:text-right mb-6 text-sm font-bold text-[#8A7060]">
-            Também: <a href="/eleicoes.html" className="text-[#1e5fae] hover:underline">🗳️ Eleições e Cidadania (não partidário) →</a>
-          </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {CENTRAIS.map((c) => (
@@ -362,7 +359,6 @@ export default function Home() {
             <a href="/alfabetizacao-eja.html" className="hover:text-[#C8742A]">Alfabetização EJA</a>
             <a href="/jogos-area.html" className="hover:text-[#C8742A]">Jogos</a>
             <a href="/consciencia-negra.html" className="hover:text-[#C8742A]">Consciência Negra</a>
-            <a href="/eleicoes.html" className="hover:text-[#C8742A]">Eleições 2026</a>
             <Link href="/pricing" className="hover:text-[#C8742A]">Preços</Link>
             <Link href="/conta.html" className="text-[#C8742A] font-extrabold hover:underline whitespace-nowrap">Entrar →</Link>
           </div>
