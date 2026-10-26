@@ -856,9 +856,9 @@
     },
     "reacao_quimica": {
       "arquivo": "/assets/quimica/reacao-quimica.svg",
-      "titulo": "Reação Química",
-      "descricao": "Reação Química.",
-      "uso_pedagogico": "Reagentes formam produtos; conservação da massa (Lavoisier).",
+      "titulo": "Reação Química — 2 H₂ + O₂ → 2 H₂O (equação balanceada)",
+      "descricao": "Duas moléculas de hidrogênio (H₂) reagem com uma molécula de oxigênio (O₂) e formam duas moléculas de água (H₂O). Um quadro mostra a contagem de átomos: 4 H e 2 O antes e depois.",
+      "uso_pedagogico": "Reagentes e produtos; equação balanceada; conservação da massa (Lavoisier): os átomos só se reorganizam.",
       "publico": [
         "fund2",
         "eja"

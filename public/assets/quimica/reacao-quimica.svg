@@ -1,2 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 250" role="img"><rect width="100%" height="100%" fill="#fff"/><defs><marker id="rq" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#333"/></marker></defs><circle cx="78" cy="120" r="14" fill="#dfe6ee"/><circle cx="102" cy="120" r="14" fill="#dfe6ee"/><text x="90" y="170" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="middle">H₂</text><text x="170" y="126" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="700" fill="#1a1a1a" text-anchor="middle">+</text><circle cx="238" cy="120" r="14" fill="#c0392b"/><circle cx="262" cy="120" r="14" fill="#c0392b"/><text x="250" y="170" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="middle">O₂</text><line x1="320" y1="120" x2="390" y2="120" stroke="#333" stroke-width="2.5" marker-end="url(#rq)"/><circle cx="450" cy="120" r="16" fill="#c0392b"/><circle cx="430" cy="138" r="11" fill="#dfe6ee"/><circle cx="470" cy="138" r="11" fill="#dfe6ee"/><text x="450" y="176" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="middle">H₂O</text><text x="130" y="210" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700" fill="#7a3a2e" text-anchor="middle">Reagentes</text><text x="450" y="210" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700" fill="#2c7a3f" text-anchor="middle">Produto</text><text x="280" y="235" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="600" fill="#555" text-anchor="middle">Os átomos se reorganizam — nada se perde (Lavoisier)</text><text x="270" y="30" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#1a1a1a" text-anchor="middle">Reação Química</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 330" role="img"><rect width="100%" height="100%" fill="#fff"/><defs><marker id="rq" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#333"/></marker></defs>
+<text x="340" y="30" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#1a1a1a" text-anchor="middle">Reação Química</text>
+<text x="340" y="58" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="700" fill="#1a1a1a" text-anchor="middle">2 H₂ + O₂ → 2 H₂O</text>
+<g stroke="#9aa7b4" stroke-width="1.2">
+<circle cx="58" cy="105" r="14" fill="#dfe6ee"/><circle cx="82" cy="105" r="14" fill="#dfe6ee"/>
+<circle cx="58" cy="155" r="14" fill="#dfe6ee"/><circle cx="82" cy="155" r="14" fill="#dfe6ee"/>
+</g>
+<g font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700" fill="#33414f" text-anchor="middle"><text x="58" y="109">H</text><text x="82" y="109">H</text><text x="58" y="159">H</text><text x="82" y="159">H</text></g>
+<text x="70" y="198" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="middle">2 H₂</text>
+<text x="70" y="214" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#555" text-anchor="middle">(2 moléculas de hidrogênio)</text>
+<text x="160" y="136" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" fill="#1a1a1a" text-anchor="middle">+</text>
+<g stroke="#8e2a1f" stroke-width="1.2"><circle cx="228" cy="130" r="15" fill="#c0392b"/><circle cx="254" cy="130" r="15" fill="#c0392b"/></g>
+<g font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700" fill="#fff" text-anchor="middle"><text x="228" y="134">O</text><text x="254" y="134">O</text></g>
+<text x="241" y="198" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="middle">O₂</text>
+<text x="241" y="214" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#555" text-anchor="middle">(1 molécula de oxigênio)</text>
+<line x1="310" y1="130" x2="390" y2="130" stroke="#333" stroke-width="2.5" marker-end="url(#rq)"/>
+<g stroke="#8e2a1f" stroke-width="1.2"><circle cx="470" cy="100" r="16" fill="#c0392b"/><circle cx="470" cy="165" r="16" fill="#c0392b"/></g>
+<g stroke="#9aa7b4" stroke-width="1.2"><circle cx="449" cy="119" r="11" fill="#dfe6ee"/><circle cx="491" cy="119" r="11" fill="#dfe6ee"/><circle cx="449" cy="184" r="11" fill="#dfe6ee"/><circle cx="491" cy="184" r="11" fill="#dfe6ee"/></g>
+<g font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700" text-anchor="middle"><text x="470" y="104" fill="#fff">O</text><text x="470" y="169" fill="#fff">O</text><text x="449" y="123" fill="#33414f">H</text><text x="491" y="123" fill="#33414f">H</text><text x="449" y="188" fill="#33414f">H</text><text x="491" y="188" fill="#33414f">H</text></g>
+<text x="470" y="222" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="600" fill="#1a1a1a" text-anchor="middle">2 H₂O</text>
+<text x="470" y="238" font-family="Arial,Helvetica,sans-serif" font-size="10" fill="#555" text-anchor="middle">(2 moléculas de água)</text>
+<text x="155" y="250" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" fill="#7a3a2e" text-anchor="middle">Reagentes</text>
+<text x="470" y="262" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" fill="#2c7a3f" text-anchor="middle">Produto</text>
+<rect x="560" y="88" width="104" height="116" rx="8" fill="#f7f9fb" stroke="#c9d3dd"/>
+<g font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#1a1a1a"><text x="612" y="106" text-anchor="middle" font-weight="700">Conte os átomos</text>
+<text x="570" y="128" font-weight="700" fill="#7a3a2e">Antes:</text><text x="570" y="144">4 H e 2 O</text>
+<text x="570" y="168" font-weight="700" fill="#2c7a3f">Depois:</text><text x="570" y="184">4 H e 2 O</text></g>
+<text x="340" y="300" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="600" fill="#555" text-anchor="middle">Os átomos só se reorganizam: o número de cada um é o mesmo antes e depois — nada se perde (Lavoisier).</text>
+</svg>
