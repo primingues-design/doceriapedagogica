@@ -17,6 +17,7 @@ const CENTRAIS = [
   { i: '🔬', t: 'Ciências', c: '#3B82C4', bg: '#E3F0FB', s: 'Animais, corpo humano, água, Sistema Solar e meio ambiente — com esquemas certos', status: 'pronta', href: '/atividades-ciencias.html' },
   { i: '🏛️', t: 'História', c: '#8A5A3B', bg: '#F4E8DD', s: 'Linha do tempo por período, personagens, fontes e leitura de imagem', status: 'pronta', href: '/atividades-historia.html' },
   { i: '🌎', t: 'Geografia', c: '#2E7D4F', bg: '#E2F3E7', s: 'Estados e capitais, mapa do Brasil, orientação, escala e leitura de mapas', status: 'pronta', href: '/atividades-geografia.html' },
+  { i: '🕊️', t: 'Ensino Religioso', c: '#6A4FD8', bg: '#EEE9FF', s: 'Não confessional: respeito, símbolos, espaços sagrados e festas', status: 'pronta', href: '/atividades-ensino-religioso.html' },
   { i: '🎒', t: 'EJA', c: '#B5462A', bg: '#FBE7DF', s: 'Alfabetização de adultos, leituras por tema e atividades prontas', status: 'pronta', href: '/eja.html' },
   { i: '🎮', t: 'Jogos', c: '#7C5CE0', bg: '#EEE9FF', s: 'Quiz, memória, Confeitaria das Frações, Caixa da Feirinha', status: 'pronta', href: '/jogos-area.html' },
 ]
@@ -210,9 +211,10 @@ export default function Home() {
             </div>
           </a>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {/* 11 cards: o de Jogos ocupa 2 colunas para a grade fechar (2 e 4 colunas) */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {CENTRAIS.map((c) => (
-              <a key={c.t} href={c.href} className="card-central bg-white rounded-3xl p-6 border border-black/5 flex flex-col" style={{ boxShadow: `0 8px 0 ${c.bg}` }}>
+              <a key={c.t} href={c.href} className={`card-central bg-white rounded-3xl p-6 border border-black/5 flex flex-col${c.t === 'Jogos' ? ' sm:col-span-2' : ''}`} style={{ boxShadow: `0 8px 0 ${c.bg}` }}>
                 <div className="w-14 h-14 rounded-2xl grid place-items-center text-3xl mb-4" style={{ background: c.bg }}>{c.i}</div>
                 <h3 className="baloo text-2xl font-extrabold leading-tight">{c.t}</h3>
                 <p className="text-sm text-[#8A7060] font-semibold mt-1 flex-1">{c.s}</p>
