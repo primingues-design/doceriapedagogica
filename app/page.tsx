@@ -356,6 +356,7 @@ export default function Home() {
             <a href="/atividades-geografia.html" className="hover:text-[#C8742A]">Geografia</a>
             <a href="/atividades-ciencias.html" className="hover:text-[#C8742A]">Ciências</a>
             <a href="/atividades-portugues.html" className="hover:text-[#C8742A]">Português</a>
+            <a href="/atividades-ensino-religioso.html" className="hover:text-[#C8742A]">Ensino Religioso</a>
             <a href="/eja.html" className="hover:text-[#C8742A]">EJA</a>
             <a href="/alfabetizacao-eja.html" className="hover:text-[#C8742A]">Alfabetização EJA</a>
             <a href="/jogos-area.html" className="hover:text-[#C8742A]">Jogos</a>
