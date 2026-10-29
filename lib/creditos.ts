@@ -8,6 +8,7 @@ export const SUPA_KEY = () => process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 // Padrão com os e-mails da fundadora; pode somar outros via env CREATOR_EMAILS (separados por vírgula).
 const CREATOR_EMAILS = (process.env.CREATOR_EMAILS || 'professorapriscila2006@gmail.com,primingues@gmail.com,crissmuniz@gmail.com')
   .toLowerCase().split(',').map((s) => s.trim()).filter(Boolean);
+export const isCreatorEmail = (email: string) => CREATOR_EMAILS.includes(String(email || '').toLowerCase());
 
 /* ── Créditos grátis ──
    anonimo: entra sem cadastro e experimenta · bonusEmail: ao colocar o e-mail (mesma conta)

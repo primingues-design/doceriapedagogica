@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel da Doceria</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* Painel só da criadora: os números vêm de /api/painel (somados no servidor). */
+:root{--bg:#FFFAF5;--surface:#ffffff;--ink:#3D1F0D;--ink2:#7D5A44;--mut:#8A7060;--line:#EFE2D4;--brand:#C8742A;--s1:#2a78d6;--s2:#eb6834;--grid:#ECE4DA}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171513;--surface:#1f1c19;--ink:#f0efec;--ink2:#c3c2b7;--mut:#a39f95;--line:#34302b;--brand:#E08A3C;--s1:#3987e5;--s2:#d95926;--grid:#2e2a26}}
+:root[data-theme="dark"]{--bg:#171513;--surface:#1f1c19;--ink:#f0efec;--ink2:#c3c2b7;--mut:#a39f95;--line:#34302b;--brand:#E08A3C;--s1:#3987e5;--s2:#d95926;--grid:#2e2a26}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Nunito',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 48px}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:18px}
+h1{font-family:'Baloo 2',sans-serif;font-size:clamp(1.7rem,4vw,2.3rem);margin:0;line-height:1.05}
+h1 span{color:var(--brand)}
+.sub{color:var(--mut);font-weight:700;font-size:14px;margin-top:2px}
+.btn{border:0;border-radius:99px;background:var(--brand);color:#fff;font:inherit;font-weight:900;padding:9px 16px;cursor:pointer}
+.tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:900px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+.tile .n{font-family:'Baloo 2',sans-serif;font-size:2.1rem;font-weight:800;line-height:1}
+.tile .l{font-weight:800;font-size:14px;margin-top:4px}
+.tile .d{color:var(--mut);font-weight:700;font-size:12.5px;margin-top:2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin-bottom:16px}
+.card h2{font-family:'Baloo 2',sans-serif;font-size:1.25rem;margin:0 0 2px}
+.card .h2s{color:var(--mut);font-weight:700;font-size:13px;margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.grid2{grid-template-columns:1fr}}
+.leg{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;font-weight:800;color:var(--ink2);margin-bottom:6px}
+.leg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;font-weight:800;padding:7px 10px;border-radius:10px;white-space:nowrap;transform:translate(-50%,-110%);opacity:0;transition:opacity .1s}
+.hbar{display:grid;grid-template-columns:150px 1fr 44px;gap:10px;align-items:center;font-size:14px;font-weight:800;margin:7px 0}
+.hbar .t{height:14px;border-radius:0 4px 4px 0;background:var(--s1)}
+.hbar .v{color:var(--ink2);text-align:right}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.5px;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:8px;border-bottom:1px solid var(--line);font-weight:700}
+.msg{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px;text-align:center;font-weight:800;color:var(--ink2)}
+.msg a{color:var(--brand)}
+details summary{cursor:pointer;color:var(--mut);font-weight:800;font-size:13px;margin-top:8px}
+.nota{color:var(--mut);font-size:13px;font-weight:700;line-height:1.5}
+.nota a{color:var(--brand)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><h1>Painel da <span>Doceria</span></h1><div class="sub" id="sub">Carregando…</div></div>
+    <button class="btn" onclick="carregar()">🔄 Atualizar</button>
+  </div>
+  <div id="app"></div>
+</div>
+<script>
+const KEY='sb-atkwvwhwbkerezdmipxw-auth-token';
+const fmt=n=>Number(n||0).toLocaleString('pt-BR');
+const pct=(a,b)=>b?Math.round(a/b*100)+'%':'—';
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dataBR=iso=>iso?new Date(iso).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';
+const app=document.getElementById('app'),sub=document.getElementById('sub');
+const TIPOS={slides:'Slides',apostila:'Texto & compreensão',plano:'Plano de aula',mapa:'Mapa mental',prova:'Atividade / Avaliação',atividade:'Atividade',avaliacao:'Avaliação',quiz:'Quiz',matematica:'Matemática',alfabetizacao:'Alfabetização'};
+
+function aviso(html){app.innerHTML='<div class="msg">'+html+'</div>';sub.textContent=''}
+
+async function carregar(){
+  let s=null;try{s=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+  if(!s||!s.access_token||(s.user&&s.user.is_anonymous))return aviso('Entre na sua conta para ver o painel.<br><br><a href="/conta.html">Entrar na conta →</a>');
+  if((s.expires_at||0)<Date.now()/1000+30)return aviso('Sua sessão venceu. Abra a <a href="/conta.html">sua conta</a> (ela renova o acesso) e volte aqui.');
+  sub.textContent='Carregando…';
+  let r;try{r=await fetch('/api/painel',{headers:{Authorization:'Bearer '+s.access_token},cache:'no-store'})}catch(e){return aviso('Sem conexão. Tente de novo.')}
+  if(r.status===403)return aviso('Acesso restrito: este painel é só para as contas de criadora da Doceria.');
+  if(r.status===401)return aviso('Sua sessão venceu. Abra a <a href="/conta.html">sua conta</a> e volte aqui.');
+  const d=await r.json().catch(()=>null);
+  if(!r.ok||!d)return aviso((d&&d.error)||'Não foi possível carregar agora.');
+  desenhar(d);
+}
+
+function desenhar(d){
+  const t=d.totais;
+  sub.textContent='Atualizado em '+dataBR(d.geradoEm)+' · as contas de criadora não entram nas contas';
+  const tiles=[
+    [t.usuarios,'Pessoas que usaram','com e sem cadastro'],
+    [t.anonimos,'Sem cadastro','experimentaram as 3 grátis'],
+    [t.comEmail,'Com e-mail',pct(t.comEmail,t.usuarios)+' colocaram o e-mail'],
+    [t.ativos7,'Ativas na semana','entraram nos últimos 7 dias'],
+    [t.pagantes,'Já compraram','pagamento aprovado no Mercado Pago']];
+  const planos=Object.entries(d.planos||{}).sort((a,b)=>b[1]-a[1]);
+  const tipos=Object.entries((d.materiais30||{}).tipos||{}).sort((a,b)=>b[1]-a[1]);
+  const maxT=Math.max(1,...tipos.map(x=>x[1]));
+  app.innerHTML=
+   '<div class="tiles">'+tiles.map(([n,l,x])=>`<div class="tile"><div class="n">${fmt(n)}</div><div class="l">${l}</div><div class="d">${x}</div></div>`).join('')+'</div>'+
+   `<div class="card"><h2>Novas pessoas por dia</h2><div class="h2s">Últimos 30 dias</div>
+     <div class="leg"><span><i style="background:var(--s1)"></i>Sem cadastro</span><span><i style="background:var(--s2)"></i>Com e-mail</span></div>
+     <div class="chart" id="chart"><div class="tip" id="tip"></div></div>
+     <details><summary>Ver como tabela</summary><table><tr><th>Dia</th><th>Sem cadastro</th><th>Com e-mail</th></tr>${d.dias.slice().reverse().map(x=>`<tr><td>${x.dia.split('-').reverse().slice(0,2).join('/')}</td><td>${x.anon}</td><td>${x.email}</td></tr>`).join('')}</table></details></div>`+
+   '<div class="grid2">'+
+   `<div class="card"><h2>Materiais salvos no histórico</h2><div class="h2s">Últimos 30 dias · ${fmt(d.materiais30.total)} no total (gerados com IA)</div>${tipos.length?tipos.map(([k,v])=>`<div class="hbar"><span>${esc(TIPOS[k]||k)}</span><div class="t" style="width:${Math.max(3,v/maxT*100)}%"></div><span class="v">${fmt(v)}</span></div>`).join(''):'<p class="nota">Nenhum material salvo nos últimos 30 dias.</p>'}</div>`+
+   `<div class="card"><h2>Planos</h2><div class="h2s">Perfis por plano</div><table><tr><th>Plano</th><th>Pessoas</th></tr>${planos.map(([k,v])=>`<tr><td>${esc(k==='Anonimo'?'Sem cadastro':k==='Free'?'Grátis (com e-mail)':k)}</td><td>${fmt(v)}</td></tr>`).join('')}</table></div>`+
+   '</div>'+
+   `<div class="card"><h2>Últimos cadastros com e-mail</h2><div class="h2s">Os 10 mais recentes</div><table><tr><th>E-mail</th><th>Cadastro</th><th>Último acesso</th></tr>${(d.recentes||[]).map(u=>`<tr><td>${esc(u.email)}</td><td>${dataBR(u.criado)}</td><td>${dataBR(u.ultimo)}</td></tr>`).join('')}</table></div>`+
+   `<p class="nota">As folhas impressas nas centrais e as visitas ao site são contadas no <a href="https://analytics.google.com/" target="_blank" rel="noopener">Google Analytics</a> (quem recusa os cookies não aparece lá). Aqui ficam só os dados de contas do Supabase.</p>`;
+  grafico(d.dias);
+}
+
+// colunas empilhadas: sem cadastro (base) + com e-mail (em cima), com 2px de espaço entre as partes
+function grafico(dias){
+  const W=900,H=260,L=34,R=8,T=12,B=28,max=Math.max(1,...dias.map(x=>x.anon+x.email));
+  const passo=max<=5?1:max<=10?2:max<=25?5:Math.ceil(max/50)*10,topo=Math.ceil(max/passo)*passo;
+  const y=v=>H-B-(H-B-T)*v/topo,larg=(W-L-R)/dias.length,bw=Math.max(4,larg*.62);
+  let s='';for(let v=0;v<=topo;v+=passo)s+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${L-6}" y="${y(v)+4}" font-size="11" text-anchor="end" fill="var(--mut)">${v}</text>`;
+  dias.forEach((d,i)=>{const x=L+larg*i+(larg-bw)/2;const ya=y(d.anon),ye=y(d.anon+d.email);
+    if(d.anon)s+=`<rect x="${x}" y="${ya}" width="${bw}" height="${H-B-ya}" fill="var(--s1)" rx="${d.email?0:3}"/>`;
+    if(d.email)s+=`<rect x="${x}" y="${ye}" width="${bw}" height="${Math.max(1,ya-ye-(d.anon?2:0))}" fill="var(--s2)" rx="3"/>`;
+    if(i%5===0||i===dias.length-1)s+=`<text x="${x+bw/2}" y="${H-8}" font-size="11" text-anchor="middle" fill="var(--mut)">${d.dia.slice(8)}/${d.dia.slice(5,7)}</text>`;
+    s+=`<rect class="hit" data-i="${i}" x="${L+larg*i}" y="${T}" width="${larg}" height="${H-B-T}" fill="transparent"/>`});
+  s+=`<line x1="${L}" x2="${W-R}" y1="${H-B}" y2="${H-B}" stroke="var(--mut)"/>`;
+  const box=document.getElementById('chart');box.insertAdjacentHTML('afterbegin',`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Novas pessoas por dia nos últimos 30 dias">${s}</svg>`);
+  const tip=document.getElementById('tip'),svg=box.querySelector('svg');
+  svg.addEventListener('mousemove',e=>{const h=e.target.closest('.hit');if(!h){tip.style.opacity=0;return}const d=dias[+h.dataset.i];
+    const bb=svg.getBoundingClientRect(),hb=h.getBoundingClientRect();tip.innerHTML=`${d.dia.split('-').reverse().join('/')}<br>Sem cadastro: ${d.anon} · Com e-mail: ${d.email}`;
+    tip.style.left=(hb.left-bb.left+hb.width/2)+'px';tip.style.top=(hb.top-bb.top+20)+'px';tip.style.opacity=1});
+  svg.addEventListener('mouseleave',()=>tip.style.opacity=0);
+}
+carregar();
+</script>
+</body>
+</html>

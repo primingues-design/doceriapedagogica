@@ -5,8 +5,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      // rotas internas (IA, pagamento) não são páginas para o Google
-      disallow: ["/api/"],
+      // rotas internas (IA, pagamento) e o painel da criadora não são páginas para o Google
+      disallow: ["/api/", "/painel.html"],
     },
     sitemap: "https://doceriapedagogica.com/sitemap.xml",
   };
