@@ -53,7 +53,7 @@ secoes: `<section id="geradores" style="padding-top:20px"><div class="wrap">
     <div class="panel">
       <div id="opts"></div>
       <div class="field" id="fQtd"><label>Quantidade</label><div class="seg" id="segQtd"></div></div>
-      <button class="btn3d btn-new" onclick="gerar()">🔄 Gerar outra folha</button>
+      <button class="btn3d btn-new" onclick="outraFolha()">🔄 Gerar outra folha</button>
       <button class="btn3d btn-print" onclick="imprimir()">🖨️ Imprimir folha + gabarito<small>usa 1 crédito</small></button>
       <div class="cred">✨ Você tem <b>3 materiais grátis</b> — sem cadastro. Com o e-mail, ganha mais 2.</div>
     </div>
@@ -234,7 +234,7 @@ const GER={
         '<div class="leg" style="grid-template-columns:1fr 1fr"><div><b>N</b>Natural</div><div><b>M</b>Modificada pelo ser humano</div></div><div class="g2">'+
         ps.map((p,i)=>\`<div class="item foto"><img src="/assets/paisagem/\${p[1]}.jpg" alt=""><span style="flex:1;font-size:18px;font-weight:700">\${i+1}. \${p[0]}</span><span class="box vazia"></span></div>\`).join('')+'</div>'+linhas(2),
         gab:ps.map((p,i)=>\`\${i+1}. \${p[0]} → <b>\${p[2]}</b> (\${p[2]==='N'?'natural':'modificada'})\`).join('<br>')}}},
-  leitura:{i:'🌍',n:'Leitura de mapa',d:'mapas do IBGE',c:'#1F4E9A',qtd:false,opts:()=>\`<div class="field"><label>Mapa</label>\${segBtns('mapa',MAPAS.map(m=>[m[0],m[2].replace(/^Mapa-múndi: /,'')]))}</div>\`,
+  leitura:{i:'🌍',n:'Leitura de mapa',d:'mapas do IBGE',c:'#1F4E9A',qtd:false,prox(){const i=MAPAS.findIndex(m=>m[0]===st.mapa);st.mapa=MAPAS[(i+1)%MAPAS.length][0]},opts:()=>\`<div class="field"><label>Mapa</label>\${segBtns('mapa',MAPAS.map(m=>[m[0],m[2].replace(/^Mapa-múndi: /,'')]))}</div>\`,
     gerar(){const m=MAPAS.find(x=>x[0]===st.mapa)||MAPAS[0];
       return{folha:head('Leitura de mapa','Observe o mapa com atenção e responda.')+\`<img class="obra" src="\${m[1]}" alt="\${m[2]}" style="max-height:290px"><div class="obra-cred"><b>\${m[2]}</b> — fonte: \${m[3]}.</div>\`+m[4].map(q=>pq(q[0],q[2])).join(''),
         gab:m[4].map(q=>q[1]).join('<br>')}}},

@@ -49,7 +49,7 @@ secoes: `<section id="geradores" style="padding-top:20px"><div class="wrap">
     <div class="panel">
       <div id="opts"></div>
       <div class="field" id="fQtd"><label>Quantidade</label><div class="seg" id="segQtd"></div></div>
-      <button class="btn3d btn-new" onclick="gerar()">🔄 Gerar outra folha</button>
+      <button class="btn3d btn-new" onclick="outraFolha()">🔄 Gerar outra folha</button>
       <button class="btn3d btn-print" onclick="imprimir()">🖨️ Imprimir folha + gabarito<small>usa 1 crédito</small></button>
       <div class="cred">✨ Você tem <b>3 materiais grátis</b> — sem cadastro. Com o e-mail, ganha mais 2.</div>
     </div>
@@ -155,7 +155,7 @@ const GER={
     gerar(){const[t,ins,lista]=MANIF[st.tema];const ps=emb(lista).slice(0,Math.min(7,lista.length));
       return{folha:head(t,ins)+AVISO+ligar(ps)+pq('Escolha um item e escreva o que você aprendeu sobre ele.',2),
         gab:ps.map(p=>\`\${p[0]} → \${p[1]}\`).join('<br>')+'<br>Última pergunta: resposta pessoal.'}}},
-  leitura:{i:'📖',n:'Leitura e reflexão',d:'textos em 3 níveis',c:'#0D9488',qtd:false,opts:()=>\`<div class="field"><label>Texto</label>\${segBtns('texto',TEXTOS.map(t=>[t.k,t.t]))}</div>\`,
+  leitura:{i:'📖',n:'Leitura e reflexão',d:'textos em 3 níveis',c:'#0D9488',qtd:false,prox(){const i=TEXTOS.findIndex(t=>t.k===st.texto);st.texto=TEXTOS[(i+1)%TEXTOS.length].k},opts:()=>\`<div class="field"><label>Texto</label>\${segBtns('texto',TEXTOS.map(t=>[t.k,t.t]))}</div>\`,
     gerar(){const T=TEXTOS.find(x=>x.k===st.texto)||TEXTOS[0];
       return{folha:head('Leitura e reflexão','Leia o texto com atenção e responda.')+\`<div class="texto-box"><h4>\${T.t}</h4>\${T.html}</div>\`+
         T.q.map((q,i)=>\`<div class="pq"><span class="nv \${q[0]}">\${NIVEL[q[0]]}</span>\${i+1}. \${q[1]}</div>\${linhas(q[3])}\`).join(''),

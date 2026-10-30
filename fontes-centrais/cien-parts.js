@@ -56,7 +56,7 @@ secoes: `<section id="geradores" style="padding-top:20px"><div class="wrap">
     <div class="panel">
       <div id="opts"></div>
       <div class="field" id="fQtd"><label>Quantidade</label><div class="seg" id="segQtd"></div></div>
-      <button class="btn3d btn-new" onclick="gerar()">🔄 Gerar outra folha</button>
+      <button class="btn3d btn-new" onclick="outraFolha()">🔄 Gerar outra folha</button>
       <button class="btn3d btn-print" onclick="imprimir()">🖨️ Imprimir folha + gabarito<small>usa 1 crédito</small></button>
       <div class="cred">✨ Você tem <b>3 materiais grátis</b> — sem cadastro. Com o e-mail, ganha mais 2.</div>
     </div>
@@ -309,7 +309,7 @@ const GER={
   quimica:{i:'🧪',n:'Química do dia a dia',d:'pH e misturas',c:'#9A4A1F',opts:()=>\`<div class="field"><label>Classificar</label>\${segBtns('qui',[['ph','🍋 Ácido, neutro ou básico'],['mistura','🥗 Tipos de mistura']])}</div>\`,
     gerar(){const[leg,lista]=QUIMICA[st.qui];const n=Math.min(st.qtd,lista.length);const qs=equilibrado(lista,q=>q[2],n);const t=st.qui==='ph'?['Ácido, neutro ou básico?','Escreva a letra: <b>A</b> (ácido, pH menor que 7), <b>N</b> (neutro, pH 7) ou <b>B</b> (básico, pH maior que 7).']:['Homogênea ou heterogênea?','Escreva <b>HO</b> se a mistura é homogênea (uma fase só) ou <b>HE</b> se é heterogênea (dá para ver as partes).'];
       return{folha:classifica(t[0],t[1],Object.entries(leg),qs,st.qui==='mistura'?60:48)+(st.qui==='ph'?'<img class="esq" src="/assets/quimica/escala-ph.svg" alt="" style="max-height:170px;margin-top:12px">':''),gab:qs.map(q=>\`\${q[1]} \${q[0]} → <b>\${q[2]}</b> (\${leg[q[2]]})\`).join('<br>')}}},
-  esquema:{i:'🔬',n:'Leitura de esquema',d:'Biologia, Física e Química',c:'#1F4E9A',qtd:false,opts:()=>AREAS.map(([a,nome,ks])=>\`<div class="field"><label>\${nome}</label>\${segBtns('esq',ks.map(k=>[k,ESQUEMAS.find(e=>e[0]===k)[2]]))}</div>\`).join(''),
+  esquema:{i:'🔬',n:'Leitura de esquema',d:'Biologia, Física e Química',c:'#1F4E9A',qtd:false,prox(){const a=AREAS.find(x=>x[2].includes(st.esq))||AREAS[0];const ks=a[2];st.esq=ks[(ks.indexOf(st.esq)+1)%ks.length]},opts:()=>AREAS.map(([a,nome,ks])=>\`<div class="field"><label>\${nome}</label>\${segBtns('esq',ks.map(k=>[k,ESQUEMAS.find(e=>e[0]===k)[2]]))}</div>\`).join(''),
     gerar(){const e=ESQUEMAS.find(x=>x[0]===st.esq)||ESQUEMAS[0];
       return{folha:head('Leitura de esquema: '+e[2].toLowerCase(),'Observe o esquema com atenção e responda.')+\`<img class="esq" src="\${e[1]}" alt="\${e[2]}" style="max-height:370px">\`+e[3].map(q=>pq(q[0],q[2])).join(''),
         gab:e[3].map(q=>q[1]).join('<br>')}}},

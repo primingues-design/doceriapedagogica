@@ -69,7 +69,7 @@
     <div class="panel">
       <div id="opts"></div>
       <div class="field" id="fQtd"><label>Quantidade</label><div class="seg" id="segQtd"></div></div>
-      <button class="btn3d btn-new" onclick="gerar()">🔄 Gerar outra folha</button>
+      <button class="btn3d btn-new" onclick="outraFolha()">🔄 Gerar outra folha</button>
       <button class="btn3d btn-print" onclick="imprimir()">🖨️ Imprimir folha + gabarito<small>usa 1 crédito</small></button>
       <div class="cred">✨ Você tem <b>3 materiais grátis</b> — sem cadastro. Com o e-mail, ganha mais 2.</div>
     </div>
@@ -241,7 +241,7 @@ const GER={
       return{folha:head('Antes e agora','<b>Ligue</b> o objeto de antigamente ao objeto de hoje que serve para a mesma coisa. Depois, escolha um par e escreva para que ele serve.')+
         '<div class="lig">'+ps.map((p,i)=>`<div class="l"><span style="font-size:19px;font-weight:700">${p[1]}</span><span class="fig" style="font-size:44px">${p[0]}</span><span class="dot"></span></div><div></div><div class="r"><span class="dot"></span><span class="fig" style="font-size:44px">${dir[i][2]}</span><span style="font-size:19px">${dir[i][3]}</span></div>`).join('')+'</div>'+linhas(2),
         gab:ps.map(p=>`${p[0]} ${p[1]} → ${p[2]} ${p[3]} (servem para ${p[4]})`).join('<br>')}}},
-  imagem:{i:'🖼️',n:'Leitura de imagem',d:'obras e fotos históricas',c:'#C8102E',qtd:false,opts:()=>[['brasil','🇧🇷 Brasil'],['mundo','🌍 Mundo']].map(([g,n])=>`<div class="field"><label>${n}</label><div class="seg">${OBRAS.filter(o=>o.g===g).map(o=>`<button class="${st.obra===o.k?'sel':''}" onclick="st.obra='${o.k}';render()">${o.nm}</button>`).join('')}</div></div>`).join(''),
+  imagem:{i:'🖼️',n:'Leitura de imagem',d:'obras e fotos históricas',c:'#C8102E',qtd:false,prox(){const o=OBRAS.find(x=>x.k===st.obra)||OBRAS[0];const gr=OBRAS.filter(x=>x.g===o.g);st.obra=gr[(gr.indexOf(o)+1)%gr.length].k},opts:()=>[['brasil','🇧🇷 Brasil'],['mundo','🌍 Mundo']].map(([g,n])=>`<div class="field"><label>${n}</label><div class="seg">${OBRAS.filter(o=>o.g===g).map(o=>`<button class="${st.obra===o.k?'sel':''}" onclick="st.obra='${o.k}';render()">${o.nm}</button>`).join('')}</div></div>`).join(''),
     gerar(){const o=OBRAS.find(x=>x.k===st.obra)||OBRAS[0];const{src,tit,aut,ano,tipo,fato,anoF}=o;
       const q=[`1. Descreva o que você vê: as pessoas, o lugar e os objetos.`,`2. Que tipo de fonte é esta (pintura, fotografia, livro…)? Quem fez e quando?`,
         '3. '+(o.q3||(anoF?`A imagem mostra ${fato}, que aconteceu em ${anoF}. Ela foi feita em ${ano}. Quantos anos depois? O artista estava lá quando o fato aconteceu?`:`Esta imagem foi feita na mesma época do que ela mostra: ${fato}. Por que isso a torna uma fonte histórica importante?`)),
@@ -306,6 +306,8 @@ function render(){
 }
 function ajustar(){const w=document.querySelector('.paper-wrap').clientWidth-36;document.getElementById('paper').style.zoom=Math.min(1,w/760)}
 addEventListener('resize',ajustar);
+// "Gerar outra folha": nas atividades de texto, obra ou mapa fixos, passa para o próximo (prox)
+function outraFolha(){const g=GER[st.g];if(g.prox)g.prox();render()}
 function gerar(){atual=GER[st.g].gerar();atual.id=st.g;const pp=document.getElementById('paper');pp.className='paper'+(st.caixa==='MAI'?' caixa-alta':'');pp.innerHTML=atual.folha+foot;ajustar()}
 async function imprimir(){
   if(atual.vazio)return;
