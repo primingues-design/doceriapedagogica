@@ -313,7 +313,8 @@ async function imprimir(){
   if(atual.vazio)return;
   if(!atual.pago){if(!(window.dpCobrar&&await window.dpCobrar('hi-'+atual.id)))return;atual.pago=true}
   document.getElementById('printArea').classList.toggle('caixa-alta',st.caixa==='MAI');
-  document.getElementById('printArea').innerHTML=`<div class="paper">${atual.folha}${foot}</div><div class="paper gaba" style="flex-direction:column">${gabHead(GER[st.g].n)}<div style="font-size:16px;line-height:1.9">${atual.gab}</div></div>`;
+  // sem gabarito (ex.: rotina e prancha do AEE) não imprime a página de gabarito
+  document.getElementById('printArea').innerHTML=`<div class="paper">${atual.folha}${foot}</div>`+(atual.gab?`<div class="paper gaba" style="flex-direction:column">${gabHead(GER[st.g].n)}<div style="font-size:16px;line-height:1.9">${atual.gab}</div></div>`:'');
   window.print();
 }
 

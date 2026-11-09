@@ -99,6 +99,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: "https://doceriapedagogica.com/atividades-aee.html",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: "https://doceriapedagogica.com/matematica.html",
       lastModified: new Date(),
       changeFrequency: "weekly",
