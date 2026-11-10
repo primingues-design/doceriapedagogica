@@ -4,7 +4,7 @@ css: `:root{--rosa:#6A4FD8;--rosa-bg:#EEE9FF}
 .eyebrow{border-color:rgba(106,79,216,.3);color:#6A4FD8}
 .seg button.sel{color:#45309E}
 .btn-print{box-shadow:0 5px 0 #45309E}
-.tabs{grid-template-columns:repeat(7,1fr)}
+.tabs{grid-template-columns:repeat(8,1fr)}
 @media(max-width:1000px){.tabs{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:560px){.tabs{grid-template-columns:repeat(2,1fr)}}
 /* painel */
@@ -66,7 +66,41 @@ css: `:root{--rosa:#6A4FD8;--rosa-bg:#EEE9FF}
 .mi{display:flex;align-items:center;gap:8px;border:1.5px solid #EEDFD0;border-radius:10px;padding:4px 6px;font-size:13px;font-weight:800}
 .mi span{flex:1}
 .mi button{border:0;background:var(--rosa-bg);color:#45309E;border-radius:8px;padding:4px 8px;font:inherit;font-size:12px;font-weight:900;cursor:pointer}
-.em-breve{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+/* adaptador de atividades (Fase 2) — tamanho "bem grande" (l-g) é o padrão; "grande" (l-m) logo abaixo */
+.ad-ta{width:100%;min-height:140px;border:2px solid #EEDFD0;border-radius:12px;padding:10px;font:inherit;font-size:14px;font-weight:600;resize:vertical}
+.ad-msg{font-size:13px;font-weight:700;color:#7D5A44;margin-top:6px}
+.ad-folha{display:flex;flex-direction:column;flex:1}
+.ad-pag{text-align:right;font-size:12px;color:#888;font-weight:700;margin:-4px 0 4px}
+.ad-txt{display:flex;flex-direction:column;gap:18px;margin-top:14px}
+.ad-fr{display:flex;align-items:center;gap:18px;font-size:30px;font-weight:600;line-height:1.3}
+.ad-fi{width:80px;height:80px;flex:none}
+.ad-its{display:flex;flex-direction:column;gap:18px;margin-top:6px;flex:1;justify-content:flex-start}
+.ad-it{border:2.5px solid #333;border-radius:16px;padding:14px 18px;break-inside:avoid}
+.ad-q{display:flex;gap:14px;align-items:flex-start}
+.ad-n{font-family:"Baloo 2";font-size:28px;background:#333;color:#fff;border-radius:50%;width:46px;height:46px;display:grid;place-items:center;flex:none;line-height:1}
+.ad-cmd{font-size:18px;color:#444}
+.ad-pq{font-size:30px;font-weight:700;line-height:1.25}
+.ad-kw{display:flex;gap:18px;margin:10px 0 0 60px}
+.ad-kw span{display:flex;flex-direction:column;align-items:center;font-size:15px;font-weight:700}.ad-kw i{font-style:normal}
+.ad-ic{width:62px;height:62px}
+.ad-ops{display:flex;gap:16px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.ad-op{border:2.5px solid #333;border-radius:14px;padding:10px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:25px;font-weight:700;min-width:170px;max-width:220px;text-align:center;line-height:1.15}
+.ad-oi{width:90px;height:90px}
+.ad-ops.apontar .ad-op{min-width:190px;font-size:27px}.ad-ops.apontar .ad-oi{width:110px;height:110px}
+.ad-ops.marcar{flex-direction:column;align-items:flex-start;margin-left:60px;gap:10px}
+.ad-ops.marcar .ad-op{flex-direction:row;border:0;padding:0;min-width:0;max-width:none;gap:14px}
+.ad-x{width:40px;height:40px;border:3px solid #333;border-radius:6px;flex:none}
+.ad-ops.marcar .ad-oi{width:56px;height:56px}
+.ad-cola{width:180px;height:140px;border:3px dashed #999;border-radius:14px;margin:12px auto 0}
+.ad-recorte{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;border-top:2px dashed #999;padding-top:14px;margin-top:16px}
+.ad-recorte .ad-op{width:180px;height:140px;border-style:dashed;padding:6px;font-size:21px;min-width:0}.ad-recorte .ad-oi{width:72px;height:72px}
+.ad-banco{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:12px}.ad-banco span{border:2px solid #999;border-radius:10px;padding:5px 14px;font-size:24px;font-weight:700}
+.ad-lin{border-bottom:2px solid #555;height:54px;margin:4px 20px 0 60px}
+.ad-desenho{height:240px;border:3px dashed #999;border-radius:14px;margin-top:12px}
+.l-m .ad-pq{font-size:24px}.l-m .ad-fr{font-size:24px}.l-m .ad-fi{width:62px;height:62px}.l-m .ad-cmd{font-size:16px}.l-m .ad-ic{width:50px;height:50px}
+.l-m .ad-op{font-size:20px;min-width:140px}.l-m .ad-oi{width:66px;height:66px}.l-m .ad-ops.apontar .ad-oi{width:88px;height:88px}.l-m .ad-ops.apontar .ad-op{font-size:23px}
+.l-m .ad-banco span{font-size:20px}.l-m .ad-ops.marcar .ad-oi{width:46px;height:46px}
+.em-breve{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 @media(max-width:860px){.em-breve{grid-template-columns:1fr}}
 .em-breve div{background:#fff;border:2px dashed #C9BFF0;border-radius:20px;padding:16px}
 .em-breve b{font-family:'Baloo 2';font-size:19px;display:block;margin-bottom:4px}
@@ -80,8 +114,8 @@ hero: `<div class="hero">
     <div>
       <div class="eyebrow">🧩 Central de AEE</div>
       <h1>Recursos de AEE <em>para imprimir</em></h1>
-      <p>Rotina visual, quadro "primeiro → depois", passo a passo de higiene, prancha de comunicação, cartões de apoio, quadro de fichas e pareamento — com <b>pictogramas</b> ou <b>fotos realistas</b>, e você ainda pode <b>usar as suas próprias fotos</b>. Tudo pronto para plastificar.</p>
-      <div class="chips"><span>🎁 Comece grátis, sem cadastro</span><span>📷 Pictograma, foto ou a sua foto</span><span>🔒 Sem pedir diagnóstico</span><span>🔠 Opção caixa alta</span></div>
+      <p>Rotina visual, quadro "primeiro → depois", passo a passo de higiene, prancha de comunicação, cartões de apoio, quadro de fichas e pareamento — com <b>pictogramas</b> ou <b>fotos realistas</b>, e você ainda pode <b>usar as suas próprias fotos</b>. Tudo pronto para plastificar. <b>Novo:</b> a IA adapta qualquer atividade para o seu aluno, com leitura fácil e pictogramas.</p>
+      <div class="chips"><span>🎁 Comece grátis, sem cadastro</span><span>✨ Adaptador de atividades com IA</span><span>📷 Pictograma, foto ou a sua foto</span><span>🔒 Sem pedir diagnóstico</span><span>🔠 Opção caixa alta</span></div>
     </div>
     <div class="hero-art" aria-hidden="true">
       <div class="letra" style="--r:-8deg;background:#6A4FD8;left:2%;top:8%">🗓️</div>
@@ -130,7 +164,6 @@ secoes: `<section id="geradores" style="padding-top:20px"><div class="wrap">
   <div class="kicker">Em breve na Central de AEE</div>
   <h2 class="sec-title">Os próximos recursos</h2>
   <div class="em-breve">
-    <div><b>✨ Adaptador de atividades</b><p>A IA adapta qualquer atividade: leitura fácil, pictogramas nas palavras-chave, menos itens por página e outras formas de responder.</p></div>
     <div><b>📘 Histórias sociais</b><p>Histórias curtas e positivas para situações difíceis, como esperar a vez ou ir ao dentista.</p></div>
     <div><b>🎮 Jogos de baixo estímulo</b><p>Pareamento e sequência na tela, sem cronômetro, sem som de erro e com cores calmas.</p></div>
   </div>
@@ -139,6 +172,7 @@ secoes: `<section id="geradores" style="padding-top:20px"><div class="wrap">
 <section class="faq" style="padding-top:10px"><div class="wrap" style="max-width:820px">
   <h2 class="sec-title" style="text-align:center;margin-bottom:18px">Perguntas frequentes</h2>
   <details><summary>Para quem são esses recursos?</summary><p>Para professoras e professores do AEE, da sala comum e de apoio, e para famílias. Eles ajudam estudantes que se beneficiam de apoio visual — com ou sem laudo. Aqui você escolhe pelo <b>apoio que o aluno precisa</b>, não pelo diagnóstico.</p></details>
+  <details><summary>Como funciona o adaptador de atividades?</summary><p>Cole o texto de uma atividade (ou envie uma foto dela) e clique em "Adaptar com IA". A IA reescreve em <b>leitura fácil</b> (frases curtas, uma ideia por frase), coloca <b>pictogramas</b> nas palavras-chave e cria opções de resposta. Depois você escolhe, sem gastar outro crédito, <b>como o aluno responde</b> (circular, marcar X, apontar, recortar e colar ou escrever), quantas perguntas vão em cada página e se quer só as essenciais. A IA pode errar: revise sempre antes de imprimir. Não escreva o nome nem o diagnóstico do aluno.</p></details>
   <details><summary>Pictograma ou foto: qual usar?</summary><p>Depende do aluno. Muitos reconhecem primeiro a <b>foto</b> e, com o tempo, passam a entender o <b>pictograma</b>. Para quem precisa do mais concreto, use <b>a sua foto</b>: o banheiro da escola, a mochila do próprio aluno. Alguns conceitos abstratos, como "acabou" e "agora não", ficam sempre como pictograma, porque a figura explica melhor.</p></details>
   <details><summary>As minhas fotos vão para a internet?</summary><p>Não. Quando você usa "Usar a minha foto", a imagem é reduzida e guardada <b>só neste navegador</b>, no seu computador ou celular. Ela não é enviada para a Doceria. Para apagar, use o botão "Apagar minhas fotos" no painel. As fotos realistas que já vêm no site mostram pessoas que não existem, criadas para a Doceria.</p></details>
   <details><summary>Preciso informar o diagnóstico do aluno?</summary><p>Não. A Doceria não pede nem guarda diagnóstico ou dados de saúde. O nome do aluno só aparece se você escrever à mão na folha impressa.</p></details>

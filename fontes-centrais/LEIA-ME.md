@@ -13,7 +13,10 @@ node fontes-centrais/build-geografia.js public fontes-centrais
 node fontes-centrais/build-ciencias.js public fontes-centrais
 node fontes-centrais/build-portugues.js public fontes-centrais
 node fontes-centrais/build-religioso.js public fontes-centrais
+node fontes-centrais/build-aee.js public fontes-centrais
 ```
+
+Central de AEE: `aee/aee-parts.js` (visual), `aee/aee-ger.js` (recursos da Fase 1), `aee/aee-pos.js` (painel de imagens), `aee/aee-adapt.js` (Fase 2: adaptador de atividades com IA; divide as páginas medindo o que cabe), `aee/pictos.js` e `aee/fotos.js`.
 
 Mudou o `historia-body.html`? Rode **todos** os montadores, porque o código comum vai para todas.
 

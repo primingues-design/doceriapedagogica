@@ -21,7 +21,9 @@ const FL=require(S+'/aee/fotos.js');for(const x of FL)if(!fs.existsSync(P+'/asse
 const FOTOS='const FOTOS='+JSON.stringify(Object.fromEntries(FL.flatMap(x=>x[1].map(k=>[k,x[0]]))))+';\n';
 // aee-pos.js entra depois do motor comum: embrulha o gerar() para desenhar o painel de imagens
 const POS=fs.readFileSync(S+'/aee/aee-pos.js','utf8');
-const js=jsBase+PIC+FOTOS+GER+'\n'+motor+kitFn+POS+'\nrender();\n</script>\n</body>\n</html>\n';
+// Fase 2: adaptador de atividades com IA (também depois do motor: embrulha gerar() e imprimir())
+const ADAPT=fs.readFileSync(S+'/aee/aee-adapt.js','utf8');
+const js=jsBase+PIC+FOTOS+GER+'\n'+motor+kitFn+POS+'\n'+ADAPT+'\nrender();\n</script>\n</body>\n</html>\n';
 const og='https://doceriapedagogica.com/og/aee.jpg';
 const head=`<!DOCTYPE html>
 <html lang="pt-BR">
@@ -29,7 +31,7 @@ const head=`<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Recursos de AEE para Imprimir: Rotina Visual e Prancha de Comunicação | Doceria Pedagógica</title>
-<meta name="description" content="Recursos de AEE para imprimir com pictogramas: rotina visual, quadro primeiro e depois, passo a passo de higiene, prancha de comunicação alternativa, cartões de apoio, quadro de fichas e pareamento. Sem pedir diagnóstico.">
+<meta name="description" content="Recursos de AEE para imprimir com pictogramas: rotina visual, quadro primeiro e depois, passo a passo de higiene, prancha de comunicação alternativa, cartões de apoio, quadro de fichas e pareamento — e um adaptador de atividades com IA (leitura fácil e pictogramas). Sem pedir diagnóstico.">
 <link rel="canonical" href="https://doceriapedagogica.com/atividades-aee.html">
 <meta property="og:title" content="Recursos de AEE para Imprimir">
 <meta property="og:description" content="Rotina visual, prancha de comunicação, cartões de apoio e mais — com pictogramas consistentes, prontos para plastificar.">
@@ -42,7 +44,7 @@ const head=`<!DOCTYPE html>
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="${og}">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://doceriapedagogica.com/#org","name":"Doceria Pedagógica","url":"https://doceriapedagogica.com"},{"@type":"CollectionPage","@id":"https://doceriapedagogica.com/atividades-aee.html","url":"https://doceriapedagogica.com/atividades-aee.html","name":"Recursos de AEE para Imprimir","inLanguage":"pt-BR","description":"Recursos de Atendimento Educacional Especializado para imprimir com pictogramas: rotina visual, primeiro e depois, sequências de vida diária, prancha de comunicação alternativa, cartões de apoio, quadro de fichas e pareamento.","educationalLevel":"Educação Infantil, Ensino Fundamental","about":"Atendimento Educacional Especializado","publisher":{"@id":"https://doceriapedagogica.com/#org"},"image":"${og}"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Início","item":"https://doceriapedagogica.com/"},{"@type":"ListItem","position":2,"name":"Central de AEE","item":"https://doceriapedagogica.com/atividades-aee.html"}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://doceriapedagogica.com/#org","name":"Doceria Pedagógica","url":"https://doceriapedagogica.com"},{"@type":"CollectionPage","@id":"https://doceriapedagogica.com/atividades-aee.html","url":"https://doceriapedagogica.com/atividades-aee.html","name":"Recursos de AEE para Imprimir","inLanguage":"pt-BR","description":"Recursos de Atendimento Educacional Especializado para imprimir com pictogramas: rotina visual, primeiro e depois, sequências de vida diária, prancha de comunicação alternativa, cartões de apoio, quadro de fichas, pareamento e adaptador de atividades com IA (leitura fácil e pictogramas).","educationalLevel":"Educação Infantil, Ensino Fundamental","about":"Atendimento Educacional Especializado","publisher":{"@id":"https://doceriapedagogica.com/#org"},"image":"${og}"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Início","item":"https://doceriapedagogica.com/"},{"@type":"ListItem","position":2,"name":"Central de AEE","item":"https://doceriapedagogica.com/atividades-aee.html"}]}]}</script>
 `;
 const es=fs.readFileSync(P+'/atividades-espanhol.html','utf8');
 const css=es.slice(es.indexOf('<link href="https://fonts'),es.indexOf('</style>')+8);
