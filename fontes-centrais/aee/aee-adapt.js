@@ -112,7 +112,10 @@ async function adaptarIA(){
   }catch(e){msg('A IA respondeu num formato inesperado. Tente de novo.')}
 }
 
-const seg2=(campo,lista)=>`<div class="seg">${lista.map(([k,n])=>`<button class="${AD[campo]===k?'sel':''}" onclick="AD.${campo}=${typeof k==='string'?`'${k}'`:k};AD.pg=0;render()">${n}</button>`).join('')}</div>`;
+// Mudou algo das perguntas? A prévia vai para a 1ª página de perguntas (a página do texto não muda com
+// a forma de responder, e antes a prévia voltava sempre para ela: parecia que nada tinha mudado).
+function adMudou(campo){if(['modo','nop','ipp','ess'].includes(campo)){const i=adPaginas().findIndex(p=>p.itens);AD.pg=i<0?0:i}render()}
+const seg2=(campo,lista)=>`<div class="seg">${lista.map(([k,n])=>`<button class="${AD[campo]===k?'sel':''}" onclick="AD.${campo}=${typeof k==='string'?`'${k}'`:k};adMudou('${campo}')">${n}</button>`).join('')}</div>`;
 GER.adaptar={i:'✨',n:'Adaptar atividade',d:'a IA adapta qualquer atividade',c:'#C2410C',qtd:false,
   opts:()=>`<div class="field"><label>1. Cole a atividade original</label>
     <textarea id="adTxt" oninput="AD.txt=this.value" placeholder="Cole aqui o enunciado, o texto e as perguntas…\n\nExemplo:\n${escH(AD_ORIGINAL_EX.slice(0,160))}…" class="ad-ta">${escH(AD.txt)}</textarea>
@@ -120,7 +123,7 @@ GER.adaptar={i:'✨',n:'Adaptar atividade',d:'a IA adapta qualquer atividade',c:
     <div class="nota-p">🔒 Não coloque nome nem diagnóstico do aluno. Se a folha tiver nome escrito, cubra antes de fotografar.</div>
     <button class="btn3d btn-print" style="margin-top:6px;padding:11px" onclick="adaptarIA()">✨ Adaptar com IA<small>usa 1 crédito · a impressão fica incluída</small></button>
     <div id="adMsg" class="ad-msg">${AD.msg||(AD.ex?'👀 Ao lado: um exemplo de atividade adaptada.':'')}</div></div>
-    <div class="field"><label>2. Como o aluno responde</label>${seg2('modo',Object.entries(AD_MODOS).map(([k,v])=>[k,v[0]]))}</div>
+    <div class="field"><label>2. Como o aluno responde</label><div class="nota-p">Muda as páginas de perguntas (a página do texto continua igual).</div>${seg2('modo',Object.entries(AD_MODOS).map(([k,v])=>[k,v[0]]))}</div>
     <div class="field"><label>Opções em cada pergunta</label>${seg2('nop',[[2,'2 opções'],[3,'3 opções']])}</div>
     <div class="field"><label>Perguntas por página</label>${seg2('ipp',[[1,'1'],[2,'2'],[3,'3']])}</div>
     <div class="field"><label>Quais perguntas</label>${seg2('ess',[[false,'Todas'],[true,'Só as essenciais']])}</div>
