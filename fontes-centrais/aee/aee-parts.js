@@ -4,7 +4,7 @@ css: `:root{--rosa:#6A4FD8;--rosa-bg:#EEE9FF}
 .eyebrow{border-color:rgba(106,79,216,.3);color:#6A4FD8}
 .seg button.sel{color:#45309E}
 .btn-print{box-shadow:0 5px 0 #45309E}
-.tabs{grid-template-columns:repeat(8,1fr)}
+.tabs{grid-template-columns:repeat(9,1fr)}
 @media(max-width:1000px){.tabs{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:560px){.tabs{grid-template-columns:repeat(2,1fr)}}
 /* painel */
@@ -100,7 +100,29 @@ css: `:root{--rosa:#6A4FD8;--rosa-bg:#EEE9FF}
 .l-m .ad-pq{font-size:24px}.l-m .ad-fr{font-size:24px}.l-m .ad-fi{width:62px;height:62px}.l-m .ad-cmd{font-size:16px}.l-m .ad-ic{width:50px;height:50px}
 .l-m .ad-op{font-size:20px;min-width:140px}.l-m .ad-oi{width:66px;height:66px}.l-m .ad-ops.apontar .ad-oi{width:88px;height:88px}.l-m .ad-ops.apontar .ad-op{font-size:23px}
 .l-m .ad-banco span{font-size:20px}.l-m .ad-ops.marcar .ad-oi{width:46px;height:46px}
-.em-breve{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+/* histórias sociais (Fase 3) */
+.sc-in{width:100%;border:2px solid #EEDFD0;border-radius:12px;padding:10px;font:inherit;font-weight:700}
+.sc-grid{flex:1;display:grid;gap:12px;min-height:0}
+.sc-grid.g4{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+.sc-grid.g2{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
+.sc-cena{border:2.5px dashed #999;border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;position:relative;min-height:0;overflow:hidden}
+.sc-cena p{margin:0;font-size:24px;font-weight:700;line-height:1.3}
+.sc-grid.g2 .sc-cena p{font-size:30px}
+.sc-ic{width:140px;height:140px}.sc-grid.g2 .sc-ic{width:190px;height:190px}
+.sc-n{position:absolute;top:8px;left:12px;font-family:"Baloo 2";font-size:22px;color:#888}
+.sc-cena.capa{border-style:solid;border-color:#333;background:#F7F4FF}
+.sc-cena.capa h4{font-family:"Baloo 2";font-size:34px;line-height:1.1;margin:0}
+.sc-grid.g2 .sc-cena.capa h4{font-size:44px}
+.sc-nome{align-self:stretch;text-align:left;font-size:16px;font-weight:700;border-bottom:1.5px solid #555;padding-bottom:4px;margin-top:6px}
+.sc-tic{width:52px;height:52px;vertical-align:middle;margin-right:10px}
+.sc-il{width:230px;height:230px;border-radius:14px;object-fit:cover;flex:none}.sc-grid.g2 .sc-il{width:300px;height:300px}
+.sc-cena.capa .sc-il{width:250px;height:250px}.sc-grid.g2 .sc-cena.capa .sc-il{width:320px;height:320px}
+.sc-lil{width:110px;height:110px;border-radius:12px;object-fit:cover;flex:none}
+.sc-lista{display:flex;flex-direction:column;gap:16px;margin-top:10px}
+.sc-li{display:flex;align-items:center;gap:18px;font-size:26px;font-weight:600;line-height:1.3}
+.sc-lic{width:70px;height:70px;flex:none}
+.sc-vazio{margin:auto;text-align:center;font-size:22px;font-weight:700;color:#666;max-width:480px}
+.em-breve{display:grid;grid-template-columns:1fr;max-width:560px;gap:14px}
 @media(max-width:860px){.em-breve{grid-template-columns:1fr}}
 .em-breve div{background:#fff;border:2px dashed #C9BFF0;border-radius:20px;padding:16px}
 .em-breve b{font-family:'Baloo 2';font-size:19px;display:block;margin-bottom:4px}
@@ -114,8 +136,8 @@ hero: `<div class="hero">
     <div>
       <div class="eyebrow">🧩 Central de AEE</div>
       <h1>Recursos de AEE <em>para imprimir</em></h1>
-      <p>Rotina visual, quadro "primeiro → depois", passo a passo de higiene, prancha de comunicação, cartões de apoio, quadro de fichas e pareamento — com <b>pictogramas</b> ou <b>fotos realistas</b>, e você ainda pode <b>usar as suas próprias fotos</b>. Tudo pronto para plastificar. <b>Novo:</b> a IA adapta qualquer atividade para o seu aluno, com leitura fácil e pictogramas.</p>
-      <div class="chips"><span>🎁 Comece grátis, sem cadastro</span><span>✨ Adaptador de atividades com IA</span><span>📷 Pictograma, foto ou a sua foto</span><span>🔒 Sem pedir diagnóstico</span><span>🔠 Opção caixa alta</span></div>
+      <p>Rotina visual, quadro "primeiro → depois", passo a passo de higiene, prancha de comunicação, cartões de apoio, quadro de fichas e pareamento — com <b>pictogramas</b> ou <b>fotos realistas</b>, e você ainda pode <b>usar as suas próprias fotos</b>. Tudo pronto para plastificar. <b>Novo:</b> a IA adapta qualquer atividade para o seu aluno, com leitura fácil e pictogramas, e você monta <b>histórias sociais</b> para preparar o aluno para situações novas.</p>
+      <div class="chips"><span>🎁 Comece grátis, sem cadastro</span><span>✨ Adaptador de atividades com IA</span><span>📘 Histórias sociais</span><span>📷 Pictograma, foto ou a sua foto</span><span>🔒 Sem pedir diagnóstico</span><span>🔠 Opção caixa alta</span></div>
     </div>
     <div class="hero-art" aria-hidden="true">
       <div class="letra" style="--r:-8deg;background:#6A4FD8;left:2%;top:8%">🗓️</div>
@@ -164,7 +186,6 @@ secoes: `<section id="geradores" style="padding-top:20px"><div class="wrap">
   <div class="kicker">Em breve na Central de AEE</div>
   <h2 class="sec-title">Os próximos recursos</h2>
   <div class="em-breve">
-    <div><b>📘 Histórias sociais</b><p>Histórias curtas e positivas para situações difíceis, como esperar a vez ou ir ao dentista.</p></div>
     <div><b>🎮 Jogos de baixo estímulo</b><p>Pareamento e sequência na tela, sem cronômetro, sem som de erro e com cores calmas.</p></div>
   </div>
 </div></section>
@@ -173,6 +194,7 @@ secoes: `<section id="geradores" style="padding-top:20px"><div class="wrap">
   <h2 class="sec-title" style="text-align:center;margin-bottom:18px">Perguntas frequentes</h2>
   <details><summary>Para quem são esses recursos?</summary><p>Para professoras e professores do AEE, da sala comum e de apoio, e para famílias. Eles ajudam estudantes que se beneficiam de apoio visual — com ou sem laudo. Aqui você escolhe pelo <b>apoio que o aluno precisa</b>, não pelo diagnóstico.</p></details>
   <details><summary>Como funciona o adaptador de atividades?</summary><p>Cole o texto de uma atividade (ou envie uma foto dela) e clique em "Adaptar com IA". A IA reescreve em <b>leitura fácil</b> (frases curtas, uma ideia por frase), coloca <b>pictogramas</b> nas palavras-chave e cria opções de resposta. Depois você escolhe, sem gastar outro crédito, <b>como o aluno responde</b> (circular, marcar X, apontar, recortar e colar ou escrever), quantas perguntas vão em cada página e se quer só as essenciais. A IA pode errar: revise sempre antes de imprimir. Não escreva o nome nem o diagnóstico do aluno.</p></details>
+  <details><summary>O que é uma história social?</summary><p>É uma história curta, na primeira pessoa ("eu"), que explica com calma uma situação: o que vai acontecer, onde, quem estará lá e o que as pessoas sentem. Ela ajuda o aluno a se preparar para algo novo ou difícil, como ir ao dentista ou esperar a vez. A maioria das frases <b>descreve</b>; poucas frases sugerem o que fazer, sempre de forma positiva ("Eu posso respirar fundo"). Leia com o aluno alguns dias antes da situação. São 8 histórias prontas, e você pode criar outra com a IA.</p></details>
   <details><summary>Pictograma ou foto: qual usar?</summary><p>Depende do aluno. Muitos reconhecem primeiro a <b>foto</b> e, com o tempo, passam a entender o <b>pictograma</b>. Para quem precisa do mais concreto, use <b>a sua foto</b>: o banheiro da escola, a mochila do próprio aluno. Alguns conceitos abstratos, como "acabou" e "agora não", ficam sempre como pictograma, porque a figura explica melhor.</p></details>
   <details><summary>As minhas fotos vão para a internet?</summary><p>Não. Quando você usa "Usar a minha foto", a imagem é reduzida e guardada <b>só neste navegador</b>, no seu computador ou celular. Ela não é enviada para a Doceria. Para apagar, use o botão "Apagar minhas fotos" no painel. As fotos realistas que já vêm no site mostram pessoas que não existem, criadas para a Doceria.</p></details>
   <details><summary>Preciso informar o diagnóstico do aluno?</summary><p>Não. A Doceria não pede nem guarda diagnóstico ou dados de saúde. O nome do aluno só aparece se você escrever à mão na folha impressa.</p></details>

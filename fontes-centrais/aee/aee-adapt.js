@@ -10,7 +10,11 @@ const PIC_LOCAL=new Set(Object.values(PIC).map(v=>v[1]));
 const hexEmoji=e=>[...String(e||'')].map(c=>c.codePointAt(0)).filter(c=>c!==0xFE0F).map(c=>c.toString(16).toUpperCase()).join('-');
 const srcEmoji=e=>{const h=hexEmoji(e);if(!h)return'';return PIC_LOCAL.has(h)?`/assets/pictos/${h}.svg`:`https://cdn.jsdelivr.net/npm/openmoji@15.1.0/color/svg/${h}.svg`};
 const escH=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const imgE=(e,cls)=>{const s=srcEmoji(e);return s?`<img class="${cls||'ad-ic'}" src="${s}" alt="" onerror="this.remove()">`:''};
+// alguns arquivos do OpenMoji mantêm o FE0F no nome (ex.: 🧑‍⚕️ = 1F9D1-200D-2695-FE0F): se falhar, tenta com ele
+const hexEmojiFE=e=>[...String(e||'')].map(c=>c.codePointAt(0).toString(16).toUpperCase()).join('-');
+const imgE=(e,cls)=>{const s=srcEmoji(e);if(!s)return'';const h2=hexEmojiFE(e);
+  const alt=h2!==hexEmoji(e)?`https://cdn.jsdelivr.net/npm/openmoji@15.1.0/color/svg/${h2}.svg`:'';
+  return `<img class="${cls||'ad-ic'}" src="${s}" alt=""${alt?` data-alt="${alt}"`:''} onerror="if(this.dataset.alt){this.src=this.dataset.alt;this.removeAttribute('data-alt')}else this.remove()">`};
 
 // exemplo pronto (aparece antes de a professora usar a IA; imprimir o exemplo usa 1 crédito, como as outras folhas)
 const AD_EXEMPLO={titulo:'Onde vivem os animais',
